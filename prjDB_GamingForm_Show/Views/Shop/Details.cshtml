@@ -1,0 +1,64 @@
+﻿@model prjDB_GamingForm_Show.Models.Entities.Product
+
+@{
+    ViewBag.Title = "Details";
+}
+<section class="py-5">
+    <div class="container px-4 px-lg-5 my-5">
+        <div class="row gx-4 gx-lg-5 align-items-center">
+
+            <div class="col-md-6"><img class="card-img-top mb-5 mb-md-0" src="https://dummyimage.com/600x700/dee2e6/6c757d.jpg" alt="..." /></div>
+            <div class="col-md-6">
+                <div class="small mb-1">SKU: BST-498</div>
+                <h1 class="display-5 fw-bolder">@Html.DisplayFor(model => model.ProductName)</h1>
+                <div class="fs-5 mb-5">
+                    <span class="text-decoration-line-through">@Html.DisplayFor(model => model.Price)</span>
+                    <span>@Html.DisplayFor(model => model.Price)</span>
+                </div>
+                <p class="lead">@Html.DisplayFor(model => model.ProductContent)</p>
+                @using (Html.BeginForm("AddToCar", "Shop", FormMethod.Post))
+                {
+                    <input type="hidden" name="ProductID" value="@Model.ProductId" />
+                    <div class="d-flex">
+                        @Html.TextBox("txtCount", "1", new { @class = "form-control text-center me-3", @style = "max-width: 3rem" })
+                        <i class="bi-cart-fill me-1"></i>
+                        <input type="submit" value="加入購物車" class="btn btn-outline-dark mt-auto" />
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Related items section-->
+<section class="py-5 bg-light">
+    <div class="container px-4 px-lg-5 mt-5">
+        <h2 class="fw-bolder mb-4">相關商品</h2>
+        <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
+            @{
+                prjDB_GamingForm_Show.Models.Entities.DbGamingFormTestContext db = new prjDB_GamingForm_Show.Models.Entities.DbGamingFormTestContext();
+                IEnumerable<prjDB_GamingForm_Show.Models.Entities.Product> list = db.Products.Where(p => p.Status.Name == "Active").ToList().Take(4);
+                foreach (var item in list)
+                {
+                    <div class="col mb-5">
+                        <div class="card h-100">
+                            Product image
+                            <img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" alt="..." />
+                            <div class="card-body p-4">
+                                <div class="text-center">
+                                    <h5 class="fw-bolder">@item.ProductName</h5>
+                                    @item.Price
+                                </div>
+                            </div>
+                            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                                <div class="text-center">
+                                    @Html.ActionLink("查看商品", "Details", "Shop", new { id = item.ProductId }, new { @class = "btn btn-outline-dark mt-auto" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+    </div>
+</section>

@@ -1,0 +1,87 @@
+﻿@model IEnumerable<prjDB_GamingForm_Show.Models.Shop.ShoppingCar>
+
+
+@{
+    ViewBag.Title = "ShoppingCar";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>購物車</h2>
+
+<table class="table">
+    <tr>
+        <th>
+            序
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ProductName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Price)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ImageID)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Count)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.total)
+        </th>
+        <th></th>
+    </tr>
+
+    @{
+
+        int count = 0;
+        decimal tax = 0;
+        decimal pay = 0;
+        decimal sum = 0;
+
+        foreach (var item in Model)
+        {
+            count++;
+            <tr>
+                <td>
+                    @count
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ProductName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Price)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ImageID)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Count)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.total)
+                </td>
+                @using (Html.BeginForm("EditCar", "Shop", FormMethod.Post))
+                {
+                    <input type="hidden" name="ProductID" value="@item.ProductID" />
+                    <td>
+                        @Html.TextBox("txtCount", "1", new { @class = "form-control text-center me-3", @style = "max-width: 3rem" })
+                    </td>
+                    <td>
+                        <input type="submit" value="修改數量" class="btn btn-outline-dark mt-auto" />
+                    </td>
+                }
+                <td>
+                    @Html.ActionLink("查看商品", "Details", "Shop", new { id = item.ProductID }, new { @class = "btn btn-outline-dark mt-auto" })
+                    @Html.ActionLink("刪除購物車", "Delete", "Shop", new { id = item.ProductID }, new { @class = "btn btn-outline-dark mt-auto", onclick = "return confirm('確定要刪除嗎?')" }) |
+                </td>
+            </tr>
+            sum += item.total;
+        }
+        tax = sum * 0.05M;
+        pay = tax + sum;
+    }
+
+</table>
+<li>交易金額:@sum.ToString("###,###,##0")</li>
+<li>稅    額:@tax.ToString("###,###,##0")</li>
+<li>應付金額:@pay.ToString("###,###,##0")</li>
