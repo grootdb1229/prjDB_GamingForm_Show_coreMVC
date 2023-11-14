@@ -8,6 +8,37 @@ namespace prjDB_GamingForm_Show.Controllers
     {
         private readonly ILogger<HomeController> _logger;
 
+        public IActionResult HomePage()
+        {
+            return View();
+        }
+        public IActionResult DeputeMain()
+        {
+            return View();
+        }
+
+        public IActionResult ShoppingMain()
+        {
+            return View();
+        }
+
+        public IActionResult BlogMain()
+        {
+            return View();
+        }
+
+        public IActionResult Login()
+        {
+            return View();
+        }
+
+        //[HttpPost]
+        //public IActionResult Login() 
+        //{
+        //    TMember user = new DbGamingFormTestContext().Members.FirstOrDefault(u => u.Email == 
+        //}
+
+
         public HomeController(ILogger<HomeController> logger)
         {
             _logger = logger;
