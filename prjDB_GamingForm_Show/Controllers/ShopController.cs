@@ -8,11 +8,12 @@ namespace prjDB_GamingForm_Show.Controllers
 {
     namespace prjDB_GamingForm_Show.Controllers
     {
-        public class ShopController : Controller
-        {
+    public class ShopController : Controller
+    {
+        public IActionResult Index()
 
             public ActionResult Index(CKeyWord ck)
-            {
+        {
 
                 String CK = ck.txtKeyword; /*Request.Form["txtKeyword"];*/
                 DbGamingFormTestContext db = new DbGamingFormTestContext();
@@ -32,8 +33,8 @@ namespace prjDB_GamingForm_Show.Controllers
 
             public ActionResult Create()
             {
-                return View();
-            }
+            return View();
+        }
 
             [HttpPost]
             public ActionResult Create(CProductWarp product) //原Product物件
