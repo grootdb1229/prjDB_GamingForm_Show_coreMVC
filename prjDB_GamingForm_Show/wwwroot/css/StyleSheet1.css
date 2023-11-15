@@ -1,0 +1,156 @@
+﻿
+* {
+    font-family: 'Roboto', sans-serif;
+}
+
+.container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-left: -65px;
+    margin-top: -20px;
+    width: 130px;
+    height: 40px;
+    text-align: center;
+}
+
+.btn {
+    color: #0099CC; /* 文字颜色 */
+    background: transparent; /* 清除背景色 */
+    border: 2px solid #0099CC; /* 边框样式、颜色、宽度 */
+    border-radius: 70px; /* 给边框添加圆角 */
+    text-decoration: none;
+    text-transform: uppercase; /* 字母转大写 */
+    border: none;
+    color: white;
+    padding: 16px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    -webkit-transition-duration: 0.4s; /* 兼容 Safari */
+    transition-duration: 0.4s;
+    cursor: pointer;
+}
+
+.btn1 {
+    background-color: white;
+    color: black;
+    border: 2px solid #008CBA;
+}
+
+    .btn1:hover {
+        background-color: #008CBA;
+        color: white;
+    }
+.btn2 {
+    color: #0099CC; /* 文字颜色 */
+    background: transparent; /* 清除背景色 */
+    border: 2px solid #0099CC; /* 边框样式、颜色、宽度 */
+    border-radius: 70px; /* 给边框添加圆角 */
+    text-decoration: none;
+    text-transform: uppercase; /* 字母转大写 */
+    border: none;
+    color: white;
+    padding: 16px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    -webkit-transition-duration: 0.4s; /* 兼容 Safari */
+    transition-duration: 0.4s;
+    cursor: pointer;
+}
+b {
+    outline: none;
+    height: 40px;
+    text-align: center;
+    width: 130px;
+    border-radius: 100px;
+    background: #fff;
+    border: 2px solid #008CBA;
+    color: #008CBA;
+    letter-spacing: 1px;
+    text-shadow: 0;
+    font:
+
+{
+    size: 12px;
+    weight: bold;
+}
+
+cursor: pointer;
+transition: all 0.25s ease;
+&:active {
+    letter-spacing: 2px;
+}
+
+&:after {
+    content: "";
+}
+
+}
+
+.onclic {
+    width: 10px !important;
+    height: 70px !important;
+    border-radius: 50% !important;
+    border-color: $gray;
+    border-width: 4px;
+    font-size: 0;
+    border-left-color: #008CBA;
+    animation: rotating 2s 0.25s linear infinite;
+    &:hover
+
+{
+    color: dodgerblue;
+    background: white;
+}
+
+}
+
+.validate {
+    content: "";
+    font-size: 16px;
+    color: black;
+    background: dodgerblue;
+    border-radius: 50px;
+    &:after
+
+{
+    font-family: 'FontAwesome';
+    content: " done \f00c";
+}
+
+}
+
+@*@keyframes rotating {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+<script >
+$(function () {
+        $("#button").click(function () {
+            $("#button").addClass("onclic", 250, validate);
+        });
+        function validate() {
+            setTimeout(function () {
+                $("#button").removeClass("onclic");
+                $("#button").addClass("validate", 450, callback);
+            }, 2250);
+        }
+        function callback() {
+            setTimeout(function () {
+                $("#button").removeClass("validate");
+            }, 1250);
+        }
+    });
+</script >
