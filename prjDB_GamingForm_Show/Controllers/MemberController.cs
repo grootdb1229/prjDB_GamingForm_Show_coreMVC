@@ -27,7 +27,7 @@ namespace prjDB_GamingForm_Show.Controllers
         {
             return View();
         }
-        [HttpPost]
+        [HttpPost] 
         public IActionResult Create(Member member)
         {
             DbGamingFormTestContext db = new DbGamingFormTestContext();
