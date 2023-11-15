@@ -10,7 +10,10 @@ namespace prjDB_GamingForm_Show.Controllers
             return View();
         }
 
-
+        public IActionResult Test() 
+        {
+            return View();
+        }
         public IActionResult MemberPage(int? id)
         {
             //if (id == null)
