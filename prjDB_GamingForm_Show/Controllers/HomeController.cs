@@ -33,10 +33,10 @@ namespace prjDB_GamingForm_Show.Controllers
         }
 
         //[HttpPost]
-        //public IActionResult Login()
-        //{
-        //    Member user = new DbGamingFormTestContext().Members.FirstOrDefault(u => u.Email ==
-        //}
+        ////public IActionResult Login()
+        ////{
+        ////    Member user = new DbGamingFormTestContext().Members.FirstOrDefault(u => u.Email ==
+        ////}
 
 
         public HomeController(ILogger<HomeController> logger)

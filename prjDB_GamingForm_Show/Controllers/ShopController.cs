@@ -10,9 +10,10 @@ namespace prjDB_GamingForm_Show.Controllers
     {
     public class ShopController : Controller
     {
-        //public IActionResult Index()
+        
 
-            public ActionResult Index(CKeyWord ck)
+
+            public IActionResult Index(CKeyWord ck)
         {
 
                 String CK = ck.txtKeyword; /*Request.Form["txtKeyword"];*/
