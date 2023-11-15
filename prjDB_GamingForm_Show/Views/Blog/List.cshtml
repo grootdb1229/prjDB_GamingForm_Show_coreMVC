@@ -1,0 +1,163 @@
+﻿@*@model IEnumerable<prjDB_GamingForm_Show.ViewModel.CBlogViewModel>*@
+@model prjDB_GamingForm_Show.ViewModels.CBlogViewModel
+
+@{
+    ViewData["Title"] = "List";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<!DOCTYPE html>
+<html lang="zxx">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="Amin Template">
+    <meta name="keywords" content="Amin, unica, creative, html">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Amin | Template</title>
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,500,600,700,800,900&display=swap"
+          rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Cinzel:400,700,900&display=swap" rel="stylesheet">
+
+    <!-- Css Styles -->
+    <link rel="stylesheet" href="~/css/bootstrap.min.css" type="text/css">
+    <link rel="stylesheet" href="~/css/font-awesome.min.css" type="text/css">
+    <link rel="stylesheet" href="~/css/elegant-icons.css" type="text/css">
+    <link rel="stylesheet" href="~/css/owl.carousel.min.css" type="text/css">
+    <link rel="stylesheet" href="~/css/barfiller.css" type="text/css">
+    <link rel="stylesheet" href="~/css/magnific-popup.css" type="text/css">
+    <link rel="stylesheet" href="~/css/slicknav.min.css" type="text/css">
+    <link rel="stylesheet" href="~/css/blogstyle.css" type="text/css">
+</head>
+
+<body>
+
+    <header class="header-section">
+        <div class="nav-options">
+
+            <div class="container">
+                <div class="humberger-menu humberger-open">
+                    <i class="fa fa-bars"></i>
+                </div>
+                <div class="nav-search search-switch">
+                    <i class="fa fa-search"></i>
+                </div>
+                <div class="nav-menu">
+                    <ul>
+                        <li class="active"><a href="@Url.Action("List", "Blog")><span>宗和</span></a></li>
+                        <a href="@Url.Action("List", "Blog")">全部</a>
+                            @{
+                                foreach (var item in Model.subTags)
+                                {
+                                <li>
+
+                                    <a href="@Url.Action("List", "Blog", new { FId =item.SubTagId})"><span>@item.Name </span></a>
+                                </li>
+                                }
+                            }
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </header>
+    <section class="instagram-post-section spad">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="section-title">
+                        <h5>Instagram</h5>
+                    </div>
+                    <div class="ip-item">
+                        <div class="ip-pic">
+                            <img src="~/images/insta-1.jpg" alt="">
+                        </div>
+                        <div class="ip-text">
+                            <div class="label"><span>Reviews</span></div>
+                            <h5><a href="#">Here's an hour of side-quests from The Outer Worlds...</a></h5>
+                            <ul>
+                                <li>by <span>Admin</span></li>
+                                <li><i class="fa fa-clock-o"></i> Aug 01, 2019</li>
+                                <li><i class="fa fa-comment-o"></i> 20</li>
+                            </ul>
+                            <p>
+                                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
+                                ut labore et dolore magna aliqua. Quis ipsum suspendisse ultrices...
+                            </p>
+                        </div>
+                    </div>
+                    <div class="ip-item">
+                        <div class="ip-pic">
+                            <img src="~/images/insta-1.jpg" alt="">
+                        </div>
+                        <div class="ip-text">
+                            <div class="label"><span>Windows</span></div>
+                            <h5><a href="#">Infinity Ward's focus isn't on battle royale, Call of...</a></h5>
+                            <ul>
+                                <li>by <span>Admin</span></li>
+                                <li><i class="fa fa-clock-o"></i> Aug 01, 2019</li>
+                                <li><i class="fa fa-comment-o"></i> 20</li>
+                            </ul>
+                            <p>
+                                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
+                                ut labore et dolore magna aliqua. Quis ipsum suspendisse ultrices...
+                            </p>
+                        </div>
+                    </div>
+                    <div class="ip-item">
+                        <div class="ip-pic">
+                            <img src="~/images/insta-1.jpg" alt="">
+                        </div>
+                        <div class="ip-text">
+                            <div class="label"><span>Hardware</span></div>
+                            <h5><a href="#">Capcom asks select fans to test new Resident Evil game</a></h5>
+                            <ul>
+                                <li>by <span>Admin</span></li>
+                                <li><i class="fa fa-clock-o"></i> Aug 01, 2019</li>
+                                <li><i class="fa fa-comment-o"></i> 20</li>
+                            </ul>
+                            <p>
+                                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
+                                ut labore et dolore magna aliqua. Quis ipsum suspendisse ultrices...
+                            </p>
+                        </div>
+                    </div>
+                    <div class="ip-item">
+                        <div class="ip-pic">
+                            <img src="~/images/insta-1.jpg" alt="">
+                        </div>
+                        <div class="ip-text">
+                            <div class="label"><span>Playstation</span></div>
+                            <h5><a href="#">Teamfight Tactics is in chaos after today's patch...</a></h5>
+                            <ul>
+                                <li>by <span>Admin</span></li>
+                                <li><i class="fa fa-clock-o"></i> Aug 01, 2019</li>
+                                <li><i class="fa fa-comment-o"></i> 20</li>
+                            </ul>
+                            <p>
+                                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
+                                ut labore et dolore magna aliqua. Quis ipsum suspendisse ultrices...
+                            </p>
+                        </div>
+                    </div>
+                    <div class="pagination-item">
+                        <a href="#"><span>1</span></a>
+                        <a href="#"><span>2</span></a>
+                        <a href="#"><span>3</span></a>
+                        <a href="#"><span>Next</span></a>
+                    </div>
+                </div>
+                </div></div></section>
+
+                <script src="~/js/jquery-3.3.1.min.js"></script>
+                <script src="~/js/bootstrap.min.js"></script>
+                <script src="~/js/jquery.magnific-popup.min.js"></script>
+                <script src="~/js/circle-progress.min.js"></script>
+                <script src="~/js/jquery.barfiller.js"></script>
+                <script src="~/js/jquery.slicknav.js"></script>
+                <script src="~/js/owl.carousel.min.js"></script>
+                <script src="~/js/blogmain.js"></script>
+</body>
+</html>
+
