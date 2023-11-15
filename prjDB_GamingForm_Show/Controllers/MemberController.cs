@@ -13,8 +13,8 @@ namespace prjDB_GamingForm_Show.Controllers
 
         public IActionResult MemberPage(int? id)
         {
-            if (id == null)
-                return RedirectToAction("Create");
+            //if (id == null)
+            //    return RedirectToAction("Create");
             DbGamingFormTestContext db = new DbGamingFormTestContext();
             IEnumerable<Member> datas = null;
             datas = from m in db.Members
