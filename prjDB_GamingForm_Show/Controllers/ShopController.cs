@@ -10,7 +10,7 @@ namespace prjDB_GamingForm_Show.Controllers
     {
     public class ShopController : Controller
     {
-        public IActionResult Index()
+        //public IActionResult Index()
 
             public ActionResult Index(CKeyWord ck)
         {
