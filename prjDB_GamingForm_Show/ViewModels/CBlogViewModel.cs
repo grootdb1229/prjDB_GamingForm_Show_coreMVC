@@ -1,6 +1,16 @@
-﻿namespace prjDB_GamingForm_Show.ViewModel
+﻿using prjDB_GamingForm_Show.Models.Entities;
+
+namespace prjDB_GamingForm_Show.ViewModels
 {
     public class CBlogViewModel
     {
+        public IEnumerable<Blog>? blogs { get; set; }
+        public IEnumerable<Article>? articles { get; set; }
+        public IEnumerable<SubBlog>? subBlogs { get; set; }
+        public IEnumerable<SubTag>? subTags { get; set; }
+        public IEnumerable<Tag>? tags { get; set; }
+
+        public IEnumerable<Models.Entities.Action>? actions { get; set; }
+        public IEnumerable<ArticleAction>? articleActions { get; set; }
     }
 }
