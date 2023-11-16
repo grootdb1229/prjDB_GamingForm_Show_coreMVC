@@ -28,13 +28,16 @@ namespace prjDB_GamingForm_Show.Controllers
             return View();
         }
         [HttpPost] 
-        public IActionResult Create(Member member)
+        public async Task<IActionResult> Create([Bind("Name,Phone,Email,Password")] Member member)
         {
-            DbGamingFormTestContext db = new DbGamingFormTestContext();
-            db.Members.Add(member);
-            db.SaveChanges();
-            int id = db.Members.Where(p => p.Email == member.Email).Select(p => p.MemberId).FirstOrDefault();
-            return RedirectToAction("MemberPage", new { id });
+            if (ModelState.IsValid) 
+            {
+                DbGamingFormTestContext db = new DbGamingFormTestContext();
+                db.Members.Add(member);
+                await db.SaveChangesAsync();
+                return RedirectToAction("MemberPage");
+            }
+            return View();
         }
 
         public IActionResult Edit(int? id)
