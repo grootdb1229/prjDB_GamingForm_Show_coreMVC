@@ -1,4 +1,5 @@
-﻿using System;
+﻿using prjDB_GamingForm_Show.Models.Entities;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -23,5 +24,8 @@ namespace prjDB_GamingForm_Show.Models.Shop
         public int Count { get; set; }
         [DisplayName("合計金額")]
         public decimal total { get { return this.Count * this.Price; } }
+        public Product product { get; set; }
+
+        public int CarCount { get; set; }
     }
 }

@@ -3,6 +3,7 @@ using prjDB_GamingForm_Show.Models;
 using prjDB_GamingForm_Show.Models.Entities;
 using prjDB_GamingForm_Show.Models.Shop;
 using prjDB_GamingForm_Show.ViewModels;
+using System.Text.Json;
 
 namespace prjDB_GamingForm_Show.Controllers
 {
@@ -119,7 +120,45 @@ namespace prjDB_GamingForm_Show.Controllers
                 Product x = db.Products.FirstOrDefault(p => p.ProductId == id);
                 return View(x);
             }
+            public IActionResult AddToCar(int? id)
+            {
+                if (id == null)
+                {
+                    return RedirectToAction("Index");
+                }
+                ViewBag.FID = id;
+                return View();
+            }
 
+            [HttpPost]
+            public IActionResult AddToCar(CShoppingCarViewModel vm)
+            {
+                DbGamingFormTestContext db = new DbGamingFormTestContext();
+                Product product = db.Products.FirstOrDefault(x => x.ProductId == vm.ProductID);
+                if (product != null)
+                {
+                    string json = "";
+                    List<ShoppingCar> car = null;
+                    if (HttpContext.Session.Keys.Contains(CDictionary.SK_PURCHASED_PRODUCES_LIST))
+                    {
+                        json = HttpContext.Session.GetString(CDictionary.SK_PURCHASED_PRODUCES_LIST);
+                        car = JsonSerializer.Deserialize<List<ShoppingCar>>(json);
+                    }
+                    else
+                    {
+                        car = new List<ShoppingCar>();
+                    }
+                    ShoppingCar x = new ShoppingCar();
+                    x.Price = (decimal)product.Price;
+                    x.Count = vm.txtCount;
+                    x.ProductID = product.ProductId;
+                    x.product = product;
+                    car.Add(x);
+                    json = JsonSerializer.Serialize(car);
+                    HttpContext.Session.SetString(CDictionary.SK_PURCHASED_PRODUCES_LIST, json);
+                }
+                return RedirectToAction("Index");
+            }
             //            public ActionResult AddToCar(CShoppingCarViewModel vm)
             //            {
 
