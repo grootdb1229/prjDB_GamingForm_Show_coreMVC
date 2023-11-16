@@ -165,7 +165,7 @@
                     </div>
                     <!-- /sidebar menu -->
                     <!-- /menu footer buttons -->
-                    <div class="sidebar-footer hidden-small">
+                    @*<div class="sidebar-footer hidden-small">
                         <a data-toggle="tooltip" data-placement="top" title="Settings">
                             <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
                         </a>
@@ -178,7 +178,7 @@
                         <a data-toggle="tooltip" data-placement="top" title="Logout" href="~/login.html">
                             <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
                         </a>
-                    </div>
+                    </div>*@
                     <!-- /menu footer buttons -->
                 </div>
             </div>
@@ -272,21 +272,22 @@
                             </li>
                         </ul>
                     </nav>
+                    
                 </div>
+                <!-- /top navigation -->
+                @RenderBody();
             </div>
-            <!-- /top navigation -->
-           @RenderBody();
-            <!-- footer content -->
-            <footer>
-                <div class="pull-right">
-                    Gentelella - Bootstrap Admin Template by <a href="https://colorlib.com">Colorlib</a>
-                </div>
-                <div class="clearfix"></div>
-            </footer>
-            <!-- /footer content -->
         </div>
     </div>
-
+   
+    <!-- footer content -->
+    @*<footer>
+        <div class="pull-right">
+            Gentelella - Bootstrap Admin Template by <a href="https://colorlib.com">Colorlib</a>
+        </div>
+        <div class="clearfix"></div>
+    </footer>*@
+    <!-- /footer content -->
     <!-- jQuery -->
     <script src="~/vendors/jquery/dist/jquery.min.js"></script>
     <!-- Bootstrap -->
@@ -318,4 +319,5 @@
     <!-- Custom Theme Scripts -->
     <script src="~/js/custom.min.js"></script>
 </body>
+
 </html>
