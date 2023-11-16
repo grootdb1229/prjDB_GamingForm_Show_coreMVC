@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using prjDB_GamingForm_Show.Models;
+using prjDB_GamingForm_Show.Models.Entities;
+using prjDB_GamingForm_Show.ViewModels;
 using System.Diagnostics;
 
 namespace prjDB_GamingForm_Show.Controllers
@@ -33,10 +35,21 @@ namespace prjDB_GamingForm_Show.Controllers
         }
 
         //[HttpPost]
-        ////public IActionResult Login()
-        ////{
-        ////    Member user = new DbGamingFormTestContext().Members.FirstOrDefault(u => u.Email ==
-        ////}
+        //public IActionResult Login(CLoginViewModel vm)
+        //{
+        //    DbGamingFormTestContext db = new DbGamingFormTestContext();
+        //    Member user = (Member)(from m in db.Members
+        //                           where m.Email == vm.txtAccount
+        //                           select m);
+        //    if (user != null) 
+        //    {
+        //        if (user.Password.Equals(vm.txtPassword)) 
+        //        {
+        //            HttpContext.Session[CDictionary.SK_Logged_User] =
+        //        }
+        //    }
+             
+        //}
 
 
         public HomeController(ILogger<HomeController> logger)

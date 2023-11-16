@@ -37,7 +37,11 @@
         decimal tax = 0;
         decimal pay = 0;
         decimal sum = 0;
-
+        //if (HttpContext.Session.Keys.Contains(CDictionary.SK_PURCHASED_PRODUCES_LIST))
+        //{
+        //    json = HttpContext.Session.GetString(CDictionary.SK_PURCHASED_PRODUCES_LIST);
+        //    car = JsonSerializer.Deserialize<List<ShoppingCar>>(json);
+        //}
         foreach (var item in Model)
         {
             count++;
