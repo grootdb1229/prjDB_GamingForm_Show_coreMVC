@@ -22,6 +22,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <_ContentIncludedByDefault Remove="wwwroot\production\images\S__84885521.jpg" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="Models\Entities\" />
   </ItemGroup>
 
