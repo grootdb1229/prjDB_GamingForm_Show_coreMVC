@@ -47,5 +47,41 @@ namespace prjDB_GamingForm_Show.Controllers
             
             return View(vm);
         }
+        public ActionResult ArticleList(int? FId, int? SFId)
+        {
+            DbGamingFormTestContext db = new DbGamingFormTestContext();
+            CBlogViewModel vm = new CBlogViewModel();
+            if (FId == null)
+                return RedirectToAction("List");
+            if (SFId == null)
+            {
+                vm = new CBlogViewModel
+                {
+                    blogs = db.Blogs.Where(b => b.BlogId == FId).Select(p => p),
+                    subBlogs = db.SubBlogs.Where(s => s.BlogId == FId).Select(p => p),
+                    articles = db.Articles.Where(a => a.SubBlog.BlogId == FId).OrderByDescending(a => a.ModifiedDate).Select(p => p)
+                };
+            }
+            else
+            {
+                vm = new CBlogViewModel
+                {
+                    blogs = db.Blogs.Where(b => b.BlogId == FId).Select(p => p),
+                    subBlogs = db.SubBlogs.Where(s => s.BlogId == FId).Select(p => p),
+                    articles = db.Articles.Where(a => a.SubBlogId == SFId).OrderByDescending(a => a.ModifiedDate).Select(p => p)
+                };
+            }
+            return View(vm);
+        }
+
+        public ActionResult ArticleContent(int? FId)
+        {
+
+            DbGamingFormTestContext db = new DbGamingFormTestContext();
+            var artcon = db.Articles.Where(a => a.ArticleId== FId)
+                .Select(a => a);
+
+            return View(artcon);
+        }
     }
 }
