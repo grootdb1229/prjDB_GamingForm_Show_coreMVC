@@ -18,7 +18,7 @@ namespace prjDB_GamingForm_Show.Controllers
             _host = host;
             _db = context;
         }
-        
+        //test
         public List<CDeputeViewModel> List { get; set; }
         public List<string> HotKeyList { get; set; }
         public List<SelectListItem> ComboList { get; set; }
