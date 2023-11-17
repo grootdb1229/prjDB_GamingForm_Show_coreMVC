@@ -1,0 +1,119 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="author" content="" />
+    <title>ZenBlog Bootstrap Template - Index</title>
+    <meta content="" name="description">
+    <meta content="" name="keywords">
+    <!-- Favicon-->
+    <link rel="icon" type="image/x-icon" href="~/Layout/ZenBlog/assets/favicon.ico" />.0v12
+    <link href="~/Layout/ZenBlog/assets/img/favicon.png" rel="icon">
+    <link href="~/Layout/ZenBlog/assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;500&family=Inter:wght@400;500&family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+
+    <!-- Bootstrap icons-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
+
+    <!-- Vendor CSS Files -->
+    <link href="~/Layout/ZenBlog/assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="~/Layout/ZenBlog/assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+    <link href="~/Layout/ZenBlog/assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+    <link href="~/Layout/ZenBlog/assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
+    <link href="~/Layout/ZenBlog/assets/vendor/aos/aos.css" rel="stylesheet">
+
+    <!-- Core theme CSS (includes Bootstrap)-->
+    <link href="~/css/styles.css" rel="stylesheet" />
+
+    <!-- Template Main CSS Files -->
+    <link href="~/Layout/ZenBlog/assets/css/variables.css" rel="stylesheet">
+    <link href="~/Layout/ZenBlog/assets/css/main.css" rel="stylesheet">
+    
+    
+</head>
+<body>
+    <!-- Navigation-->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light" style="background-color:black">
+        <div class="container px-4 px-lg-5">
+            <a class="navbar-brand" href="#!">Groot遊戲資源整合平台</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
+                    <li class="nav-item"> @Html.ActionLink("論壇", "Index", "Blog", null, new { @class = "nav-link" })</li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">委託</a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li>@Html.ActionLink("委託", "DeputeMainpage", "Depute", null, new { @class = "dropdown-item" })</li>
+                            <li><hr class="dropdown-divider" /></li>
+                            <li>@Html.ActionLink("委託管理", "MyDeputeList", "Depute", null, new { @class = "dropdown-item" })</li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">商城</a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li>
+                                @Html.ActionLink("全部商品", "Index", "Shop", null, new { @class = "dropdown-item" })
+                            </li>
+                            <li><hr class="dropdown-divider" /></li>
+                            <li><a class="dropdown-item" href="#!">Popular Items</a></li>
+                            <li><a class="dropdown-item" href="#!">New Arrivals</a></li>
+                        </ul>
+                    </li>
+                </ul>
+                @{
+                    
+                    int count = 0;
+                    //if (HttpContext.Session.Keys.Contains(prjDB_GamingForm_Show.Models.CDictionary.SK_PURCHASED_PRODUCES_LIST) != null)
+                    //{
+                    //    List<prjDB_GamingForm_Show.Models.ShoppingCar> car = Session[prjDB_GamingForm_Show.Models.CDictionary.SK_PURCHASED_PRODUCES_LIST] as List<prjDB_GamingForm_Show.Models.ShoppingCar>;
+                    //    count = car.Count();
+                    //}
+
+
+                    <form class="d-flex">
+                        <a href="~/Shop/ShoppingCar" class="btn mt-auto btn-outline-dark bi-cart-fill me-1" id="car">
+                            <span class="badge bg-dark text-white ms-1 rounded-pill">@count</span>
+                        </a>
+                    </form>
+                }
+            </div>
+        </div>
+    </nav>
+
+    @RenderBody()
+    <!-- Footer-->
+    <footer class="py-5 bg-dark">
+        <div class="container"><p class="m-0 text-center text-white">Copyright &copy; Your Website 2023</p></div>
+    </footer>4
+    <!-- Bootstrap core JS-->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Core theme JS-->
+    <script src="~/js/scripts.js"></script>
+    <script>
+        const button = document.querySelector('#car');
+
+        button.addEventListener('mouseover', () => {
+            button.style.backgroundColor = '#a81d1d';
+        });
+
+        button.addEventListener('mouseout', () => {
+            button.style.backgroundColor = '';
+        });
+    </script>
+
+    <script src="~/Layout/ZenBlog/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="~/Layout/ZenBlog/assets/vendor/swiper/swiper-bundle.min.js"></script>
+    <script src="~/Layout/ZenBlog/assets/vendor/glightbox/js/glightbox.min.js"></script>
+    <script src="~/Layout/ZenBlog/assets/vendor/aos/aos.js"></script>
+    <script src="~/Layout/ZenBlog/assets/vendor/php-email-form/validate.js"></script>
+
+    <!-- Template Main JS File -->
+    <script src="~/Layout/ZenBlog/assets/js/main.js"></script>
+
+</body>
+</html>
