@@ -1,4 +1,4 @@
-﻿@*@model IEnumerable<prjDB_GamingForm_Show.ViewModel.CBlogViewModel>*@
+﻿@* @model IEnumerable<prjDB_GamingForm_Show.ViewModels.CBlogViewModel> *@
 @model prjDB_GamingForm_Show.ViewModels.CBlogViewModel
 
 @{
@@ -32,10 +32,10 @@
     <link rel="stylesheet" href="~/css/blogstyle.css" type="text/css">
 </head>
 
-<body>
+ <body>
 
     <header class="header-section">
-        <div class="nav-options">
+        <div class="nav-options" style="background-color: #272727">
 
             <div class="container">
                 <div class="humberger-menu humberger-open">
@@ -52,7 +52,6 @@
                                 foreach (var item in Model.subTags)
                                 {
                                 <li>
-
                                     <a href="@Url.Action("List", "Blog", new { FId =item.SubTagId})"><span>@item.Name </span></a>
                                 </li>
                                 }
@@ -66,103 +65,35 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-8">
-                            @{
-                                foreach(var item in Model.subBlogs)
+                    <div class="section-title">
+                        <h5>Instagram</h5>
+                    </div>       
+                    <img style="display:none" src="~/images/comic.jpg" width="60" height="45" alt="">
+                
+                                @{
+                                foreach(var item in Model.blogs)
                                 {
                             <div class="ip-item">
                                 <div class="ip-pic">
-                                    <img src="~/images/insta-1.jpg" alt="">
-                                    <img src="~/images/insta-1.jpg" alt="">
+                                    <a href="@Url.Action("ArticleList", "Blog", new { FId =item.BlogId})">
+                                    <img src="~/images/@item.FImagePath" width="1200" height="400" alt="">                                    
+                                    </a>
                                 </div>
                                 <div class="ip-text">
-                                    <h5><a href="#">@item.Articles.FirstOrDefault().Title</a></h5>
+                                    <a href="@Url.Action("ArticleList", "Blog", new { FId =item.BlogId})">
+                                    <h5>@item.Title</h5>
+                                    </a>
                                     <ul>
                                         <li><i class="fa fa-clock-o"></i></li>
                                     </ul>
                                     <p>
-                                       
+                                      @*@item.SubBlogs.First().Articles.First().Title*@
+                                      最新文章標題
                                     </p>
                                 </div>
                             </div>
                                 }
-                            }
-                    @* <div class="ip-item">
-                        <div class="ip-pic">
-                            <img src="~/images/insta-1.jpg" alt="">
-                            <img src="~/images/insta-1.jpg" alt="">
-                        </div>
-                        <div class="ip-text">
-                            <div class="label"><span>Reviews</span></div>
-                            <h5><a href="#">Here's an hour of side-quests from The Outer Worlds...</a></h5>
-                            <ul>
-                                <li><i class="fa fa-clock-o"></i> Aug 01, 2019</li>
-                            </ul>
-                            <p>
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
-                                ut labore et dolore magna aliqua. Quis ipsum suspendisse ultrices...
-                            </p>
-                        </div>
-                    </div>
-                    <div class="ip-item">
-                        <div class="ip-pic">
-                            <img src="~/images/insta-1.jpg" alt="">
-                        </div>
-                        <div class="ip-text">
-                            <div class="label"><span>Windows</span></div>
-                            <h5><a href="#">Infinity Ward's focus isn't on battle royale, Call of...</a></h5>
-                            <ul>
-                                <li>by <span>Admin</span></li>
-                                <li><i class="fa fa-clock-o"></i> Aug 01, 2019</li>
-                                <li><i class="fa fa-comment-o"></i> 20</li>
-                            </ul>
-                            <p>
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
-                                ut labore et dolore magna aliqua. Quis ipsum suspendisse ultrices...
-                            </p>
-                        </div>
-                    </div>
-                    <div class="ip-item">
-                        <div class="ip-pic">
-                            <img src="~/images/insta-1.jpg" alt="">
-                        </div>
-                        <div class="ip-text">
-                            <div class="label"><span>Hardware</span></div>
-                            <h5><a href="#">Capcom asks select fans to test new Resident Evil game</a></h5>
-                            <ul>
-                                <li>by <span>Admin</span></li>
-                                <li><i class="fa fa-clock-o"></i> Aug 01, 2019</li>
-                                <li><i class="fa fa-comment-o"></i> 20</li>
-                            </ul>
-                            <p>
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
-                                ut labore et dolore magna aliqua. Quis ipsum suspendisse ultrices...
-                            </p>
-                        </div>
-                    </div>
-                    <div class="ip-item">
-                        <div class="ip-pic">
-                            <img src="~/images/insta-1.jpg" alt="">
-                        </div>
-                        <div class="ip-text">
-                            <div class="label"><span>Playstation</span></div>
-                            <h5><a href="#">Teamfight Tactics is in chaos after today's patch...</a></h5>
-                            <ul>
-                                <li>by <span>Admin</span></li>
-                                <li><i class="fa fa-clock-o"></i> Aug 01, 2019</li>
-                                <li><i class="fa fa-comment-o"></i> 20</li>
-                            </ul>
-                            <p>
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
-                                ut labore et dolore magna aliqua. Quis ipsum suspendisse ultrices...
-                            </p>
-                        </div>
-                    </div> *@
-            @* <div class="pagination-item">
-                    <a href="#"><span>1</span></a>
-                    <a href="#"><span>2</span></a>
-                    <a href="#"><span>3</span></a>
-                    <a href="#"><span>Next</span></a>
-                    </div> *@
+                            }                   
                 </div>
             </div>
         </div>
@@ -176,6 +107,6 @@
     <script src="~/js/jquery.slicknav.js"></script>
     <script src="~/js/owl.carousel.min.js"></script>
     <script src="~/js/blogmain.js"></script>
-</body>
+ </body>
 </html>
 

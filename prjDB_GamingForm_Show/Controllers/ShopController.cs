@@ -39,8 +39,9 @@ namespace prjDB_GamingForm_Show.Controllers
 
             public ActionResult Create()
             {
-            return View();
-        }
+                _db.Products.Load();
+                return View();
+            }
 
             [HttpPost]
             public ActionResult Create(CProductWarp product) //原Product物件
