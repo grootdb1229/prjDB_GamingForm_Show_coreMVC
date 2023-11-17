@@ -30,6 +30,7 @@ namespace prjDB_GamingForm_Show.Controllers
         }
         public void ListLoad()
         {
+            //test
             List = new List<CDeputeViewModel>();
             _db.Members.Load();
             _db.Statuses.Load();
