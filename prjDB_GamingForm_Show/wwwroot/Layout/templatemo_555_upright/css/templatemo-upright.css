@@ -187,7 +187,7 @@ hr {
 
 .nav-link {
     position: relative;
-    color: #006699;
+    color: #a81d1d;/*側藍文字顏色*/
     font-size: 1.4rem;
     padding-top: 15px;
     padding-bottom: 15px;
@@ -208,8 +208,8 @@ hr {
 
 .nav-item:hover .nav-link,
 .nav-link.current {
-    background-color: #F2F2F2;
-    color: #006699;
+    background-color: #F2F2F2; /*側藍選中時的背景顏色*/
+    color: #a81d1d; /*側藍選中時的文字顏色*/
     padding-left: 30px;
 }
 
@@ -272,7 +272,7 @@ hr {
 }
 
 .tm-post-link:hover {
-    color: #068ccf;
+    color: #FF9797;/*內文連結hover顏色*/
 }
 
 /* Gallery section */
@@ -300,11 +300,11 @@ hr {
 
 .tm-gallery-link {
     padding: 15px;
-    color: #006699;
+    color: #006699; /*不知道是啥*/
 }
 
     .tm-gallery-link.active {
-        color: #666666;
+        color: #a81d1d;/*不知道是啥*/
     }
 
 .tm-gallery-link-icon {
