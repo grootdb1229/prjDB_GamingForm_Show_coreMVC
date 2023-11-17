@@ -15,6 +15,14 @@
                     <span class="text-decoration-line-through">@Html.DisplayFor(model => model.Price)</span>
                     <span>@Html.DisplayFor(model => model.Price)</span>
                 </div>
+                <!-- Product reviews-->
+                <div class="d-flex text-warning mb-2">
+                    <div class="bi-star-fill"></div>
+                    <div class="bi-star-fill"></div>
+                    <div class="bi-star-fill"></div>
+                    <div class="bi-star-fill"></div>
+                    <div class="bi-star-fill"></div>
+                </div>
                 <p class="lead">@Html.DisplayFor(model => model.ProductContent)</p>
                 @using (Html.BeginForm("AddToCar", "Shop", FormMethod.Post))
                 {
@@ -31,7 +39,7 @@
 </section>
 
 <!-- Related items section-->
-<section class="py-5 bg-light">
+@*<section class="py-5 bg-light">
     <div class="container px-4 px-lg-5 mt-5">
         <h2 class="fw-bolder mb-4">相關商品</h2>
         <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
@@ -61,4 +69,4 @@
             }
         </div>
     </div>
-</section>
+</section>*@

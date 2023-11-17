@@ -70,7 +70,7 @@ namespace prjDB_GamingForm_Show.Controllers
             }
         }
         
-        public ActionResult DeputeList(CKeyWord vm)
+        public IActionResult DeputeList(CKeyWord vm)
         {
             IEnumerable<CDeputeViewModel> datas = null;
             if (string.IsNullOrEmpty(vm.txtKeyword))

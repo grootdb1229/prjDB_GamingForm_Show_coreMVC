@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using prjDB_GamingForm_Show.Models;
 using prjDB_GamingForm_Show.Models.Entities;
 using prjDB_GamingForm_Show.Models.Shop;
@@ -21,7 +22,6 @@ namespace prjDB_GamingForm_Show.Controllers
             }
             public IActionResult Index(CKeyWord ck)
             {
-
                 String CK = ck.txtKeyword; /*Request.Form["txtKeyword"];*/
                 IEnumerable<Product> Pdb = null;
                 if (string.IsNullOrEmpty(CK))
@@ -39,13 +39,13 @@ namespace prjDB_GamingForm_Show.Controllers
 
             public ActionResult Create()
             {
-            return View();
-        }
+                _db.Products.Load();
+                return View();
+            }
 
             [HttpPost]
             public ActionResult Create(CProductWarp product) //原Product物件
             {
-                DbGamingFormTestContext db = new DbGamingFormTestContext();
                 Product x = new Product();
 
                 x.ProductName = product.ProductName;
@@ -59,11 +59,8 @@ namespace prjDB_GamingForm_Show.Controllers
                 //目前沒有FirmID跟圖片功能
                 //MemberID跟StatusID是寫死在CProduct物件中的
 
-                db.Products.Add(x);
-                db.SaveChanges();
-
-
-
+                _db.Products.Add(x);
+                _db.SaveChanges();
 
                 return RedirectToAction("Index");
             }
@@ -72,22 +69,17 @@ namespace prjDB_GamingForm_Show.Controllers
             public ActionResult Edit(int? id)
             {
 
-                DbGamingFormTestContext db = new DbGamingFormTestContext();
-                Product pdb = db.Products.FirstOrDefault(p => p.ProductId == id);
+                Product pdb = _db.Products.FirstOrDefault(p => p.ProductId == id);
                 if (pdb == null)
                     return RedirectToAction("Index");
 
                 return View(pdb);
             }
 
-
-
-
             [HttpPost]
             public ActionResult Edit(CProductWarp product) //原Product物件   
             {
-                DbGamingFormTestContext db = new DbGamingFormTestContext();
-                Product x = db.Products.FirstOrDefault(p => p.ProductId == product.ProductID);
+                Product x = _db.Products.FirstOrDefault(p => p.ProductId == product.ProductID);
                 if (x != null)
                 {
                     x.ProductName = product.ProductName;
@@ -99,7 +91,7 @@ namespace prjDB_GamingForm_Show.Controllers
                     x.MemberId = product.MemberID;
                     //目前沒有FirmID跟圖片功能
                     //MemberID跟StatusID是寫死在CProduct物件中的
-                    db.SaveChanges();
+                    _db.SaveChanges();
                 }
                 return RedirectToAction("Index");
             }
@@ -107,21 +99,20 @@ namespace prjDB_GamingForm_Show.Controllers
             public ActionResult Delete(int id)    ////不確定是否要用刪除的方式來表達商品下架，刪除資料也會讓關聯表紀錄消失。
             {
 
-                DbGamingFormTestContext db = new DbGamingFormTestContext();
-                Product x = db.Products.FirstOrDefault(p => p.ProductId == id);
+                Product x = _db.Products.FirstOrDefault(p => p.ProductId == id);
                 if (x != null)
                 {
-                    db.Products.Remove(x);
+                    _db.Products.Remove(x);
                 }
-                db.SaveChanges();
+                _db.SaveChanges();
                 return RedirectToAction("Index");
             }
 
             public ActionResult Details(int id)
             {
 
-                DbGamingFormTestContext db = new DbGamingFormTestContext();
-                Product x = db.Products.FirstOrDefault(p => p.ProductId == id);
+                _db.Products.Load();
+                Product x = _db.Products.FirstOrDefault(p => p.ProductId == id);
                 return View(x);
             }
             public IActionResult AddToCar(int? id)
@@ -137,8 +128,7 @@ namespace prjDB_GamingForm_Show.Controllers
             [HttpPost]
             public IActionResult AddToCar(CShoppingCarViewModel vm)
             {
-                DbGamingFormTestContext db = new DbGamingFormTestContext();
-                Product product = db.Products.FirstOrDefault(x => x.ProductId == vm.ProductID);
+                Product product = _db.Products.FirstOrDefault(x => x.ProductId == vm.ProductID);
                 if (product != null)
                 {
                     string json = "";

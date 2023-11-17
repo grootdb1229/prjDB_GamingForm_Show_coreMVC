@@ -1,0 +1,45 @@
+﻿@model IEnumerable<prjDB_GamingForm_Show.Models.Entities.Article>
+   l
+
+
+
+@{
+    ViewBag.Title = "ArticleContent";
+}
+
+<h2>ArticleContent</h2>
+
+<p>
+        @Html.ActionLink("Create New", "Create")
+    </p>
+
+
+@{ int count = 0;
+        <setion>
+    @foreach (var item in Model)
+    {
+    <div>  
+          @Html.DisplayFor(modelItem => item.Title)
+        <p>
+            @Html.DisplayFor(modelItem=>item.Member.Name)
+        </p>
+    </div>
+    <div>
+
+            @Html.DisplayFor(modelItem => item.ArticleContent)
+    </div>
+    <div>
+            @Html.DisplayFor(modelItem => item.ModifiedDate)
+    </div>
+
+            @Html.ActionLink("Edit", "Edit", new { id = item.ArticleId })             
+            @Html.ActionLink("Delete", "Delete", new { id = item.ArticleId})
+    }
+
+
+
+
+     </setion>
+}
+}
+
