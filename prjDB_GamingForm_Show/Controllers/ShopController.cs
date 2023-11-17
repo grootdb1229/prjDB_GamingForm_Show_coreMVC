@@ -11,23 +11,27 @@ namespace prjDB_GamingForm_Show.Controllers
     {
     public class ShopController : Controller
     {
-        
 
-
+            private readonly IWebHostEnvironment _host;
+            private readonly DbGamingFormTestContext _db;
+            public ShopController(IWebHostEnvironment host, DbGamingFormTestContext db)
+            {
+                _host = host;
+                _db = db;
+            }
             public IActionResult Index(CKeyWord ck)
-        {
+            {
 
                 String CK = ck.txtKeyword; /*Request.Form["txtKeyword"];*/
-                DbGamingFormTestContext db = new DbGamingFormTestContext();
                 IEnumerable<Product> Pdb = null;
                 if (string.IsNullOrEmpty(CK))
                 {
-                    Pdb = from aa in db.Products
+                    Pdb = from aa in _db.Products
                           select aa;
                 }
                 else
                 {
-                    Pdb = db.Products.Where(p => p.ProductName.Contains(CK));
+                    Pdb = _db.Products.Where(p => p.ProductName.Contains(CK));
                 }
                 return View(Pdb);
 
