@@ -94,5 +94,9 @@ namespace prjDB_GamingForm_Show.Controllers
             return View(datas);
 
         }
+        public IActionResult test()
+        {
+            return View();
+        }
     }
 }
