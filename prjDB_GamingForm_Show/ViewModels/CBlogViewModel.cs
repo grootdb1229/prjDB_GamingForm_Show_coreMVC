@@ -12,7 +12,9 @@ namespace prjDB_GamingForm_Show.ViewModels
 
         public IEnumerable<Models.Entities.Action>? actions { get; set; }
         public IEnumerable<ArticleAction>? articleActions { get; set; }
+        public IEnumerable<Reply>? replies { get; set; }
 
-        public IEnumerable<string>? artTitle { get; set; }
+        public IEnumerable<Member>? members { get; set; }
+
     }
 }
