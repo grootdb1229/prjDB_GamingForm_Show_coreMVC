@@ -42,6 +42,7 @@ namespace prjDB_GamingForm_Show.Controllers
                     articles = _db.Articles.Where(a=>a.SubBlog.Blog.SubTagId!=14).OrderByDescending(a => a.ModifiedDate).Select(p => p),
                     actions = _db.Actions,
                     articleActions = _db.ArticleActions,
+
                     //artTitle = _db.Articles.Where(a => a.SubBlog.Blog.SubTagId != 14).OrderByDescending(a => a.ModifiedDate).Select(p => p.Title)
 
                 };
