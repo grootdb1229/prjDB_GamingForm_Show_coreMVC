@@ -43,7 +43,7 @@
         <div class="form-group">
 
             <label for="Tags" class="control-label col-md-2">選擇標籤：</label>
-            <div class="col-md-10">
+            <div class="col-md-10">             
                 <select id="Tags" name="TagID" class="form-control"> </select>
             </div>
         </div>
@@ -114,6 +114,21 @@
             }
         }
     </script>
+
+    <!--放大標-->
+    <script>
+     async function Biglabel()
+     {
+            const response = await fetch(`@Url.Content("~/Shop/CreateTag")`);
+            const data=await response.json();
+            const tags = data.map(x => `<select>${data}</select>`)
+            document.querySelector('#Tags').innerHTML=tags.join("");
+     }
+        Biglabel()
+
+
+    </script>
+
 
     }
 
