@@ -25,8 +25,9 @@
     <div>
         @Html.DisplayFor(modelItem => Model.articles.FirstOrDefault().ModifiedDate)
     </div style="margin:0 auto;width:650px ">
-    @*@Html.ActionLink("Edit", "Edit", new { id = Model.articles.FirstOrDefault().ArticleId })
-    @Html.ActionLink("Delete", "Delete", new { id = Model.articles.FirstOrDefault().ArticleId})*@
+
+    @Html.ActionLink("Edit", "Edit", new { id = Model.articles.FirstOrDefault().ArticleId })
+    @Html.ActionLink("刪除", "ArticleDelete", new { id = Model.articles.FirstOrDefault().ArticleId},new{ onclick= "return confirm ('確定刪除嗎?')"})
 
     <div style="min-height: 650px;">
         @foreach (var item in Model.replies){
@@ -42,9 +43,13 @@
         <h3>@Html.DisplayFor(modelitem=> item.ReplyContents)</h3>
         <br/>
         <h3>@Html.DisplayFor(modelitem=> item.ModifiedDate)</h3>
-
         }
+
     </div>
+   
+
+  
+
     </div>
 
 
