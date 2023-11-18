@@ -19,9 +19,8 @@
         <div class="form-group">
             @Html.LabelFor(model => model.ImageID, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @*@Html.EditorFor(model => model.ImageID, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(model => model.ImageID, "", new { @class = "text-danger" })*@
-                <input type="file" />
+                <input type="file" id="imageInput" onchange="previewImage(this)" />
+                <img id="imagePreview" style="max-width: 300px; max-height: 300px; margin-top: 10px;" />
             </div>
         </div>
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
@@ -40,56 +39,17 @@
                 @Html.ValidationMessageFor(model => model.Price, "", new { @class = "text-danger" })
             </div>
         </div>
-        @*產品上架/更新日要在類別或是controllers中獨立寫下GetDate*@
-        @*<div class="form-group">
-    @Html.LabelFor(model => model.AvailableDate, htmlAttributes: new { @class = "control-label col-md-2" })
-    <div class="col-md-10">
-    @Html.EditorFor(model => model.AvailableDate, new { htmlAttributes = new { @class = "form-control" } })
-    @Html.ValidationMessageFor(model => model.AvailableDate, "", new { @class = "text-danger" })
-    </div>
-    </div>*@
-        @*<div class="form-group">
-    <div class="col-md-10">
-    @Html.DropDownListFor(model => model.屬性
-    new SelectList(Model.屬性值, "Value", "Text"),
-    "請選擇",
-    new { @class = "form-control" })
-    @Html.ValidationMessageFor(model => model.Price, "", new { @class = "text-danger" })
-    </div>
-    </div>*@
-        @{
 
-            prjDB_GamingForm_Show.Models.Entities.DbGamingFormTestContext db = new prjDB_GamingForm_Show.Models.Entities.DbGamingFormTestContext();
-            List<prjDB_GamingForm_Show.Models.Entities.Tag> list = (from aa in db.Tags where aa.TagId < 4 select aa).ToList();
-            List<prjDB_GamingForm_Show.Models.Entities.SubTag> Sublist = (from aa in db.SubTags select aa).ToList();
-            <!--這句話暫時沒用-->
-        }   <!--這是為了設計標籤，但是還沒學AJ技術所以先寫死-->
         <div class="form-group">
+
             <label for="Tags" class="control-label col-md-2">選擇標籤：</label>
-            <div class="col-md-10">
-                <select id="Tags" name="TagID" class="form-control">
-                    @foreach (var tag in list)
-                    {
-                        <option value="@tag.Name">@tag.Name</option>
-                    }
-                </select>
+            <div class="col-md-10">             
+                <select id="Tags" name="TagID" class="form-control"> </select>
             </div>
         </div>
-        <label for="Tags" class="control-label col-md-2">選擇子標籤：</label>
-        <div style="width: 50vw; height: 30vh; border: 1px solid black; display: flex; flex-wrap: wrap; justify-content: space-between; align-content: flex-start; overflow-y: auto;">
-            @foreach (var tag in Sublist)
-            {
-                <div style="width: 18%; margin-bottom: 5px;">
-                    <input type="checkbox" id="@tag.Name" name="SubTagID" value="@tag.Name">
-                    <label for="@tag.Name">
-                        <span style="font-weight: bold;">@tag.Name</span>
-
-                    </label>
-                </div>
-            }
+        <div id="dynamicDiv" style="display:none;border: 1px solid #ccc; padding: 10px; overflow-y: auto; width:90px;">
+            <!-- 內容會自動調整高度 -->
         </div>
-
-
 
         <div class="form-group">
             @Html.LabelFor(model => model.ProductContent, htmlAttributes: new { @class = "control-label col-md-2" })
@@ -108,21 +68,8 @@
             </div>
         </div>
         @*產品狀態要在類別或是controllers中獨立寫下""上架中"的邏輯*@
-        @*<div class="form-group">
-    @Html.LabelFor(model => model.StatusID, htmlAttributes: new { @class = "control-label col-md-2" })
-    <div class="col-md-10">
-    @Html.EditorFor(model => model.StatusID, new { htmlAttributes = new { @class = "form-control" } })
-    @Html.ValidationMessageFor(model => model.StatusID, "", new { @class = "text-danger" })
-    </div>
-    </div>*@
+
         @*上架人員的ID在類別或是controllers中獨立寫下邏輯*@
-        @*<div class="form-group">
-    @Html.LabelFor(model => model.MemberID, htmlAttributes: new { @class = "control-label col-md-2" })
-    <div class="col-md-10">
-    @Html.EditorFor(model => model.MemberID, new { htmlAttributes = new { @class = "form-control" } })
-    @Html.ValidationMessageFor(model => model.MemberID, "", new { @class = "text-danger" })
-    </div>
-    </div>*@
 
         <hr />
 
@@ -135,7 +82,55 @@
         </div>
 
     </div>
+    @section Scripts
+    {
+    <!--子標籤視窗大小-->
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            // 監聽textarea內容變化
+            $('#ProductContent').on('input', function () {
+                // 根據內容設置div高度
+                var contentHeight = $(this).prop('scrollHeight');
+                $('#dynamicDiv').height(contentHeight);
+            });
+        });
+    </script>
+    <!--圖片呈現-->
+    <script>
+        function previewImage(input) {
+            var preview = document.getElementById('imagePreview');
+            var file = input.files[0];
+            var reader = new FileReader();
 
+            reader.onloadend = function () {
+                preview.src = reader.result;
+            }
+
+            if (file) {
+                reader.readAsDataURL(file);
+            } else {
+                preview.src = "";
+            }
+        }
+    </script>
+
+    <!--放大標-->
+    <script>
+     async function Biglabel()
+     {
+            const response = await fetch(`@Url.Content("~/Shop/CreateTag")`);
+            const data=await response.json();
+            const tags = data.map(x => `<select>${data}</select>`)
+            document.querySelector('#Tags').innerHTML=tags.join("");
+     }
+        Biglabel()
+
+
+    </script>
+
+
+    }
 
 }
 

@@ -39,11 +39,18 @@ namespace prjDB_GamingForm_Show.Controllers
 
             public ActionResult Create()
             {
+               
                 _db.Products.Load();
                 return View();
             }
+            public ActionResult CreateTag()
+            {
+                var Tag = _db.Tags.Where(p => p.TagId >= 2).Select(s => s.Name);
+                return Json(Tag);
+            }
 
-            [HttpPost]
+
+                [HttpPost]
             public ActionResult Create(CProductWarp product) //原Product物件
             {
                 Product x = new Product();
@@ -64,7 +71,7 @@ namespace prjDB_GamingForm_Show.Controllers
 
                 return RedirectToAction("Index");
             }
-
+           
 
             public ActionResult Edit(int? id)
             {

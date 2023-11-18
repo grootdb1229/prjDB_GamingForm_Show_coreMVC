@@ -1,16 +1,10 @@
 ﻿@* @model IEnumerable<prjDB_GamingForm_Show.ViewModels.CBlogViewModel> *@
-    @model prjDB_GamingForm_Show.ViewModels.CBlogViewModel
+@model prjDB_GamingForm_Show.ViewModels.CBlogViewModel
 @{
     ViewBag.Title = "ArticleList";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>ArticleList</h2>
-
-
-@*<div>
-    @Html.ActionLink("發表文章", "ArticleCreate", "Blog", new { FId = Model.blogs.FirstOrDefault().BlogID},null)
-</div>*@
 
 <html lang="zxx">
 
@@ -37,30 +31,31 @@
     <link rel="stylesheet" href="~/css/slicknav.min.css" type="text/css">
     <link rel="stylesheet" href="~/css/blogstyle.css" type="text/css">
 </head>
- <body>
+<body>
 
     <header class="header-section">
-        <div class="nav-options" style="background-color: #272727">
+        <div class="nav-options">
 
             <div class="container">
                 <div class="humberger-menu humberger-open">
-                    <i class="fa fa-bars"></i>
+                    @Html.ActionLink("前往首頁", "List", "Blog")
                 </div>
                 <div class="nav-search search-switch">
-                    <i class="fa fa-search"></i>
+                    @Html.ActionLink("發表文章", "ArticleCreate", "Blog", new { /*FId = Model.blogs.FirstOrDefault().BlogID*/})
                 </div>
                 <div class="nav-menu">
                     <ul>
-                        <li class="active"><a href="@Url.Action("List", "Blog")><span>宗和</span></a></li>
-                        <a href="@Url.Action("List", "Blog")">全部</a>
-                            @{
-                                foreach (var item in Model.subTags)
-                                {
+                        <li class="active">
+                            <a href="@Url.Action("ArticleList", "Blog", new { FId = Model.blogs.FirstOrDefault().BlogId})">全部</a>
+                        </li>
+                        @{
+                            foreach (var item in Model.subBlogs.GroupBy(p => p.Title))
+                            {
                                 <li>
-                                    <a href="@Url.Action("List", "Blog", new { FId =item.SubTagId})"><span>@item.Name </span></a>
+                                    <a href="@Url.Action("ArticleList", "Blog", new {FId=item.First().BlogId ,SFId = item.FirstOrDefault().SubBlogId})">@item.Key</a>
                                 </li>
-                                }
                             }
+                        }
                     </ul>
                 </div>
             </div>
@@ -68,55 +63,42 @@
     </header>
 
 
- <div style="margin:0 auto;width:650px;">
-     <ul style="list-style:none">
-        <li style="float: left ;margin:0 10px;">
 
-            <a href="@Url.Action("ArticleList", "Blog", new { Fid = Model.blogs.FirstOrDefault().BlogId @*.FirstOrDefault().blogs.FirstOrDefault().BlogId*@ })">全部</a>
-        </li>
-          @foreach (var item in Model.subBlogs.GroupBy(p => p.Title))
-          {
-          @*  <li style="float: left; margin: 0 10px;">
-           <a href="@Url.Action("ArticleList", "Blog", new { FId = item.FirstOrDefault().SubBlog.BlogID})">@item.Key</a>
-          </li>*@
-          }
-     </ul>
-   </div>
-  <div style="margin:0 auto;width:650px;">
+    <div style="margin:0 auto;width:650px;">
 
-    <table class="table">
-        <tr>
+        <table class="table">
+            <tr>
 
-            <th>
-                @Html.DisplayNameFor(model => model.articles.FirstOrDefault().Title)
+                <th>
+                    @Html.DisplayNameFor(model => model.articles.FirstOrDefault().Title)
 
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.articles.FirstOrDefault().ModifiedDate)
-            </th>
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.articles.FirstOrDefault().ModifiedDate)
+                </th>
 
-        </tr>
+            </tr>
 
-        @{
-            foreach (var item in Model.articles)
-            {
-                <tr>
+            @{
+                foreach (var item in Model.articles)
+                {
+                    <tr>
 
-                    <td>
-                        <a style="text-decoration:none" href="@Url.Action("ArticleContent", "Blog", new { AFId =item.ArticleId}) ">@item.Title</a>
-                    </td>
+                        <td>
+                            <a style="text-decoration:none" href="@Url.Action("ArticleContent", "Blog", new { AFId =item.ArticleId}) ">@item.Title</a>
+                        </td>
 
-                    <td style="color:wheat ;font-size:8px" >
-                        @Html.DisplayFor(modelItem => item.ModifiedDate)
+                        <td style="color:wheat ;font-size:8px">
+                            @Html.DisplayFor(modelItem => item.ModifiedDate)
                             @*<p>@Html.DisplayFor(modelItem => item.Member.Name)</p>  預計顯示作者名稱在發文時間下面*@
-                    </td>
+                        </td>
 
-                </tr>
+                    </tr>
+                }
             }
-        }
 
-    </table>
-  </div>
+        </table>
+    </div>
 
     <script src="~/js/jquery-3.3.1.min.js"></script>
     <script src="~/js/jquery-3.3.1.min.js"></script>
@@ -127,5 +109,5 @@
     <script src="~/js/jquery.slicknav.js"></script>
     <script src="~/js/owl.carousel.min.js"></script>
     <script src="~/js/blogmain.js"></script>
- </body>
+</body>
 </html>
