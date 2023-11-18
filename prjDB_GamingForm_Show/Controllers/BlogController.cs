@@ -22,7 +22,6 @@ namespace prjDB_GamingForm_Show.Controllers
 
         public ActionResult List(int? FId)
         {
-
             _db.Actions.Load();
             _db.SubBlogs.Load();
             _db.Blogs.Load();
@@ -37,11 +36,13 @@ namespace prjDB_GamingForm_Show.Controllers
                 {
                     tags = _db.Tags.Select(p => p),
                     subTags = _db.SubTags.Where(s => s.TagId == 4 && s.SubTagId != 14).Select(p => p),
-                    blogs = _db.Blogs.Select(p => p),
+                    blogs = _db.Blogs.Include(b=>b.SubBlogs).Select(p => p),
                     subBlogs = _db.SubBlogs.Select(p => p),
-                    articles = _db.Articles.AsEnumerable().OrderByDescending(a => a.ModifiedDate).Select(p => p),
+                    articles = _db.Articles.Where(a=>a.SubBlog.Blog.SubTagId!=14).OrderByDescending(a => a.ModifiedDate).Select(p => p),
                     actions = _db.Actions,
-                    articleActions = _db.ArticleActions
+                    articleActions = _db.ArticleActions,
+                    artTitle=_db.Articles.Where(a => a.SubBlog.Blog.SubTagId != 14).OrderByDescending(a => a.ModifiedDate).Select(p => p.Title)
+
                 };
             }
             else
@@ -50,14 +51,13 @@ namespace prjDB_GamingForm_Show.Controllers
                 {
                     tags = _db.Tags.Select(p => p),
                     subTags = _db.SubTags.Where(s => s.TagId == 4 && s.SubTagId != 14).Select(p => p),
-                    blogs = _db.Blogs.Where(b => b.SubTagId == FId).Select(p => p),
+                    blogs = _db.Blogs.Where(b =>  b.SubTagId ==FId).Select(p => p),
                     subBlogs = _db.SubBlogs.Where(s => s.Blog.SubTagId == FId).Select(p => p),
                     articles = _db.Articles.Where(a => a.SubBlog.Blog.SubTagId == FId).OrderByDescending(a => a.ModifiedDate).Select(p => p),
                     actions = _db.Actions,
                     articleActions = _db.ArticleActions
                 };
-            }
-
+            }            
 
             return View(vm);
         }
@@ -74,7 +74,6 @@ namespace prjDB_GamingForm_Show.Controllers
                     blogs = _db.Blogs.Where(b => b.BlogId == FId).Select(p => p),
                     subBlogs = _db.SubBlogs.Where(s => s.BlogId == FId).Select(p => p),
                     articles = _db.Articles.Where(a => a.SubBlog.BlogId == FId).OrderByDescending(a => a.ModifiedDate).Select(p => p),
-
                     tags = _db.Tags.Select(p => p),
                     subTags = _db.SubTags.Where(s => s.TagId == 4 && s.SubTagId != 14).Select(p => p),
 
