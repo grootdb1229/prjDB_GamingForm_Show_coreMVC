@@ -10,10 +10,4 @@ public partial class Image
     public string? Name { get; set; }
 
     public string Image1 { get; set; } = null!;
-
-    public virtual ICollection<Blog> Blogs { get; set; } = new List<Blog>();
-
-    public virtual ICollection<Member> Members { get; set; } = new List<Member>();
-
-    public virtual ICollection<Product> Products { get; set; } = new List<Product>();
 }

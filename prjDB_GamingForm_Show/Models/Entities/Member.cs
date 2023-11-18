@@ -17,7 +17,7 @@ public partial class Member
 
     public string Password { get; set; } = null!;
 
-    public int ImageId { get; set; }
+    public string FImagePath { get; set; } = null!;
 
     public string? Mycomment { get; set; }
 
@@ -32,8 +32,6 @@ public partial class Member
     public virtual ICollection<DeputeRecord> DeputeRecords { get; set; } = new List<DeputeRecord>();
 
     public virtual ICollection<Depute> Deputes { get; set; } = new List<Depute>();
-
-    public virtual Image Image { get; set; } = null!;
 
     public virtual ICollection<MemberStatus> MemberStatuses { get; set; } = new List<MemberStatus>();
 
