@@ -7,24 +7,82 @@
 
 <h2>ArticleList</h2>
 
+
 @*<div>
     @Html.ActionLink("發表文章", "ArticleCreate", "Blog", new { FId = Model.blogs.FirstOrDefault().BlogID},null)
 </div>*@
-<div style="margin:0 auto;width:650px;">
-    <ul style="list-style:none">
+
+<html lang="zxx">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="Amin Template">
+    <meta name="keywords" content="Amin, unica, creative, html">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Amin | Template</title>
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,500,600,700,800,900&display=swap"
+          rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Cinzel:400,700,900&display=swap" rel="stylesheet">
+
+    <!-- Css Styles -->
+    <link rel="stylesheet" href="~/css/bootstrap.min.css" type="text/css">
+    <link rel="stylesheet" href="~/css/font-awesome.min.css" type="text/css">
+    <link rel="stylesheet" href="~/css/elegant-icons.css" type="text/css">
+    <link rel="stylesheet" href="~/css/owl.carousel.min.css" type="text/css">
+    <link rel="stylesheet" href="~/css/barfiller.css" type="text/css">
+    <link rel="stylesheet" href="~/css/magnific-popup.css" type="text/css">
+    <link rel="stylesheet" href="~/css/slicknav.min.css" type="text/css">
+    <link rel="stylesheet" href="~/css/blogstyle.css" type="text/css">
+</head>
+ <body>
+
+    <header class="header-section">
+        <div class="nav-options" style="background-color: #272727">
+
+            <div class="container">
+                <div class="humberger-menu humberger-open">
+                    <i class="fa fa-bars"></i>
+                </div>
+                <div class="nav-search search-switch">
+                    <i class="fa fa-search"></i>
+                </div>
+                <div class="nav-menu">
+                    <ul>
+                        <li class="active"><a href="@Url.Action("List", "Blog")><span>宗和</span></a></li>
+                        <a href="@Url.Action("List", "Blog")">全部</a>
+                            @{
+                                foreach (var item in Model.subTags)
+                                {
+                                <li>
+                                    <a href="@Url.Action("List", "Blog", new { FId =item.SubTagId})"><span>@item.Name </span></a>
+                                </li>
+                                }
+                            }
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </header>
+
+
+ <div style="margin:0 auto;width:650px;">
+     <ul style="list-style:none">
         <li style="float: left ;margin:0 10px;">
 
             <a href="@Url.Action("ArticleList", "Blog", new { Fid = Model.blogs.FirstOrDefault().BlogId @*.FirstOrDefault().blogs.FirstOrDefault().BlogId*@ })">全部</a>
         </li>
           @foreach (var item in Model.subBlogs.GroupBy(p => p.Title))
           {
-@*           <li style="float: left; margin: 0 10px;">
+          @*  <li style="float: left; margin: 0 10px;">
            <a href="@Url.Action("ArticleList", "Blog", new { FId = item.FirstOrDefault().SubBlog.BlogID})">@item.Key</a>
           </li>*@
           }
-    </ul>
-</div>
-<div style="margin:0 auto;width:650px;">
+     </ul>
+   </div>
+  <div style="margin:0 auto;width:650px;">
 
     <table class="table">
         <tr>
@@ -48,8 +106,9 @@
                         <a style="text-decoration:none" href="@Url.Action("ArticleContent", "Blog", new { AFId =item.ArticleId}) ">@item.Title</a>
                     </td>
 
-                    <td>
+                    <td style="color:wheat ;font-size:8px" >
                         @Html.DisplayFor(modelItem => item.ModifiedDate)
+                            @*<p>@Html.DisplayFor(modelItem => item.Member.Name)</p>  預計顯示作者名稱在發文時間下面*@
                     </td>
 
                 </tr>
@@ -57,4 +116,16 @@
         }
 
     </table>
-</div>
+  </div>
+
+    <script src="~/js/jquery-3.3.1.min.js"></script>
+    <script src="~/js/jquery-3.3.1.min.js"></script>
+    <script src="~/js/bootstrap.min.js"></script>
+    <script src="~/js/jquery.magnific-popup.min.js"></script>
+    <script src="~/js/circle-progress.min.js"></script>
+    <script src="~/js/jquery.barfiller.js"></script>
+    <script src="~/js/jquery.slicknav.js"></script>
+    <script src="~/js/owl.carousel.min.js"></script>
+    <script src="~/js/blogmain.js"></script>
+ </body>
+</html>
