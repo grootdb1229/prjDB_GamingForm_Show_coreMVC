@@ -33,6 +33,8 @@
 </head>
 <body>
 
+
+
     <header class="header-section">
         <div class="nav-options">
 
@@ -87,10 +89,9 @@
                         <td>
                             <a style="text-decoration:none" href="@Url.Action("ArticleContent", "Blog", new { AFId =item.ArticleId}) ">@item.Title</a>
                         </td>
-
-                        <td style="color:wheat ;font-size:8px">
-                            @Html.DisplayFor(modelItem => item.ModifiedDate)
-                            @*<p>@Html.DisplayFor(modelItem => item.Member.Name)</p>  預計顯示作者名稱在發文時間下面*@
+                        <td style="color:wheat;font-size:10px ">
+                              @Html.DisplayFor(modelItem => item.ModifiedDate)
+                            <p>@Html.DisplayFor(modelItem => item.Member.Name)</p>   @* 預計顯示作者名稱在發文時間下面 *@
                         </td>
 
                     </tr>

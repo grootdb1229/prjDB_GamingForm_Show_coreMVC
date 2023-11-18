@@ -80,11 +80,8 @@
                                     <a href="@Url.Action("ArticleList", "Blog", new { FId =item.BlogId})">
                                         <span style="color: #FFFFFF;font-size:32px">@item.Title</span>
                                     </a>
-                                    <p>
-                                        
-
-                                        最新文章標題
-                                    </p>
+                                    <p>最新文章標題</p>
+                                    <p>@Html.DisplayFor(modelItem => item.SubBlogs.FirstOrDefault().Articles.LastOrDefault().Title)</p>
                                 </div>
                             </div>
                         }
