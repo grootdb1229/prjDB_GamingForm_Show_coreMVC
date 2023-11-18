@@ -24,7 +24,7 @@ namespace prjDB_GamingForm_Show.Controllers
         {
             _db.Actions.Load();
             _db.SubBlogs.Load();
-            //_db.Blogs.Load();
+            _db.Blogs.Load();
             _db.Tags.Load();
             _db.SubTags.Load();
             _db.ArticleActions.Load();
@@ -37,10 +37,12 @@ namespace prjDB_GamingForm_Show.Controllers
                     tags = _db.Tags.Select(p => p),
                     subTags = _db.SubTags.Where(s => s.TagId == 4 && s.SubTagId != 14).Select(p => p),
                     blogs = _db.Blogs.Include(b=>b.SubBlogs).Select(p => p),
-                    subBlogs = _db.SubBlogs.Select(p => p),
+                    subBlogs = _db.SubBlogs.Include(a => a.Articles).Select(p => p),
+
                     articles = _db.Articles.Where(a=>a.SubBlog.Blog.SubTagId!=14).OrderByDescending(a => a.ModifiedDate).Select(p => p),
                     actions = _db.Actions,
                     articleActions = _db.ArticleActions,
+
                     //artTitle = _db.Articles.Where(a => a.SubBlog.Blog.SubTagId != 14).OrderByDescending(a => a.ModifiedDate).Select(p => p.Title)
 
                 };
@@ -52,7 +54,8 @@ namespace prjDB_GamingForm_Show.Controllers
                     tags = _db.Tags.Select(p => p),
                     subTags = _db.SubTags.Where(s => s.TagId == 4 && s.SubTagId != 14).Select(p => p),
                     blogs = _db.Blogs.Where(b =>  b.SubTagId ==FId).Select(p => p),
-                    subBlogs = _db.SubBlogs.Where(s => s.Blog.SubTagId == FId).Select(p => p),
+                    subBlogs = _db.SubBlogs.Include(a => a.Articles).Where(s => s.Blog.SubTagId == FId).Select(p => p),
+
                     articles = _db.Articles.Where(a => a.SubBlog.Blog.SubTagId == FId).OrderByDescending(a => a.ModifiedDate).Select(p => p),
                     actions = _db.Actions,
                     articleActions = _db.ArticleActions
@@ -73,7 +76,7 @@ namespace prjDB_GamingForm_Show.Controllers
                 {
                     blogs = _db.Blogs.Where(b => b.BlogId == FId).Select(p => p),
                     subBlogs = _db.SubBlogs.Where(s => s.BlogId == FId).Select(p => p),
-                    articles = _db.Articles.Where(a => a.SubBlog.BlogId == FId).OrderByDescending(a => a.ModifiedDate).Select(p => p),
+                    articles = _db.Articles.Include(a => a.Member).Where(a => a.SubBlog.BlogId == FId).OrderByDescending(a => a.ModifiedDate).Select(p => p),
                     tags = _db.Tags.Select(p => p),
                     subTags = _db.SubTags.Where(s => s.TagId == 4 && s.SubTagId != 14).Select(p => p),
 
@@ -85,7 +88,7 @@ namespace prjDB_GamingForm_Show.Controllers
                 {
                     blogs = _db.Blogs.Where(b => b.BlogId == FId).Select(p => p),
                     subBlogs = _db.SubBlogs.Where(s => s.BlogId == FId).Select(p => p),
-                    articles = _db.Articles.Where(a => a.SubBlogId == SFId).OrderByDescending(a => a.ModifiedDate).Select(p => p),
+                    articles = _db.Articles.Include(a => a.Member).Where(a => a.SubBlogId == SFId).OrderByDescending(a => a.ModifiedDate).Select(p => p),
 
                     tags = _db.Tags.Select(p => p),
                     subTags = _db.SubTags.Where(s => s.TagId == 4 && s.SubTagId != 14).Select(p => p),
@@ -96,28 +99,7 @@ namespace prjDB_GamingForm_Show.Controllers
 
         public ActionResult ArticleContent(int? AFId)
         {
-
-            //CBlogViewModel vm = new CBlogViewModel();
-
-            // vm = new CBlogViewModel
-            //{
-
-            //    tags = _db.Tags.Select(p => p),
-            //    subTags = _db.SubTags.Where(s => s.TagId == 4 && s.SubTagId != 14).Select(p => p),
-            //    blogs = _db.Blogs.Select(p => p),
-            //    subBlogs = _db.SubBlogs.Select(p => p),
-            //    articles = _db.Articles.AsEnumerable().Where(a => a.ArticleId == AFId).Select(p => p),
-            //    actions = _db.Actions,
-            //    articleActions = _db.ArticleActions,
-            //    replies = _db.Replies.Where(a => a.ArticleId == AFId).Select(p => p),
-            //    members = _db.Members
-            // };
-
-
-            //var artcon = _db.Articles.Where(a => a.ArticleId == AFId)
-            //    .Select(a => a);
-
-            //return View(vm);
+           
             CBlogViewModel vm = new CBlogViewModel();
 
             vm = new CBlogViewModel
@@ -130,7 +112,7 @@ namespace prjDB_GamingForm_Show.Controllers
                 actions = _db.Actions,
                 articleActions = _db.ArticleActions,
                 replies = _db.Replies.Include(a=>a.Member).Where(a => a.ArticleId == AFId).ToList(),
-                members = _db.Members
+                members = _db.Members.Include(a=>a.Image)
             };
 
             var artcon = _db.Articles.Where(a => a.ArticleId == AFId).Select(a => a);
@@ -145,7 +127,6 @@ namespace prjDB_GamingForm_Show.Controllers
                 _db.Articles.Remove(art);
                 _db.SaveChanges();
             }
-
 
             return RedirectToAction("ArticleList", new { SFId });
         }

@@ -1,0 +1,84 @@
+﻿@model IEnumerable<prjDB_GamingForm_Show.Models.Entities.Member>
+
+@{
+    ViewData["Title"] = "MemberList";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h2>會員清單</h2>
+
+<p>
+    @Html.ActionLink("上一頁", "MemberListPrevious", "Admin", null, null) |
+    @Html.ActionLink("下一頁", "MemberListNext", "Admin", null, null)
+</p>
+<table class="table" style="color:white">
+    <thead>
+        <tr>
+            <th>
+                會員編號
+            </th>
+            <th>
+                姓名
+            </th>
+            <th>
+                電話
+            </th>
+            <th>
+                生日
+            </th>
+            <th>
+                信箱
+            </th>            
+            <th>
+                性別
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            string m = "";
+            string b = "";
+            foreach (var item in Model) {
+                if (item.Gender == 1)
+                {
+                    m = "男";
+                }
+                else if (item.Gender == 2)
+                {
+                    m = "女";
+                }
+                else
+                {
+                    m = "不分";
+                }
+                b = item.Birth.ToString("yyyy / MM / dd");
+                <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.MemberId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Phone)
+            </td>
+            <td>
+                @b
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Email)
+            </td>            
+            <td>
+                @m
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+            </td>
+        </tr>
+}
+}
+    </tbody>
+</table>
