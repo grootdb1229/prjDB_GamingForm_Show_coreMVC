@@ -2,132 +2,155 @@
 
 
 @{
-    ViewBag.Title = "Create";
+	ViewBag.Title = "Create";
 }
 
 
 @using (Html.BeginForm())
 {
-    @Html.AntiForgeryToken()
+	@Html.AntiForgeryToken()
 
-    <div class="container px-4 px-lg-5 mt-2">
+	<div class="container px-4 px-lg-5 mt-2">
 
-        <h2>新增商品</h2>
-
-
-        <hr />
-        <div class="form-group">
-            @Html.LabelFor(model => model.ImageID, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                <input type="file" id="imageInput" onchange="previewImage(this)" />
-                <img id="imagePreview" style="max-width: 300px; max-height: 300px; margin-top: 10px;" />
-            </div>
-        </div>
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        <div class="form-group">
-            @Html.LabelFor(model => model.ProductName, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.ProductName, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.ProductName, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Price, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Price, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Price, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-
-            <label for="Tags" class="control-label col-md-2">選擇標籤：</label>
-            <div class="col-md-10">             
-                <select id="Tags" name="TagID" class="form-control"> </select>
-            </div>
-        </div>
-        <div id="dynamicDiv" style="display:none;border: 1px solid #ccc; padding: 10px; overflow-y: auto; width:90px;">
-            <!-- 內容會自動調整高度 -->
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.ProductContent, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @*@Html.EditorFor(model => model.ProductContent, new { htmlAttributes = new { @class = "form-control" } })*@
-                <textarea style="width: 50vw; height: 45vh; resize: none;" name="ProductContent" cols="120">請輸入產品描述</textarea>
-                @Html.ValidationMessageFor(model => model.ProductContent, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.UnitStock, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.UnitStock, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.UnitStock, "", new { @class = "text-danger" })
-            </div>
-        </div>
-        @*產品狀態要在類別或是controllers中獨立寫下""上架中"的邏輯*@
-
-        @*上架人員的ID在類別或是controllers中獨立寫下邏輯*@
-
-        <hr />
-
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="送出並新增" class="btn btn-outline-dark mt-auto" />
-
-                @Html.ActionLink("回首頁", "Index", "Shop", null, new { @class = "btn btn-outline-dark mt-auto" })
-            </div>
-        </div>
-
-    </div>
-    @section Scripts
-    {
-    <!--子標籤視窗大小-->
-    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-    <script>
-        $(document).ready(function () {
-            // 監聽textarea內容變化
-            $('#ProductContent').on('input', function () {
-                // 根據內容設置div高度
-                var contentHeight = $(this).prop('scrollHeight');
-                $('#dynamicDiv').height(contentHeight);
-            });
-        });
-    </script>
-    <!--圖片呈現-->
-    <script>
-        function previewImage(input) {
-            var preview = document.getElementById('imagePreview');
-            var file = input.files[0];
-            var reader = new FileReader();
-
-            reader.onloadend = function () {
-                preview.src = reader.result;
-            }
-
-            if (file) {
-                reader.readAsDataURL(file);
-            } else {
-                preview.src = "";
-            }
-        }
-    </script>
-
-    <!--放大標-->
-    <script>
-     async function Biglabel()
-     {
-            const response = await fetch(`@Url.Content("~/Shop/CreateTag")`);
-            const data=await response.json();
-            const tags = data.map(x => `<select>${data}</select>`)
-            document.querySelector('#Tags').innerHTML=tags.join("");
-     }
-        Biglabel()
+		<h2>新增商品</h2>
 
 
-    </script>
+		<hr />
+		<div class="form-group">
+			@Html.LabelFor(model => model.ImageID, htmlAttributes: new { @class = "control-label col-md-2" })
+			<div class="col-md-10">
+				<input type="file" id="imageInput" onchange="previewImage(this)" />
+				<img id="imagePreview" style="max-width: 300px; max-height: 300px; margin-top: 10px;" />
+			</div>
+		</div>
+		@Html.ValidationSummary(true, "", new { @class = "text-danger" })
+		<div class="form-group">
+			@Html.LabelFor(model => model.ProductName, htmlAttributes: new { @class = "control-label col-md-2" })
+			<div class="col-md-10">
+				@Html.EditorFor(model => model.ProductName, new { htmlAttributes = new { @class = "form-control" } })
+				@Html.ValidationMessageFor(model => model.ProductName, "", new { @class = "text-danger" })
+			</div>
+		</div>
+
+		<div class="form-group">
+			@Html.LabelFor(model => model.Price, htmlAttributes: new { @class = "control-label col-md-2" })
+			<div class="col-md-10">
+				@Html.EditorFor(model => model.Price, new { htmlAttributes = new { @class = "form-control" } })
+				@Html.ValidationMessageFor(model => model.Price, "", new { @class = "text-danger" })
+			</div>
+		</div>
+
+		<div class="form-group">
+
+			<label for="Tags" class="control-label col-md-2">選擇標籤：</label>
+			<div class="col-md-10">
+				<select id="Tags" name="TagID" class="form-control"> </select>
+			</div>
+		</div>
+		<div id="dynamicDiv" style="display:none;border: 1px solid #ccc; padding: 10px; overflow-y: auto; width:50vw;">
+			<!-- 內容會自動調整高度 -->				
+		</div>
+
+		<div class="form-group">
+			@Html.LabelFor(model => model.ProductContent, htmlAttributes: new { @class = "control-label col-md-2" })
+			<div class="col-md-10">
+				@*@Html.EditorFor(model => model.ProductContent, new { htmlAttributes = new { @class = "form-control" } })*@
+				<textarea style="width: 50vw; height: 45vh; resize: none;" name="ProductContent" cols="120">請輸入產品描述</textarea>
+				@Html.ValidationMessageFor(model => model.ProductContent, "", new { @class = "text-danger" })
+			</div>
+		</div>
+
+		<div class="form-group">
+			@Html.LabelFor(model => model.UnitStock, htmlAttributes: new { @class = "control-label col-md-2" })
+			<div class="col-md-10">
+				@Html.EditorFor(model => model.UnitStock, new { htmlAttributes = new { @class = "form-control" } })
+				@Html.ValidationMessageFor(model => model.UnitStock, "", new { @class = "text-danger" })
+			</div>
+		</div>
+		@*產品狀態要在類別或是controllers中獨立寫下""上架中"的邏輯*@
+
+		@*上架人員的ID在類別或是controllers中獨立寫下邏輯*@
+
+		<hr />
+
+		<div class="form-group">
+			<div class="col-md-offset-2 col-md-10">
+				<input type="submit" value="送出並新增" class="btn btn-outline-dark mt-auto" />
+
+				@Html.ActionLink("回首頁", "Index", "Shop", null, new { @class = "btn btn-outline-dark mt-auto" })
+			</div>
+		</div>
+
+	</div>
+	@section Scripts
+	{
+	<!--子標籤視窗大小-->
+	<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+	<script>
+		$(document).ready(function () {
+			// 監聽textarea內容變化
+			$('#ProductContent').on('input', function () {
+				// 根據內容設置div高度
+				var contentHeight = $(this).prop('scrollHeight');
+				$('#dynamicDiv').height(contentHeight);
+			});
+		});
+	</script>
+	<!--圖片呈現-->
+	<script>
+		function previewImage(input) {
+			var preview = document.getElementById('imagePreview');
+			var file = input.files[0];
+			var reader = new FileReader();
+
+			reader.onloadend = function () {
+				preview.src = reader.result;
+			}
+
+			if (file) {
+				reader.readAsDataURL(file);
+			} else {
+				preview.src = "";
+			}
+		}
+	</script>
+
+	<!--放Tag-->
+	<script>
+		const SelTag = document.querySelector('#Tags');
+		const SelSub = document.querySelector('#dynamicDiv');
+		SelTag.addEventListener('change', () => 
+		{
+			console.log(SelTag.value);
+			SelSub.style.display = 'block';
+			Subtag();
+		})
+			
+	
+
+
+		async function BigTag() {
+			const response = await fetch(`@Url.Content("~/Shop/CreateTag")`);
+			const data = await response.json();
+			const tags = data.map(x => `<option value="${x.tagId}">${x.name}</option>`);
+			document.querySelector('#Tags').innerHTML = tags.join("");
+		}
+		BigTag();
+
+
+		async function Subtag() {
+			const response = await fetch(`@Url.Content("~/Shop/SubTag")?id=${SelTag.value}`);
+			const data = await response.json();
+			console.log(data);
+			const subtagOptions = data.map(x => `
+			  <label>
+						<input type="radio" id="subtag" name="XXXXXXX">${x}
+			  </label>
+			`);
+			document.querySelector('#dynamicDiv').innerHTML = subtagOptions.join("");
+		}
+
+	</script>
 
 
     }

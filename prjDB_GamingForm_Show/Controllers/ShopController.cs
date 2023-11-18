@@ -45,12 +45,19 @@ namespace prjDB_GamingForm_Show.Controllers
             }
             public ActionResult CreateTag()
             {
-                var Tag = _db.Tags.Where(p => p.TagId >= 2).Select(s => s.Name);
+                var Tag = _db.Tags.Where(p => p.TagId <=3).Select(t => new { t.TagId, t.Name }).ToList();
+
+				return Json(Tag);
+            }
+            public ActionResult SubTag(int? id)
+            {
+                _db.SubTags.Load();
+                var Tag = _db.SubTags.Where(p => p.TagId == id).Select(s => s.Name ).ToList();
                 return Json(Tag);
             }
 
 
-                [HttpPost]
+				[HttpPost]
             public ActionResult Create(CProductWarp product) //原Product物件
             {
                 Product x = new Product();
