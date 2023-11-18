@@ -22,7 +22,7 @@ namespace prjDB_GamingForm_Show.Controllers
 
         public ActionResult List(int? FId)
         {
-            
+
             _db.Actions.Load();
             _db.SubBlogs.Load();
             _db.Blogs.Load();
@@ -40,8 +40,8 @@ namespace prjDB_GamingForm_Show.Controllers
                     blogs = _db.Blogs.Select(p => p),
                     subBlogs = _db.SubBlogs.Select(p => p),
                     articles = _db.Articles.AsEnumerable().OrderByDescending(a => a.ModifiedDate).Select(p => p),
-                    actions= _db.Actions,
-                    articleActions= _db.ArticleActions
+                    actions = _db.Actions,
+                    articleActions = _db.ArticleActions
                 };
             }
             else
@@ -57,13 +57,13 @@ namespace prjDB_GamingForm_Show.Controllers
                     articleActions = _db.ArticleActions
                 };
             }
-            
-            
+
+
             return View(vm);
         }
         public ActionResult ArticleList(int? FId, int? SFId)
         {
-            
+
             CBlogViewModel vm = new CBlogViewModel();
             if (FId == null)
                 return RedirectToAction("List");
@@ -105,16 +105,28 @@ namespace prjDB_GamingForm_Show.Controllers
                 subTags = _db.SubTags.Where(s => s.TagId == 4 && s.SubTagId != 14).Select(p => p),
                 blogs = _db.Blogs.Select(p => p),
                 subBlogs = _db.SubBlogs.Select(p => p),
-                articles = _db.Articles.AsEnumerable().OrderByDescending(a => a.ModifiedDate).Select(p => p),
+                articles = _db.Articles.AsEnumerable().Where(a => a.ArticleId == AFId).Select(p => p),
                 actions = _db.Actions,
                 articleActions = _db.ArticleActions
             };
 
 
-            var artcon = _db.Articles.Where(a => a.ArticleId== AFId)
+            var artcon = _db.Articles.Where(a => a.ArticleId == AFId)
                 .Select(a => a);
 
-            return View(artcon);
+            return View(vm);
+        }
+        public ActionResult ArticleDelete(int? SFId, int? AFId)
+        {
+            Article art = _db.Articles.FirstOrDefault(a => a.ArticleId == AFId);
+            if (art != null)
+            {
+                _db.Articles.Remove(art);
+                _db.SaveChanges();
+            }
+
+
+            return RedirectToAction("ArticleList", new { SFId });
         }
     }
 }

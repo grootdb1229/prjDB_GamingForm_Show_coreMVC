@@ -1,40 +1,37 @@
 ﻿@* @model IEnumerable<prjDB_GamingForm_Show.Models.Entities.Article> *@
    @model prjDB_GamingForm_Show.ViewModels.CBlogViewModel
 
-
-
 @{
     ViewBag.Title = "ArticleContent";
 }
 
 
- <h2>ArticleContent</h2>
 
-    <p>
-        @Html.ActionLink("Create New", "Create")
-    </p>
+ <div style="margin:0 auto;width:650px">
 
-  
   @{ 
      int count = 0;
     
-     @foreach (var item in Model.articles)
-     {
        <div>  
-          @Html.DisplayFor(modelItem => item.Title)
+ <h2>
+          @Html.DisplayFor(modelItem => Model.articles.FirstOrDefault().Title)
+ </h2>
         <p>
-            @Html.DisplayFor(modelItem=>item.Member.Name)
+            @Html.DisplayFor(modelItem=>Model.articles.FirstOrDefault().Member.Name)
         </p>
        </div>
        <div>
 
-            @Html.DisplayFor(modelItem => item.ArticleContent)
+        @Html.DisplayFor(modelItem => Model.articles.FirstOrDefault().ArticleContent)
        </div>
        <div>
-            @Html.DisplayFor(modelItem => item.ModifiedDate)
+        @Html.DisplayFor(modelItem => Model.articles.FirstOrDefault().ModifiedDate)
        </div>
 
-            @Html.ActionLink("Edit", "Edit", new { id = item.ArticleId })             
-            @Html.ActionLink("Delete", "Delete", new { id = item.ArticleId})
+    @Html.ActionLink("Edit", "Edit", new { id = Model.articles.FirstOrDefault().ArticleId })
+    @Html.ActionLink("Delete", "Delete", new { id = Model.articles.FirstOrDefault().ArticleId})
+     @foreach (var item in Model.articles)
+     {
      } 
     }
+ </div>
