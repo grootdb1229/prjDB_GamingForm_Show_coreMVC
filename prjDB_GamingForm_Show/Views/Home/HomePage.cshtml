@@ -5,7 +5,9 @@
 }
 
 <h1>歡迎來到GROOT論壇</h1>
-
+        @*TODO:1.所有的連結都要改成各版的連結 
+        2.各版面的資料之後全部都要改成用抓資料的
+        3.要重新看抓圖片的部分*@
 <section id="hero-slider" class="hero-slider">
     <div class="container-md" data-aos="fade-in">
         <div class="row">
@@ -14,7 +16,7 @@
                     <div class="swiper-wrapper">
                         @*討論版*@
                         <div class="swiper-slide">
-                            <a href= @Url.Action("ArticleList" , "Blog") class="img-bg d-flex align-items-end" style="background-image: url('~/Layout/ZenBlog/assets/img/post-slide-1.jpg');">
+                            <a href= @Url.Action("ArticleList" , "Blog") class="img-bg d-flex align-items-end" style="background-image: url("~/HomePageTemImage/HomePage_LOL.jpg");/>
                                 <div class="img-bg-inner">
                                     <h2>論壇首頁</h2>
                                     <p>各式遊戲文章</p>
@@ -65,13 +67,19 @@
 <!-- ======= Post Grid Section ======= -->
 <section id="posts" class="posts">
     <div class="container" data-aos="fade-up">
+
+       <div class="section-header d-flex justify-content-between align-items-center mb-5">
+            <h2>各類商品</h2>
+            <div><a href= @Url.Action("Index" , "Shop") class="more">查看所有熱門商品</a></div>
+        </div>
+
         <div class="row g-5">
             <div class="col-lg-4">
                 <div class="post-entry-1 lg">
-                    <a href="single-post.html"><img src="~/Layout/ZenBlog/assets/img/post-landscape-1.jpg" alt="" class="img-fluid"></a>
-                    <div class="post-meta"><span class="date">Culture</span> <span class="mx-1">&bullet;</span> <span>Jul 5th '22</span></div>
-                    <h2><a href="single-post.html">11 Work From Home Part-Time Jobs You Can Do Now</a></h2>
-                    <p class="mb-4 d-block">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Vero temporibus repudiandae, inventore pariatur numquam cumque possimus exercitationem? Nihil tempore odit ab minus eveniet praesentium, similique blanditiis molestiae ut saepe perspiciatis officia nemo, eos quae cumque. Accusamus fugiat architecto rerum animi atque eveniet, quo, praesentium dignissimos</p>
+                    <a href=@Url.Action("Index" , "Shop")><img src="~/HomePageTemImage/AOE4_Homeprod.jpg" alt="" class="img-fluid"></a>
+                    <div class="post-meta"><span class="date">遊戲商城</span> <span class="mx-1">&bullet;</span> <span>2023/11/19</span></div>
+                    <h2><a href=@Url.Action("Index" , "Shop")>蘇丹飛升已經開放下載</a></h2>
+                    <p class="mb-4 d-block">世紀帝國四首部大型資料片正式發布,遊戲本體內容現在只要399!!趕快加入一同見證聖殿騎士團和中東文明的壯絕激鬥吧</p>
 
                     <div class="d-flex align-items-center author">
                         <div class="photo"><img src="~/Layout/ZenBlog/assets/img/person-1.jpg" alt="" class="img-fluid"></div>
@@ -87,36 +95,37 @@
                 <div class="row g-5">
                     <div class="col-lg-4 border-start custom-border">
                         <div class="post-entry-1">
-                            <a href="single-post.html"><img src="~/Layout/ZenBlog/assets/img/post-landscape-2.jpg" alt="" class="img-fluid"></a>
-                            <div class="post-meta"><span class="date">Sport</span> <span class="mx-1">&bullet;</span> <span>Jul 5th '22</span></div>
-                            <h2><a href="single-post.html">Let’s Get Back to Work, New York</a></h2>
+                            <a href=@Url.Action("Index" , "Shop")><img src="~/HomePageTemImage/WhiteAlbum2.jpg" alt="" class="img-fluid"></a>
+                            <div class="post-meta"><span class="date">遊戲商城</span> <span class="mx-1">&bullet;</span> <span>2023/11/11</span></div>
+                            <h2><a href=@Url.Action("Index" , "Shop")>~驀然雪化，且靜候飛雪再臨之時~</a></h2>
+                             <p class="mb-4 d-block">聖誕佳期倒數一個月!還不快和你的心上人再次重溫白色相簿2三人組那剪不斷理還亂的三角愛戀?白色相簿2幸福的另一側限時下殺199元!!!</p>
                         </div>
                         <div class="post-entry-1">
-                            <a href="single-post.html"><img src="~/Layout/ZenBlog/assets/img/post-landscape-5.jpg" alt="" class="img-fluid"></a>
+                            <a href=@Url.Action("Index" , "Shop")><img src="~/Layout/ZenBlog/assets/img/post-landscape-5.jpg" alt="" class="img-fluid"></a>
                             <div class="post-meta"><span class="date">Food</span> <span class="mx-1">&bullet;</span> <span>Jul 17th '22</span></div>
                             <h2><a href="single-post.html">How to Avoid Distraction and Stay Focused During Video Calls?</a></h2>
                         </div>
                         <div class="post-entry-1">
-                            <a href="single-post.html"><img src="~/Layout/ZenBlog/assets/img/post-landscape-7.jpg" alt="" class="img-fluid"></a>
+                            <a href=@Url.Action("Index" , "Shop")><img src="~/Layout/ZenBlog/assets/img/post-landscape-7.jpg" alt="" class="img-fluid"></a>
                             <div class="post-meta"><span class="date">Design</span> <span class="mx-1">&bullet;</span> <span>Mar 15th '22</span></div>
-                            <h2><a href="single-post.html">Why Craigslist Tampa Is One of The Most Interesting Places On the Web?</a></h2>
+                            <h2><a href= @Url.Action("Index" , "Shop")>Why Craigslist Tampa Is One of The Most Interesting Places On the Web?</a></h2>
                         </div>
                     </div>
                     <div class="col-lg-4 border-start custom-border">
                         <div class="post-entry-1">
                             <a href="single-post.html"><img src="~/Layout/ZenBlog/assets/img/post-landscape-3.jpg" alt="" class="img-fluid"></a>
                             <div class="post-meta"><span class="date">Business</span> <span class="mx-1">&bullet;</span> <span>Jul 5th '22</span></div>
-                            <h2><a href="single-post.html">6 Easy Steps To Create Your Own Cute Merch For Instagram</a></h2>
+                            <h2><a href= @Url.Action("Index" , "Shop")>6 Easy Steps To Create Your Own Cute Merch For Instagram</a></h2>
                         </div>
                         <div class="post-entry-1">
                             <a href="single-post.html"><img src="~/Layout/ZenBlog/assets/img/post-landscape-6.jpg" alt="" class="img-fluid"></a>
                             <div class="post-meta"><span class="date">Tech</span> <span class="mx-1">&bullet;</span> <span>Mar 1st '22</span></div>
-                            <h2><a href="single-post.html">10 Life-Changing Hacks Every Working Mom Should Know</a></h2>
+                            <h2><a href= @Url.Action("Index" , "Shop")>10 Life-Changing Hacks Every Working Mom Should Know</a></h2>
                         </div>
                         <div class="post-entry-1">
                             <a href="single-post.html"><img src="~/Layout/ZenBlog/assets/img/post-landscape-8.jpg" alt="" class="img-fluid"></a>
                             <div class="post-meta"><span class="date">Travel</span> <span class="mx-1">&bullet;</span> <span>Jul 5th '22</span></div>
-                            <h2><a href="single-post.html">5 Great Startup Tips for Female Founders</a></h2>
+                            <h2><a href= @Url.Action("Index" , "Shop")>5 Great Startup Tips for Female Founders</a></h2>
                         </div>
                     </div>
 
@@ -176,8 +185,8 @@
     <div class="container" data-aos="fade-up">
 
         <div class="section-header d-flex justify-content-between align-items-center mb-5">
-            <h2>Culture</h2>
-            <div><a href="category.html" class="more">See All Culture</a></div>
+            <h2>各類論壇及熱門文章</h2>
+            <div><a href="category.html" class="more">查看所有熱門文章</a></div>
         </div>
 
         <div class="row">
@@ -185,16 +194,16 @@
 
                 <div class="d-lg-flex post-entry-2">
                     <a href="single-post.html" class="me-4 thumbnail mb-4 mb-lg-0 d-inline-block">
-                        <img src="~/Layout/ZenBlog/assets/img/post-landscape-6.jpg" alt="" class="img-fluid">
+                        <img src="~/HomePageTemImage/LOL論壇版.jpg" alt="" class="img-fluid">
                     </a>
                     <div>
-                        <div class="post-meta"><span class="date">Culture</span> <span class="mx-1">&bullet;</span> <span>Jul 5th '22</span></div>
-                        <h3><a href="single-post.html">What is the son of Football Coach John Gruden, Deuce Gruden doing Now?</a></h3>
-                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Distinctio placeat exercitationem magni voluptates dolore. Tenetur fugiat voluptates quas, nobis error deserunt aliquam temporibus sapiente, laudantium dolorum itaque libero eos deleniti?</p>
+                        <div class="post-meta"><span class="date">英雄聯盟版</span> <span class="mx-1">&bullet;</span> <span>2023/11/15</span></div>
+                        <h3><a href="single-post.html">這個趙信只會出雄心之鋼跟泰坦九頭蛇是怎樣!??</a></h3>
+                        <p>同場ARAM有多達六人都在出雄心之鋼，雄心之鋼是否過於ＯＰ？</p>
                         <div class="d-flex align-items-center author">
-                            <div class="photo"><img src="~/Layout/ZenBlog/assets/img/person-2.jpg" alt="" class="img-fluid"></div>
+                            <div class="photo"><img src="~/HomePageTemImage/雄心之鋼迷因圖.jpg" alt="" class="img-fluid"></div>
                             <div class="name">
-                                <h3 class="m-0 p-0">Wade Warren</h3>
+                                <h3 class="m-0 p-0">ＢＹ邱炫嘉</h3>
                             </div>
                         </div>
                     </div>
@@ -230,39 +239,39 @@
 
             <div class="col-md-3">
                 <div class="post-entry-1 border-bottom">
-                    <div class="post-meta"><span class="date">Culture</span> <span class="mx-1">&bullet;</span> <span>Jul 5th '22</span></div>
-                    <h2 class="mb-2"><a href="single-post.html">How to Avoid Distraction and Stay Focused During Video Calls?</a></h2>
-                    <span class="author mb-3 d-block">Jenny Wilson</span>
+                    <div class="post-meta"><span class="date">熱門文章</span> <span class="mx-1">&bullet;</span> <span>2023/11/19</span></div>
+                    <h2 class="mb-2"><a href="single-post.html">T1這次世界大賽要靠Gumayusi吧!?那個走位</a></h2>
+                    <span class="author mb-3 d-block">邱炫嘉</span>
                 </div>
 
                 <div class="post-entry-1 border-bottom">
-                    <div class="post-meta"><span class="date">Culture</span> <span class="mx-1">&bullet;</span> <span>Jul 5th '22</span></div>
-                    <h2 class="mb-2"><a href="single-post.html">17 Pictures of Medium Length Hair in Layers That Will Inspire Your New Haircut</a></h2>
-                    <span class="author mb-3 d-block">Jenny Wilson</span>
+                    <div class="post-meta"><span class="date">熱門文章</span> <span class="mx-1">&bullet;</span> <span>2023/11/17</span></div>
+                    <h2 class="mb-2"><a href="single-post.html">阿烏拉跟芙莉蓮根本就不是同一個層級的魔法使</a></h2>
+                    <span class="author mb-3 d-block">圈圈</span>
                 </div>
 
                 <div class="post-entry-1 border-bottom">
-                    <div class="post-meta"><span class="date">Culture</span> <span class="mx-1">&bullet;</span> <span>Jul 5th '22</span></div>
-                    <h2 class="mb-2"><a href="single-post.html">9 Half-up/half-down Hairstyles for Long and Medium Hair</a></h2>
-                    <span class="author mb-3 d-block">Jenny Wilson</span>
+                    <div class="post-meta"><span class="date">熱門文章</span> <span class="mx-1">&bullet;</span> <span>2023/11/15</span></div>
+                    <h2 class="mb-2"><a href="single-post.html">所以我說他為什麼要一直嘴我犽凝大絕沒開到</a></h2>
+                    <span class="author mb-3 d-block">老邊</span>
                 </div>
 
                 <div class="post-entry-1 border-bottom">
-                    <div class="post-meta"><span class="date">Culture</span> <span class="mx-1">&bullet;</span> <span>Jul 5th '22</span></div>
-                    <h2 class="mb-2"><a href="single-post.html">Life Insurance And Pregnancy: A Working Mom’s Guide</a></h2>
-                    <span class="author mb-3 d-block">Jenny Wilson</span>
+                    <div class="post-meta"><span class="date">熱門文章</span> <span class="mx-1">&bullet;</span> <span>2023/11/19</span></div>
+                    <h2 class="mb-2"><a href="single-post.html">我就說阿育布王朝那個駱駝騎士根本做壞了</a></h2>
+                    <span class="author mb-3 d-block">倫</span>
                 </div>
 
                 <div class="post-entry-1 border-bottom">
-                    <div class="post-meta"><span class="date">Culture</span> <span class="mx-1">&bullet;</span> <span>Jul 5th '22</span></div>
-                    <h2 class="mb-2"><a href="single-post.html">The Best Homemade Masks for Face (keep the Pimples Away)</a></h2>
-                    <span class="author mb-3 d-block">Jenny Wilson</span>
+                    <div class="post-meta"><span class="date">熱門文章</span> <span class="mx-1">&bullet;</span> <span>2023/11/18</span></div>
+                    <h2 class="mb-2"><a href="single-post.html">到底是誰歐卡還沒有上車!?</a></h2>
+                    <span class="author mb-3 d-block">老朱</span>
                 </div>
 
                 <div class="post-entry-1 border-bottom">
-                    <div class="post-meta"><span class="date">Culture</span> <span class="mx-1">&bullet;</span> <span>Jul 5th '22</span></div>
-                    <h2 class="mb-2"><a href="single-post.html">10 Life-Changing Hacks Every Working Mom Should Know</a></h2>
-                    <span class="author mb-3 d-block">Jenny Wilson</span>
+                    <div class="post-meta"><span class="date">熱門文章</span> <span class="mx-1">&bullet;</span> <span>2023/11/19</span></div>
+                    <h2 class="mb-2"><a href="single-post.html">下禮拜要去日本有沒有推薦的景點</a></h2>
+                    <span class="author mb-3 d-block">小郭</span>
                 </div>
             </div>
         </div>
