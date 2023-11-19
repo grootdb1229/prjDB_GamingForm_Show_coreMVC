@@ -87,7 +87,7 @@
                     <tr>
 
                         <td>
-                            <a style="text-decoration:none" href="@Url.Action("ArticleContent", "Blog", new { AFId =item.ArticleId}) ">@item.Title</a>
+                            <a style="text-decoration:none" href="@Url.Action("ArticleContent", "Blog", new {FId=item.SubBlog.BlogId, AFId =item.ArticleId}) ">@item.Title</a>
                         </td>
                         <td style="color:wheat;font-size:10px ">
                               @Html.DisplayFor(modelItem => item.ModifiedDate)
