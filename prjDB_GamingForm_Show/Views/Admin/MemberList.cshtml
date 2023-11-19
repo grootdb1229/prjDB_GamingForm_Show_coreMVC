@@ -5,15 +5,20 @@
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
-<h2>會員清單</h2>
-
+<h2 style="margin-left:5px ; font-size:25px">會員清單</h2>
+@using (Html.BeginForm())
+{
+    @:信箱關鍵字查詢 @Html.TextBox("txtKeyWord",null,new{@class = "col-form-label"})
+    <input type="submit" value="查詢" class="btn btn-dark" />
+}
+<p style="margin-top:5px"></p>
 <p>
     @*<input type="button" id="last" value="上一頁"/>*@
     @*<input type="button" id="next" value="下一頁"/>*@
-    @Html.ActionLink("上一頁", "MemberListPrevious", "Admin", null, null) |
-    @Html.ActionLink("下一頁", "MemberListNext", "Admin", null, null)
+    @Html.ActionLink("上一頁", "MemberListPrevious", "Admin", null, new  { @class = "btn btn-dark" })
+    @Html.ActionLink("下一頁", "MemberListNext", "Admin", null, new  { @class = "btn btn-dark" })
 </p>
-<table class="table table-dark table-hover" style="color:white; id="members">
+<table class="table table-dark table-hover" style="color:white ; font-size:20px" id="members">
     <thead>
         <tr>
             <th>
@@ -30,7 +35,7 @@
             </th>
             <th>
                 信箱
-            </th>            
+            </th>
             <th>
                 性別
             </th>
@@ -41,7 +46,8 @@
         @{
             string m = "";
             string b = "";
-            foreach (var item in Model) {
+            foreach (var item in Model)
+            {
                 if (item.Gender == 1)
                 {
                     m = "男";
@@ -56,32 +62,31 @@
                 }
                 b = item.Birth.ToString("yyyy / MM / dd");
                 <tr>
-            <td id="mid">
-                @Html.DisplayFor(modelItem => item.MemberId)
-            </td>
-            <td id="mname">
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td id="mphone">
-                @Html.DisplayFor(modelItem => item.Phone)
-            </td>
-            <td id="mbirth">
-                @b
-            </td>
-            <td id="memail">
-                @Html.DisplayFor(modelItem => item.Email)
-            </td>            
-            <td id="msex">
-                @m
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
-            </td>
-        </tr>
-}
-}
+                    <td id="mid">
+                        @Html.DisplayFor(modelItem => item.MemberId)
+                    </td>
+                    <td id="mname">
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td id="mphone">
+                        @Html.DisplayFor(modelItem => item.Phone)
+                    </td>
+                    <td id="mbirth">
+                        @b
+                    </td>
+                    <td id="memail">
+                        @Html.DisplayFor(modelItem => item.Email)
+                    </td>
+                    <td id="msex">
+                        @m
+                    </td>
+                    <td>
+                        @Html.ActionLink("狀態", "Edit","Admin", new { /* id=item.PrimaryKey */ },new  { @class = "btn btn-dark" })
+                        @Html.ActionLink("詳細", "Details","Admin", new { /* id=item.PrimaryKey */ },new  { @class = "btn btn-dark" })
+                    </td>
+                </tr>
+            }
+        }
     </tbody>
 </table>
 @*@section Scripts{
