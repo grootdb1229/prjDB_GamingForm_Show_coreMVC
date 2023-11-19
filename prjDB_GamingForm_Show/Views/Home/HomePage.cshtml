@@ -5,6 +5,8 @@
 }
 
 <h1>歡迎來到GROOT論壇</h1>
+<p>@Html.ActionLink("登入", "Login",  "Home",   /*new { id = item.fID }*/new { @class = "btn btn-success" })</p>
+<p>@Html.ActionLink("註冊", "Create", "Member", new { @class = "btn btn-success" })</p>
         @*TODO:1.所有的連結都要改成各版的連結 
         2.各版面的資料之後全部都要改成用抓資料的
         3.要重新看抓圖片的部分*@
@@ -102,29 +104,29 @@
                         </div>
                         <div class="post-entry-1">
                             <a href=@Url.Action("Index" , "Shop")><img src="~/Layout/ZenBlog/assets/img/post-landscape-5.jpg" alt="" class="img-fluid"></a>
-                            <div class="post-meta"><span class="date">Food</span> <span class="mx-1">&bullet;</span> <span>Jul 17th '22</span></div>
+                            <div class="post-meta"><span class="date">遊戲商城</span> <span class="mx-1">&bullet;</span> <span>Jul 17th '22</span></div>
                             <h2><a href="single-post.html">How to Avoid Distraction and Stay Focused During Video Calls?</a></h2>
                         </div>
                         <div class="post-entry-1">
                             <a href=@Url.Action("Index" , "Shop")><img src="~/Layout/ZenBlog/assets/img/post-landscape-7.jpg" alt="" class="img-fluid"></a>
-                            <div class="post-meta"><span class="date">Design</span> <span class="mx-1">&bullet;</span> <span>Mar 15th '22</span></div>
+                            <div class="post-meta"><span class="date">遊戲商城</span> <span class="mx-1">&bullet;</span> <span>Mar 15th '22</span></div>
                             <h2><a href= @Url.Action("Index" , "Shop")>Why Craigslist Tampa Is One of The Most Interesting Places On the Web?</a></h2>
                         </div>
                     </div>
                     <div class="col-lg-4 border-start custom-border">
                         <div class="post-entry-1">
                             <a href="single-post.html"><img src="~/Layout/ZenBlog/assets/img/post-landscape-3.jpg" alt="" class="img-fluid"></a>
-                            <div class="post-meta"><span class="date">Business</span> <span class="mx-1">&bullet;</span> <span>Jul 5th '22</span></div>
+                            <div class="post-meta"><span class="date">遊戲商城</span> <span class="mx-1">&bullet;</span> <span>Jul 5th '22</span></div>
                             <h2><a href= @Url.Action("Index" , "Shop")>6 Easy Steps To Create Your Own Cute Merch For Instagram</a></h2>
                         </div>
                         <div class="post-entry-1">
                             <a href="single-post.html"><img src="~/Layout/ZenBlog/assets/img/post-landscape-6.jpg" alt="" class="img-fluid"></a>
-                            <div class="post-meta"><span class="date">Tech</span> <span class="mx-1">&bullet;</span> <span>Mar 1st '22</span></div>
+                            <div class="post-meta"><span class="date">遊戲商城</span> <span class="mx-1">&bullet;</span> <span>Mar 1st '22</span></div>
                             <h2><a href= @Url.Action("Index" , "Shop")>10 Life-Changing Hacks Every Working Mom Should Know</a></h2>
                         </div>
                         <div class="post-entry-1">
                             <a href="single-post.html"><img src="~/Layout/ZenBlog/assets/img/post-landscape-8.jpg" alt="" class="img-fluid"></a>
-                            <div class="post-meta"><span class="date">Travel</span> <span class="mx-1">&bullet;</span> <span>Jul 5th '22</span></div>
+                            <div class="post-meta"><span class="date">遊戲商城</span> <span class="mx-1">&bullet;</span> <span>Jul 5th '22</span></div>
                             <h2><a href= @Url.Action("Index" , "Shop")>5 Great Startup Tips for Female Founders</a></h2>
                         </div>
                     </div>
