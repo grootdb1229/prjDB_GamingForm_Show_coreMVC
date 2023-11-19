@@ -32,9 +32,9 @@ namespace DB_GamingForm_Show.Job.DeputeClass
         [DisplayName("懸賞區域")]
         public string region { get; set; }
 
-        public string Hoekyy1 { get; set; }
-        public string Hoekyy2 { get; set; }
-        public string Hoekyy3 { get; set; }
+        public string Skillname { get; set; }
+        public int Count { get; set; }
+        
 
 
 

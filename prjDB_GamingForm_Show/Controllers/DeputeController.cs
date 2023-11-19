@@ -18,34 +18,8 @@ namespace prjDB_GamingForm_Show.Controllers
         {
             _host = host;
             _db = context;
+            ListLoad();
         }
-        //test
-        public List<CDeputeViewModel> List { get; set; }
-        public List<string> HotKeyList { get; set; }
-        public List<SelectListItem> ComboList { get; set; }
-        public List<SelectListItem> ComboList1 { get; set; }
-        public List<SelectListItem> ComboList2 { get; set; }
-        public IActionResult Index()
-        {
-            return View();
-        }
-        public IActionResult SkillClassess()
-        {
-            var SkillClasses = from n in _db.SkillClasses
-                               select n;
-            return Json(SkillClasses);
-        }
-        public IActionResult Skills(int? id)
-        {
-            var Skills = _db.Skills.Where(a => a.SkillClassId == id);
-            return Json(Skills);
-        }
-        public IActionResult DeputeMain() 
-        {
-        
-            return View();
-        }
-
         public void ListLoad()
         {
             //test
@@ -108,10 +82,71 @@ namespace prjDB_GamingForm_Show.Controllers
                    .OrderByDescending(n => n.modifieddate);
 
             }
-            
+
             return Json(datas);
 
         }
+        //test
+        public List<CDeputeViewModel> List { get; set; }
+        
+        public IActionResult Index()
+        {
+            //測試網頁樣板用
+            return View();
+        }
+        public IActionResult SkillClassess()
+        {
+            var datas = from n in _db.SkillClasses
+                               select n;
+            return Json(datas);
+        }
+        public IActionResult Skills(int? id)
+        {
+            var datas = _db.Skills.Where(a => a.SkillClassId == id);
+            return Json(datas);
+        }
+        public IActionResult DeputeCount()
+        {
+            var SkillClasses = _db.SkillClasses.Select(n => n.Name);
+            List<CDeputeViewModel> slist = new List<CDeputeViewModel>();
+            CDeputeViewModel x = null;
+            foreach (var item in SkillClasses) 
+            {
+                var datas = from n in List.AsEnumerable()
+                            where n.content.Contains(item)
+                            select n;
+
+                x = new CDeputeViewModel()
+                {
+                    Skillname = item,
+                    Count = datas.Count()
+                };
+
+                slist.Add(x);
+
+
+            }
+            return Json(slist);
+        }
+
+        public IActionResult NewFive()
+        {
+            var datas = List.OrderByDescending(n=>n.modifieddate).Take(5);
+            return Json(datas);
+        }
+
+        public IActionResult TopFive(int? id)
+        {
+            var datas = _db.Skills.Where(a => a.SkillClassId == id);
+            return Json(datas);
+        }
+        public IActionResult DeputeMain() 
+        {
+        
+            return View();
+        }
+
+        
 
         public int memberIdtest = 38;
         public IActionResult test()

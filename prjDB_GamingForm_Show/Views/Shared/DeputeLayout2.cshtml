@@ -92,11 +92,11 @@
                         //}
 
 
-                        <form class="d-flex">
-                            <a href="~/Shop/ShoppingCar" class="btn mt-auto btn-outline-dark bi-cart-fill me-1">
-                                <span class="badge bg-dark text-white ms-1 rounded-pill">@count</span>
-                            </a>
-                        </form>
+                            <form class="d-flex">
+                                <a href="~/Shop/ShoppingCar" class="btn mt-auto btn-outline-dark bi-cart-fill me-1">
+                                    <span class="badge bg-dark text-white ms-1 rounded-pill">@count</span>
+                                </a>
+                            </form>
                     }
                 </div>
             </div>
@@ -174,7 +174,7 @@
                         </div>
                     </div>
                     <div class="col-md-2">
-                        <button class="btn btn-dark border-0 w-100">Search</button>
+                        <button id="search" name="txtKeyword" class="btn btn-dark border-0 w-100">Search</button>
                     </div>
                 </div>
             </div>
@@ -184,7 +184,7 @@
         <div class="container-xxl py-5">
             <div class="container">
                 <h1 class="text-center mb-5 wow fadeInUp" data-wow-delay="0.1s">Explore By Category</h1>
-                <div class="row g-4">
+                <div id="category" class="row g-4">
                     <div class="col-lg-3 col-sm-6 wow fadeInUp" data-wow-delay="0.1s">
                         <a class="cat-item rounded p-4" href="">
                             <i class="fa fa-3x fa-mail-bulk text-primary mb-4"></i>
@@ -269,6 +269,7 @@
     <!-- Template Javascript -->
     <script src="~/layout/jobentry-1.0.0/js/main.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
+    
     <script>
         const button = document.querySelector('.btndp');
 
@@ -284,8 +285,9 @@
     <script>
         const selSkillClasses = document.querySelector('#combo1');
         const selectSkills = document.querySelector('#combo2');
-
-        loadSkillClassess()
+        const selCategory = document.querySelector('#category');
+        loadSkillClassess();
+        loadCategory();
         selSkillClasses.addEventListener("change", () => { loadSkill() });
         // selectDist.addEventListener("change", () => { loadSkill() });
         
@@ -295,6 +297,7 @@
             const data = await response.json();
             // console.log(data);
             const SkillClassess = data.map(SkillClassess => `<option value='${SkillClassess.skillClassId}'>${SkillClassess.name}</option>`)
+            
             selSkillClasses.innerHTML = SkillClassess.join("");
             loadSkill();
 
@@ -311,20 +314,41 @@
             
         }
 
-        
-        // $('#buttonJson').click(function () {
-        //     $.getJSON('@Url.Content("~/api/cities")', (datas) => {
-        //         const docFrag = $(document.createDocumentFragment());
-        //         $.each(datas, (index, city) => {
-        //             //console.log(city);
-        //             // <li class="list-group-item" > An item < /li>
-        //             const li = $('<li></li>').text(city).addClass('list-group-item');
-        //             docFrag.append(li);
-        //         })
-        //         $('.list-group').html(docFrag);
-        //     })
-        //     $('#divAlert').text("JSON")
-        // })
+        async function loadCategory() {
+            const ctgFrag = $(document.createDocumentFragment());
+            const response = await fetch(`@Url.Content("~/Depute/DeputeCount")`);
+            // console.log(response);
+            const data = await response.json();
+             console.log(data);
+            const category = data.map(category =>
+                `
+                                <div class="col-lg-3 col-sm-6 wow fadeInUp" data-wow-delay="0.1s">
+                                        <a class="cat-item rounded p-4" href="">
+                                            <i class="fa fa-3x fa-mail-bulk text-primary mb-4"></i>
+                                                                    <h6 class="mb-3">${category.skillname}</h6>
+                                                            <p class="mb-0">${category.count} 筆</p>
+                                        </a>
+                                    </div>
+
+
+                    `)
+            ctgFrag.append(category)
+            selCategory.innerHTML = ctgFrag;
+            $('#category').html(ctgFrag)
+        }
+        $('#search').click(function () {
+            $.getJSON('@Url.Content("~/Depute/DeputeList")', (datas) => {
+                const docFrag = $(document.createDocumentFragment());
+                $.each(datas, (index, city) => {
+                    //console.log(city);
+                    // <li class="list-group-item" > An item < /li>
+                    const li = $('<li></li>').text(city).addClass('list-group-item');
+                    docFrag.append(li);
+                })
+                $('.list-group').html(docFrag);
+            })
+            $('#divAlert').text("JSON")
+        })
 
 
 
