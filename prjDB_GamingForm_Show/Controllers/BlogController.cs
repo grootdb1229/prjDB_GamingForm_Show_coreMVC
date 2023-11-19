@@ -36,7 +36,7 @@ namespace prjDB_GamingForm_Show.Controllers
                 {
                     tags = _db.Tags.Select(p => p),
                     subTags = _db.SubTags.Where(s => s.TagId == 4 && s.SubTagId != 14).Select(p => p),
-                    blogs = _db.Blogs.Include(b=>b.SubBlogs).Select(p => p),
+                    blogs = _db.Blogs.Where(b=>b.SubTagId != 14).Include(b=>b.SubBlogs).Select(p => p),
                     subBlogs = _db.SubBlogs.Include(a => a.Articles).Select(p => p),
 
                     articles = _db.Articles.Where(a=>a.SubBlog.Blog.SubTagId!=14).OrderByDescending(a => a.ModifiedDate).Select(p => p),
@@ -86,12 +86,11 @@ namespace prjDB_GamingForm_Show.Controllers
             {
                 vm = new CBlogViewModel
                 {
-                    blogs = _db.Blogs.Where(b => b.BlogId == FId).Select(p => p),
-                    subBlogs = _db.SubBlogs.Where(s => s.BlogId == FId).Select(p => p),
-                    articles = _db.Articles.Include(a => a.Member).Where(a => a.SubBlogId == SFId).OrderByDescending(a => a.ModifiedDate).Select(p => p),
-
                     tags = _db.Tags.Select(p => p),
                     subTags = _db.SubTags.Where(s => s.TagId == 4 && s.SubTagId != 14).Select(p => p),
+                    blogs = _db.Blogs.Where(b => b.BlogId == FId).Select(p => p),
+                    subBlogs = _db.SubBlogs.Where(s => s.BlogId == FId).Select(p => p),
+                    articles = _db.Articles.Include(a => a.Member).Include(a=>a.Replies).Where(a => a.SubBlogId == SFId).OrderByDescending(a => a.ModifiedDate).Select(p => p),
                 };
             }
             return View(vm);
@@ -112,14 +111,14 @@ namespace prjDB_GamingForm_Show.Controllers
                 actions = _db.Actions,
                 articleActions = _db.ArticleActions,
                 replies = _db.Replies.Include(a=>a.Member).Where(a => a.ArticleId == AFId).ToList(),
-                members = _db.Members.Include(a=>a.Image)
+                //members = _db.Members.Include(a=>a.Image)
             };
 
             var artcon = _db.Articles.Where(a => a.ArticleId == AFId).Select(a => a);
 
             return View(vm);
         }
-        public ActionResult ArticleDelete(int? FId, int? AFId)
+        public ActionResult ArticleDelete(int? SFId, int? AFId)
         {
             Article art = _db.Articles.FirstOrDefault(a => a.ArticleId == AFId);
             if (art != null)
