@@ -10,8 +10,8 @@ namespace prjDB_GamingForm_Show.Controllers
 {
     namespace prjDB_GamingForm_Show.Controllers
     {
-    public class ShopController : Controller
-    {
+        public class ShopController : Controller
+        {
 
             private readonly IWebHostEnvironment _host;
             private readonly DbGamingFormTestContext _db;
@@ -22,7 +22,7 @@ namespace prjDB_GamingForm_Show.Controllers
             }
             public IActionResult Index(CKeyWord ck)
             {
-                String CK = ck.txtKeyword; /*Request.Form["txtKeyword"];*/
+                String CK = ck.txtKeyword;
                 IEnumerable<Product> Pdb = null;
                 if (string.IsNullOrEmpty(CK))
                 {
@@ -39,46 +39,50 @@ namespace prjDB_GamingForm_Show.Controllers
 
             public ActionResult Create()
             {
-               
+
                 _db.Products.Load();
                 return View();
             }
             public ActionResult CreateTag()
             {
-                var Tag = _db.Tags.Where(p => p.TagId <=3).Select(t => new { t.TagId, t.Name }).ToList();
+                var Tag = _db.Tags.Where(p => p.TagId <= 3).Select(t => new { t.TagId, t.Name }).ToList();
 
-				return Json(Tag);
+                return Json(Tag);
             }
             public ActionResult SubTag(int? id)
             {
                 _db.SubTags.Load();
-                var Tag = _db.SubTags.Where(p => p.TagId == id).Select(s => s.Name ).ToList();
+                var Tag = _db.SubTags.Where(p => p.TagId == id).Select(s => s.Name).ToList();
                 return Json(Tag);
             }
 
 
-				[HttpPost]
+            [HttpPost]
             public ActionResult Create(CProductWarp product) //原Product物件
             {
                 Product x = new Product();
+                if (_db != null)
+                {
+                    if (product.photo != null)
+                    {
+                        string photoName = Guid.NewGuid().ToString() + ".jpg";
+                        x.FImagePath = photoName;
+                        product.photo.CopyTo(new FileStream(_host.WebRootPath + "/images/shop/" + photoName, FileMode.Create));
+                    }
+                    x.ProductName = product.ProductName;
+                    x.Price = product.Price;
+                    x.AvailableDate = product.AvailableDate;
+                    x.ProductContent = product.ProductContent;
+                    x.UnitStock = product.UnitStock;
+                    x.StatusId = product.StatusID;
+                    x.MemberId = product.MemberID;
 
-                x.ProductName = product.ProductName;
-                x.Price = product.Price;
-                x.AvailableDate = product.AvailableDate;
-                x.ProductContent = product.ProductContent;
-                x.UnitStock = product.UnitStock;
-                x.StatusId = product.StatusID;
-                x.MemberId = product.MemberID;
-
-                //目前沒有FirmID跟圖片功能
-                //MemberID跟StatusID是寫死在CProduct物件中的
-
-                _db.Products.Add(x);
-                _db.SaveChanges();
-
+                    _db.Products.Add(x);
+                    _db.SaveChanges();
+                }
                 return RedirectToAction("Index");
             }
-           
+
 
             public ActionResult Edit(int? id)
             {
@@ -96,7 +100,13 @@ namespace prjDB_GamingForm_Show.Controllers
                 Product x = _db.Products.FirstOrDefault(p => p.ProductId == product.ProductID);
                 if (x != null)
                 {
-                    x.ProductName = product.ProductName;
+					if (product.photo != null)
+					{
+						string photoName = Guid.NewGuid().ToString() + ".jpg";
+						x.FImagePath = photoName;
+						product.photo.CopyTo(new FileStream(_host.WebRootPath + "/images/shop/" + photoName, FileMode.Create));
+					}
+					x.ProductName = product.ProductName;
                     x.Price = product.Price;
                     x.AvailableDate = product.AvailableDate;
                     x.ProductContent = product.ProductContent;
