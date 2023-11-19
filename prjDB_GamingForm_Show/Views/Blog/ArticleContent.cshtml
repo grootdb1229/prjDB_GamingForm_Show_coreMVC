@@ -7,81 +7,89 @@
 
 
 <div style="margin: 0 auto; width: 650px;">
-    <div style="border: 2px solid red; padding: 3px; margin: 5px; border-radius: 5px; width: 650px; margin: 0 auto;">
-        <div>
-            <h2>
-                @Html.DisplayFor(modelItem => Model.articles.FirstOrDefault().Title)
-            </h2>
-            <div>
+
+    <!-- ArticleContent -->
+
+    <div style="border: 2px solid red; padding: 3px; margin: 5px; border-radius: 5px; display: flex;">
+        <div style="display: flex;">
+            <div style="margin-right: 10px;">
                 @{
                     var author = Model.articles.FirstOrDefault()?.Member;
                     if (author != null)
                     {
-                        <img src="~/images/@author.FImagePath" alt="">
+                        <img src="~/images/@author.FImagePath" alt="" style="max-width: 100px;border-radius: 50%;">
                     }
                 }
             </div>
+            <div style="flex-grow: 1;">
+                <!-- 使用 flex-grow: 1; 讓這個區塊填滿剩餘的寬度 -->
+                <div>
+                    @Html.DisplayFor(modelItem => Model.articles.FirstOrDefault().Title)
+                </div>
+                <div>
+                    @* 超連結個人葉面 *@
+                    樓主
+                    <h3>@Html.DisplayFor(modelItem => Model.articles.FirstOrDefault().Member.Name)</h3>
+                </div>
+                <p style="margin: 0;">
+                    @Html.DisplayFor(modelItem => Model.articles.FirstOrDefault().ArticleContent)
+                </p>
+                <br />
+                <div>
+                    @*讚用ajax*@
+                    @{
+                        int like = 0;
+                        // foreach (var item in Model.articles)
+                        // {
+                        //      @Html.ActionLink("讚", "Like", "Blog", new { AFId = item.ArticleId }, null)
+                        // }
+                        @Html.ActionLink("讚", "Like", "Blog", new { AFId = Model.articles.FirstOrDefault().ArticleId, FId = Model.blogs.FirstOrDefault().BlogId }, null)
 
-            <p>
-                @* 超連結個人葉面 *@
-                樓主
-                @Html.DisplayFor(modelItem => Model.articles.FirstOrDefault().Member.Name)
-            </p>
-        </div>
-        <div style="word-wrap: break-word; white-space: pre-line;">
-            <p style="margin: 0;">
-                @Html.DisplayFor(modelItem => Model.articles.FirstOrDefault().ArticleContent)
-            </p>
-        </div>
-        <div>
-            @Html.DisplayFor(modelItem => Model.articles.FirstOrDefault().ModifiedDate)
+                        like = Model.articleActions.Count(a => a.ActionId == 1);
+                        @like
+                    }
+                </div>
+                    @Html.ActionLink("Edit", "Edit", new { id = Model.articles.FirstOrDefault().ArticleId })
+                    @Html.ActionLink("刪除", "ArticleDelete", new { AFId = Model.articles.FirstOrDefault().ArticleId, FId = Model.blogs.FirstOrDefault().BlogId }, new { onclick = "return confirm ('確定刪除嗎?')" })
+                
+                <div>
+                    發表時間: @Html.DisplayFor(modelItem => Model.articles.FirstOrDefault().ModifiedDate)
+                </div>
+            </div>
         </div>
     </div>
 
-    @*讚用ajax*@
-    @{
-        int like = 0;
-        foreach (var item in Model.articles)
-        {
-            @Html.ActionLink("讚", "Like", "Blog", new { AFId = item.ArticleId }, null)
-        }
-        like = Model.articleActions.Count(a => a.ActionId == 1);
-        @like
-    }
-    <div>
-        @Html.ActionLink("Edit", "Edit", new { id = Model.articles.FirstOrDefault().ArticleId })
-        @Html.ActionLink("刪除", "ArticleDelete", new { AFId = Model.articles.FirstOrDefault().ArticleId, FId = Model.blogs.FirstOrDefault().BlogId }, new { onclick = "return confirm ('確定刪除嗎?')" })
-    </div>
-
-    <div style="min-height: 650px;display: flex;">
+    <!-- Replies -->
+    <div style="min-height: 650px;">
         @{
             int count = 0;
             foreach (var item in Model.replies)
             {
                 count++;
                 <div style="border: 2px solid red; padding: 3px; margin: 5px; border-radius: 5px; display: flex;">
-                    <div>
+                    <div div style="margin-right: 10px;">
                         @{
                             var replyAuthor = item.Member;
                             if (replyAuthor != null)
                             {
-                                <img src="~/images/@replyAuthor.FImagePath" alt="" style="max-width: 100px;">
+                                <img src="~/images/@replyAuthor.FImagePath" alt="" style="max-width: 100px;border-radius: 50%;">
                             }
                         }
                     </div>
-
                     <div style="margin-left: 10px;">
                         <div>
                             @count 樓
                         </div>
                         <h3>@item.Member.Name</h3>
-                        <div style="max-height: 100px; overflow: hidden; word-wrap: break-word; white-space: pre-line;">
+                        <div style="overflow: hidden; word-wrap: break-word; white-space: pre-line; display: flex;">
                             <p style="margin: 0;">
                                 @Html.DisplayFor(modelitem => item.ReplyContents)
                             </p>
                         </div>
                         <br />
-                        @Html.DisplayFor(modelitem => item.ModifiedDate)
+                        <div>
+                            發表時間: @Html.DisplayFor(modelitem => item.ModifiedDate)
+                        </div>
                     </div>
                 </div>
             }

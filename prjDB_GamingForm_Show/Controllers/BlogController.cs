@@ -105,11 +105,11 @@ namespace prjDB_GamingForm_Show.Controllers
             {
                 tags = _db.Tags.Select(p => p),
                 subTags = _db.SubTags.Where(s => s.TagId == 4 && s.SubTagId != 14).Select(p => p),
-                blogs = _db.Blogs.Where(b=>b.BlogId==FId).Select(p => p),
+                blogs = _db.Blogs.Include(p=>p.SubBlogs).Where(b=>b.BlogId==FId).Select(p => p),
                 subBlogs = _db.SubBlogs.Include(s=>s.Articles).Select(p => p),
                 articles = _db.Articles.Include(a => a.Member).AsEnumerable().Where(a => a.ArticleId == AFId).Select(p => p),
                 actions = _db.Actions,
-                articleActions = _db.ArticleActions,
+                articleActions = _db.ArticleActions.Where(a=>a.ArticleId==AFId).Select(p=>p),
                 replies = _db.Replies.Include(a=>a.Member).Where(a => a.ArticleId == AFId).ToList(),
                 members = _db.Members
             };
@@ -128,6 +128,7 @@ namespace prjDB_GamingForm_Show.Controllers
             }
             return RedirectToAction("ArticleList", new { FId });
         }
+
         public IActionResult ArticleCreate(int? FId)
         {
             CBlogViewModel vm = null;
@@ -149,7 +150,7 @@ namespace prjDB_GamingForm_Show.Controllers
             _db.SaveChanges();
             return RedirectToAction("ArticleList", new { FId });
         }
-        public ActionResult Like(int? AFId)
+        public ActionResult Like(int? AFId, int? FId)
         {           
             
             var art = _db.ArticleActions.Where(a => a.ArticleId == AFId && a.MemberId == 16 && a.ActionId == 1).Select(a => a).FirstOrDefault();
@@ -167,7 +168,7 @@ namespace prjDB_GamingForm_Show.Controllers
                 _db.ArticleActions.Add(x);
             }
             _db.SaveChanges();
-            return RedirectToAction("ArticleContent", new { AFId });
+            return RedirectToAction("ArticleContent", new { AFId, FId });
         }
 
     }
