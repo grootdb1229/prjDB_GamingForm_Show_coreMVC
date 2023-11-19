@@ -69,6 +69,12 @@ namespace prjDB_GamingForm_Show.Models.Shop
         public int ImageID { get; set; }
 
 
+        public string? FImagePath { 
+            get { return _product.FImagePath; }
+            set { _product.FImagePath = value; }
+        }
+
+        public IFormFile photo { get; set; }
         public int TagID { get; set; }
         public int SubTagID { get; set; }
 
