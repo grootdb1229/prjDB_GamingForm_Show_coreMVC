@@ -43,7 +43,7 @@
                     @Html.ActionLink("前往首頁", "List", "Blog")
                 </div>
                 <div class="nav-search search-switch">
-                    @Html.ActionLink("發表文章", "ArticleCreate", "Blog", new { /*FId = Model.blogs.FirstOrDefault().BlogID*/})
+                    @Html.ActionLink("發表文章", "ArticleCreate", "Blog", new { FId = Model.blogs.FirstOrDefault().BlogId},null)
                 </div>
                 <div class="nav-menu">
                     <ul>
@@ -66,7 +66,7 @@
 
 
 
-    <div style="margin:0 auto;width:650px;background-color:#4F4F4F">
+    <div style="margin:10px auto;width:650px;background-color:#4F4F4F">
 
         <table class="table">
             <tr>
