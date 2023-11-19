@@ -15,7 +15,7 @@
 </head>
 <body>
     <!-- Navigation-->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light" style="background-color:black">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light" style="background-color:black;">
         <div class="container px-4 px-lg-5">
             <a class="navbar-brand" href="#!">Groot遊戲資源整合平台</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
@@ -43,7 +43,7 @@
                     </li>
                 </ul>
                 @{
-                    
+
                     int count = 0;
                     //if (HttpContext.Session.Keys.Contains(prjDB_GamingForm_Show.Models.CDictionary.SK_PURCHASED_PRODUCES_LIST) != null)
                     //{
@@ -61,10 +61,10 @@
             </div>
         </div>
     </nav>
-   
-   @RenderBody()
+
+    @RenderBody()
     <!-- Footer-->
-    <footer class="py-5 bg-dark">
+    <footer class="py-5 bg-dark" style="position:relative;bottom:0;width:100%">
         <div class="container"><p class="m-0 text-center text-white">Copyright &copy; Your Website 2023</p></div>
     </footer>
     <!-- Bootstrap core JS-->
