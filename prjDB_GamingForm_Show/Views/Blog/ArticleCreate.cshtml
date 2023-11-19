@@ -1,0 +1,62 @@
+﻿@*@model prjDB_GamingForm_Show.Models.Entities.Article*@
+@model prjDB_GamingForm_Show.ViewModels.CBlogViewModel
+@{
+    ViewData["Title"] = "ArticleCreate";
+}
+
+<h2>ArticleCreate</h2>
+
+<h4>Article</h4>
+<hr />
+<div >
+    <div class="row" style="margin:10px auto;width:650px;background-color:#4F4F4F">
+        <div class="col-md-4">
+            <form asp-action="ArticleCreate" method="post">
+                <input type="hidden" name="FId" value="@Model.blogs.First().BlogId" />
+                @{
+
+                    <select name="SubBlogID" class="form-select">
+                        @foreach (var i in Model.subBlogs)
+                        {
+                            <option value="@i.SubBlogId">@i.Title</option>
+                        }
+                    </select>
+                }
+                <div class="form-group">
+@*                    <label asp-for="subBlogs." class="control-label"></label>
+                    <input asp-for="SubBlogId" class="form-control" />
+                    <span asp-validation-for="SubBlogId" class="text-danger"></span>*@
+                </div>
+                <div class="form-group">
+                    <label asp-for="articles.First().Title" class="control-label"></label>
+                    <input name="Title" class="form-control" />
+                    <span asp-validation-for="articles.First().Title" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="articles.First().ArticleContent" class="control-label"></label>
+                    <input  name="ArticleContent" class="form-control" />
+                    <span asp-validation-for="articles.First().ArticleContent" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    @*<label asp-for="ModifiedDate" class="control-label"></label>
+                    <input asp-for="ModifiedDate" class="form-control" />
+                    <span asp-validation-for="ModifiedDate" class="text-danger"></span>*@
+                    <input type="hidden" name="ModifiedDate" value="@DateTime.Now" />
+                    <input type="hidden" name="MemberId" value="15" />
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="發文" class="btn btn-default" />
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div>
+       @Html.ActionLink("回列表","ArticleList","Blog",new{FId= Model.blogs.First().BlogId},null)
+    </div>
+</div>
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

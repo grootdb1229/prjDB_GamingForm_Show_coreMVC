@@ -7,32 +7,52 @@
 
 
 <div style="margin:0 auto;width:650px ;">
-    <div style="border: 2px solid red;padding:3px;margin:5px;border-radius:5px">
-    <div>
-        <h2>
-            @Html.DisplayFor(modelItem => Model.articles.FirstOrDefault().Title)
-        </h2>
-    </div> 
+    <div style="border: 2px solid red; padding: 3px; margin: 5px; border-radius: 5px; width: 650px; margin: 0 auto;">
+        <div>
+            <h2>
+                @Html.DisplayFor(modelItem => Model.articles.FirstOrDefault().Title)
+            </h2>
+            <div>
+                @{
+                    var author = Model.articles.FirstOrDefault()?.Member;
+                    if (author != null)
+                    {
+                        <img src="~/images/@author.FImagePath" alt="">
+                    }
+                }
+            </div>
 
-    <div>
-        <p>
-            @*超連結個人葉面*@
-            樓主
-            @Html.DisplayFor(modelItem=>Model.articles.FirstOrDefault().Member.Name) 
-        </p>
+            <p>
+                @* 超連結個人葉面 *@
+                樓主
+                @Html.DisplayFor(modelItem => Model.articles.FirstOrDefault().Member.Name)
+            </p>
+        </div>
+        <div>
+            @Html.DisplayFor(modelItem => Model.articles.FirstOrDefault().ArticleContent)
+        </div>
+        <div>
+            @Html.DisplayFor(modelItem => Model.articles.FirstOrDefault().ModifiedDate)
+        </div>
     </div>
+
+       @*讚用ajax*@
+        @{
+        int like = 0;  
+        foreach (var item in Model.articles)
+        {
+         @Html.ActionLink("讚", "Like", "Blog", new { AFId = item.ArticleId }, null)
+        }
+         like = Model.articleActions.Count(a => a.ActionId == 1);
+         @like
+        }
     <div>
-        @Html.DisplayFor(modelItem => Model.articles.FirstOrDefault().ArticleContent)
-    </div>
-    <div>
-        @Html.DisplayFor(modelItem => Model.articles.FirstOrDefault().ModifiedDate)
-    </div style="margin:0 auto;width:650px ">
 
     @Html.ActionLink("Edit", "Edit", new { id = Model.articles.FirstOrDefault().ArticleId })
-    @Html.ActionLink("刪除", "ArticleDelete", new { id = Model.articles.FirstOrDefault().ArticleId},new{ onclick= "return confirm ('確定刪除嗎?')"})
+    @Html.ActionLink("刪除", "ArticleDelete", new { AFId = Model.articles.FirstOrDefault().ArticleId,FId=Model.blogs.FirstOrDefault().BlogId},new{ onclick= "return confirm ('確定刪除嗎?')"})
     </div>
 
-    <div style="min-height: 650px;">
+  @*  <div style="min-height: 650px;">
         @{
             int count = 0;
             foreach (var item in Model.replies)
@@ -41,8 +61,22 @@
                 var memberName = from n in item.Member.Name
                               select n;
           <div style="border: 2px solid red;padding:3px;margin:5px;border-radius:5px">
-           @count 樓 
-           <h3>@item.Member.Name</h3>
+           @count 樓  
+
+           <div>      
+
+               <div>      
+                    @{
+                        var replyAuthor = item.Member;
+                        if (replyAuthor != null)
+                        {
+                            <img src="~/images/@replyAuthor.FImagePath" alt="">
+                        }
+                    }
+                </div>
+           </div>
+
+           
            <br/>
            <h3>@Html.DisplayFor(modelitem=> item.ReplyContents)</h3>
            <br/>
@@ -50,8 +84,38 @@
           </div>
          }
         }
-    </div>
-   
+    </div>*@
+   <div style="min-height: 650px;">
+    @{
+        int count = 0;
+        foreach (var item in Model.replies)
+        {
+            count++;
+            <div style="border: 2px solid red; padding: 3px; margin: 5px; border-radius: 5px; display: flex;">
+                <div>
+                    @{
+                        var replyAuthor = item.Member;
+                        if (replyAuthor != null)
+                        {
+                            <img src="~/images/@replyAuthor.FImagePath" alt="" style="max-width: 100px;">
+                        }
+                    }
+                </div>
+
+                <div style="margin-left: 10px;">
+                    <div>
+                        @count 樓
+                    </div>
+                    <h3>@item.Member.Name</h3>
+                    <br/>
+                    <h3>@Html.DisplayFor(modelitem => item.ReplyContents)</h3>
+                    <br/>
+                    @Html.DisplayFor(modelitem => item.ModifiedDate)
+                </div>
+            </div>
+        }
+    }
+</div>
 
   
 
