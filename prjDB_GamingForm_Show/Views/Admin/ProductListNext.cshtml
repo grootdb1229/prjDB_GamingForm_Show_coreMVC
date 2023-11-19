@@ -1,0 +1,86 @@
+﻿@*@model IEnumerable<prjDB_GamingForm_Show.Models.Entities.Product>*@
+@model prjDB_GamingForm_Show.ViewModels.CAdminCheckProductViewModel
+
+@{
+    ViewData["Title"] = "ProductList";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h2>商品清單</h2>
+
+<p>
+    @Html.ActionLink("上一頁", "ProductListPrevious", "Admin", null, null) |
+    @Html.ActionLink("下一頁", "ProductListNext", "Admin", null, null)
+</p>
+<table class="table table-dark table-hover" style="color:white">
+    <thead>
+        <tr>
+            <th>
+                商品編號
+            </th>
+            <th>
+                商品名稱
+            </th>
+            <th>
+                商品單價
+            </th>
+            <th>
+                最後更新日期
+            </th>            
+            <th>
+                商品庫存
+            </th>
+            <th>
+                商品狀態
+            </th>
+            <th>
+                上架者
+            </th>            
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            string s = "";            
+            foreach (var item in Model.Products) {
+                if(item.StatusId == 1)
+                {
+                    s = "販售中";
+                }
+                else if (item.StatusId == 2)
+                {
+                    s = "尚未開始販售";
+                }
+                string d = item.AvailableDate.ToString("yyyy / MM / dd");
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.ProductId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ProductName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Price)
+            </td>
+            <td>
+                @d
+            </td>            
+            <td>
+                @Html.DisplayFor(modelItem => item.UnitStock)
+            </td>
+            <td>
+                @s
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Member.Name)
+            </td>            
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+            </td>
+        </tr>
+}
+}
+    </tbody>
+</table>

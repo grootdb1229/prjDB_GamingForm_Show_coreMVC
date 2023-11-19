@@ -22,13 +22,13 @@ namespace prjDB_GamingForm_Show.Controllers
 
         public ActionResult List(int? FId)
         {
-            _db.Actions.Load();
-            _db.SubBlogs.Load();
-            _db.Blogs.Load();
-            _db.Tags.Load();
-            _db.SubTags.Load();
-            _db.ArticleActions.Load();
-            _db.Articles.Load();
+            //_db.Actions.Load();
+            //_db.SubBlogs.Load();
+            //_db.Blogs.Load();
+            //_db.Tags.Load();
+            //_db.SubTags.Load();
+            //_db.ArticleActions.Load();
+            //_db.Articles.Load();
             CBlogViewModel vm = new CBlogViewModel();
             if (FId == null)
             {
@@ -112,7 +112,7 @@ namespace prjDB_GamingForm_Show.Controllers
                 actions = _db.Actions,
                 articleActions = _db.ArticleActions,
                 replies = _db.Replies.Include(a=>a.Member).Where(a => a.ArticleId == AFId).ToList(),
-                members = _db.Members.Include(a=>a.Image)
+                //members = _db.Members.Include(a=>a.Image)
             };
 
             var artcon = _db.Articles.Where(a => a.ArticleId == AFId).Select(a => a);
