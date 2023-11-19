@@ -29,6 +29,23 @@ namespace prjDB_GamingForm_Show.Controllers
         {
             return View();
         }
+        public IActionResult SkillClassess()
+        {
+            var SkillClasses = from n in _db.SkillClasses
+                               select n;
+            return Json(SkillClasses);
+        }
+        public IActionResult Skills(int? id)
+        {
+            var Skills = _db.Skills.Where(a => a.SkillClassId == id);
+            return Json(Skills);
+        }
+        public IActionResult DeputeMain() 
+        {
+        
+            return View();
+        }
+
         public void ListLoad()
         {
             //test
@@ -91,8 +108,8 @@ namespace prjDB_GamingForm_Show.Controllers
                    .OrderByDescending(n => n.modifieddate);
 
             }
-
-            return View(datas);
+            
+            return Json(datas);
 
         }
 

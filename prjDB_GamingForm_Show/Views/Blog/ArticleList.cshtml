@@ -1,60 +1,114 @@
 ﻿@* @model IEnumerable<prjDB_GamingForm_Show.ViewModels.CBlogViewModel> *@
-    @model prjDB_GamingForm_Show.ViewModels.CBlogViewModel
+@model prjDB_GamingForm_Show.ViewModels.CBlogViewModel
 @{
     ViewBag.Title = "ArticleList";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>ArticleList</h2>
 
-@*<div>
-    @Html.ActionLink("發表文章", "ArticleCreate", "Blog", new { FId = Model.blogs.FirstOrDefault().BlogID},null)
-</div>*@
-<div style="margin:0 auto;width:650px;">
-    <ul style="list-style:none">
-        <li style="float: left ;margin:0 10px;">
+<html lang="zxx">
 
-            <a href="@Url.Action("ArticleList", "Blog", new { Fid = Model.blogs.FirstOrDefault().BlogId @*.FirstOrDefault().blogs.FirstOrDefault().BlogId*@ })">全部</a>
-        </li>
-          @foreach (var item in Model.subBlogs.GroupBy(p => p.Title))
-          {
-@*           <li style="float: left; margin: 0 10px;">
-           <a href="@Url.Action("ArticleList", "Blog", new { FId = item.FirstOrDefault().SubBlog.BlogID})">@item.Key</a>
-          </li>*@
-          }
-    </ul>
-</div>
-<div style="margin:0 auto;width:650px;">
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="Amin Template">
+    <meta name="keywords" content="Amin, unica, creative, html">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Amin | Template</title>
 
-    <table class="table">
-        <tr>
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,500,600,700,800,900&display=swap"
+          rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Cinzel:400,700,900&display=swap" rel="stylesheet">
 
-            <th>
-                @Html.DisplayNameFor(model => model.articles.FirstOrDefault().Title)
+    <!-- Css Styles -->
+    <link rel="stylesheet" href="~/css/bootstrap.min.css" type="text/css">
+    <link rel="stylesheet" href="~/css/font-awesome.min.css" type="text/css">
+    <link rel="stylesheet" href="~/css/elegant-icons.css" type="text/css">
+    <link rel="stylesheet" href="~/css/owl.carousel.min.css" type="text/css">
+    <link rel="stylesheet" href="~/css/barfiller.css" type="text/css">
+    <link rel="stylesheet" href="~/css/magnific-popup.css" type="text/css">
+    <link rel="stylesheet" href="~/css/slicknav.min.css" type="text/css">
+    <link rel="stylesheet" href="~/css/blogstyle.css" type="text/css">
+</head>
+<body>
 
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.articles.FirstOrDefault().ModifiedDate)
-            </th>
 
-        </tr>
 
-        @{
-            foreach (var item in Model.articles)
-            {
-                <tr>
+    <header class="header-section">
+        <div class="nav-options">
 
-                    <td>
-                        <a style="text-decoration:none" href="@Url.Action("ArticleContent", "Blog", new { AFId =item.ArticleId}) ">@item.Title</a>
-                    </td>
+            <div class="container">
+                <div class="humberger-menu humberger-open">
+                    @Html.ActionLink("前往首頁", "List", "Blog")
+                </div>
+                <div class="nav-search search-switch">
+                    @Html.ActionLink("發表文章", "ArticleCreate", "Blog", new { FId = Model.blogs.FirstOrDefault().BlogId},null)
+                </div>
+                <div class="nav-menu">
+                    <ul>
+                        <li class="active">
+                            <a href="@Url.Action("ArticleList", "Blog", new { FId = Model.blogs.FirstOrDefault().BlogId})">全部</a>
+                        </li>
+                        @{
+                            foreach (var item in Model.subBlogs.GroupBy(p => p.Title))
+                            {
+                                <li>
+                                    <a href="@Url.Action("ArticleList", "Blog", new {FId=item.First().BlogId ,SFId = item.FirstOrDefault().SubBlogId})">@item.Key</a>
+                                </li>
+                            }
+                        }
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </header>
 
-                    <td>
-                        @Html.DisplayFor(modelItem => item.ModifiedDate)
-                    </td>
 
-                </tr>
+
+    <div style="margin:10px auto;width:650px;background-color:#4F4F4F">
+
+        <table class="table">
+            <tr>
+
+                <th>
+                    @Html.DisplayNameFor(model => model.articles.FirstOrDefault().Title)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.articles.FirstOrDefault().ModifiedDate)
+                </th>
+        
+
+            </tr>
+
+            @{
+                foreach (var item in Model.articles)
+                {
+                    <tr>
+
+                        <td>
+                            <a style="text-decoration:none" href="@Url.Action("ArticleContent", "Blog", new {FId=item.SubBlog.BlogId, AFId =item.ArticleId}) ">@item.Title</a>
+                        </td>
+                        <td style="color:wheat;font-size:10px ">
+                              @Html.DisplayFor(modelItem => item.ModifiedDate)
+                            <p>@Html.DisplayFor(modelItem => item.Member.Name)</p>   @* 預計顯示作者名稱在發文時間下面 *@
+                        </td>
+
+                    </tr>
+                }
             }
-        }
 
-    </table>
-</div>
+        </table>
+    </div>
+
+    <script src="~/js/jquery-3.3.1.min.js"></script>
+    <script src="~/js/jquery-3.3.1.min.js"></script>
+    <script src="~/js/bootstrap.min.js"></script>
+    <script src="~/js/jquery.magnific-popup.min.js"></script>
+    <script src="~/js/circle-progress.min.js"></script>
+    <script src="~/js/jquery.barfiller.js"></script>
+    <script src="~/js/jquery.slicknav.js"></script>
+    <script src="~/js/owl.carousel.min.js"></script>
+    <script src="~/js/blogmain.js"></script>
+</body>
+</html>

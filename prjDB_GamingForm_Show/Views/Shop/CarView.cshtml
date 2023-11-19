@@ -1,0 +1,71 @@
+﻿@model IEnumerable<prjDB_GamingForm_Show.Models.Shop.ShoppingCar>
+
+@{
+    ViewData["Title"] = "CarView";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>CarView</h2>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.ProductName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Price)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Count)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.total)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@{
+     int count = 0;
+        decimal tax = 0;
+        decimal pay = 0;
+        decimal sum = 0;
+    foreach (var item in Model) {
+        count++;
+        <tr>
+            <td>
+                @count
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ProductName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Price)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Count)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.total)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+            </td>
+        </tr>
+         sum += item.total;
+}
+
+        tax = sum * 0.05M;
+        pay = tax + sum;
+}
+    </tbody>
+</table>
+<li>交易金額:@sum.ToString("###,###,##0")</li>
+<li>稅    額:@tax.ToString("###,###,##0")</li>
+<li>應付金額:@pay.ToString("###,###,##0")</li>

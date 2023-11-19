@@ -19,6 +19,7 @@
         @: 關鍵字 @Html.TextBox("txtKeyword")
         <input type="submit" value="查詢" />
     }
+
     <!-- Search Start -->
     <div class="container-fluid bg-primary mb-5 wow fadeIn" data-wow-delay="0.1s" style="padding: 35px;">
         <div class="container">
@@ -53,8 +54,9 @@
         </div>
     </div>
     <!-- Search End -->
-    @Html.ActionLink("新增商品", "Create", "Shop", new { @class = "btn btn-outline-dark mt-auto" })
-</p>
+ </p>  
+    @Html.ActionLink("我要上架", "Create", "Shop",null, new { @class = "btn btn-outline-dark mt-auto" })
+
     <div class="container px-4 px-lg-5 mt-5">
         <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
             @foreach (var item in Model)
@@ -65,7 +67,7 @@
                     <!-- Sale badge-->
                     <div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem">Sale</div>
                     <!-- Product image-->
-                    <img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" alt="..." />
+                    <img class="card-img-top" src="~/images/shop/@item.FImagePath" alt="..." />
                     <!-- Product details-->
                     <div class="card-body p-4">
                         <div class="text-center">
@@ -86,19 +88,21 @@
                     </div>
                     <!-- Product actions-->
                     <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+ @using (Html.BeginForm("AddToCar", "Shop", FormMethod.Post))
+                            {
+@Html.TextBox("txtCount", "1", new { @class = "form-control text-center me-3 textbox"})
                         <div class="text-center">
                                 @Html.ActionLink("查看商品", "Details", "Shop", new { id = item.ProductId }, new { @class = "btn btn-outline-dark mt-auto" })
                         </div>
                         <div class="text-center">
                                 @Html.ActionLink("測試修改", "Edit", "Shop", new { id = item.ProductId }, new { @class = "btn btn-outline-dark mt-auto" })
                             </div>
-                            @using (Html.BeginForm("AddToCar", "Shop", FormMethod.Post))
-                            {
+                           
                                 <input type="hidden" name="ProductID" value="@item.ProductId" />
                         <div class="text-center">
-                                    @Html.TextBox("txtCount", "1", new { @class = "form-control text-center me-3", @style = "max-width: 3rem" })
+                                    
                                     <input type="submit" value="加入購物車" class="btn btn-outline-dark mt-auto" />
-                    </div>
+                       </div>
                             }
 
                     </div>
@@ -107,3 +111,9 @@
             }
         </div>
     </div>
+    <style>
+        .textbox{
+        max-width: 3rem;
+        justify-content:center
+        }
+    </style>
