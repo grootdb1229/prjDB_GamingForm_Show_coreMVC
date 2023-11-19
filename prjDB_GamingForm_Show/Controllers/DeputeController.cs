@@ -6,6 +6,7 @@ using prjDB_GamingForm_Show.Models.Entities;
 using prjDB_GamingForm_Show.Models.Shop;
 using prjDB_GamingForm_Show.ViewModels;
 using System.Collections.Generic;
+using static prjDB_GamingForm_Show.Controllers.DeputeController;
 
 namespace prjDB_GamingForm_Show.Controllers
 {
@@ -86,7 +87,7 @@ namespace prjDB_GamingForm_Show.Controllers
 
             }
         }
-        
+
         public IActionResult DeputeList(CKeyWord vm)
         {
             IEnumerable<CDeputeViewModel> datas = null;
@@ -111,9 +112,38 @@ namespace prjDB_GamingForm_Show.Controllers
             return Json(datas);
 
         }
+
+        public int memberIdtest = 38;
         public IActionResult test()
         {
             return View();
+        }
+        
+        public IActionResult Personal()
+        {
+            return View();
+        }
+        public IActionResult PartialReleaseList()
+        {
+            _db.Deputes.Load();
+            _db.Regions.Load();
+            _db.Statuses.Load();
+            _db.Skills.Load();
+            var q = _db.Deputes.Where(_ => _.ProviderId == memberIdtest).Select(_ => _);
+            return PartialView(q);
+        }
+        public IActionResult PartialReceiveList()
+        {
+            _db.Deputes.Load();
+            _db.DeputeRecords.Load();
+            _db.Regions.Load();
+            _db.Statuses.Load();
+            var q = _db.DeputeRecords.Where(_ => _.MemberId == memberIdtest).Select(_ => _);
+            return PartialView(q);
+        }
+        public IActionResult PartialGallery()
+        {
+            return PartialView();
         }
     }
 }

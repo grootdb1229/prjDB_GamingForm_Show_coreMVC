@@ -194,77 +194,77 @@ $(document).ready(function () {
 
     /************** "About" Carousel *****************/
 
-    $('.tm-carousel').slick({
-        dots: true,
-        infinite: false,
-        arrows: false,
-        speed: 300,
-        slidesToShow: 6,
-        slidesToScroll: 6,
-        responsive: [
-            {
-                breakpoint: 2500,
-                settings: {
-                    slidesToShow: 5,
-                    slidesToScroll: 5
-                }
-            },
-            {
-                breakpoint: 1920,
-                settings: {
-                    slidesToShow: 4,
-                    slidesToScroll: 4
-                }
-            },
-            {
-                breakpoint: 1500,
-                settings: {
-                    slidesToShow: 3,
-                    slidesToScroll: 3
-                }
-            },
-            {
-                breakpoint: 1260,
-                settings: {
-                    slidesToShow: 2,
-                    slidesToScroll: 2
-                }
-            },
-            {
-                breakpoint: 1125,
-                settings: {
-                    slidesToShow: 1,
-                    slidesToScroll: 1
-                }
-            },
-            {
-                breakpoint: 991,
-                settings: {
-                    slidesToShow: 2,
-                    slidesToScroll: 2
-                }
-            },
-            {
-                breakpoint: 768,
-                settings: {
-                    slidesToShow: 1,
-                    slidesToScroll: 1
-                }
-            },
-            {
-                breakpoint: 700,
-                settings: {
-                    slidesToShow: 2,
-                    slidesToScroll: 2
-                }
-            },
-            {
-                breakpoint: 500,
-                settings: {
-                    slidesToShow: 1,
-                    slidesToScroll: 1
-                }
-            }
-        ]
-    });
+    //$('.tm-carousel').slick({
+    //    dots: true,
+    //    infinite: false,
+    //    arrows: false,
+    //    speed: 300,
+    //    slidesToShow: 6,
+    //    slidesToScroll: 6,
+    //    responsive: [
+    //        {
+    //            breakpoint: 2500,
+    //            settings: {
+    //                slidesToShow: 5,
+    //                slidesToScroll: 5
+    //            }
+    //        },
+    //        {
+    //            breakpoint: 1920,
+    //            settings: {
+    //                slidesToShow: 4,
+    //                slidesToScroll: 4
+    //            }
+    //        },
+    //        {
+    //            breakpoint: 1500,
+    //            settings: {
+    //                slidesToShow: 3,
+    //                slidesToScroll: 3
+    //            }
+    //        },
+    //        {
+    //            breakpoint: 1260,
+    //            settings: {
+    //                slidesToShow: 2,
+    //                slidesToScroll: 2
+    //            }
+    //        },
+    //        {
+    //            breakpoint: 1125,
+    //            settings: {
+    //                slidesToShow: 1,
+    //                slidesToScroll: 1
+    //            }
+    //        },
+    //        {
+    //            breakpoint: 991,
+    //            settings: {
+    //                slidesToShow: 2,
+    //                slidesToScroll: 2
+    //            }
+    //        },
+    //        {
+    //            breakpoint: 768,
+    //            settings: {
+    //                slidesToShow: 1,
+    //                slidesToScroll: 1
+    //            }
+    //        },
+    //        {
+    //            breakpoint: 700,
+    //            settings: {
+    //                slidesToShow: 2,
+    //                slidesToScroll: 2
+    //            }
+    //        },
+    //        {
+    //            breakpoint: 500,
+    //            settings: {
+    //                slidesToShow: 1,
+    //                slidesToScroll: 1
+    //            }
+    //        }
+    //    ]
+    //});
 });
