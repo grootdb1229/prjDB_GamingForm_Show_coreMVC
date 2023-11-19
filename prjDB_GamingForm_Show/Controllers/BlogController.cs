@@ -36,12 +36,12 @@ namespace prjDB_GamingForm_Show.Controllers
                 {
                     tags = _db.Tags.Select(p => p),
                     subTags = _db.SubTags.Where(s => s.TagId == 4 && s.SubTagId != 14).Select(p => p),
-                    blogs = _db.Blogs.Include(b=>b.SubBlogs).Select(p => p),
+                    blogs = _db.Blogs.Include(b=>b.SubBlogs).ThenInclude(a=>a.Articles).ToList().Select(p => p),
                     subBlogs = _db.SubBlogs.Select(p => p),
                     articles = _db.Articles.Where(a=>a.SubBlog.Blog.SubTagId!=14).OrderByDescending(a => a.ModifiedDate).Select(p => p),
                     actions = _db.Actions,
                     articleActions = _db.ArticleActions,
-                    artTitle=_db.Articles.Where(a => a.SubBlog.Blog.SubTagId != 14).OrderByDescending(a => a.ModifiedDate).Select(p => p.Title)
+                   
 
                 };
             }
@@ -137,7 +137,7 @@ namespace prjDB_GamingForm_Show.Controllers
 
             return View(vm);
         }
-        public ActionResult ArticleDelete(int? SFId, int? AFId)
+        public ActionResult ArticleDelete(int? FId, int? AFId)
         {
             Article art = _db.Articles.FirstOrDefault(a => a.ArticleId == AFId);
             if (art != null)
@@ -147,7 +147,7 @@ namespace prjDB_GamingForm_Show.Controllers
             }
 
 
-            return RedirectToAction("ArticleList", new { SFId });
+            return RedirectToAction("ArticleList", new { FId });
         }
     }
 }

@@ -27,7 +27,7 @@
     </div style="margin:0 auto;width:650px ">
 
     @Html.ActionLink("Edit", "Edit", new { id = Model.articles.FirstOrDefault().ArticleId })
-    @Html.ActionLink("刪除", "ArticleDelete", new { id = Model.articles.FirstOrDefault().ArticleId},new{ onclick= "return confirm ('確定刪除嗎?')"})
+    @Html.ActionLink("刪除", "ArticleDelete", new { AFId = Model.articles.FirstOrDefault().ArticleId,FId=Model.subBlogs.First().BlogId},new{ onclick= "return confirm ('確定刪除嗎?')"})
 
     <div style="min-height: 650px;">
         @foreach (var item in Model.replies){
