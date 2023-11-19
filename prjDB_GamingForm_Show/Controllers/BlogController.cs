@@ -111,7 +111,7 @@ namespace prjDB_GamingForm_Show.Controllers
                 actions = _db.Actions,
                 articleActions = _db.ArticleActions,
                 replies = _db.Replies.Include(a=>a.Member).Where(a => a.ArticleId == AFId).ToList(),
-                //members = _db.Members.Include(a=>a.Image)
+                members = _db.Members
             };
 
             var artcon = _db.Articles.Where(a => a.ArticleId == AFId).Select(a => a);
@@ -129,5 +129,26 @@ namespace prjDB_GamingForm_Show.Controllers
 
             return RedirectToAction("ArticleList", new { SFId });
         }
+        public ActionResult Like(int? AFId)
+        {           
+            
+            var art = _db.ArticleActions.Where(a => a.ArticleId == AFId && a.MemberId == 16 && a.ActionId == 1).Select(a => a).FirstOrDefault();
+
+            if (art != null)
+            {
+                _db.ArticleActions.Remove(art);
+            }
+            else
+            {
+                ArticleAction x = new ArticleAction();
+                x.ArticleId = (int)AFId;
+                x.MemberId = 16;
+                x.ActionId = 1;
+                _db.ArticleActions.Add(x);
+            }
+            _db.SaveChanges();
+            return RedirectToAction("ArticleContent", new { AFId });
+        }
+
     }
 }
