@@ -12,6 +12,9 @@
     <div class="col-md-4">
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <p>
+        <input type="hidden" name="MemberId" value="@Model.MemberId" />
+            </p>
             <div class="form-group">
                 <label asp-for="Name" class="control-label"></label>
                 <input asp-for="Name" class="form-control" />
@@ -38,9 +41,9 @@
                 <span asp-validation-for="Password" class="text-danger"></span>
             </div>
             <div class="form-group">
-                @* <label asp-for="ImageId" class="control-label"></label>
-                <input asp-for="ImageId" class="form-control" />
-                <span asp-validation-for="ImageId" class="text-danger"></span> *@
+                 <label asp-for="FImagePath" class="control-label"></label>
+                <input asp-for="FImagePath" class="form-control" />
+                <span asp-validation-for="FImagePath" class="text-danger"></span> 
             </div>
             <div class="form-group">
                 <label asp-for="Mycomment" class="control-label"></label>
@@ -65,7 +68,7 @@
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="MemberPage">回到會員個人頁面</a>
 </div>
 
 @section Scripts {
