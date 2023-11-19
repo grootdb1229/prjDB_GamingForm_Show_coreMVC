@@ -34,12 +34,12 @@
 
 <body>
 
-    <header class="header-section">
+    <header class="header-section" >
         <div class="nav-options">
 
             <div class="container">
 
-                <div class="nav-menu">
+                <div class="nav-menu" >
                     <ul>
                         <li>
                             <a href="@Url.Action("List", "Blog")"><span>全部</span></a>
@@ -57,37 +57,29 @@
             </div>
         </div>
     </header>
-    <section class="instagram-post-section spad">
+    <section class="instagram-post-section spad" style="background-color:#272727">
         <div class="container">
             <div class="row">
-                <div class="col-lg-8">
-                    <div class="section-title">
-                        <h5>GROOT</h5>
-                    </div>
-                    <img style="display:none" src="~/images/comic.jpg" width="60" height="45" alt="">
-
-
+                <div class="col-lg-11" style="background-color:#4F4F4F;border-radius:8px">                   
                     @{
                         foreach (var item in Model.blogs)
                         {
-                            <div class="ip-item">
+                            <div class="ip-item" style="border-bottom:1px dotted #272727;padding:12px;margin:0px">
                                 <div class="ip-pic">
                                     <a href="@Url.Action("ArticleList", "Blog", new { FId =item.BlogId})">
-                                        <img src="~/images/@item.FImagePath" width="1200" height="400" alt="">
+                                        <img src="~/images/@item.FImagePath" width="360" height="108" alt="">
                                     </a>
                                 </div>
                                 <div class="ip-text">
-                                    <a href="@Url.Action("ArticleList", "Blog", new { FId =item.BlogId})">
+                                    <a style="text-decoration:none" href="@Url.Action("ArticleList", "Blog", new { FId =item.BlogId})">
                                         <span style="color: #FFFFFF;font-size:32px">@item.Title</span>
                                     </a>
-                                    <p>最新文章</p>
-                                    <p style="font-size:30px">@Html.DisplayFor(modelItem => item.SubBlogs.FirstOrDefault().Articles.LastOrDefault().Title)</p>
-                                                                        
+                                   
+                                    <p style="font-size:24px">@Html.DisplayFor(modelItem => item.SubBlogs.FirstOrDefault().Articles.LastOrDefault().Title)</p>                                                                        
                                 </div>
                             </div>
                         }
                     }
-
                 </div>
             </div>
         </div>

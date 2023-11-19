@@ -1,0 +1,26 @@
+﻿
+@{
+    ViewData["Title"] = "Personal";
+    Layout = "~/Views/Shared/_Layout_DB.cshtml";
+}
+
+<h2>Personal</h2>
+
+@section scripts{
+    <script>
+        function loadReleaseList() {
+            $('#divReleasePart').load('@Url.Content("~/depute/PartialReleaseList")');
+        }
+        loadReleaseList()
+
+        function loadReceiveList() {
+            $('#divReceivePart').load('@Url.Content("~/depute/PartialReceiveList")');
+        }
+        loadReceiveList()
+
+        function loadGallery() {
+            $('#divGalleryPart').load('@Url.Content("~/depute/PartialGallery")');
+        }
+        loadGallery()
+    </script>
+}
