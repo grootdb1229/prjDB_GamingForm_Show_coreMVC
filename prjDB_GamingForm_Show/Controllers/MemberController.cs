@@ -17,14 +17,23 @@ namespace prjDB_GamingForm_Show.Controllers
             return View();
         }
 
-        public IActionResult Test() 
-        {
-            return View();
-        }
+        //public IActionResult Test() 
+        //{
+        //    return View();
+        //}
         public IActionResult MemberPage(int? id)
         {
             //if (id == null)
             //    return RedirectToAction("Create");
+            IEnumerable<Member> datas = null;
+            datas = from m in _db.Members
+                    where m.MemberId == id
+                    select m;
+            return View(datas);
+        }
+
+        public IActionResult Test(int? id) 
+        {
             IEnumerable<Member> datas = null;
             datas = from m in _db.Members
                     where m.MemberId == id
@@ -57,11 +66,26 @@ namespace prjDB_GamingForm_Show.Controllers
             else
                 return View(member);
         }
-        //[HttpPost]
-        //public IActionResult Edit(int? id)
-        //{
+        [HttpPost]
+        public IActionResult Edit(Member member)
+        {
+            Member dbmember = _db.Members.FirstOrDefault(m => m.MemberId == member.MemberId);
+            if (member == null) 
+            {
+                return RedirectToAction("Create");
+            }
+            //dbmember == null;
+            if (dbmember != null)
+            {
+                dbmember.Name  = member.Name;
+                dbmember.Phone = member.Phone;
+                dbmember.Email = member.Email;
+                dbmember.Password = member.Password;
+                _db.SaveChanges();
+            }
+            return RedirectToAction("MemberPage");
+        }
 
-        //}
 
     }
 }
