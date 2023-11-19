@@ -96,7 +96,7 @@ namespace prjDB_GamingForm_Show.Controllers
             return View(vm);
         }
 
-        public ActionResult ArticleContent(int? AFId)
+        public ActionResult ArticleContent(int? FId,int? AFId)
         {
 
             CBlogViewModel vm = new CBlogViewModel();
@@ -105,8 +105,8 @@ namespace prjDB_GamingForm_Show.Controllers
             {
                 tags = _db.Tags.Select(p => p),
                 subTags = _db.SubTags.Where(s => s.TagId == 4 && s.SubTagId != 14).Select(p => p),
-                blogs = _db.Blogs.Select(p => p),
-                subBlogs = _db.SubBlogs.Select(p => p),
+                blogs = _db.Blogs.Where(b=>b.BlogId==FId).Select(p => p),
+                subBlogs = _db.SubBlogs.Include(s=>s.Articles).Select(p => p),
                 articles = _db.Articles.Include(a => a.Member).AsEnumerable().Where(a => a.ArticleId == AFId).Select(p => p),
                 actions = _db.Actions,
                 articleActions = _db.ArticleActions,

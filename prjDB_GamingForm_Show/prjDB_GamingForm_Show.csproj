@@ -27,6 +27,7 @@
 
   <ItemGroup>
     <Folder Include="Models\Entities\" />
+    <Folder Include="wwwroot\images\shop\" />
   </ItemGroup>
 
   <ItemGroup>
