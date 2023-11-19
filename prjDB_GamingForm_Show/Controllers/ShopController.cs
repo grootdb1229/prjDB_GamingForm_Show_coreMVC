@@ -39,11 +39,25 @@ namespace prjDB_GamingForm_Show.Controllers
 
             public ActionResult Create()
             {
+               
                 _db.Products.Load();
                 return View();
             }
+            public ActionResult CreateTag()
+            {
+                var Tag = _db.Tags.Where(p => p.TagId <=3).Select(t => new { t.TagId, t.Name }).ToList();
 
-            [HttpPost]
+				return Json(Tag);
+            }
+            public ActionResult SubTag(int? id)
+            {
+                _db.SubTags.Load();
+                var Tag = _db.SubTags.Where(p => p.TagId == id).Select(s => s.Name ).ToList();
+                return Json(Tag);
+            }
+
+
+				[HttpPost]
             public ActionResult Create(CProductWarp product) //原Product物件
             {
                 Product x = new Product();
@@ -64,7 +78,7 @@ namespace prjDB_GamingForm_Show.Controllers
 
                 return RedirectToAction("Index");
             }
-
+           
 
             public ActionResult Edit(int? id)
             {
@@ -144,6 +158,7 @@ namespace prjDB_GamingForm_Show.Controllers
                     }
                     ShoppingCar x = new ShoppingCar();
                     x.Price = (decimal)product.Price;
+                    x.ProductName = product.ProductName;
                     x.Count = vm.txtCount;
                     x.ProductID = product.ProductId;
                     x.product = product;
@@ -152,6 +167,21 @@ namespace prjDB_GamingForm_Show.Controllers
                     HttpContext.Session.SetString(CDictionary.SK_PURCHASED_PRODUCES_LIST, json);
                 }
                 return RedirectToAction("Index");
+            }
+
+            public IActionResult CarView()
+            {
+                if (!HttpContext.Session.Keys.Contains(CDictionary.SK_PURCHASED_PRODUCES_LIST))
+                {
+                    return RedirectToAction("Index");
+                }
+                string json = HttpContext.Session.GetString(CDictionary.SK_PURCHASED_PRODUCES_LIST);
+                List<ShoppingCar> car = JsonSerializer.Deserialize<List<ShoppingCar>>(json);
+                if (car == null)
+                {
+                    return RedirectToAction("Index");
+                }
+                return View(car);
             }
             //            public ActionResult AddToCar(CShoppingCarViewModel vm)
             //            {

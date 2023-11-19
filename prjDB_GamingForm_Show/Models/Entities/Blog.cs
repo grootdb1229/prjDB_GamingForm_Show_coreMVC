@@ -11,11 +11,7 @@ public partial class Blog
 
     public int SubTagId { get; set; }
 
-    public int? ImageId { get; set; }
-
     public string? FImagePath { get; set; }
-
-    public virtual Image? Image { get; set; }
 
     public virtual ICollection<SubBlog> SubBlogs { get; set; } = new List<SubBlog>();
 

@@ -105,10 +105,10 @@ public partial class DbGamingFormTestContext : DbContext
 
     public virtual DbSet<WishList> WishLists { get; set; }
 
-//    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-//#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-//        //=> optionsBuilder.UseSqlServer("Data Source=192.168.22.164\\DESKTOP-RAE7E6C,1433;Initial Catalog=DB_GamingForm_test;Persist Security Info=True;User ID=DBmem;Password=12345678;Trust Server Certificate=True");
-//     => optionsBuilder.UseSqlServer("Data Source=.;Initial Catalog=DB_GamingForm_test;Integrated Security=True;Trust Server Certificate=True");
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+        => optionsBuilder.UseSqlServer("Data Source=cdfc0ea1e7f4.sn.mynetname.net\\Akuna-PC,1433;Initial Catalog=DB_GamingForm_test;Persist Security Info=True;User ID=DBmem;Password=12345678;Trust Server Certificate=True");
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Action>(entity =>
@@ -224,18 +224,11 @@ public partial class DbGamingFormTestContext : DbContext
             entity.ToTable("Blog");
 
             entity.Property(e => e.BlogId).HasColumnName("BlogID");
-            entity.Property(e => e.FImagePath)
-                .HasMaxLength(50)
-                .HasColumnName("fImagePath");
-            entity.Property(e => e.ImageId).HasColumnName("ImageID");
+            entity.Property(e => e.FImagePath).HasColumnName("fImagePath");
             entity.Property(e => e.SubTagId)
                 .HasDefaultValueSql("((10))")
                 .HasColumnName("SubTagID");
             entity.Property(e => e.Title).HasMaxLength(50);
-
-            entity.HasOne(d => d.Image).WithMany(p => p.Blogs)
-                .HasForeignKey(d => d.ImageId)
-                .HasConstraintName("FK_Blog_Image");
 
             entity.HasOne(d => d.SubTag).WithMany(p => p.Blogs)
                 .HasForeignKey(d => d.SubTagId)
@@ -406,16 +399,11 @@ public partial class DbGamingFormTestContext : DbContext
             entity.Property(e => e.MemberId).HasColumnName("MemberID");
             entity.Property(e => e.Birth).HasColumnType("date");
             entity.Property(e => e.Email).HasMaxLength(50);
+            entity.Property(e => e.FImagePath).HasColumnName("fImagePath");
             entity.Property(e => e.Gender).HasDefaultValueSql("((3))");
-            entity.Property(e => e.ImageId).HasColumnName("ImageID");
             entity.Property(e => e.Mycomment).HasColumnType("ntext");
             entity.Property(e => e.Name).HasMaxLength(50);
             entity.Property(e => e.Phone).HasMaxLength(24);
-
-            entity.HasOne(d => d.Image).WithMany(p => p.Members)
-                .HasForeignKey(d => d.ImageId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_Member_Image");
         });
 
         modelBuilder.Entity<MemberStatus>(entity =>
@@ -543,20 +531,16 @@ public partial class DbGamingFormTestContext : DbContext
 
             entity.Property(e => e.ProductId).HasColumnName("ProductID");
             entity.Property(e => e.AvailableDate).HasColumnType("date");
+            entity.Property(e => e.FImagePath).HasColumnName("fImagePath");
             entity.Property(e => e.FirmId)
                 .HasDefaultValueSql("((0))")
                 .HasColumnName("FirmID");
-            entity.Property(e => e.ImageId).HasColumnName("ImageID");
             entity.Property(e => e.MemberId)
                 .HasDefaultValueSql("((0))")
                 .HasColumnName("MemberID");
             entity.Property(e => e.Price).HasColumnType("money");
             entity.Property(e => e.ProductName).HasMaxLength(50);
             entity.Property(e => e.StatusId).HasColumnName("StatusID");
-
-            entity.HasOne(d => d.Image).WithMany(p => p.Products)
-                .HasForeignKey(d => d.ImageId)
-                .HasConstraintName("FK_Product_Image");
 
             entity.HasOne(d => d.Member).WithMany(p => p.Products)
                 .HasForeignKey(d => d.MemberId)

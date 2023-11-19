@@ -53,7 +53,7 @@
 
 
                     <form class="d-flex">
-                        <a href="~/Shop/ShoppingCar" class="btn mt-auto btn-outline-dark bi-cart-fill me-1" id="car">
+                        <a href="~/Shop/CarView" class="btn mt-auto btn-outline-dark bi-cart-fill me-1" id="car">
                             <span class="badge bg-dark text-white ms-1 rounded-pill">@count</span>
                         </a>
                     </form>
@@ -82,5 +82,7 @@
             button.style.backgroundColor = '';
         });
     </script>
+    <!--圈圈加進來測試用-->
+    @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
