@@ -4,6 +4,7 @@ using prjDB_GamingForm_Show.Models;
 using prjDB_GamingForm_Show.Models.Entities;
 using prjDB_GamingForm_Show.Models.Shop;
 using prjDB_GamingForm_Show.ViewModels;
+using System.Reflection.PortableExecutable;
 using System.Text.Json;
 
 namespace prjDB_GamingForm_Show.Controllers
@@ -21,13 +22,24 @@ namespace prjDB_GamingForm_Show.Controllers
                 _db = db;
             }
             public IActionResult Index(CKeyWord ck)
-            {
+            { 
+                //UI相關
+                //Todo 商品切成XX個一頁，下面要有1~XX個頁，上面要有選項讓客人決定一頁呈現 20 OR 40個   //補充 蝦皮沒分 大約60件一頁
+               //Todo 商品圖片大小不一需要修正
+               //Todo 篩選 價格排序 上架日期排序 銷售件數排序
+               //Todo 研究一下商品上架/修改的選擇圖片那區，檔案名移除+讓他好看點
+
+                //軟體功能相關
+                //Todo  你的交易邏輯有待考據。請洽GPT或者芳芳老師
+                //Todo  tag選擇後要有DIV去接客人選擇的Subtag，可視化讓客人選擇自己商品的標籤，再用迴圈塞入資料庫
+                //Todo  產品留言功能目前未實作
+
                 String CK = ck.txtKeyword;
                 IEnumerable<Product> Pdb = null;
                 if (string.IsNullOrEmpty(CK))
                 {
-                    Pdb = from aa in _db.Products
-                          select aa;
+                    Pdb = (from aa in _db.Products
+                          select aa).Take(25);
                 }
                 else
                 {
@@ -36,7 +48,11 @@ namespace prjDB_GamingForm_Show.Controllers
                 return View(Pdb);
 
             }
-
+            public IActionResult IndexPage(int? id) //拿來跳page用的 id用變數去計算，++--一個變數去控制讀取到的最後一個商品控制Page
+            {   IEnumerable<Product> Pdb = null;
+                Pdb = (from aa in _db.Products select aa).Skip((int)id).Take(25);//到最後一頁之後不能按 邏輯再補充
+                return Json(Pdb);
+            }
             public ActionResult Create()
             {
 
@@ -67,7 +83,7 @@ namespace prjDB_GamingForm_Show.Controllers
                     {
                         string photoName = Guid.NewGuid().ToString() + ".jpg";
                         x.FImagePath = photoName;
-                        product.photo.CopyTo(new FileStream(_host.WebRootPath + "/images/shop/" + photoName, FileMode.Create));
+                        product.photo.CopyTo(new FileStream(_host.WebRootPath + "/images/shop/" + photoName, FileMode.Create));       
                     }
                     x.ProductName = product.ProductName;
                     x.Price = product.Price;
