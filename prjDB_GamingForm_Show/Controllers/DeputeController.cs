@@ -71,10 +71,13 @@ namespace prjDB_GamingForm_Show.Controllers
             return View();
 
         }
-        public IActionResult Search(string txtKeyword)
+        public IActionResult Search(CKeyWord vm)
         {
             IEnumerable<CDeputeViewModel> datas = null;
-            if (string.IsNullOrEmpty(txtKeyword))
+            if (string.IsNullOrEmpty(vm.txtKeyword) &&
+                vm.txtSkill == "請選擇..." && 
+                vm.txtSkillClass == "請選擇..." && 
+                vm.txtSalary == "請選擇...")
             {
                 ListLoad();
                 datas = from n in List
@@ -83,13 +86,32 @@ namespace prjDB_GamingForm_Show.Controllers
             }
             else
             {
-                datas = List.Where(n => n.DeputeContent.Trim().ToLower().Contains(txtKeyword.Trim().ToLower()) ||
-                                          n.providername.Trim().ToLower().Contains(txtKeyword.Trim().ToLower()) ||
-                                          n.salary.ToString().Trim().ToLower().Contains(txtKeyword.Trim().ToLower()) ||
-                                          n.region.Trim().ToLower().Contains(txtKeyword.Trim().ToLower())
+                
+                if (string.IsNullOrEmpty(vm.txtKeyword))
+                    vm.txtKeyword = "";
+                if (vm.txtSkill== "請選擇...")
+                    vm.txtSkill = "";
+                if (vm.txtSkillClass== "請選擇...")
+                    vm.txtSkillClass = "";
+                if (vm.txtSalary == "請選擇...")
+                    vm.txtSalary = "0";
+                datas = List.Where(n => (n.DeputeContent.Trim().ToLower().Contains(vm.txtKeyword.Trim().ToLower()) ||
+                                          n.providername.Trim().ToLower().Contains(vm.txtKeyword.Trim().ToLower()) ||
+                                          n.salary.ToString().Trim().ToLower().Contains(vm.txtKeyword.Trim().ToLower()) ||
+                                          n.region.Trim().ToLower().Contains(vm.txtKeyword.Trim().ToLower()))
+                                          &&
+                                          (n.DeputeContent.Trim().ToLower().Contains(vm.txtSkill.Trim().ToLower()))
+                                          &&
+                                          (n.DeputeContent.Trim().ToLower().Contains(vm.txtKeyword.Trim().ToLower()))
+                                          &&
+                                          (n.salary>=(Convert.ToInt32(vm.txtSalary)))
                                           )
                    .OrderByDescending(n => n.modifieddate);
 
+            }
+            if(datas==null || datas.Count()==0)
+            {
+                return Content("No result");
             }
             return Json(datas);
         }

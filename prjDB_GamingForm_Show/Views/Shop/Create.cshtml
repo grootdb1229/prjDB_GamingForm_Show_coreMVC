@@ -147,11 +147,11 @@
             Subtag();
         })
         //////監聽事件--選擇小標籤
-        const checkboxlist = document.querySelector('input[name="subtag"]')
-            checkboxes.forEach(checkbox => { checkbox.addEventListener('change',()=>{
-                if (checkbox.checked) { console.log(checkbox.value) }
-            })
-        });
+        // const checkboxlist = document.querySelector('input[name="subtag"]')
+        //     checkboxes.forEach(checkbox => { checkbox.addEventListener('change',()=>{
+        //         if (checkbox.checked) { console.log(checkbox.value) }
+        //     })
+        // });
 
               //SelSub.addEventListener('change', () => 
               //  {
@@ -186,9 +186,16 @@
             const subtagOptions = data.map(x =>
                 `
                       <label>
-                            <input type="checkbox" id="subtag" name="subtag" value="${x.subTagId}">${x.name}
+                                            <input type="checkbox" id="${x.name}" name="subtag" value="${x.name}">${x.name}
                       </label>
-                    `);
+
+                    `
+                                    
+                    $(`#${x.name}`).check(function() {
+                    SelDiv.innerHTML = `<p>${x.name}.value</p>`;
+                
+                })
+            );
             SubDiv.innerHTML = subtagOptions.join("");
           
         }
