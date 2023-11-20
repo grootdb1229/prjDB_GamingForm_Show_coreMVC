@@ -32,15 +32,13 @@
     <link rel="stylesheet" href="~/css/slicknav.min.css" type="text/css">
     <link rel="stylesheet" href="~/css/blogstyle.css" type="text/css">
 </head>
-<body>
-
-    
+<body>      
 
     <header class="header-section">
         <div class="nav-options">
 
             <div class="container">
-                <div class="humberger-menu humberger-open">
+                <div class="humberger-menu ">
                     @Html.ActionLink("前往首頁", "List", "Blog")
                 </div>
                 <div class="nav-search search-switch">
@@ -61,22 +59,32 @@
                         }
                     </ul>
                 </div>
+                @using (Html.BeginForm())
+                {
+                    @:關鍵字 @Html.TextBox("txtKeyword")
+                    <input type="submit" value="查詢" />
+                }
             </div>
         </div>
     </header>
 
 
 
-    <div style="margin:10px auto;width:650px;background-color:#4F4F4F">
+    <div style="margin:0px auto;margin-top:30px;width:940px;background-color:#4F4F4F;box-shadow:0px 0px 8px 8px #cccccc;border-radius:8px">
 
         <table class="table">
             <tr>
 
                 <th>
+                    <h4 style="color:antiquewhite;text-align:center">
+
                     @Html.DisplayNameFor(model => model.articles.FirstOrDefault().Title)
+                    </h4>
                 </th>
                 <th>
+                    <h4 style="color:antiquewhite;text-align:center">
                     @Html.DisplayNameFor(model => model.articles.FirstOrDefault().ModifiedDate)
+                    </h4>
                 </th>
         
 
@@ -88,7 +96,14 @@
                     <tr>
 
                         <td>
-                            <a style="text-decoration:none" href="@Url.Action("ArticleContent", "Blog", new {FId=item.SubBlog.BlogId, AFId =item.ArticleId}) ">@item.Title</a>
+                            <a style="text-decoration:none" href="@Url.Action("ArticleContent", "Blog", new {FId=item.SubBlog.BlogId, AFId =item.ArticleId}) ">
+                                <span style="color:	#FF8000">
+                            【@item.SubBlog.Title】
+                                </span>
+                                <span>
+                            @item.Title
+                                </span>
+                            </a>
                         </td>
                         <td style="color:wheat;font-size:10px ">
                               @Html.DisplayFor(modelItem => item.ModifiedDate)

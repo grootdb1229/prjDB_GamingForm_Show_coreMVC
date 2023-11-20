@@ -46,15 +46,14 @@ namespace prjDB_GamingForm_Show.Controllers
             return View();
         }
         [HttpPost] 
-        public async Task<IActionResult> Create([Bind("Name,Phone,Email,Password")] Member member)
+        public IActionResult Create (Member member)
         {
-            if (ModelState.IsValid) 
-            {
+                string photoName = Guid.NewGuid().ToString() + ".jpg";
+                member.FImagePath = photoName;
                 _db.Members.Add(member);
-                await _db.SaveChangesAsync();
+                _db.SaveChanges();
                 return RedirectToAction("MemberPage");
-            }
-            return View();
+           
         }
 
         public IActionResult Edit(int? id)

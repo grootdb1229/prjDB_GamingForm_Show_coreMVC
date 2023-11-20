@@ -88,21 +88,105 @@ namespace prjDB_GamingForm_Show.Controllers
                 return View(members);
             }            
         }
-        public IActionResult BlogCategoryList()
+        public IActionResult BlogCategoryList(CKeyWordViewModel kyvm)
         {
-            var bc = from b in _db.SubTags.Where(tid => tid.TagId == 4)
-                     select b;
-            return View(bc);
-        }
-        public IActionResult BlogList()
-        {
-            CBlogViewModel vm = new CBlogViewModel
+            if (string.IsNullOrEmpty(kyvm.txtKeyWord))
             {
-                blogs = _db.Blogs.Include(p=>p.SubTag),
-                subTags = _db.SubTags
-            };
-            
-            return View(vm);
+                var bc = from b in _db.SubTags.Where(tid => tid.TagId == 4)
+                         select b;
+                return View(bc);
+            }
+            else
+            {
+                var bc = from b in _db.SubTags.Where(tid => tid.TagId == 4 && tid.Name.Contains(kyvm.txtKeyWord))
+                         select b;
+                return View(bc);
+            }
+        }
+        public IActionResult BlogList(CKeyWordViewModel kyvm)
+        {
+            CBlogViewModel vm = null;
+            if (string.IsNullOrEmpty(kyvm.txtKeyWord))
+            {
+                vm = new CBlogViewModel
+                {
+                    blogs = _db.Blogs.Include(p => p.SubTag).Skip(i每頁筆數 * i頁數).Take(i每頁筆數),
+                    subTags = _db.SubTags
+                };
+                return View(vm);
+            }
+            else
+            {
+                vm = new CBlogViewModel
+                {
+                    blogs = _db.Blogs.Include(p => p.SubTag).Where(b => b.Title.Contains(kyvm.txtKeyWord)).Skip(i每頁筆數 * i頁數).Take(i每頁筆數),
+                    subTags = _db.SubTags
+                };
+                return View(vm);
+            }            
+        }
+        public IActionResult BlogListNext(CKeyWordViewModel kyvm)
+        {
+            CBlogViewModel vm = null;
+            if (string.IsNullOrEmpty(kyvm.txtKeyWord))
+            {
+                if (HttpContext.Session.Keys.Contains(CDictionary.SK_管理者觀看版面清單頁數使用關鍵字))
+                {
+                    i頁數 = (int)HttpContext.Session.GetInt32(CDictionary.SK_管理者觀看版面清單頁數使用關鍵字);
+                }
+                if (i頁數 < _db.Blogs.Count() / i每頁筆數)
+                {
+                    i頁數++;
+                }
+
+                HttpContext.Session.SetInt32(CDictionary.SK_管理者觀看版面清單頁數使用關鍵字, i頁數);
+                vm = new CBlogViewModel
+                {
+                    blogs = _db.Blogs.Include(p => p.SubTag).Skip(i每頁筆數 * i頁數).Take(i每頁筆數),
+                    subTags = _db.SubTags
+                };
+                return View(vm);
+            }
+            else
+            {
+                vm = new CBlogViewModel
+                {
+                    blogs = _db.Blogs.Include(p => p.SubTag).Where(b => b.Title.Contains(kyvm.txtKeyWord)).Skip(i每頁筆數 * i頁數).Take(i每頁筆數),
+                    subTags = _db.SubTags
+                };
+                return View(vm);
+            }            
+        }
+        public IActionResult BlogListPrevious(CKeyWordViewModel kyvm)
+        {
+            CBlogViewModel vm = null;
+            if (string.IsNullOrEmpty(kyvm.txtKeyWord))
+            {
+                if (HttpContext.Session.Keys.Contains(CDictionary.SK_管理者觀看版面清單頁數使用關鍵字))
+                {
+                    i頁數 = (int)HttpContext.Session.GetInt32(CDictionary.SK_管理者觀看版面清單頁數使用關鍵字);
+                }
+                if (i頁數 != 0)
+                {
+                    i頁數--;
+                }
+                HttpContext.Session.SetInt32(CDictionary.SK_管理者觀看版面清單頁數使用關鍵字, i頁數);
+                vm = new CBlogViewModel
+                {
+                    blogs = _db.Blogs.Include(p => p.SubTag).Skip(i每頁筆數 * i頁數).Take(i每頁筆數),
+                    subTags = _db.SubTags
+                };
+                return View(vm);
+            }
+            else
+            {
+                vm = new CBlogViewModel
+                {
+                    blogs = _db.Blogs.Include(p => p.SubTag).Where(b => b.Title.Contains(kyvm.txtKeyWord)).Skip(i每頁筆數 * i頁數).Take(i每頁筆數),
+                    subTags = _db.SubTags
+                };
+                return View(vm);
+            }
         }
         public IActionResult ProductList(CKeyWordViewModel kyvm)
         {

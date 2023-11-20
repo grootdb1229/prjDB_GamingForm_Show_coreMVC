@@ -27,6 +27,9 @@
                     </div>
                     <button type="submit" class="btn btn-black">登入</button>
                     <button type="button" class="btn btn-secondary" id="btnre">重新輸入</button>
+                    <br>
+                    <p style="margin:5px"></p>
+                    <button type="button" class="btn btn-black" id="btndemo">Demo</button>
                 </form>
             </div>
         </div>
@@ -37,6 +40,10 @@
         document.querySelector('#btnre').addEventListener('click',()=>{
             document.querySelector('#acc').value = "";
             document.querySelector('#pwd').value = "";
+        })
+        document.querySelector('#btndemo').addEventListener('click',()=>{
+            document.querySelector('#acc').value = "papa@gmail.com";
+            document.querySelector('#pwd').value = "papa0625";
         })
     </script>
 }

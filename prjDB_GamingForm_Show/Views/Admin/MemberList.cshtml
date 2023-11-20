@@ -5,14 +5,15 @@
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
-<h2 style="margin-left:5px ; font-size:25px">會員清單</h2>
+<h2 style="margin-left:5px ; font-size:45px">會員清單</h2>
 @using (Html.BeginForm())
 {
-    @:信箱關鍵字查詢 @Html.TextBox("txtKeyWord",null,new{@class = "col-form-label"})
+    <p style="display:inline;font-size:30px;margin-left:5px;margin-right:10px">信箱關鍵字查詢 : </p> @Html.TextBox("txtKeyWord",null,new{@class = "col-form-label"})
     <input type="submit" value="查詢" class="btn btn-dark" />
+    
 }
-<p style="margin-top:5px"></p>
-<p>
+@*<p style="margin-top:5px"></p>*@
+<p style="margin-left:5px">
     @*<input type="button" id="last" value="上一頁"/>*@
     @*<input type="button" id="next" value="下一頁"/>*@
     @Html.ActionLink("上一頁", "MemberListPrevious", "Admin", null, new  { @class = "btn btn-dark" })
