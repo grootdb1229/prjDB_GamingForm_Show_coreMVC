@@ -25,6 +25,6 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Blog}/{action=List}/{id?}");
+    pattern: "{controller=depute}/{action=personal}/{id?}");
 
 app.Run();
