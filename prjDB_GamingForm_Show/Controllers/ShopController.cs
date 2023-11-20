@@ -39,7 +39,7 @@ namespace prjDB_GamingForm_Show.Controllers
                 if (string.IsNullOrEmpty(CK))
                 {
                     Pdb = (from aa in _db.Products
-                          select aa).Take(25);
+                          select aa)/*.Take(25)*/;
                 }
                 else
                 {
@@ -49,7 +49,8 @@ namespace prjDB_GamingForm_Show.Controllers
 
             }
             public IActionResult IndexPage(int? id) //拿來跳page用的 id用變數去計算，++--一個變數去控制讀取到的最後一個商品控制Page
-            {   IEnumerable<Product> Pdb = null;
+            {
+                IEnumerable<Product> Pdb = null;
                 Pdb = (from aa in _db.Products select aa).Skip((int)id).Take(25);//到最後一頁之後不能按 邏輯再補充
                 return Json(Pdb);
             }
@@ -79,12 +80,12 @@ namespace prjDB_GamingForm_Show.Controllers
                 Product x = new Product();
                 if (_db != null)
                 {
-                    //if (product.photo != null)
-                    //{
-                    //    string photoName = Guid.NewGuid().ToString() + ".jpg";
-                    //    x.FImagePath = photoName;
-                    //    product.photo.CopyTo(new FileStream(_host.WebRootPath + "/images/shop/" + photoName, FileMode.Create));       
-                    //}
+                    if (product.photo != null)
+                    {
+                        string photoName = Guid.NewGuid().ToString() + ".jpg";
+                        x.FImagePath = photoName;
+                        product.photo.CopyTo(new FileStream(_host.WebRootPath + "/images/shop/" + photoName, FileMode.Create));
+                    }
                     x.ProductName = product.ProductName;
                     x.Price = product.Price;
                     x.AvailableDate = product.AvailableDate;
@@ -116,13 +117,13 @@ namespace prjDB_GamingForm_Show.Controllers
                 Product x = _db.Products.FirstOrDefault(p => p.ProductId == product.ProductID);
                 if (x != null)
                 {
-					//if (product.photo != null)
-					//{
-					//	string photoName = Guid.NewGuid().ToString() + ".jpg";
-     //                   x.FImagePath = photoName;
-     //                   product.photo.CopyTo(new FileStream(_host.WebRootPath + "/images/shop/" + photoName, FileMode.Create));
-					//}
-					x.ProductName = product.ProductName;
+                    if (product.photo != null)
+                    {
+                        string photoName = Guid.NewGuid().ToString() + ".jpg";
+                        x.FImagePath = photoName;
+                        product.photo.CopyTo(new FileStream(_host.WebRootPath + "/images/shop/" + photoName, FileMode.Create));
+                    }
+                    x.ProductName = product.ProductName;
                     x.Price = product.Price;
                     x.AvailableDate = product.AvailableDate;
                     x.ProductContent = product.ProductContent;
