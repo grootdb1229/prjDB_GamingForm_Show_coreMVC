@@ -39,11 +39,20 @@ namespace prjDB_GamingForm_Show.Controllers
                 if (string.IsNullOrEmpty(CK))
                 {
                     Pdb = (from aa in _db.Products
+                           where aa.StatusId == 1
                           select aa)/*.Take(25)*/;
                 }
                 else
                 {
-                    Pdb = _db.Products.Where(p => p.ProductName.Contains(CK));
+                    Pdb = _db.Products.Where(p => p.ProductName.Contains(CK)&&p.StatusId==1);
+                }
+                string json = "";
+                ViewBag.Car = 0;
+                if (HttpContext.Session.Keys.Contains(CDictionary.SK_PURCHASED_PRODUCES_LIST))
+                {
+                    json = HttpContext.Session.GetString(CDictionary.SK_PURCHASED_PRODUCES_LIST);
+                    List<ShoppingCar> car = JsonSerializer.Deserialize<List<ShoppingCar>>(json);
+                    ViewBag.Car = car.Count();
                 }
                 return View(Pdb);
 
@@ -56,7 +65,6 @@ namespace prjDB_GamingForm_Show.Controllers
             }
             public ActionResult Create()
             {
-
                 _db.Products.Load();
                 return View();
             }
@@ -97,6 +105,7 @@ namespace prjDB_GamingForm_Show.Controllers
                     _db.Products.Add(x);
                     _db.SaveChanges();
                 }
+                Thread.Sleep(3000);
                 return RedirectToAction("Index");
             }
 
@@ -134,7 +143,8 @@ namespace prjDB_GamingForm_Show.Controllers
                     //MemberID跟StatusID是寫死在CProduct物件中的
                     _db.SaveChanges();
                 }
-                return RedirectToAction("Index");
+				Thread.Sleep(3000);
+				return RedirectToAction("Index");
             }
 
             public ActionResult Delete(int id)    ////不確定是否要用刪除的方式來表達商品下架，刪除資料也會讓關聯表紀錄消失。
@@ -192,7 +202,9 @@ namespace prjDB_GamingForm_Show.Controllers
                     car.Add(x);
                     json = JsonSerializer.Serialize(car);
                     HttpContext.Session.SetString(CDictionary.SK_PURCHASED_PRODUCES_LIST, json);
+                    ViewBag.Car = car.Count();
                 }
+                
                 return RedirectToAction("Index");
             }
 
@@ -208,6 +220,7 @@ namespace prjDB_GamingForm_Show.Controllers
                 {
                     return RedirectToAction("Index");
                 }
+                ViewBag.Car = car.Count();
                 return View(car);
             }
 
@@ -222,6 +235,7 @@ namespace prjDB_GamingForm_Show.Controllers
                 }
                 json = JsonSerializer.Serialize(car);
                 HttpContext.Session.SetString(CDictionary.SK_PURCHASED_PRODUCES_LIST, json);
+                ViewBag.Car = car.Count();
                 return RedirectToAction("CarView");
             }
 
@@ -250,8 +264,10 @@ namespace prjDB_GamingForm_Show.Controllers
                 car.Add(n);
                 json = JsonSerializer.Serialize(car);
                 HttpContext.Session.SetString(CDictionary.SK_PURCHASED_PRODUCES_LIST, json);
+                ViewBag.Car = car.Count();
                 return RedirectToAction("CarView");
             }
+
 
             public IActionResult Purchase()
             {
@@ -260,8 +276,11 @@ namespace prjDB_GamingForm_Show.Controllers
                 car.Clear();
                 json = JsonSerializer.Serialize(car);
                 HttpContext.Session.SetString(CDictionary.SK_PURCHASED_PRODUCES_LIST, json);
-                return RedirectToAction("List");
+                ViewBag.Car = 0;
+                Thread.Sleep(3000);
+                return RedirectToAction("Index");
             }
+
         }
     }
 }
