@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using prjDB_GamingForm_Show.Models.Entities;
+using prjDB_GamingForm_Show.Models.Member;
 
 namespace prjDB_GamingForm_Show.Controllers
 {
@@ -45,15 +46,23 @@ namespace prjDB_GamingForm_Show.Controllers
         {
             return View();
         }
-        [HttpPost] 
-        public IActionResult Create (Member member)
+        [HttpPost]
+        public IActionResult Create(CMemberWrap memberWrap)
         {
-                string photoName = Guid.NewGuid().ToString() + ".jpg";
-                member.FImagePath = photoName;
-                _db.Members.Add(member);
-                _db.SaveChanges();
-                return RedirectToAction("MemberPage");
-           
+            Member member = new Member();
+            member.Name = memberWrap.Name;
+            member.Phone = memberWrap.Phone;
+            member.Birth = memberWrap.Birth;
+            member.Email = memberWrap.Email;
+            member.Password = memberWrap.Password;
+            member.Gender = memberWrap.Gender;
+            string photoName = Guid.NewGuid().ToString() + ".jpg";
+            member.FImagePath = photoName; 
+            memberWrap.photo.CopyTo(new FileStream(_host.WebRootPath + "/MemberPhoto/" + photoName, FileMode.Create));
+            _db.Members.Add(member);
+            _db.SaveChanges();
+            ViewBag.ID = member.MemberId;
+            return RedirectToAction("MemberPage" , "Member");
         }
 
         public IActionResult Edit(int? id)
