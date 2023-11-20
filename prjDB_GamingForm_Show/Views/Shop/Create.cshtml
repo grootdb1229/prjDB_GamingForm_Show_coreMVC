@@ -2,76 +2,81 @@
 
 
 @{
-	ViewBag.Title = "Create";
+    ViewBag.Title = "Create";
 }
 
 
 @using (Html.BeginForm("Create", "Shop", FormMethod.Post, new { enctype = "multipart/form-data",id="productform" }))
 {
-	@Html.AntiForgeryToken()
+    @Html.AntiForgeryToken()
 
-	<div class="container px-4 px-lg-5 mt-2">
+    <div class="container px-4 px-lg-5 mt-2">
 
-		<h2>新增商品</h2>
+        <h2>新增商品</h2>
 
 
-		<hr />
-		<div class="form-group">
-			@Html.LabelFor(model => model.ImageID, htmlAttributes: new { @class = "control-label col-md-2" })
-			<div class="col-md-10">
-				<input type="file" name="photo" id="imageInput" onchange="previewImage(this)"  />
-				<img id="imagePreview" style="max-width: 300px; max-height: 300px; margin-top: 10px;" />
-			</div>
-		</div>
-		@Html.ValidationSummary(true, "", new { @class = "text-danger" })
-		<div class="form-group">
-			@Html.LabelFor(model => model.ProductName, htmlAttributes: new { @class = "control-label col-md-2" })
-			<div class="col-md-10">
-				@Html.EditorFor(model => model.ProductName, new { htmlAttributes = new { @class = "form-control" } })
-				@Html.ValidationMessageFor(model => model.ProductName, "", new { @class = "text-danger" })
-			</div>
-		</div>
+        <hr />
+        <div class="form-group">
+            @Html.LabelFor(model => model.ImageID, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <input type="file" name="photo" id="imageInput" onchange="previewImage(this)" />
+                <img id="imagePreview" style="max-width: 300px; max-height: 300px; margin-top: 10px;" />
+            </div>
+        </div>
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.ProductName, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.ProductName, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.ProductName, "", new { @class = "text-danger" })
+            </div>
+        </div>
 
-		<div class="form-group">
-			@Html.LabelFor(model => model.Price, htmlAttributes: new { @class = "control-label col-md-2" })
-			<div class="col-md-10">
-				@Html.EditorFor(model => model.Price, new { htmlAttributes = new { @class = "form-control" } })
-				@Html.ValidationMessageFor(model => model.Price, "", new { @class = "text-danger" })
-			</div>
-		</div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.Price, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Price, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Price, "", new { @class = "text-danger" })
+            </div>
+        </div>
 
-		<div class="form-group">
+        <div class="form-group">
 
-			<label for="Tags" class="control-label col-md-2">選擇標籤：</label>
-			<div class="col-md-10">
-				<select id="Tags" name="TagID" class="form-control"> </select>
-			</div>
-		</div>
-		<div id="dynamicDiv" style="display:none;border: 1px solid #ccc; padding: 10px; overflow-y: auto; width:50vw;">
-			<!-- 內容會自動調整高度 -->				
-		</div>
+            <label for="Tags" class="control-label col-md-2">選擇標籤：</label>
+            <div class="col-md-10">
+                <select id="Tags" name="TagID" class="form-control"> </select>
+            </div>
+        </div>
+        <div id="dynamicDiv" style="display:none;border: 1px solid #ccc; padding: 10px; overflow-y: auto; width:50vw;">
+            <!-- 內容會自動調整高度 -->	
+        </div>
+        <input type="button" id="DoNotSubmit" value="選擇指定標籤"/>
+        <div id="SelTagDiv" style="display:none;border: 1px solid #ccc; padding: 10px; overflow-y: auto; width:50vw;">
+            <!-- 內容會自動調整高度 -->
+        </div>
 
-		<div class="form-group">
-			@Html.LabelFor(model => model.ProductContent, htmlAttributes: new { @class = "control-label col-md-2" })
-			<div class="col-md-10">
-				@*@Html.EditorFor(model => model.ProductContent, new { htmlAttributes = new { @class = "form-control" } })*@
-				<textarea style="width: 50vw; height: 45vh; resize: none;" name="ProductContent" cols="120">請輸入產品描述</textarea>
-				@Html.ValidationMessageFor(model => model.ProductContent, "", new { @class = "text-danger" })
-			</div>
-		</div>
 
-		<div class="form-group">
-			@Html.LabelFor(model => model.UnitStock, htmlAttributes: new { @class = "control-label col-md-2" })
-			<div class="col-md-10">
-				@Html.EditorFor(model => model.UnitStock, new { htmlAttributes = new { @class = "form-control" } })
-				@Html.ValidationMessageFor(model => model.UnitStock, "", new { @class = "text-danger" })
-			</div>
-		</div>
-		@*產品狀態要在類別或是controllers中獨立寫下""上架中"的邏輯*@
+        <div class="form-group">
+            @Html.LabelFor(model => model.ProductContent, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @*@Html.EditorFor(model => model.ProductContent, new { htmlAttributes = new { @class = "form-control" } })*@
+                <textarea style="width: 50vw; height: 45vh; resize: none;" name="ProductContent" cols="120"></textarea>
+                @Html.ValidationMessageFor(model => model.ProductContent, "", new { @class = "text-danger" })
+            </div>
+        </div>
 
-		@*上架人員的ID在類別或是controllers中獨立寫下邏輯*@
+        <div class="form-group">
+            @Html.LabelFor(model => model.UnitStock, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.UnitStock, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.UnitStock, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        @*產品狀態要在類別或是controllers中獨立寫下""上架中"的邏輯*@
 
-		<hr />
+        @*上架人員的ID在類別或是controllers中獨立寫下邏輯*@
+
+        <hr />
 
 		<div class="form-group">
 			<div class="col-md-offset-2 col-md-10">
@@ -79,31 +84,31 @@
 			</div>
 		</div>
 
-	</div>
-	@section Scripts
-	{
-	<!--子標籤視窗大小-->
-	<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-	<script>
-		$(document).ready(function () {
-			// 監聽textarea內容變化
-			$('#ProductContent').on('input', function () {
-				// 根據內容設置div高度
-				var contentHeight = $(this).prop('scrollHeight');
-				$('#dynamicDiv').height(contentHeight);
-			});
-		});
-	</script>
-	<!--圖片呈現-->
-	<script>
-		function previewImage(input) {
-			var preview = document.getElementById('imagePreview');
-			var file = input.files[0];
-			var reader = new FileReader();
+    </div>
+    @section Scripts
+    {
+    <!--子標籤視窗大小-->
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            // 監聽textarea內容變化
+            $('#ProductContent').on('input', function () {
+                // 根據內容設置div高度
+                var contentHeight = $(this).prop('scrollHeight');
+                $('#dynamicDiv').height(contentHeight);
+            });
+        });
+    </script>
+    <!--圖片呈現-->
+    <script>
+        function previewImage(input) {
+            var preview = document.getElementById('imagePreview');
+            var file = input.files[0];
+            var reader = new FileReader();
 
-			reader.onloadend = function () {
-				preview.src = reader.result;
-			}
+            reader.onloadend = function () {
+                preview.src = reader.result;
+            }
 
 			if (file) {
 				reader.readAsDataURL(file);
@@ -130,46 +135,85 @@
 
 	</script>
 
-	<!--放Tag-->
-	<script>
-		const SelTag = document.querySelector('#Tags');
-		const SelSub = document.querySelector('#dynamicDiv');
-		SelTag.addEventListener('change', () => 
-		{
-			console.log(SelTag.value);
-			SelSub.style.display = 'block';
-			Subtag();
-		})
-			
-	
+    <!--放Tag-->
+    <script>
+        const SelTag = document.querySelector('#Tags');
+        const SubDiv = document.querySelector('#dynamicDiv');
+        const SelSub = document.querySelector('#subtag');
+        const SelDiv = document.querySelector('#SelTagDiv');
+        const SelSubButton = document.querySelector('#DoNotSubmit');
+        //監聽事件--選擇大標籤
+        SelTag.addEventListener('change', () => {
+            SubDiv.style.display = 'block';
+            Subtag();
+        })
+        //////監聽事件--選擇小標籤
+        const checkboxlist = document.querySelector('input[name="subtag"]')
+            checkboxes.forEach(checkbox => { checkbox.addEventListener('change',()=>{
+                if (checkbox.checked) { console.log(checkbox.value) }
+            })
+        });
+
+              //SelSub.addEventListener('change', () => 
+              //  {
+              //      console.log(SelSub.value);
+              //      if (SelSub.checked) {
+              //          SelDiv.style.display = 'block';
+              //      }
+              //  });
 
 
-		async function BigTag() {
-			const response = await fetch(`@Url.Content("~/Shop/CreateTag")`);
-			const data = await response.json();
-			const tags = data.map(x => `<option value="${x.tagId}">${x.name}</option>`);
-			document.querySelector('#Tags').innerHTML = tags.join("");
-		}
-		BigTag();
+        /////監聽事件--控制小標籤按鈕ver
+
+        SelSubButton.addEventListener('click',(e)=>
+        {   e.preventDefault();
+            SelDiv.style.display = 'block';
+            SelSubTag();
+        })
+
+        async function BigTag() {
+            const response = await fetch(`@Url.Content("~/Shop/CreateTag")`);
+            const data = await response.json();
+            const tags = data.map(x => `<option value="${x.tagId}">${x.name}</option>`);
+            SelTag.innerHTML = tags.join("");
+            Subtag();
+        }
+        BigTag();
 
 
-		async function Subtag() {
-			const response = await fetch(`@Url.Content("~/Shop/SubTag")?id=${SelTag.value}`);
-			const data = await response.json();
-			console.log(data);
-			const subtagOptions = data.map(x => `
-			  <label>
-						<input type="radio" id="subtag" name="XXXXXXX">${x}
-			  </label>
-			`);
-			document.querySelector('#dynamicDiv').innerHTML = subtagOptions.join("");
-		}
+        async function Subtag() {
+            const response = await fetch(`@Url.Content("~/Shop/SubTag")?id=${SelTag.value}`);
+            const data = await response.json();
+            const subtagOptions = data.map(x =>
+                `
+                      <label>
+                            <input type="checkbox" id="subtag" name="subtag" value="${x.subTagId}">${x.name}
+                      </label>
+                    `);
+            SubDiv.innerHTML = subtagOptions.join("");
+          
+        }
 
-	</script>
+        async function SelSubTag()///這是被選中在div加入的程式碼
+        {
+            const response = await fetch(`@Url.Content("~/Shop/SelSubTag")?id=1`);
+            const data = await response.json(); 
+            console.log(data);
+            const subtagOptions = data.map(x =>
+                `
+                 <label>
+                      <input type="checkbox" id="SelSubtag" name="subtag" value="${x.subTagId}">${x.name}
+                 </label>
+                            `);
+            SelDiv.innerHTML += subtagOptions.join("");
+        }
+
+
+    </script>
 
 
     }
 
+
+
 }
-
-
