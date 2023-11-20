@@ -156,15 +156,20 @@ namespace prjDB_GamingForm_Show.Controllers
         {
             return View();
         }
-        public IActionResult Apply(int id)
+        public IActionResult Apply(int id=7)
         {
-            return View();
+            ViewBag.memberid = _memberIdtest;
+            Depute o=_db.Deputes.FirstOrDefault(_ => _.DeputeId == id);
+            if (o == null)
+                return RedirectToAction("Index");
+            return View(o);
         }
         [HttpPost]
-        public IActionResult Apply()
+        public IActionResult Apply(DeputeRecord vm)
         {
-
-            return RedirectToAction("Index");
+            _db.DeputeRecords.Add(vm);
+            _db.SaveChanges();
+            return RedirectToAction("DeputeMain");
         }
         public IActionResult Edit(int id)
         {
