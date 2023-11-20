@@ -72,7 +72,7 @@
 
 
 /*** Navbar ***/
-/*.navbar .dropdown-toggle::after {
+.navbar .dropdown-toggle::after {
     border: none;
     content: "\f107";
     font-family: "Font Awesome 5 Free";
@@ -89,9 +89,9 @@
 .navbar-dark .navbar-nav .nav-link,
 .navbar-light .navbar-nav .nav-link {
     margin-right: 30px;
-    padding: 25px 0;
+    /*padding: 25px 0;*/
     color: #FFFFFF;
-    font-size: 15px;
+    /*font-size: 15px;*/
     text-transform: uppercase;
     outline: none;
 }
@@ -117,11 +117,11 @@
 
 .navbar-light .navbar-brand,
 .navbar-light a.btn {
-    height: 75px;
+    /*height: 75px;*/
 }
 
 .navbar-light .navbar-nav .nav-link {
-    color: var(--dark);
+    /*color: var(--dark);*/
     font-weight: 500;
 }
 
@@ -150,7 +150,8 @@
         opacity: 1;
     }
 }
-*/
+
+
 
 /*** Header ***/
 .header-carousel .container,
