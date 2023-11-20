@@ -153,6 +153,16 @@ namespace prjDB_GamingForm_Show.Controllers
         {
             return View();
         }
+        public IActionResult Edit(CDeputeViewModel vm)
+        {
+
+            return View();
+        }
+
+        public IActionResult delete()
+        {
+            return RedirectToAction("Personal");
+        }
         
         public IActionResult Personal()
         {
