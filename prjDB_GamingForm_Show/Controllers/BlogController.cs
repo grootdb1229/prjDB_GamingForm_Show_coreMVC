@@ -171,5 +171,35 @@ namespace prjDB_GamingForm_Show.Controllers
             return RedirectToAction("ArticleContent", new { AFId, FId });
         }
 
+
+        public IActionResult ReplyCreate(int? AFId)
+        {
+            CBlogViewModel vm = null;
+            if (AFId == null)
+                return RedirectToAction("ArticleList");
+            vm = new CBlogViewModel
+            {
+
+                articles = _db.Articles.Include(s=>s.Replies).Where(a=>a.ArticleId==AFId).Select(p=>p),
+                replies = _db.Replies
+            };
+
+            return View(vm);
+        }
+        [HttpPost]
+        public IActionResult ReplyCreate(Article Inart, int? FId)
+        {
+            _db.Articles.Add(Inart);
+            _db.SaveChanges();
+            return RedirectToAction("ArticleList", new { FId });
+        }
+
+
+
+
+
+
+
+
     }
 }

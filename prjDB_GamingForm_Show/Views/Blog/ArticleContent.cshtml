@@ -4,95 +4,144 @@
     ViewBag.Title = "ArticleContent";
 }
 
+<html lang="zxx">
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="Amin Template">
+    <meta name="keywords" content="Amin, unica, creative, html">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Amin | Template</title>
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,500,600,700,800,900&display=swap"
+          rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Cinzel:400,700,900&display=swap" rel="stylesheet">
+
+    <!-- Css Styles -->
+    <link rel="stylesheet" href="~/css/bootstrap.min.css" type="text/css">
+    <link rel="stylesheet" href="~/css/font-awesome.min.css" type="text/css">
+    <link rel="stylesheet" href="~/css/elegant-icons.css" type="text/css">
+    <link rel="stylesheet" href="~/css/owl.carousel.min.css" type="text/css">
+    <link rel="stylesheet" href="~/css/barfiller.css" type="text/css">
+    <link rel="stylesheet" href="~/css/magnific-popup.css" type="text/css">
+    <link rel="stylesheet" href="~/css/slicknav.min.css" type="text/css">
+    <link rel="stylesheet" href="~/css/blogstyle.css" type="text/css">
+</head>
+<body>
+    <div class="nav-search search-switch" style="float:right;">
+        @Html.ActionLink("發表回覆", "ReplyCreate", "Blog", new { AFId = Model.articles.FirstOrDefault().ArticleId},null)
+    </div>
 
 
-<div style="margin: 0 auto; width: 650px;">
 
-    <!-- ArticleContent -->
+    <div style="margin: 0 auto; width: 800px;">
 
-    <div style="border: 2px solid red; padding: 3px; margin: 5px; border-radius: 5px; display: flex;">
-        <div style="display: flex;">
-            <div style="margin-right: 10px;">
-                @{
-                    var author = Model.articles.FirstOrDefault()?.Member;
-                    if (author != null)
-                    {
-                        <img src="~/images/@author.FImagePath" alt="" style="max-width: 100px;border-radius: 50%;">
-                    }
-                }
-            </div>
-            <div style="flex-grow: 1;">
-                <!-- 使用 flex-grow: 1; 讓這個區塊填滿剩餘的寬度 -->
-                <div>
-                    @Html.DisplayFor(modelItem => Model.articles.FirstOrDefault().Title)
-                </div>
-                <div>
-                    @* 超連結個人葉面 *@
-                    樓主
-                    <h3>@Html.DisplayFor(modelItem => Model.articles.FirstOrDefault().Member.Name)</h3>
-                </div>
-                <p style="margin: 0;">
-                    @Html.DisplayFor(modelItem => Model.articles.FirstOrDefault().ArticleContent)
-                </p>
-                <br />
-                <div>
-                    @*讚用ajax*@
+        <!-- ArticleContent -->
+
+        <div style="border: 2px solid red; padding: 3px; margin: 5px; border-radius: 5px; display: flex;">
+            <div style="display: flex;">
+                <div style="margin-right: 10px;">
                     @{
-                        int like = 0;
-                        // foreach (var item in Model.articles)
-                        // {
-                        //      @Html.ActionLink("讚", "Like", "Blog", new { AFId = item.ArticleId }, null)
-                        // }
-                        @Html.ActionLink("讚", "Like", "Blog", new { AFId = Model.articles.FirstOrDefault().ArticleId, FId = Model.blogs.FirstOrDefault().BlogId }, null)
-
-                        like = Model.articleActions.Count(a => a.ActionId == 1);
-                        @like
+                        var author = Model.articles.FirstOrDefault()?.Member;
+                        if (author != null)
+                        {
+                            <img src="~/images/@author.FImagePath" alt="" style="max-width: 100px;border-radius: 50%;">
+                        }
                     }
                 </div>
+                <div style="flex-grow: 1;">
+                    <!-- 使用 flex-grow: 1; 讓這個區塊填滿剩餘的寬度 -->
+                    <div>
+                        <h1 style="color:white">
+                            @Html.DisplayFor(modelItem => Model.articles.FirstOrDefault().Title)
+                        </h1>
+                    </div>
+                    <div>
+                        @* 超連結個人葉面 *@
+                        樓主
+                        <h3 style="color:white">
+                            @Html.DisplayFor(modelItem => Model.articles.FirstOrDefault().Member.Name)
+                        </h3>
+                    </div>
+                    <p style="font-size:15px">
+                        發表時間: @Html.DisplayFor(modelItem => Model.articles.FirstOrDefault().ModifiedDate)
+                    </p>
+                    <div style="max-width:800px; overflow: hidden; word-wrap: break-word; white-space: pre-line; display: flex;">
+                        <p style="margin: 0; max-width:650px">
+                            @Html.DisplayFor(modelItem => Model.articles.FirstOrDefault().ArticleContent)
+                        </p>
+                    </div>
+                    <br />
+                    <div>
+                        @*讚用ajax*@
+                        @{
+                            int like = 0;
+                            // foreach (var item in Model.articles)
+                            // {
+                            //      @Html.ActionLink("讚", "Like", "Blog", new { AFId = item.ArticleId }, null)
+                            // }
+                            @Html.ActionLink("讚", "Like", "Blog", new { AFId = Model.articles.FirstOrDefault().ArticleId, FId = Model.blogs.FirstOrDefault().BlogId }, null)
+
+                            like = Model.articleActions.Count(a => a.ActionId == 1);
+                            @like
+                        }
+                    </div>
                     @Html.ActionLink("Edit", "Edit", new { id = Model.articles.FirstOrDefault().ArticleId })
                     @Html.ActionLink("刪除", "ArticleDelete", new { AFId = Model.articles.FirstOrDefault().ArticleId, FId = Model.blogs.FirstOrDefault().BlogId }, new { onclick = "return confirm ('確定刪除嗎?')" })
-                
-                <div>
-                    發表時間: @Html.DisplayFor(modelItem => Model.articles.FirstOrDefault().ModifiedDate)
+
                 </div>
             </div>
         </div>
+
+        <!-- Replies -->
+        <div style="min-height: 800px;">
+            @{
+                int count = 0;
+                foreach (var item in Model.replies)
+                {
+                    count++;
+                    <div style="border: 2px solid red; padding: 3px; margin: 5px; border-radius: 5px; display: flex;">
+                        <div div style="margin-right: 10px;">
+                            @{
+                                var replyAuthor = item.Member;
+                                if (replyAuthor != null)
+                                {
+                                    <img src="~/images/@replyAuthor.FImagePath" alt="" style="max-width: 100px; border-radius: 50%;">
+                                }
+                            }
+                        </div>
+                        <div style="flex-grow: 1;">
+                            <div>
+                                @count 樓
+                            </div>
+                            <h3 style="color:white">
+                                @item.Member.Name
+                            </h3>
+                            <p style="font-size:15px">
+                            發表時間: @Html.DisplayFor(modelitem => item.ModifiedDate)
+                            </p>
+                            <div style="overflow: hidden; word-wrap: break-word; white-space: pre-line; display: flex;">
+                                <p style="margin:0; max-width:650px">
+                                    @Html.DisplayFor(modelitem => item.ReplyContents)
+                                </p>
+                            </div>
+                            <br />
+                        </div>
+                    </div>
+                }
+            }
+        </div>
     </div>
 
-    <!-- Replies -->
-    <div style="min-height: 650px;">
-        @{
-            int count = 0;
-            foreach (var item in Model.replies)
-            {
-                count++;
-                <div style="border: 2px solid red; padding: 3px; margin: 5px; border-radius: 5px; display: flex;">
-                    <div div style="margin-right: 10px;">
-                        @{
-                            var replyAuthor = item.Member;
-                            if (replyAuthor != null)
-                            {
-                                <img src="~/images/@replyAuthor.FImagePath" alt="" style="max-width: 100px;border-radius: 50%;">
-                            }
-                        }
-                    </div>
-                    <div style="margin-left: 10px;">
-                        <div>
-                            @count 樓
-                        </div>
-                        <h3>@item.Member.Name</h3>
-                        <div style="overflow: hidden; word-wrap: break-word; white-space: pre-line; display: flex;">
-                            <p style="margin: 0;">
-                                @Html.DisplayFor(modelitem => item.ReplyContents)
-                            </p>
-                        </div>
-                        <br />
-                        <div>
-                            發表時間: @Html.DisplayFor(modelitem => item.ModifiedDate)
-                        </div>
-                    </div>
-                </div>
-            }
-        }
-    </div>
-</div>
+    <script src="~/js/jquery-3.3.1.min.js"></script>
+    <script src="~/js/jquery-3.3.1.min.js"></script>
+    <script src="~/js/bootstrap.min.js"></script>
+    <script src="~/js/jquery.magnific-popup.min.js"></script>
+    <script src="~/js/circle-progress.min.js"></script>
+    <script src="~/js/jquery.barfiller.js"></script>
+    <script src="~/js/jquery.slicknav.js"></script>
+    <script src="~/js/owl.carousel.min.js"></script>
+    <script src="~/js/blogmain.js"></script>
+</body>
+</html>
