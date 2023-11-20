@@ -50,12 +50,12 @@ namespace prjDB_GamingForm_Show.ViewModels
                 
                 x = new CDeputeViewModel()
                 {
-                    id = item.DeputeId.ToString(),
+                    id = item.DeputeId,
                     providername = item.Name,
                     startdate = item.SrartDate,
                     modifieddate = item.Modifiedate,
                     content = item.DeputeContent,
-                    salary = item.Salary.ToString(),
+                    salary = item.Salary,
                     status = item.Status,
                     region = item.City
                 };
