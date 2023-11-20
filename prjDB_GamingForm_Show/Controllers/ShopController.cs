@@ -79,12 +79,12 @@ namespace prjDB_GamingForm_Show.Controllers
                 Product x = new Product();
                 if (_db != null)
                 {
-                    if (product.photo != null)
-                    {
-                        string photoName = Guid.NewGuid().ToString() + ".jpg";
-                        x.FImagePath = photoName;
-                        product.photo.CopyTo(new FileStream(_host.WebRootPath + "/images/shop/" + photoName, FileMode.Create));       
-                    }
+                    //if (product.photo != null)
+                    //{
+                    //    string photoName = Guid.NewGuid().ToString() + ".jpg";
+                    //    x.FImagePath = photoName;
+                    //    product.photo.CopyTo(new FileStream(_host.WebRootPath + "/images/shop/" + photoName, FileMode.Create));       
+                    //}
                     x.ProductName = product.ProductName;
                     x.Price = product.Price;
                     x.AvailableDate = product.AvailableDate;
@@ -116,12 +116,12 @@ namespace prjDB_GamingForm_Show.Controllers
                 Product x = _db.Products.FirstOrDefault(p => p.ProductId == product.ProductID);
                 if (x != null)
                 {
-					if (product.photo != null)
-					{
-						string photoName = Guid.NewGuid().ToString() + ".jpg";
-						x.FImagePath = photoName;
-						product.photo.CopyTo(new FileStream(_host.WebRootPath + "/images/shop/" + photoName, FileMode.Create));
-					}
+					//if (product.photo != null)
+					//{
+					//	string photoName = Guid.NewGuid().ToString() + ".jpg";
+     //                   x.FImagePath = photoName;
+     //                   product.photo.CopyTo(new FileStream(_host.WebRootPath + "/images/shop/" + photoName, FileMode.Create));
+					//}
 					x.ProductName = product.ProductName;
                     x.Price = product.Price;
                     x.AvailableDate = product.AvailableDate;
@@ -209,80 +209,58 @@ namespace prjDB_GamingForm_Show.Controllers
                 }
                 return View(car);
             }
-            //            public ActionResult AddToCar(CShoppingCarViewModel vm)
-            //            {
 
-            //                DbGamingFormTestContext db = new DbGamingFormTestContext();
-            //                Product product = db.Products.FirstOrDefault(p => p.ProductId == vm.ProductID);
-            //                if (product == null)
-            //                {
-            //                    return RedirectToAction("Index");
-            //                }
-            //                List<ShoppingCar> car = Session[CDictionary.SK_PURCHASED_PRODUCES_LIST] as List<ShoppingCar>;
-            //                if (car == null)
-            //                {
-            //                    car = new List<ShoppingCar>();
-            //                    Session[CDictionary.SK_PURCHASED_PRODUCES_LIST] = car;
-            //                }
-            //                ShoppingCar x = new ShoppingCar()
-            //                {
-            //                    ProductID = vm.ProductID,
-            //                    ProductName = product.ProductName,
-            //                    Price = (decimal)product.Price,
-            //                    ImageID = (int)product.ImageId,
-            //                    Count = vm.txtCount
-            //                };
-            //                car.Add(x);
-            //                return RedirectToAction("Index");//ShoppingCar
-            //            }
-            //            public ActionResult ShoppingCar()
-            //            {
-            //                List<ShoppingCar> car = Session[CDictionary.SK_PURCHASED_PRODUCES_LIST] as List<ShoppingCar>;
-            //                if (car == null)
-            //                {
-            //                    return RedirectToAction("Index");
-            //                }
-            //                return View(car);
-            //            }
-            //            public ActionResult DeleteFromCar(int id)////應該能正常移除購物車了/////
-            //            {
-            //                List<ShoppingCar> car = Session[CDictionary.SK_PURCHASED_PRODUCES_LIST] as List<ShoppingCar>;
-            //                DbGamingFormTestContext db = new DbGamingFormTestContext();
-            //                ShoppingCar x = car.FirstOrDefault(p => p.ProductID == id);
-            //                if (x != null)
-            //                {
-            //                    car.Remove(x);
-            //                }
-            //                return RedirectToAction("ShoppingCar");
-            //            }
+            public IActionResult DeleteFromCar(int id)////應該能正常移除購物車了/////
+            {
+                string json = HttpContext.Session.GetString(CDictionary.SK_PURCHASED_PRODUCES_LIST);
+                List<ShoppingCar> car = JsonSerializer.Deserialize<List<ShoppingCar>>(json);
+                ShoppingCar x = car.FirstOrDefault(p => p.ProductID == id);
+                if (x != null)
+                {
+                    car.Remove(x);
+                }
+                json = JsonSerializer.Serialize(car);
+                HttpContext.Session.SetString(CDictionary.SK_PURCHASED_PRODUCES_LIST, json);
+                return RedirectToAction("CarView");
+            }
 
-            //            [HttpPost]
-            //            public ActionResult EditCar(CShoppingCarViewModel vm)
-            //            {
-            //                DbGamingFormTestContext db = new DbGamingFormTestContext();
-            //                Product product = db.Products.FirstOrDefault(p => p.ProductId == vm.ProductID);
-            //                if (product == null)
-            //                {
-            //                    return RedirectToAction("List");
-            //                }
-            //                List<ShoppingCar> car = Session[CDictionary.SK_PURCHASED_PRODUCES_LIST] as List<ShoppingCar>;
+            [HttpPost]
+            public IActionResult EditCar(CShoppingCarViewModel vm)
+            {
+                Product product = _db.Products.FirstOrDefault(p => p.ProductId == vm.ProductID);
+                if (product == null)
+                {
+                    return RedirectToAction("Index");
+                }
+                string json = HttpContext.Session.GetString(CDictionary.SK_PURCHASED_PRODUCES_LIST);
+                List<ShoppingCar> car = JsonSerializer.Deserialize<List<ShoppingCar>>(json);
+                ShoppingCar x = car.FirstOrDefault(p => p.ProductID == vm.ProductID);
+                if (x != null)
+                {
+                    car.Remove(x);
+                }
+                ShoppingCar n = new ShoppingCar()
+                {
+                    ProductID = vm.ProductID,
+                    ProductName = product.ProductName,
+                    Price = (decimal)product.Price,
+                    Count = vm.txtCount
+                };
+                car.Add(n);
+                json = JsonSerializer.Serialize(car);
+                HttpContext.Session.SetString(CDictionary.SK_PURCHASED_PRODUCES_LIST, json);
+                return RedirectToAction("CarView");
+            }
 
-            //                ShoppingCar x = car.FirstOrDefault(p => p.ProductID == vm.ProductID);
-            //                if (x != null)
-            //                {
-            //                    car.Remove(x);
-            //                }
-            //                ShoppingCar n = new ShoppingCar()
-            //                {
-            //                    ProductID = vm.ProductID,
-            //                    ProductName = product.ProductName,
-            //                    Price = (decimal)product.Price,
-            //                    ImageID = (int)product.ImageId,
-            //                    Count = vm.txtCount
-            //                };
-            //                car.Add(n);
-            //                return RedirectToAction("ShoppingCar");
-            //            }
+            public IActionResult Purchase()
+            {
+                string json = HttpContext.Session.GetString(CDictionary.SK_PURCHASED_PRODUCES_LIST);
+                List<ShoppingCar> car = JsonSerializer.Deserialize<List<ShoppingCar>>(json);
+                car.Clear();
+                json = JsonSerializer.Serialize(car);
+                HttpContext.Session.SetString(CDictionary.SK_PURCHASED_PRODUCES_LIST, json);
+                return RedirectToAction("List");
+            }
         }
     }
 }
