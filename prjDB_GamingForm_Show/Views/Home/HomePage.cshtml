@@ -39,7 +39,7 @@
                         </div>
                         @*最新委託*@
                         <div class="swiper-slide">
-                        <a href="@Url.Action("Index" , "Shop")">
+                        <a href="@Url.Action("DeputeMain" , "Depute")">
                             <img src="~/HomePageTemImage/GetyourFKJOB.jpg" width="1290" height="500" alt="">
                             <div class="img-bg-inner">
                                 <h2>委託首頁</h2>
@@ -208,7 +208,7 @@
                     </a>
                     <div>
                         <div class="post-meta"><span class="date">英雄聯盟版</span> <span class="mx-1">&bullet;</span> <span>2023/11/15</span></div>
-                        <a href="@Url.Action("ArticleList" , "Blog" , new {FId=9})" style="font-size:xx-large">這個趙信只會出雄心之鋼跟泰坦九頭蛇是怎樣!??</a>
+                        <a href= @Url.Action("ArticleList" , "Blog" , new {FId=9}) style="font-size:xx-large">這個趙信只會出雄心之鋼跟泰坦九頭蛇是怎樣!??</a>
                         <p>同場ARAM有多達六人都在出雄心之鋼，雄心之鋼是否過於ＯＰ？</p>
                         <div class="d-flex align-items-center author">
                             <div class="photo"><img src="~/HomePageTemImage/雄心之鋼迷因圖.jpg" alt="" class="img-fluid"></div>
@@ -222,26 +222,26 @@
                 <div class="row">
                     <div class="col-lg-4">
                         <div class="post-entry-1 border-bottom">
-                            <a href="single-post.html"><img src="~/HomePageTemImage/Faker奪冠.jpg" alt="" class="img-fluid"></a>
+                            <a href= @Url.Action("ArticleList" , "Blog" , new {FId=9}) ><img src="~/HomePageTemImage/Faker奪冠.jpg" alt="" class="img-fluid"></a>
                             <div class="post-meta"><span class="date">英雄聯盟版</span> <span class="mx-1">&bullet;</span> <span>2023/11/20</span></div>
-                            <h2 class="mb-2"><a href="single-post.html">11 Work From Home Part-Time Jobs You Can Do Now</a></h2>
-                            <span class="author mb-3 d-block">Jenny Wilson</span>
-                            <p class="mb-4 d-block">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Vero temporibus repudiandae, inventore pariatur numquam cumque possimus</p>
+                            <h2 class="mb-2"><a href= @Url.Action("ArticleList" , "Blog" , new {FId=9})>暌違多年T1再次擊敗LPL奪下世界大賽冠軍</a></h2>
+                            <span class="author mb-3 d-block">邱炫嘉</span>
+                            <p class="mb-4 d-block">2023年11月19日,在韓國釜山FAKER再次帶領T1隊友奪下睽違已久的冠軍,讓我們再次恭喜大魔王!</p>
                         </div>
 
                         <div class="post-entry-1">
-                            <div class="post-meta"><span class="date">Culture</span> <span class="mx-1">&bullet;</span> <span>Jul 5th '22</span></div>
-                            <h2 class="mb-2"><a href="single-post.html">5 Great Startup Tips for Female Founders</a></h2>
-                            <span class="author mb-3 d-block">Jenny Wilson</span>
+                            <div class="post-meta"><span class="date">歐卡2</span> <span class="mx-1">&bullet;</span> <span>2023/11/09</span></div>
+                            <h2 class="mb-2"><a href= @Url.Action("List", "Blog")>到底還有誰還沒有上車</a></h2>
+                            <span class="author mb-3 d-block">老朱</span>
                         </div>
                     </div>
                     <div class="col-lg-8">
                         <div class="post-entry-1">
-                            <a href="single-post.html"><img src="~/Layout/ZenBlog/assets/img/post-landscape-2.jpg" alt="" class="img-fluid"></a>
-                            <div class="post-meta"><span class="date">Culture</span> <span class="mx-1">&bullet;</span> <span>Jul 5th '22</span></div>
-                            <h2 class="mb-2"><a href="single-post.html">How to Avoid Distraction and Stay Focused During Video Calls?</a></h2>
-                            <span class="author mb-3 d-block">Jenny Wilson</span>
-                            <p class="mb-4 d-block">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Vero temporibus repudiandae, inventore pariatur numquam cumque possimus</p>
+                            <a href=@Url.Action("List", "Blog")><img src="~/HomePageTemImage/Assassin's Creed Blog.jpg" alt="" class="img-fluid"></a>
+                            <div class="post-meta"><span class="date">刺客教條版</span> <span class="mx-1">&bullet;</span> <span>2023/11/15</span></div>
+                            <h2 class="mb-2"><a href="single-post.html">這版刺客教條終於不是無雙模式了</a></h2>
+                            <span class="author mb-3 d-block">小郭</span>
+                            <p class="mb-4 d-block">終於又可以重新好好地當個刺客了</p>
                         </div>
                     </div>
                 </div>
@@ -292,25 +292,25 @@
     <div class="container" data-aos="fade-up">
 
         <div class="section-header d-flex justify-content-between align-items-center mb-5">
-            <h2>Business</h2>
-            <div><a href="category.html" class="more">See All Business</a></div>
+            <h2>工作和委託</h2>
+            <div><a href="category.html" class="more">查看所有工作及委託</a></div>
         </div>
 
         <div class="row">
             <div class="col-md-9 order-md-2">
 
                 <div class="d-lg-flex post-entry-2">
-                    <a href="single-post.html" class="me-4 thumbnail d-inline-block mb-4 mb-lg-0">
+                    <a href= @Url.Action("DeputeMain" , "Depute") class="me-4 thumbnail d-inline-block mb-4 mb-lg-0">
                         <img src="~/Layout/ZenBlog/assets/img/post-landscape-3.jpg" alt="" class="img-fluid">
                     </a>
                     <div>
-                        <div class="post-meta"><span class="date">Business</span> <span class="mx-1">&bullet;</span> <span>Jul 5th '22</span></div>
-                        <h3><a href="single-post.html">What is the son of Football Coach John Gruden, Deuce Gruden doing Now?</a></h3>
-                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Distinctio placeat exercitationem magni voluptates dolore. Tenetur fugiat voluptates quas, nobis error deserunt aliquam temporibus sapiente, laudantium dolorum itaque libero eos deleniti?</p>
+                        <div class="post-meta"><span class="date">工作及委託</span> <span class="mx-1">&bullet;</span> <span>2023/11/20</span></div>
+                        <h3><a href= @Url.Action("DeputeMain" , "Depute")>徵熟悉AI方面的專家</a></h3>
+                        <p>需要會深度學習的AI專家來協助訓練AI</p>
                         <div class="d-flex align-items-center author">
-                            <div class="photo"><img src="~/Layout/ZenBlog/assets/img/person-4.jpg" alt="" class="img-fluid"></div>
+                            <div class="photo"><img src="~/HomePageTemImage/AI.jpg" alt="" class="img-fluid"></div>
                             <div class="name">
-                                <h3 class="m-0 p-0">Wade Warren</h3>
+                                <h3 class="m-0 p-0">老邊</h3>
                             </div>
                         </div>
                     </div>
@@ -319,65 +319,65 @@
                 <div class="row">
                     <div class="col-lg-4">
                         <div class="post-entry-1 border-bottom">
-                            <a href="single-post.html"><img src="~/Layout/ZenBlog/assets/img/post-landscape-5.jpg" alt="" class="img-fluid"></a>
-                            <div class="post-meta"><span class="date">Business</span> <span class="mx-1">&bullet;</span> <span>Jul 5th '22</span></div>
-                            <h2 class="mb-2"><a href="single-post.html">11 Work From Home Part-Time Jobs You Can Do Now</a></h2>
-                            <span class="author mb-3 d-block">Jenny Wilson</span>
-                            <p class="mb-4 d-block">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Vero temporibus repudiandae, inventore pariatur numquam cumque possimus</p>
+                            <a href= @Url.Action("DeputeMain" , "Depute")><img src="~/HomePageTemImage/Drawing_job.jpg" alt="" class="img-fluid"></a>
+                            <div class="post-meta"><span class="date">工作及委託</span> <span class="mx-1">&bullet;</span> <span>2023/11/17</span></div>
+                            <h2 class="mb-2"><a href="single-post.html">徵繪畫方面的人才</a></h2>
+                            <span class="author mb-3 d-block">圈圈</span>
+                            <p class="mb-4 d-block">徵常年幫鳥類動物寫生的繪畫專家</p>
                         </div>
 
                         <div class="post-entry-1">
-                            <div class="post-meta"><span class="date">Business</span> <span class="mx-1">&bullet;</span> <span>Jul 5th '22</span></div>
-                            <h2 class="mb-2"><a href="single-post.html">5 Great Startup Tips for Female Founders</a></h2>
-                            <span class="author mb-3 d-block">Jenny Wilson</span>
+                            <div class="post-meta"><span> class="date" 工作及委託</span> <span class="mx-1">&bullet;</span> <span>2023/11/10</span></div>
+                            <h2 class="mb-2"><a href= @Url.Action("DeputeMain" , "Depute")>徵CSS Html熟悉者</a></h2>
+                            <span class="author mb-3 d-block">老邊</span>
                         </div>
                     </div>
                     <div class="col-lg-8">
                         <div class="post-entry-1">
-                            <a href="single-post.html"><img src="~/Layout/ZenBlog/assets/img/post-landscape-7.jpg" alt="" class="img-fluid"></a>
-                            <div class="post-meta"><span class="date">Business</span> <span class="mx-1">&bullet;</span> <span>Jul 5th '22</span></div>
-                            <h2 class="mb-2"><a href="single-post.html">How to Avoid Distraction and Stay Focused During Video Calls?</a></h2>
-                            <span class="author mb-3 d-block">Jenny Wilson</span>
-                            <p class="mb-4 d-block">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Vero temporibus repudiandae, inventore pariatur numquam cumque possimus</p>
+                            <a href=@Url.Action("DeputeMain" , "Depute")><img src="~/HomePageTemImage/Tanks.jpg" alt="" class="img-fluid"></a>
+                            <div class="post-meta"><span class="date">工作及委託</span> <span class="mx-1">&bullet;</span> <span>2023/11/19</span></div>
+                            <h2 class="mb-2"><a href= @Url.Action("DeputeMain" , "Depute")>徵歐卡2戰車模組製作</a></h2>
+                            <span class="author mb-3 d-block">老朱</span>
+                            <p class="mb-4 d-block">歐卡2的模組有點少不夠我裝了 希望來個戰車的模組讓我爽爽</p>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="col-md-3">
                 <div class="post-entry-1 border-bottom">
-                    <div class="post-meta"><span class="date">Business</span> <span class="mx-1">&bullet;</span> <span>Jul 5th '22</span></div>
-                    <h2 class="mb-2"><a href="single-post.html">How to Avoid Distraction and Stay Focused During Video Calls?</a></h2>
-                    <span class="author mb-3 d-block">Jenny Wilson</span>
+                    <div class="post-meta"><span class="date">工作及委託</span> <span class="mx-1">&bullet;</span> <span>2023/10/13</span></div>
+                    <h2 class="mb-2"><a href= @Url.Action("DeputeMain" , "Depute") >徵有辯論社經歷的人 教我怎麼把人噴爆</a></h2>
+                    <span class="author mb-3 d-block">老邊</span>
                 </div>
 
                 <div class="post-entry-1 border-bottom">
-                    <div class="post-meta"><span class="date">Business</span> <span class="mx-1">&bullet;</span> <span>Jul 5th '22</span></div>
-                    <h2 class="mb-2"><a href="single-post.html">17 Pictures of Medium Length Hair in Layers That Will Inspire Your New Haircut</a></h2>
-                    <span class="author mb-3 d-block">Jenny Wilson</span>
+                    <div class="post-meta"><span class="date">工作及委託</span> <span class="mx-1">&bullet;</span> <span>2023/10/23</span></div>
+                    <h2 class="mb-2"><a href= @Url.Action("DeputeMain" , "Depute") >徵遊戲音樂製作相關人士</a></h2>
+                    <span class="author mb-3 d-block">倫</span>
                 </div>
 
                 <div class="post-entry-1 border-bottom">
-                    <div class="post-meta"><span class="date">Business</span> <span class="mx-1">&bullet;</span> <span>Jul 5th '22</span></div>
-                    <h2 class="mb-2"><a href="single-post.html">9 Half-up/half-down Hairstyles for Long and Medium Hair</a></h2>
-                    <span class="author mb-3 d-block">Jenny Wilson</span>
+                    <div class="post-meta"><span class="date">工作及委託</span> <span class="mx-1">&bullet;</span> <span>2023/10/29</span></div>
+                    <h2 class="mb-2"><a href=@Url.Action("DeputeMain" , "Depute") >徵熟悉VS的人協助開發程式</a></h2>
+                    <span class="author mb-3 d-block">專業甩頭</span>
                 </div>
 
                 <div class="post-entry-1 border-bottom">
-                    <div class="post-meta"><span class="date">Business</span> <span class="mx-1">&bullet;</span> <span>Jul 5th '22</span></div>
-                    <h2 class="mb-2"><a href="single-post.html">Life Insurance And Pregnancy: A Working Mom’s Guide</a></h2>
-                    <span class="author mb-3 d-block">Jenny Wilson</span>
+                    <div class="post-meta"><span class="date">工作及委託</span> <span class="mx-1">&bullet;</span> <span>2023/10/31</span></div>
+                    <h2 class="mb-2"><a href= @Url.Action("DeputeMain" , "Depute")>徵熟悉SQL SERVER的人幫忙設計資料庫架構</a></h2>
+                    <span class="author mb-3 d-block">克銘</span>
                 </div>
 
                 <div class="post-entry-1 border-bottom">
-                    <div class="post-meta"><span class="date">Business</span> <span class="mx-1">&bullet;</span> <span>Jul 5th '22</span></div>
-                    <h2 class="mb-2"><a href="single-post.html">The Best Homemade Masks for Face (keep the Pimples Away)</a></h2>
-                    <span class="author mb-3 d-block">Jenny Wilson</span>
+                    <div class="post-meta"><span class="date">工作及委託</span> <span class="mx-1">&bullet;</span> <span>2023/11/09</span></div>
+                    <h2 class="mb-2"><a href=@Url.Action("DeputeMain" , "Depute") >徵JAVASCRIPTS熟人幫我寫作業</a></h2>
+                    <span class="author mb-3 d-block">倫</span>
                 </div>
 
                 <div class="post-entry-1 border-bottom">
-                    <div class="post-meta"><span class="date">Business</span> <span class="mx-1">&bullet;</span> <span>Jul 5th '22</span></div>
-                    <h2 class="mb-2"><a href="single-post.html">10 Life-Changing Hacks Every Working Mom Should Know</a></h2>
-                    <span class="author mb-3 d-block">Jenny Wilson</span>
+                    <div class="post-meta"><span class="date">工作及委託</span> <span class="mx-1">&bullet;</span> <span>2023/11/17</span></div>
+                    <h2 class="mb-2"><a href=@Url.Action("DeputeMain" , "Depute")>徵熟悉網頁設計的專家</a></h2>
+                    <span class="author mb-3 d-block">圈圈</span>
                 </div>
             </div>
         </div>
