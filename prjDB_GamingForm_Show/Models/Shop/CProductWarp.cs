@@ -79,7 +79,8 @@ namespace prjDB_GamingForm_Show.Models.Shop
         public int TagID { get; set; }
         public int SubTagID { get; set; }
 
+        public List<int> values {  get; set; }
 
-    
+
     }
 }
