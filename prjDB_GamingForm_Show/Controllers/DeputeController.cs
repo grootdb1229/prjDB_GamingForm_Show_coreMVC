@@ -32,6 +32,7 @@ namespace prjDB_GamingForm_Show.Controllers
                        select new
                        {
                            n.DeputeId,
+                           n.Title,
                            Name = n.Provider.Name,
                            SrartDate = n.StartDate.ToString("d"),
                            Modifiedate = n.Modifiedate.ToString("d"),
@@ -48,6 +49,7 @@ namespace prjDB_GamingForm_Show.Controllers
                 x = new CDeputeViewModel()
                 {
                     id = item.DeputeId.ToString(),
+                    title = item.Title,
                     providername = item.Name,
                     startdate = item.SrartDate,
                     modifieddate = item.Modifiedate,
