@@ -6,14 +6,14 @@
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
-<h2 style="margin-left:5px ; font-size:25px">商品清單</h2>
+<h2 style="margin-left:5px ; font-size:45px">商品清單</h2>
 @using (Html.BeginForm())
 {
-    @:商品名稱關鍵字查詢 @Html.TextBox("txtKeyWord",null,new{@class = "col-form-label"})
+    <p style="display:inline;font-size:30px;margin-left:5px;margin-right:10px">商品名稱關鍵字查詢 : </p> @Html.TextBox("txtKeyWord",null,new{@class = "col-form-label"})
     <input type="submit" value="查詢" class="btn btn-dark" />
 }
-<p style="margin-top:5px"></p>
-<p>
+@*<p style="margin-top:5px"></p>*@
+<p style ="margin-left:5px">
     @Html.ActionLink("上一頁", "ProductListPrevious", "Admin", null, new  { @class = "btn btn-dark" })
     @Html.ActionLink("下一頁", "ProductListNext", "Admin", null, new  { @class = "btn btn-dark" })
 </p>
