@@ -111,7 +111,7 @@
         const divSkillsGroup = document.querySelector('#nav-tabContent');
         const divSkills = document.querySelector('#divSkills');
         const divChooseSkillClass = document.querySelector('.list-group-item.active');
-
+        
         loadSkillClasses();
         // loadSkills();
 
@@ -119,19 +119,19 @@
         async function loadSkillClasses() {
             const response = await fetch('@Url.Content("~/depute/skillclasses")');
             const datas = await response.json();
+            console.log(datas);
             const skillclasses = datas.map(skillclass => `<a class="list-${skillclass.name}-item-action list-group-item" id="list-${skillclass.name}-list" data-bs-toggle="list" href="#list-${skillclass.name}" role="tab" aria-controls="list-${skillclass.name}">${skillclass.name}<ul id=sel${skillclass.name} class="list-group col-6"></ul></a>`);
-            const skillsgroup = datas.map(skillclass => `<div class="tab-pane fade" id="list-${skillclass.name}" role="tabpanel" aria-labelledby="list-${skillclass.name}-list">
+            // const skillsgroup = datas.map(skillclass => `<div class="tab-pane fade" id="list-${skillclass.name}" role="tabpanel" aria-labelledby="list-${skillclass.name}-list">
             
-            ${skillclass.name}
-                    <li class="list-group-item">
-                                    <input class="form-check-input me-1" type="checkbox" value="" id="firstCheckboxStretched">
-                                    <label class="form-check-label stretched-link" for="firstCheckboxStretched">First checkbox</label>
-                                </li>
+            // ${skillclass.name}
+            //         <li class="list-group-item">
+            //                         <input class="form-check-input me-1" type="checkbox" value="" id="firstCheckboxStretched">
+            //                         <label class="form-check-label stretched-link" for="firstCheckboxStretched">First checkbox</label>
+            //                     </li>
 
-            </div>`)
+            // </div>`)
             divSkillClasses.innerHTML = skillclasses.join("");
-            divSkillsGroup.innerHTML = skillsgroup.join("");
-            console.log(document.querySelector('.list-group-item.active'));
+            // divSkillsGroup.innerHTML = skillsgroup.join("");
             if (document.querySelector('.list-group-item.active'))
                 loadSkills();
         }
