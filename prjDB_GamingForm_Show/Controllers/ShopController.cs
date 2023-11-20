@@ -5,7 +5,9 @@ using prjDB_GamingForm_Show.Models.Entities;
 using prjDB_GamingForm_Show.Models.Shop;
 using prjDB_GamingForm_Show.ViewModels;
 using System.Reflection.PortableExecutable;
+using System.Security.Cryptography.Xml;
 using System.Text.Json;
+using System.Transactions;
 
 namespace prjDB_GamingForm_Show.Controllers
 {
@@ -22,12 +24,12 @@ namespace prjDB_GamingForm_Show.Controllers
                 _db = db;
             }
             public IActionResult Index(CKeyWord ck)
-            { 
+            {
                 //UI相關
-               //Todo 商品切成XX個一頁，下面要有1~XX個頁，上面要有選項讓客人決定一頁呈現 20 OR 40個   //補充 蝦皮沒分 大約60件一頁
-               //Todo 商品圖片大小不一需要修正
-               //Todo 篩選 價格排序 上架日期排序 銷售件數排序
-               //Todo 研究一下商品上架/修改的選擇圖片那區，檔案名移除+讓他好看點
+                //Todo 商品切成XX個一頁，下面要有1~XX個頁，上面要有選項讓客人決定一頁呈現 20 OR 40個   //補充 蝦皮沒分 大約60件一頁
+                //Todo 商品圖片大小不一需要修正
+                //Todo 篩選 價格排序 上架日期排序 銷售件數排序
+                //Todo 研究一下商品上架/修改的選擇圖片那區，檔案名移除+讓他好看點
 
                 //軟體功能相關
                 //Todo  你的交易邏輯有待考據。請洽GPT或者芳芳老師
@@ -39,7 +41,7 @@ namespace prjDB_GamingForm_Show.Controllers
                 if (string.IsNullOrEmpty(CK))
                 {
                     Pdb = (from aa in _db.Products
-                          select aa)/*.Take(25)*/;
+                           select aa)/*.Take(25)*/;
                 }
                 else
                 {
@@ -69,14 +71,14 @@ namespace prjDB_GamingForm_Show.Controllers
             public ActionResult SubTag(int? id)
             {
                 _db.SubTags.Load();
-                var Tag = _db.SubTags.Where(p => p.TagId == id).Select(s => new { s.SubTagId,s.Name }).ToList();
+                var Tag = _db.SubTags.Where(p => p.TagId == id).Select(s => new { s.SubTagId, s.Name }).ToList();
                 return Json(Tag);
             }
 
-            public ActionResult SelSubTag(int? id) 
+            public ActionResult SelSubTag(int? id)
             {
                 _db.SubBlogs.Load();
-                var SelSub=_db.SubTags.Where(p=>p.SubTagId==id).Select(s => new { s.SubTagId, s.Name }).ToList();
+                var SelSub = _db.SubTags.Where(p => p.SubTagId == id).Select(s => new { s.SubTagId, s.Name }).ToList();
                 return Json(SelSub);
             }
 
@@ -84,27 +86,38 @@ namespace prjDB_GamingForm_Show.Controllers
             public ActionResult Create(CProductWarp product) //原Product物件
             {
                 Product x = new Product();
-                if (_db != null)
+                using (TransactionScope ts = new TransactionScope())
                 {
-                    if (product.photo != null)
+                    if (_db != null)
                     {
-                        string photoName = Guid.NewGuid().ToString() + ".jpg";
-                        x.FImagePath = photoName;
-                        product.photo.CopyTo(new FileStream(_host.WebRootPath + "/images/shop/" + photoName, FileMode.Create));
-                    }
-                    x.ProductName = product.ProductName;
-                    x.Price = product.Price;
-                    x.AvailableDate = product.AvailableDate;
-                    x.ProductContent = product.ProductContent;
-                    x.UnitStock = product.UnitStock;
-                    x.StatusId = product.StatusID;
-                    x.MemberId = product.MemberID;
-
-                    _db.Products.Add(x);
-                    _db.SaveChanges();
-                }
+                        if (product.photo != null)
+                        {
+                            string photoName = Guid.NewGuid().ToString() + ".jpg";
+                            x.FImagePath = photoName;
+                            product.photo.CopyTo(new FileStream(_host.WebRootPath + "/images/shop/" + photoName, FileMode.Create));
+                        }
+                        x.ProductName = product.ProductName;
+                        x.Price = product.Price;
+                        x.AvailableDate = product.AvailableDate;
+                        x.ProductContent = product.ProductContent;
+                        x.UnitStock = product.UnitStock;
+                        x.StatusId = product.StatusID;
+                        x.MemberId = product.MemberID;           
+                        _db.Products.Add(x);
+                        _db.SaveChanges();
+                        //foreach (int tag in product.SelSubTags)
+                        //{
+                        //    ProductTag y = new ProductTag();
+                        //    y.SubTagId =Convert.ToInt32(tag);
+                        //    y.ProductId = _db.Products.AsEnumerable().Select(x => x.ProductId).Last();
+                        //    _db.ProductTags.Add(y);
+                        //    _db.SaveChanges();
+                        //}
+                    ts.Complete();}
+                } 
                 return RedirectToAction("Index");
             }
+
 
 
             public ActionResult Edit(int? id)

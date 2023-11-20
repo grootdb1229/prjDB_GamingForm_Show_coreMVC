@@ -72,9 +72,6 @@
                 @Html.ValidationMessageFor(model => model.UnitStock, "", new { @class = "text-danger" })
             </div>
         </div>
-        @*產品狀態要在類別或是controllers中獨立寫下""上架中"的邏輯*@
-
-        @*上架人員的ID在類別或是controllers中獨立寫下邏輯*@
 
         <hr />
 
@@ -138,44 +135,42 @@
     <script>
         const SelTag = document.querySelector('#Tags');
         const SubDiv = document.querySelector('#dynamicDiv');
-        const SelSub = document.querySelector('#subtag');
+        //const SelSub = document.querySelector('input[name="subtag"]');
         const SelDiv = document.querySelector('#SelTagDiv');
         const SelSubButton = document.querySelector('#DoNotSubmit');
+        
+        
         //監聽事件--選擇大標籤
         SelTag.addEventListener('change', () => {
             SubDiv.style.display = 'block';
             Subtag();
         })
-        //////監聽事件--選擇小標籤
-        const checkboxlist = document.querySelector('input[name="subtag"]')
-            checkboxes.forEach(checkbox => { checkbox.addEventListener('change',()=>{
-                if (checkbox.checked) { console.log(checkbox.value) }
-            })
-        });
+        //////監聽事件--選擇小標
 
-              //SelSub.addEventListener('change', () => 
-              //  {
-              //      console.log(SelSub.value);
-              //      if (SelSub.checked) {
-              //          SelDiv.style.display = 'block';
-              //      }
-              //  });
+        //const SelSub = document.querySelector('input[name="subtag"]');
+        //SelSub.addEventListener('change', () => {
+        //    console.log(SelSub.value);
+        //    if (SelSub.checked) {
+        //        SelDiv.style.display = 'block';
+        //        SelSubTag();
+        //    }
+        //});
 
 
         /////監聽事件--控制小標籤按鈕ver
-
-        SelSubButton.addEventListener('click',(e)=>
-        {   e.preventDefault();
+        SelSubButton.addEventListener('click', (e) => {
+            e.preventDefault();
             SelDiv.style.display = 'block';
             SelSubTag();
         })
-
         async function BigTag() {
             const response = await fetch(`@Url.Content("~/Shop/CreateTag")`);
             const data = await response.json();
             const tags = data.map(x => `<option value="${x.tagId}">${x.name}</option>`);
             SelTag.innerHTML = tags.join("");
             Subtag();
+
+
         }
         BigTag();
 
@@ -186,11 +181,16 @@
             const subtagOptions = data.map(x =>
                 `
                       <label>
-                            <input type="checkbox" id="subtag" name="subtag" value="${x.subTagId}">${x.name}
+                        <input type="checkbox" id="${x.name}" name="subtag" value="${x.subTagId}">${x.name}
                       </label>
-                    `);
-            SubDiv.innerHTML = subtagOptions.join("");
-          
+                   
+                    `
+                    //$(`#${x.name}`).check(function () {
+                    //SelDiv.innerHTML = `<p>${x.name}.value</p>`;  
+                    //})
+            
+            ); 
+            SubDiv.innerHTML = subtagOptions.join("");   
         }
 
         async function SelSubTag()///這是被選中在div加入的程式碼
@@ -201,15 +201,13 @@
             const subtagOptions = data.map(x =>
                 `
                  <label>
-                      <input type="checkbox" id="SelSubtag" name="subtag" value="${x.subTagId}">${x.name}
+                   <p type="checkbox" id="SelSubtag" name="SelSubTags" value="${x.subTagId}">${x.name}</p>
                  </label>
                             `);
             SelDiv.innerHTML += subtagOptions.join("");
         }
 
-
     </script>
-
 
     }
 
