@@ -71,10 +71,13 @@ namespace prjDB_GamingForm_Show.Controllers
             return View();
 
         }
-        public IActionResult Search(string txtKeyword)
+        public IActionResult Search(CKeyWord vm)
         {
             IEnumerable<CDeputeViewModel> datas = null;
-            if (string.IsNullOrEmpty(txtKeyword))
+            if (string.IsNullOrEmpty(vm.txtKeyword) &&
+                vm.txtSkill == "請選擇..." && 
+                vm.txtSkillClass == "請選擇..." && 
+                vm.txtSalary == "請選擇...")
             {
                 ListLoad();
                 datas = from n in List
@@ -83,13 +86,32 @@ namespace prjDB_GamingForm_Show.Controllers
             }
             else
             {
-                datas = List.Where(n => n.DeputeContent.Trim().ToLower().Contains(txtKeyword.Trim().ToLower()) ||
-                                          n.providername.Trim().ToLower().Contains(txtKeyword.Trim().ToLower()) ||
-                                          n.salary.ToString().Trim().ToLower().Contains(txtKeyword.Trim().ToLower()) ||
-                                          n.region.Trim().ToLower().Contains(txtKeyword.Trim().ToLower())
+                
+                if (string.IsNullOrEmpty(vm.txtKeyword))
+                    vm.txtKeyword = "";
+                if (vm.txtSkill== "請選擇...")
+                    vm.txtSkill = "";
+                if (vm.txtSkillClass== "請選擇...")
+                    vm.txtSkillClass = "";
+                if (vm.txtSalary == "請選擇...")
+                    vm.txtSalary = "0";
+                datas = List.Where(n => (n.DeputeContent.Trim().ToLower().Contains(vm.txtKeyword.Trim().ToLower()) ||
+                                          n.providername.Trim().ToLower().Contains(vm.txtKeyword.Trim().ToLower()) ||
+                                          n.salary.ToString().Trim().ToLower().Contains(vm.txtKeyword.Trim().ToLower()) ||
+                                          n.region.Trim().ToLower().Contains(vm.txtKeyword.Trim().ToLower()))
+                                          &&
+                                          (n.DeputeContent.Trim().ToLower().Contains(vm.txtSkill.Trim().ToLower()))
+                                          &&
+                                          (n.DeputeContent.Trim().ToLower().Contains(vm.txtKeyword.Trim().ToLower()))
+                                          &&
+                                          (n.salary>=(Convert.ToInt32(vm.txtSalary)))
                                           )
                    .OrderByDescending(n => n.modifieddate);
 
+            }
+            if(datas==null || datas.Count()==0)
+            {
+                return Content("No result");
             }
             return Json(datas);
         }
@@ -201,10 +223,24 @@ namespace prjDB_GamingForm_Show.Controllers
                 o.Title = vm.title;
                 _db.SaveChanges();
             }
-            
             return RedirectToAction("Personal");
         }
-
+        public IActionResult SkillClasses()
+        {
+            var datas = new
+            {
+                skillclasses = _db.SkillClasses.Select(_ => _),
+                skills = _db.Skills.Select(_ => _)
+            };
+            //var datas = _db.SkillClasses.Select(_ => _);
+            return Json(datas);
+        }
+        public IActionResult Skillss(string skillClass)
+        {
+            int skillclassid = Convert.ToInt32(_db.SkillClasses.Where(_ => _.Name == skillClass).FirstOrDefault()?.SkillClassId);
+            var datas = _db.Skills.Where(_ => _.SkillClassId == skillclassid).Select(_ => _);
+            return Json(datas);
+        }
         public IActionResult Create()
         {
             return View();
@@ -227,13 +263,14 @@ namespace prjDB_GamingForm_Show.Controllers
             _db.SaveChanges();
             return RedirectToAction("Personal");
         }
-        public IActionResult delete()
+        public IActionResult deleteDepute()
         {
             return RedirectToAction("Personal");
         }
         
         public IActionResult Personal()
         {
+            ViewBag.memberid=_memberIdtest;
             return View();
         }
         public IActionResult PartialReleaseList()
