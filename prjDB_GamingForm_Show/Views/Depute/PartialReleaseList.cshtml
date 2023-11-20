@@ -13,7 +13,10 @@
         <th class="col-1">
             #
         </th>
-        <th class="col-3">
+        <th class="col-1">
+            標題
+        </th>
+        <th class="col-2">
             內容
         </th>
         <th class="col-1">
@@ -40,40 +43,42 @@
 
     @{
         int count = 0;
-        foreach(var i in Model)
+        foreach (var i in Model)
         {
             count++;
             <tr>
-            <td class="col-1">
-                @count
-            </td>
-            <td class="col-3">
-                @i.DeputeContent
-            </td>
-            <td class="col-1">
-                @i.Region.City
-            </td>
-            <td class="col-1">
-                @i.Status.Name
-            </td>
-            <td class="col-1">
-                @i.Salary
-            </td>
-            <td class="col-1">
-                @i.Modifiedate
-            </td>
-            <td class="col-1">
-                @i.StartDate
-            </td>
-            <td class="col-1">
-                
-            </td>
+                <td class="col-1">
+                    @count
+                </td>
+                <td class="col-3">
+                    @i.Title
+                </td>
+                <td class="col-3">
+                    @i.DeputeContent
+                </td>
+                <td class="col-1">
+                    @i.Region.City
+                </td>
+                <td class="col-1">
+                    @i.Status.Name
+                </td>
+                <td class="col-1">
+                    @i.Salary
+                </td>
+                <td class="col-1">
+                    @i.Modifiedate
+                </td>
+                <td class="col-1">
+                    @i.StartDate
+                </td>
+                <td class="col-1">
+                </td>
                 <td class="col-2">
                     @Html.ActionLink("修改", "Edit", "Depute", new { id = i.DeputeId }, new { @class = "btn btn-success" }) |
                     @Html.ActionLink("詳細資料", "Details", new { id = i.DeputeId }, new { @class = "btn btn-info" }) |
                     @Html.ActionLink("刪除", "Delete", "Depute", new { id = i.DeputeId }, new { @class = "btn btn-danger", onclick = "return confirm('確定要刪除嗎?')" })
                 </td>
-        </tr>
-    }
+            </tr>
+        }
     }
 </table>
