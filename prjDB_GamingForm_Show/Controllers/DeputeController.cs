@@ -53,7 +53,7 @@ namespace prjDB_GamingForm_Show.Controllers
                     providername = item.Name,
                     startdate = item.SrartDate,
                     modifieddate = item.Modifiedate,
-                    content = item.DeputeContent,
+                    DeputeContent = item.DeputeContent,
                     salary = item.Salary,
                     status = item.Status,
                     region = item.City
@@ -76,7 +76,7 @@ namespace prjDB_GamingForm_Show.Controllers
             }
             else
             {
-                datas = List.Where(n => n.content.Trim().ToLower().Contains(vm.txtKeyword.Trim().ToLower()) ||
+                datas = List.Where(n => n.DeputeContent.Trim().ToLower().Contains(vm.txtKeyword.Trim().ToLower()) ||
                                           n.providername.Trim().ToLower().Contains(vm.txtKeyword.Trim().ToLower()) ||
                                           n.salary.ToString().Trim().ToLower().Contains(vm.txtKeyword.Trim().ToLower()) ||
                                           n.region.Trim().ToLower().Contains(vm.txtKeyword.Trim().ToLower())
@@ -115,7 +115,7 @@ namespace prjDB_GamingForm_Show.Controllers
             foreach (var item in SkillClasses) 
             {
                 var datas = from n in List.AsEnumerable()
-                            where n.content.Contains(item)
+                            where n.DeputeContent.Contains(item)
                             select n;
 
                 x = new CDeputeViewModel()
@@ -166,22 +166,46 @@ namespace prjDB_GamingForm_Show.Controllers
         [HttpPost]
         public IActionResult Edit(CDeputeViewModel vm)
         {
-            Depute n = new Depute()
+            Depute o=_db.Deputes.Where(_=>_.DeputeId==vm.id).FirstOrDefault();
+            if (o != null)
             {
-                DeputeId = vm.id,
-                ProviderId =_memberIdtest,
-                //StartDate
-                Modifiedate = DateTime.Now,
-                DeputeContent =vm.content,
-                //Salary =vm.salary,
-                StatusId =_db.Statuses.FirstOrDefault(_=>_.Name==vm.status).StatusId,
-                RegionId =_db.Regions.FirstOrDefault(_=>_.City==vm.region).RegionId,
-                Title =vm.title,
-            };
+                o.DeputeId = vm.id;
+                o.ProviderId = _memberIdtest;
+                o.StartDate = Convert.ToDateTime(vm.startdate);
+                o.Modifiedate=DateTime.Now;
+                o.DeputeContent = vm.DeputeContent;
+                o.Salary = vm.salary;
+                //o.StatusId = _db.Statuses.FirstOrDefault(_ => _.Name == vm.status).StatusId;
+                //o.RegionId = _db.Regions.FirstOrDefault(_ => _.City == vm.region).RegionId;
+                o.Title = vm.title;
+                _db.SaveChanges();
+            }
             
             return RedirectToAction("Personal");
         }
 
+        public IActionResult Create()
+        {
+            return View();
+        }
+        [HttpPost]
+        public IActionResult Create(CDeputeViewModel vm)
+        {
+            Depute n= new Depute()
+            {
+                ProviderId= _memberIdtest,
+                StartDate= DateTime.Now,
+                Modifiedate= DateTime.Now,
+                DeputeContent= vm.DeputeContent,
+                Salary= vm.salary,
+                //StatusId = _db.Statuses.FirstOrDefault(_ => _.Name == vm.status).StatusId,
+                //RegionId = _db.Regions.FirstOrDefault(_ => _.City == vm.region).RegionId,
+                Title= vm.title,
+            };
+            _db.Deputes.Add(n);
+            _db.SaveChanges();
+            return RedirectToAction("Personal");
+        }
         public IActionResult delete()
         {
             return RedirectToAction("Personal");

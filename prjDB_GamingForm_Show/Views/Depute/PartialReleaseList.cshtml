@@ -4,13 +4,19 @@
     For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 *@
 
+@Html.ActionLink("發佈委託","Create","Depute",null,new{@class="btn btn-primary tm-btn-next"})
+
+
 <table class="table table-striped table-bordered">
 
     <tr>
         <th class="col-1">
             #
         </th>
-        <th class="col-3">
+        <th class="col-1">
+            標題
+        </th>
+        <th class="col-2">
             內容
         </th>
         <th class="col-1">
@@ -37,40 +43,42 @@
 
     @{
         int count = 0;
-        foreach(var i in Model)
+        foreach (var i in Model)
         {
             count++;
             <tr>
-            <td class="col-1">
-                @count
-            </td>
-            <td class="col-3">
-                @i.DeputeContent
-            </td>
-            <td class="col-1">
-                @i.Region.City
-            </td>
-            <td class="col-1">
-                @i.Status.Name
-            </td>
-            <td class="col-1">
-                @i.Salary
-            </td>
-            <td class="col-1">
-                @i.Modifiedate
-            </td>
-            <td class="col-1">
-                @i.StartDate
-            </td>
-            <td class="col-1">
-                
-            </td>
+                <td class="col-1">
+                    @count
+                </td>
+                <td class="col-3">
+                    @i.Title
+                </td>
+                <td class="col-3">
+                    @i.DeputeContent
+                </td>
+                <td class="col-1">
+                    @i.Region.City
+                </td>
+                <td class="col-1">
+                    @i.Status.Name
+                </td>
+                <td class="col-1">
+                    @i.Salary
+                </td>
+                <td class="col-1">
+                    @i.Modifiedate
+                </td>
+                <td class="col-1">
+                    @i.StartDate
+                </td>
+                <td class="col-1">
+                </td>
                 <td class="col-2">
                     @Html.ActionLink("修改", "Edit", "Depute", new { id = i.DeputeId }, new { @class = "btn btn-success" }) |
                     @Html.ActionLink("詳細資料", "Details", new { id = i.DeputeId }, new { @class = "btn btn-info" }) |
                     @Html.ActionLink("刪除", "Delete", "Depute", new { id = i.DeputeId }, new { @class = "btn btn-danger", onclick = "return confirm('確定要刪除嗎?')" })
                 </td>
-        </tr>
-    }
+            </tr>
+        }
     }
 </table>

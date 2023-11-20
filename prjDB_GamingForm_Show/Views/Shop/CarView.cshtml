@@ -5,14 +5,15 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>CarView</h2>
+<h2>購物車</h2>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    @Html.ActionLink("繼續購物", "Index", "Shop",null, new { @class = "btn btn-outline-dark mt-auto" })
+    @Html.ActionLink("結帳", "Purchase", "Shop",null, new { @class = "btn btn-outline-dark mt-auto", @id="btnpurchase" })
 </p>
 <table class="table">
     <thead>
-        <tr>
+        <tr class="textcolor">
             <th>
                 @Html.DisplayNameFor(model => model.ProductName)
             </th>
@@ -36,10 +37,7 @@
         decimal sum = 0;
     foreach (var item in Model) {
         count++;
-        <tr>
-            <td>
-                @count
-            </td>
+        <tr class="textcolor">
             <td>
                 @Html.DisplayFor(modelItem => item.ProductName)
             </td>
@@ -52,11 +50,20 @@
             <td>
                 @Html.DisplayFor(modelItem => item.total)
             </td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
-            </td>
+                    @using (Html.BeginForm("EditCar", "Shop", FormMethod.Post))
+                    {
+                        <input type="hidden" name="ProductID" value="@item.ProductID" />
+                        <td>
+                            @Html.TextBox("txtCount", "1", new { @class = "form-control text-center me-3", @style = "max-width: 3rem" })
+                        </td>
+                        <td>
+                            <input type="submit" value="修改數量" class="btn btn-outline-dark mt-auto" />
+                        </td>
+                    }
+                    <td>
+                        @Html.ActionLink("查看商品", "Details", "Shop", new { id = item.ProductID }, new { @class = "btn btn-outline-dark mt-auto" })
+                        @Html.ActionLink("刪除購物車", "DeleteFromCar", "Shop", new { id = item.ProductID }, new { @class = "btn btn-outline-dark mt-auto", onclick = "return confirm('確定要刪除嗎?')" })
+                    </td>
         </tr>
          sum += item.total;
 }
@@ -69,3 +76,21 @@
 <li>交易金額:@sum.ToString("###,###,##0")</li>
 <li>稅    額:@tax.ToString("###,###,##0")</li>
 <li>應付金額:@pay.ToString("###,###,##0")</li>
+ <style>
+    .textcolor {
+        color:white
+     }
+</style>
+<script>
+    const btn = document.querySelector('#btnpurchase');
+    btn.addEventListener('click', event => {
+    			event.preventDefault();
+
+        fetch('@Url.Content("~/Shop/Purchase")')
+            .then(Swal.fire({
+                title: "結帳成功!",
+                text: "訂單已送至電子信箱!",
+                icon: "success"}))
+    })
+
+</script>
