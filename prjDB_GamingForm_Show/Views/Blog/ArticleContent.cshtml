@@ -49,7 +49,7 @@
                         @like
                     }
                 </div>
-                    @Html.ActionLink("Edit", "Edit", new { id = Model.articles.FirstOrDefault().ArticleId })
+                @Html.ActionLink("修改", "ArticleEdit", new { AFId = Model.articles.FirstOrDefault().ArticleId ,FId = Model.blogs.FirstOrDefault().BlogId})
                     @Html.ActionLink("刪除", "ArticleDelete", new { AFId = Model.articles.FirstOrDefault().ArticleId, FId = Model.blogs.FirstOrDefault().BlogId }, new { onclick = "return confirm ('確定刪除嗎?')" })
                 
                 <div>

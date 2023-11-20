@@ -1,0 +1,14 @@
+﻿<head>
+    @*<link href="~/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">*@
+    <link href="~/vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="~/js/bootstrap.min.js"></script>
+    <script src="~/js/jquery-3.3.1.min.js"></script>
+    <link href="~/css/Admin.css" rel="stylesheet" />
+    <!------ Include the above in your HEAD tag ---------->
+</head>
+
+
+
+
+@RenderBody()
+@await RenderSectionAsync("Scripts", required: false)
