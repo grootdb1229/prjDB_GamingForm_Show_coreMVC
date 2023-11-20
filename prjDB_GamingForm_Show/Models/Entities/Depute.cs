@@ -15,7 +15,7 @@ public partial class Depute
 
     public string? DeputeContent { get; set; }
 
-    public int Salary { get; set; }
+    public decimal Salary { get; set; }
 
     public int StatusId { get; set; }
 
