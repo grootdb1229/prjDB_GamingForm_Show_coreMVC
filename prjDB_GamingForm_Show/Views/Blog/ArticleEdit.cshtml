@@ -1,0 +1,54 @@
+﻿@*@model prjDB_GamingForm_Show.Models.Entities.Article*@
+@model prjDB_GamingForm_Show.ViewModels.CBlogViewModel
+@{
+    ViewData["Title"] = "ArticleEdit";
+}
+
+<h2>ArticleEdit</h2>
+
+<h4>Article</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="ArticleEdit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        
+            <input type="hidden" name="ArticleId" value="@Model.articles.FirstOrDefault().ArticleId" />
+            <input type="hidden" name="AFId" value="@Model.articles.FirstOrDefault().ArticleId" />
+            <input type="hidden" name="FId" value="@Model.blogs.FirstOrDefault().BlogId" />
+            @{
+
+                <select name="SubBlogID" class="form-select">
+                    @foreach (var i in Model.subBlogs)
+                    {
+                        <option value="@i.SubBlogId">@i.Title</option>
+                    }
+                </select>
+            }
+            <div class="form-group">
+                <label asp-for="articles.FirstOrDefault().Title" class="control-label"></label>
+                <input asp-for="articles.FirstOrDefault().Title" class="form-control" />
+                <span asp-validation-for="articles.FirstOrDefault().Title" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="articles.FirstOrDefault().ArticleContent" class="control-label"></label>
+                <input asp-for="articles.FirstOrDefault().ArticleContent" class="form-control" />
+                <span asp-validation-for="articles.FirstOrDefault().ArticleContent" class="text-danger"></span>
+            </div>
+            <input type="hidden" name="ModifiedDate" value="@DateTime.Now" />
+            <input type="hidden" name="MemberId" value="15" />
+         
+            <div class="form-group">
+                <input type="submit" value="修改" class="btn btn-default" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    @Html.ActionLink("回列表","ArticleList","Blog",new{FId= Model.blogs.First().BlogId},null)
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
