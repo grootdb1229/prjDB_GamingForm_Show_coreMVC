@@ -4,30 +4,33 @@
 @{
     ViewData["Title"] = "ArticleCreate";
 }
-
+<script src="@Url.Content("~/build/ckeditor.js")" type="text/javascript"></script>
+@section Styles{
+    <style>
+      
+        input{
+            margin:3px
+        }
+    </style>
+   
+}
 <h2>ArticleCreate</h2>
-
 <h4>Article</h4>
 <hr />
-<div >
+<div>
     <div class="row" style="margin:10px auto;width:650px;background-color:#4F4F4F">
-        <div class="col-md-4">
+        <div class="col-md-10">
             <form asp-action="ArticleCreate" method="post">
+                <label asp-for="blogs.First().Title" class="control-label"></label>
                 <input type="hidden" name="FId" value="@Model.blogs.First().BlogId" />
-                @{
-
-                    <select name="SubBlogID" class="form-select">
+                <select name="SubBlogID" class="form-select"style="margin-top:3px">
+                    @{
                         @foreach (var i in Model.subBlogs)
                         {
                             <option value="@i.SubBlogId">@i.Title</option>
                         }
-                    </select>
-                }
-                <div class="form-group">
-@*                    <label asp-for="subBlogs." class="control-label"></label>
-                    <input asp-for="SubBlogId" class="form-control" />
-                    <span asp-validation-for="SubBlogId" class="text-danger"></span>*@
-                </div>
+                    }
+                </select>          
                 <div class="form-group">
                     <label asp-for="articles.First().Title" class="control-label"></label>
                     <input name="Title" class="form-control" />
@@ -35,30 +38,43 @@
                 </div>
                 <div class="form-group">
                     <label asp-for="articles.First().ArticleContent" class="control-label"></label>
-                    <input  name="ArticleContent" class="form-control" />
+                    <input name="ArticleContent" class="form-control" />
                     <span asp-validation-for="articles.First().ArticleContent" class="text-danger"></span>
                 </div>
-                <div class="form-group">
-                    @*<label asp-for="ModifiedDate" class="control-label"></label>
-                    <input asp-for="ModifiedDate" class="form-control" />
-                    <span asp-validation-for="ModifiedDate" class="text-danger"></span>*@
+                <div class="form-group">                   
                     <input type="hidden" name="ModifiedDate" value="@DateTime.Now" />
                     <input type="hidden" name="MemberId" value="15" />
+                </div>
+                <div>
+                    <textarea name="ArticleContent" id="editor" placeholder="請在這裡填寫內容" cols="60" rows="15" style="resize:none;color:black">                    
+                </textarea>
                 </div>
                 <div class="form-group">
                     <input type="submit" value="發文" class="btn btn-default" />
                 </div>
-               
             </form>
         </div>
     </div>
-
-    <div>
-       @Html.ActionLink("回列表","ArticleList","Blog",new{FId= Model.blogs.First().BlogId},null)
-    </div>
 </div>
 @section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
+
+    <script>
+
+
+        ClassicEditor
+            .create(document.querySelector(
+                '#editor'))
+            .then(editor => {
+                console.log(editor);
+            })
+            .catch(error => {
+                console.error(error);
+            });
+    </script>
 }
+
+
+
+
+
+
