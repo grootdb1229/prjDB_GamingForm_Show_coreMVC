@@ -32,5 +32,11 @@ namespace prjDB_GamingForm_Show.Controllers
             }
             return View();
         }
+        
+        public IActionResult Logout()
+        {
+            HttpContext.Session.Remove(CDictionary.SK_管理者登入資訊使用關鍵字);
+            return RedirectToAction("Login");            
+        }
     }
 }
