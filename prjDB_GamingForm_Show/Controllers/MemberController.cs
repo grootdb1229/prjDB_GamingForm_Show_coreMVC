@@ -48,7 +48,8 @@ namespace prjDB_GamingForm_Show.Controllers
         [HttpPost] 
         public IActionResult Create (Member member)
         {
-           
+                string photoName = Guid.NewGuid().ToString() + ".jpg";
+                member.FImagePath = photoName;
                 _db.Members.Add(member);
                 _db.SaveChanges();
                 return RedirectToAction("MemberPage");

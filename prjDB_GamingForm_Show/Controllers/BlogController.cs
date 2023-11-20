@@ -107,7 +107,7 @@ namespace prjDB_GamingForm_Show.Controllers
             return View(vm);
         }
 
-        public ActionResult ArticleContent(int? FId, int? AFId)
+        public ActionResult ArticleContent(int? FId, int? AFId )
         {
 
             CBlogViewModel vm = new CBlogViewModel();
@@ -117,7 +117,7 @@ namespace prjDB_GamingForm_Show.Controllers
                 tags = _db.Tags.Select(p => p),
                 subTags = _db.SubTags.Where(s => s.TagId == 4 && s.SubTagId != 14).Select(p => p),
                 blogs = _db.Blogs.Include(p => p.SubBlogs).Where(b => b.BlogId == FId).Select(p => p),
-                subBlogs = _db.SubBlogs.Include(s => s.Articles).Select(p => p),
+                subBlogs = _db.SubBlogs.Where(s=>s.BlogId==FId).Include(s => s.Articles).Select(p => p),
                 articles = _db.Articles.Include(a => a.Member).AsEnumerable().Where(a => a.ArticleId == AFId).Select(p => p),
                 actions = _db.Actions,
                 articleActions = _db.ArticleActions.Where(a => a.ArticleId == AFId).Select(p => p),
@@ -139,6 +139,19 @@ namespace prjDB_GamingForm_Show.Controllers
             }
             return RedirectToAction("ArticleList", new { FId });
         }
+
+        public ActionResult ReplyDelete(int? RFId, int? AFId , int? FId)
+        {
+            Reply re = _db.Replies.FirstOrDefault(a => a.ReplyId == RFId);
+            if (re != null)
+            {
+                _db.Replies.Remove(re);
+                _db.SaveChanges();
+            }
+            return RedirectToAction("ArticleContent", new { AFId ,FId});
+        }
+
+
 
         public IActionResult ArticleCreate(int? FId)
         {
@@ -190,6 +203,37 @@ namespace prjDB_GamingForm_Show.Controllers
             return RedirectToAction("ArticleContent", new { AFId, FId });
         }
 
+        //--
+        public IActionResult ReplyEdit(int? AFId , int? RFId , int?FId)
+        {
+            CBlogViewModel vm = new CBlogViewModel()
+            {
+                blogs = _db.Blogs.Include(b => b.SubBlogs).Where(p => p.BlogId == FId),
+                subBlogs = _db.SubBlogs.Include(s => s.Blog).Where(p => p.BlogId == FId).Select(p => p),
+                articles = _db.Articles.Where(a => a.ArticleId == (int)AFId).Select(a => a),
+                replies = _db.Replies.Where(a=>a.ReplyId == (int)RFId).Select(a=>a),
+
+            };
+
+            return View(vm);
+        }
+
+        [HttpPost]
+        public IActionResult ReplyEdit(Reply Inrep, int? AFId, int? FId, int? RFId)
+        {
+            Reply dbArt = _db.Replies.First(a => a.ReplyId == RFId);
+            if (dbArt != null)
+            {
+                dbArt.ReplyContents = Inrep.ReplyContents;
+                dbArt.ModifiedDate = Inrep.ModifiedDate;
+            }
+            _db.SaveChanges();
+            return RedirectToAction("ArticleContent", new { AFId,FId });
+        }
+
+
+
+        //--
 
 
 
@@ -215,33 +259,30 @@ namespace prjDB_GamingForm_Show.Controllers
         }
 
 
-        public IActionResult ReplyCreate(int? AFId)
+
+
+        public IActionResult ReplyCreate(int? AFId,int? FId)
         {
             CBlogViewModel vm = null;
             if (AFId == null)
                 return RedirectToAction("ArticleList");
             vm = new CBlogViewModel
             {
-
-                articles = _db.Articles.Include(s => s.Replies).Where(a => a.ArticleId == AFId).Select(p => p),
+                blogs=_db.Blogs.Where(b=>b.BlogId==FId),
+                articles = _db.Articles.Include(s=>s.Replies).Where(a=>a.ArticleId==AFId).Select(p=>p),
                 replies = _db.Replies
             };
 
             return View(vm);
         }
         [HttpPost]
-        public IActionResult ReplyCreate(Article Inart, int? FId)
+        public IActionResult ReplyCreate(Reply Inart, int? AFId ,int? FId)
         {
-            _db.Articles.Add(Inart);
+
+            _db.Replies.Add(Inart);
             _db.SaveChanges();
-            return RedirectToAction("ArticleList", new { FId });
+            return RedirectToAction("ArticleContent", new { AFId , FId });
         }
-
-
-
-
-
-
 
 
     }
