@@ -9,7 +9,8 @@ namespace prjDB_GamingForm_Show.Models.Shop
 
     {
         public string txtKeyword { get; set; }
-        public string txtHotkey { get; set; }
+        public string txtSkill { get; set; }
+        public string txtSkillClass { get; set; }
 
 
     }

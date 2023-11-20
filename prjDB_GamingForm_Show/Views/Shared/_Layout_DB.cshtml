@@ -29,7 +29,7 @@
     <!-- Navigation-->
     <nav class="navbar navbar-expand-lg navbar-light bg-light" style="background-color:black;">
         <div class="container px-4 px-lg-5">
-            <a class="navbar-brand" href="#!">Groot遊戲資源整合平台</a>
+            <a class="navbar-brand" href="#!"><img src="~/images/grootlogiicon.png" width="80px" height="80px" /></a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
@@ -65,8 +65,8 @@
 
 
                     <form class="d-flex">
-                        <a href="~/Shop/CarView" class="btn mt-auto btn-outline-dark bi-cart-fill me-1" id="car">
-                            <span class="badge bg-dark text-white ms-1 rounded-pill">@count</span>
+                        <a href="~/Shop/CarView" class="btn mt-auto btn-outline-dark me-1" id="car">
+                            會員編號:@ViewBag.memberid
                         </a>
                     </form>
                 }
@@ -627,7 +627,7 @@
                         </div>
                     </div>
                 </div>
-                @RenderBody();
+                @RenderBody()
                 <!-- Copyright -->
                 <div class="tm-section-wrap tm-copyright row">
                     <div class="col-12">
