@@ -15,11 +15,13 @@ public partial class Depute
 
     public string? DeputeContent { get; set; }
 
-    public int Salary { get; set; }
+    public decimal Salary { get; set; }
 
     public int StatusId { get; set; }
 
     public int RegionId { get; set; }
+
+    public string? Title { get; set; }
 
     public virtual ICollection<DeputeRecord> DeputeRecords { get; set; } = new List<DeputeRecord>();
 
