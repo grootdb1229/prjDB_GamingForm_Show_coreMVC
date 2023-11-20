@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace prjDB_GamingForm_Show.Models.Entities;
 
@@ -9,10 +11,11 @@ public partial class Article
 
     public int SubBlogId { get; set; }
 
+    [DisplayName("文章標題")]
     public string Title { get; set; } = null!;
-
+    [DisplayName("文章內容")]
     public string ArticleContent { get; set; } = null!;
-
+    [DisplayName("最後發文時間")]
     public DateTime ModifiedDate { get; set; }
 
     public int MemberId { get; set; }
