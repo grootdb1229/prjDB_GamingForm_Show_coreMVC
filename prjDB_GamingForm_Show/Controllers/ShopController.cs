@@ -24,7 +24,7 @@ namespace prjDB_GamingForm_Show.Controllers
             public IActionResult Index(CKeyWord ck)
             { 
                 //UI相關
-                //Todo 商品切成XX個一頁，下面要有1~XX個頁，上面要有選項讓客人決定一頁呈現 20 OR 40個   //補充 蝦皮沒分 大約60件一頁
+               //Todo 商品切成XX個一頁，下面要有1~XX個頁，上面要有選項讓客人決定一頁呈現 20 OR 40個   //補充 蝦皮沒分 大約60件一頁
                //Todo 商品圖片大小不一需要修正
                //Todo 篩選 價格排序 上架日期排序 銷售件數排序
                //Todo 研究一下商品上架/修改的選擇圖片那區，檔案名移除+讓他好看點
@@ -39,7 +39,7 @@ namespace prjDB_GamingForm_Show.Controllers
                 if (string.IsNullOrEmpty(CK))
                 {
                     Pdb = (from aa in _db.Products
-                          select aa).Take(25);
+                          select aa)/*.Take(25)*/;
                 }
                 else
                 {
@@ -68,10 +68,16 @@ namespace prjDB_GamingForm_Show.Controllers
             public ActionResult SubTag(int? id)
             {
                 _db.SubTags.Load();
-                var Tag = _db.SubTags.Where(p => p.TagId == id).Select(s => s.Name).ToList();
+                var Tag = _db.SubTags.Where(p => p.TagId == id).Select(s => new { s.SubTagId,s.Name }).ToList();
                 return Json(Tag);
             }
 
+            public ActionResult SelSubTag(int? id) 
+            {
+                _db.SubBlogs.Load();
+                var SelSub=_db.SubTags.Where(p=>p.SubTagId==id).Select(s => new { s.SubTagId, s.Name }).ToList();
+                return Json(SelSub);
+            }
 
             [HttpPost]
             public ActionResult Create(CProductWarp product) //原Product物件
