@@ -65,10 +65,16 @@ namespace prjDB_GamingForm_Show.Controllers
             }
         }
 
-        public IActionResult DeputeList(CKeyWord vm)
+        public IActionResult DeputeList()
+        {
+            
+            return View();
+
+        }
+        public IActionResult Search(string txtKeyword)
         {
             IEnumerable<CDeputeViewModel> datas = null;
-            if (string.IsNullOrEmpty(vm.txtKeyword))
+            if (string.IsNullOrEmpty(txtKeyword))
             {
                 ListLoad();
                 datas = from n in List
@@ -77,18 +83,17 @@ namespace prjDB_GamingForm_Show.Controllers
             }
             else
             {
-                datas = List.Where(n => n.DeputeContent.Trim().ToLower().Contains(vm.txtKeyword.Trim().ToLower()) ||
-                                          n.providername.Trim().ToLower().Contains(vm.txtKeyword.Trim().ToLower()) ||
-                                          n.salary.ToString().Trim().ToLower().Contains(vm.txtKeyword.Trim().ToLower()) ||
-                                          n.region.Trim().ToLower().Contains(vm.txtKeyword.Trim().ToLower())
+                datas = List.Where(n => n.DeputeContent.Trim().ToLower().Contains(txtKeyword.Trim().ToLower()) ||
+                                          n.providername.Trim().ToLower().Contains(txtKeyword.Trim().ToLower()) ||
+                                          n.salary.ToString().Trim().ToLower().Contains(txtKeyword.Trim().ToLower()) ||
+                                          n.region.Trim().ToLower().Contains(txtKeyword.Trim().ToLower())
                                           )
                    .OrderByDescending(n => n.modifieddate);
 
             }
-
             return Json(datas);
-
         }
+
         //test
         public List<CDeputeViewModel> List { get; set; }
         
@@ -156,15 +161,20 @@ namespace prjDB_GamingForm_Show.Controllers
         {
             return View();
         }
-        public IActionResult Apply(int id)
+        public IActionResult Apply(int id=7)
         {
-            return View();
+            ViewBag.memberid = _memberIdtest;
+            Depute o=_db.Deputes.FirstOrDefault(_ => _.DeputeId == id);
+            if (o == null)
+                return RedirectToAction("Index");
+            return View(o);
         }
         [HttpPost]
-        public IActionResult Apply()
+        public IActionResult Apply(DeputeRecord vm)
         {
-
-            return RedirectToAction("Index");
+            _db.DeputeRecords.Add(vm);
+            _db.SaveChanges();
+            return RedirectToAction("DeputeMain");
         }
         public IActionResult Edit(int id)
         {
@@ -191,10 +201,24 @@ namespace prjDB_GamingForm_Show.Controllers
                 o.Title = vm.title;
                 _db.SaveChanges();
             }
-            
             return RedirectToAction("Personal");
         }
+        public IActionResult SkillClasses()
+        {
+            var datas = new
+            {
+                skillclasses = _db.SkillClasses.Select(_ => _),
+                skills=_db.Skills.Select(_ => _)
+            };
 
+            return Json(datas);
+        }
+        public IActionResult Skillss(string skillClass)
+        {
+            int skillclassid = Convert.ToInt32(_db.SkillClasses.Where(_ => _.Name == skillClass).FirstOrDefault()?.SkillClassId);
+            var datas = _db.Skills.Where(_ => _.SkillClassId == skillclassid).Select(_ => _);
+            return Json(datas);
+        }
         public IActionResult Create()
         {
             return View();
@@ -217,13 +241,14 @@ namespace prjDB_GamingForm_Show.Controllers
             _db.SaveChanges();
             return RedirectToAction("Personal");
         }
-        public IActionResult delete()
+        public IActionResult deleteDepute()
         {
             return RedirectToAction("Personal");
         }
         
         public IActionResult Personal()
         {
+            ViewBag.memberid=_memberIdtest;
             return View();
         }
         public IActionResult PartialReleaseList()
