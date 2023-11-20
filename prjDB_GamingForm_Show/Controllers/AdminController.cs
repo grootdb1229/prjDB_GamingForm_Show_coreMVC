@@ -138,7 +138,6 @@ namespace prjDB_GamingForm_Show.Controllers
                 {
                     i頁數++;
                 }
-
                 HttpContext.Session.SetInt32(CDictionary.SK_管理者觀看版面清單頁數使用關鍵字, i頁數);
                 vm = new CBlogViewModel
                 {

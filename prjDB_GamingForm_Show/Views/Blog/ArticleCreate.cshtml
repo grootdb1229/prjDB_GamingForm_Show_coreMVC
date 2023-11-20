@@ -4,10 +4,17 @@
 @{
     ViewData["Title"] = "ArticleCreate";
 }
-<script src="@Url.Content("~/build/ckeditor.js")" type="text/javascript"></script>
+@* <script src="@Url.Content("~/build/ckeditor.js")" type="text/javascript"></script> *@
+<script src="https://cdn.ckeditor.com/ckeditor5/40.1.0/classic/ckeditor.js"></script>
 @section Styles{
     <style>
-      
+        .ck{
+            height:650px;
+        }
+        .ck.ck-content{
+            color:black
+           
+        }
         input{
             margin:3px
         }
@@ -19,15 +26,15 @@
 <hr />
 <div>
     <div class="row" style="margin:10px auto;width:650px;background-color:#4F4F4F">
-        <div class="col-md-10">
+        <div >
             <form asp-action="ArticleCreate" method="post">
                 <label style="margin-top:5px" asp-for="blogs.First().Title" class="control-label"></label>
                 <input type="hidden" name="FId" value="@Model.blogs.First().BlogId" />
                 <select name="SubBlogID" class="form-select"style="margin-top:3px">
                     @{
-                        @foreach (var i in Model.subBlogs)
+                                @foreach (var i in Model.subBlogs)
                         {
-                            <option value="@i.SubBlogId">@i.Title</option>
+                                    <option value="@i.SubBlogId">@i.Title</option>
                         }
                     }
                 </select>          
@@ -46,7 +53,7 @@
                     <input type="hidden" name="MemberId" value="15" />
                 </div>
                 <div>
-                    <textarea name="ArticleContent" id="editor" placeholder="請在這裡填寫內容" cols="60" rows="15" style="resize:none;>                    
+                    <textarea name="ArticleContent" id="editor" placeholder="請在這裡填寫內容" style="resize:none; height:700px">                    
                 </textarea>
                 </div>
                 <div class="form-group">
@@ -63,7 +70,11 @@
 
         ClassicEditor
             .create(document.querySelector(
-                '#editor'))
+                '#editor'), {
+                toolbar: ['undo', 'redo', '|', 'bold', 'italic', 'fontfamily', 'fontsize', 'fontColor', 'fontBackgroundColor'
+
+                ]
+                })
             .then(editor => {
                 console.log(editor);
             })

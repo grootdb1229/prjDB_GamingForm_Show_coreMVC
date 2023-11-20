@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Azure.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using prjDB_GamingForm_Show.Models.Entities;
 using prjDB_GamingForm_Show.ViewModels;
@@ -64,7 +65,6 @@ namespace prjDB_GamingForm_Show.Controllers
         }
         public ActionResult ArticleList(CKeyWordViewModel kw, int? FId, int? SFId)
         {
-
             CBlogViewModel vm = new CBlogViewModel();
             if (!string.IsNullOrEmpty(kw.txtKeyWord))
             {
@@ -109,7 +109,6 @@ namespace prjDB_GamingForm_Show.Controllers
 
         public ActionResult ArticleContent(int? FId, int? AFId )
         {
-
             CBlogViewModel vm = new CBlogViewModel();
 
             vm = new CBlogViewModel
@@ -124,7 +123,6 @@ namespace prjDB_GamingForm_Show.Controllers
                 replies = _db.Replies.Include(a => a.Member).Where(a => a.ArticleId == AFId).ToList(),
                 members = _db.Members
             };
-
             var artcon = _db.Articles.Where(a => a.ArticleId == AFId).Select(a => a);
 
             return View(vm);
@@ -284,6 +282,15 @@ namespace prjDB_GamingForm_Show.Controllers
             return RedirectToAction("ArticleContent", new { AFId , FId });
         }
 
+
+        // Todo:API插入圖片
+        // Todo:CKeditor 補完整
+        //
+
+        //public IActionResult ReplyCreate()
+        //{
+        //    return Content();
+        //}
 
     }
 }

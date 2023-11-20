@@ -37,7 +37,7 @@
             </div>
             <input type="hidden" name="ModifiedDate" value="@DateTime.Now" />
             <input type="hidden" name="MemberId" value="15" />
-         
+        
             <div class="form-group">
                 <input type="submit" value="修改" class="btn btn-default" />
             </div>
@@ -46,7 +46,7 @@
 </div>
 
 <div>
-    @Html.ActionLink("回列表","ArticleList","Blog",new{FId= Model.blogs.First().BlogId},null)
+    @Html.ActionLink("回列表","ArticleContent","Blog",new{AFId= Model.articles.FirstOrDefault().ArticleId,FId=Model.blogs.FirstOrDefault().BlogId},null)
 </div>
 
 @section Scripts {
