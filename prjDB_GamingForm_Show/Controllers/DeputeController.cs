@@ -155,6 +155,24 @@ namespace prjDB_GamingForm_Show.Controllers
         {
             return View();
         }
+        public IActionResult Edit(int id)
+        {
+            _db.Deputes.Load();
+            Depute n = _db.Deputes.FirstOrDefault(_ => _.DeputeId == id);
+            if (n == null)
+                return RedirectToAction("Personal");
+            return View(n);
+        }
+        public IActionResult Edit(CDeputeViewModel vm)
+        {
+
+            return RedirectToAction("Personal");
+        }
+
+        public IActionResult delete()
+        {
+            return RedirectToAction("Personal");
+        }
         
         public IActionResult Personal()
         {
