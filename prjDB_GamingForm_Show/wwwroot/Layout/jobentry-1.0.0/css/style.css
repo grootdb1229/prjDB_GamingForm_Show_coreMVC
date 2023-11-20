@@ -89,9 +89,9 @@
 .navbar-dark .navbar-nav .nav-link,
 .navbar-light .navbar-nav .nav-link {
     margin-right: 30px;
-    padding: 25px 0;
+    /*padding: 25px 0;*/
     color: #FFFFFF;
-    font-size: 15px;
+    /*font-size: 15px;*/
     text-transform: uppercase;
     outline: none;
 }
@@ -121,7 +121,7 @@
 }
 
 .navbar-light .navbar-nav .nav-link {
-    color: var(--dark);
+    /*color: var(--dark);*/
     font-weight: 500;
 }
 

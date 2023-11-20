@@ -80,6 +80,7 @@
                                 <li><a class="dropdown-item" href="#!">Popular Items</a></li>
                                 <li><a class="dropdown-item" href="#!">New Arrivals</a></li>
                             </ul>
+                            
                         </li>
                     </ul>
                     @{
@@ -90,7 +91,6 @@
                         //    List<prjDB_GamingForm_Show.Models.ShoppingCar> car = Session[prjDB_GamingForm_Show.Models.CDictionary.SK_PURCHASED_PRODUCES_LIST] as List<prjDB_GamingForm_Show.Models.ShoppingCar>;
                         //    count = car.Count();
                         //}
-
 
                         <form class="d-flex">
                             <a href="~/Shop/CarView" class="btn mt-auto btn-outline-dark bi-cart-fill me-1" id="car">
@@ -270,17 +270,6 @@
     
     @await RenderSectionAsync("Scripts", required: false)
     
-    <script>
-        const button = document.querySelector('.btndp');
-
-        button.addEventListener('mouseover', () => {
-            button.style.backgroundColor = '#a81d1d';
-        });
-
-        button.addEventListener('mouseout', () => {
-            button.style.backgroundColor = '';
-        });
-    </script>
     <!-- Core theme JS-->
     <script src="~/js/scripts.js"></script>
     <script>
@@ -353,6 +342,17 @@
 
 
 
+    </script>
+    <script>
+        const button = document.querySelector('#car');
+
+        button.addEventListener('mouseover', () => {
+            button.style.backgroundColor = '#a81d1d';
+        });
+
+        button.addEventListener('mouseout', () => {
+            button.style.backgroundColor = '';
+        });
     </script>
 
 </body>
