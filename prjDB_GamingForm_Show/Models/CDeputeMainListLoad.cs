@@ -54,7 +54,7 @@ namespace prjDB_GamingForm_Show.ViewModels
                     providername = item.Name,
                     startdate = item.SrartDate,
                     modifieddate = item.Modifiedate,
-                    content = item.DeputeContent,
+                    DeputeContent = item.DeputeContent,
                     salary = item.Salary,
                     status = item.Status,
                     region = item.City

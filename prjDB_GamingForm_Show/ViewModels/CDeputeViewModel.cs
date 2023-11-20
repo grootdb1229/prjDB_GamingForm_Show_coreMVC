@@ -25,7 +25,7 @@ namespace DB_GamingForm_Show.Job.DeputeClass
         public string modifieddate { get; set; }
 
         [DisplayName("懸賞內容")]
-        public string content { get; set; }
+        public string DeputeContent { get; set; }
 
         [DisplayName("懸賞金額")]
         public decimal salary { get; set; }
