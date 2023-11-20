@@ -48,9 +48,9 @@
                 <select id="dynamicDiv" name="SubTagID" class="form-control"> </select>
             </div>
         </div>
-    
-     
-        <div id="SelTagDiv" style="display:none;border: 1px solid #ccc; padding: 10px; overflow-y: auto; width:50vw;">
+
+
+        <div class="form-group" id="SelTagDiv" style="display:none;border: 1px solid #ccc; padding: 10px; overflow-y: auto; width:50vw;">
             <!-- 內容會自動調整高度 -->
         </div>
 
@@ -172,44 +172,43 @@
         {
             const response = await fetch(`@Url.Content("~/Shop/SelSubTag")?id=${SubDiv.value}`);
             const data = await response.json(); 
-            console.log(data);
             const subtagOptions = data.map(x =>
                 `<label>
                    <p type="checkbox" id="SelSubtag" name="SelSubTags" value="${x.subTagId}">${x.name}</p>      
-                    </label>        `);
+                    </label>`);
             SelDiv.innerHTML += subtagOptions.join("");
         }
         //////這個我真的不會寫。
-        function putinList() {
-            var values = [];
-            var goestolist = document.querySelectorAll('#SelTagDiv p');
+        // function putinList() {
+        //     var values = [];
+        //     var goestolist = document.querySelectorAll('#SelTagDiv p');
 
-            goestolist.forEach(function (p) {
-                var match = p.innerHTML.match(/value="(\d+)"/);
-                if (match && match.length > 1) {
-                    var intValue = parseInt(match[1]);
-                    if (!isNaN(intValue)) {
-                        values.push(intValue);
-                    }
-                }
-            });
+        //     goestolist.forEach(function (p) {
+        //         var match = p.innerHTML.match(/value="(\d+)"/);  //印出P  改成CLASS 不然ID是唯一值 
+        //         if (match && match.length > 1) {
+        //             var intValue = parseInt(match[1]);
+        //             if (!isNaN(intValue)) {
+        //                 values.push(intValue);
+        //             }
+        //         } console.log(values);
+        //     });
 
-            // 使用 AJAX 发送数据到后端
-            var xhr = new XMLHttpRequest();
-            xhr.open('POST', '/YourController/YourAction', true);
-            xhr.setRequestHeader('Content-Type', 'application/json');
+        //     // 使用 AJAX 发送数据到后端
+        //     var xhr = new XMLHttpRequest();
+        //     xhr.open('POST', '/YourController/YourAction', true);
+        //     xhr.setRequestHeader('Content-Type', 'application/json');
 
-            // 将 values 数组转换为 JSON 字符串
-            var jsonValues = JSON.stringify({ values: values });
+        //     // 将 values 数组转换为 JSON 字符串
+        //     var jsonValues = JSON.stringify({ values: values });
 
-            xhr.onreadystatechange = function () {
-                if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
-                    console.log('Data sent successfully.');
-                }
-            };
+        //     xhr.onreadystatechange = function () {
+        //         if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+        //             console.log('Data sent successfully.');
+        //         }
+        //     };
 
-            xhr.send(jsonValues);
-        }
+        //     xhr.send(jsonValues);
+        // }
 
                     
     </script>
