@@ -32,6 +32,7 @@ namespace prjDB_GamingForm_Show.Controllers
                        select new
                        {
                            n.DeputeId,
+                           n.Title,
                            Name = n.Provider.Name,
                            SrartDate = n.StartDate.ToString("d"),
                            Modifiedate = n.Modifiedate.ToString("d"),
@@ -47,12 +48,13 @@ namespace prjDB_GamingForm_Show.Controllers
 
                 x = new CDeputeViewModel()
                 {
-                    id = item.DeputeId.ToString(),
+                    id = item.DeputeId,
+                    title = item.Title,
                     providername = item.Name,
                     startdate = item.SrartDate,
                     modifieddate = item.Modifiedate,
                     content = item.DeputeContent,
-                    salary = item.Salary.ToString(),
+                    salary = item.Salary,
                     status = item.Status,
                     region = item.City
                 };
@@ -76,7 +78,7 @@ namespace prjDB_GamingForm_Show.Controllers
             {
                 datas = List.Where(n => n.content.Trim().ToLower().Contains(vm.txtKeyword.Trim().ToLower()) ||
                                           n.providername.Trim().ToLower().Contains(vm.txtKeyword.Trim().ToLower()) ||
-                                          n.salary.Trim().ToLower().Contains(vm.txtKeyword.Trim().ToLower()) ||
+                                          n.salary.ToString().Trim().ToLower().Contains(vm.txtKeyword.Trim().ToLower()) ||
                                           n.region.Trim().ToLower().Contains(vm.txtKeyword.Trim().ToLower())
                                           )
                    .OrderByDescending(n => n.modifieddate);
@@ -148,10 +150,41 @@ namespace prjDB_GamingForm_Show.Controllers
 
         
 
-        public int memberIdtest = 38;
+        public int _memberIdtest = 38;
         public IActionResult test()
         {
             return View();
+        }
+        public IActionResult Edit(int id)
+        {
+            _db.Deputes.Load();
+            Depute n = _db.Deputes.FirstOrDefault(_ => _.DeputeId == id);
+            if (n == null)
+                return RedirectToAction("Personal");
+            return View(n);
+        }
+        [HttpPost]
+        public IActionResult Edit(CDeputeViewModel vm)
+        {
+            Depute n = new Depute()
+            {
+                DeputeId = vm.id,
+                ProviderId =_memberIdtest,
+                //StartDate
+                Modifiedate = DateTime.Now,
+                DeputeContent =vm.content,
+                //Salary =vm.salary,
+                StatusId =_db.Statuses.FirstOrDefault(_=>_.Name==vm.status).StatusId,
+                RegionId =_db.Regions.FirstOrDefault(_=>_.City==vm.region).RegionId,
+                Title =vm.title,
+            };
+            
+            return RedirectToAction("Personal");
+        }
+
+        public IActionResult delete()
+        {
+            return RedirectToAction("Personal");
         }
         
         public IActionResult Personal()
@@ -164,7 +197,7 @@ namespace prjDB_GamingForm_Show.Controllers
             _db.Regions.Load();
             _db.Statuses.Load();
             _db.Skills.Load();
-            var q = _db.Deputes.Where(_ => _.ProviderId == memberIdtest).Select(_ => _);
+            var q = _db.Deputes.Where(_ => _.ProviderId == _memberIdtest).Select(_ => _);
             return PartialView(q);
         }
         public IActionResult PartialReceiveList()
@@ -173,7 +206,7 @@ namespace prjDB_GamingForm_Show.Controllers
             _db.DeputeRecords.Load();
             _db.Regions.Load();
             _db.Statuses.Load();
-            var q = _db.DeputeRecords.Where(_ => _.MemberId == memberIdtest).Select(_ => _);
+            var q = _db.DeputeRecords.Where(_ => _.MemberId == _memberIdtest).Select(_ => _);
             return PartialView(q);
         }
         public IActionResult PartialGallery()

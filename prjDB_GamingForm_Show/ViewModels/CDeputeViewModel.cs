@@ -13,8 +13,10 @@ namespace DB_GamingForm_Show.Job.DeputeClass
     public class CDeputeViewModel
     {
 
-        public string id { get; set; }
+        public int id { get; set; }
         [DisplayName("懸賞來源")]
+        public string title { get; set; }
+        [DisplayName("懸賞開始時間")]
         public string providername { get; set; }
         [DisplayName("懸賞開始時間")]
         public string startdate { get; set; }
@@ -26,7 +28,7 @@ namespace DB_GamingForm_Show.Job.DeputeClass
         public string content { get; set; }
 
         [DisplayName("懸賞金額")]
-        public string salary { get; set; }
+        public decimal salary { get; set; }
         [DisplayName("懸賞狀態")]
         public string status { get; set; }
         [DisplayName("懸賞區域")]
