@@ -6,7 +6,7 @@ using prjDB_GamingForm_Show.ViewModels;
 
 namespace prjDB_GamingForm_Show.Controllers
 {
-    public class AdminController : Controller
+    public class AdminController : AdminUseSuperController
     {
         private readonly IWebHostEnvironment _host;
         private readonly DbGamingFormTestContext _db;
