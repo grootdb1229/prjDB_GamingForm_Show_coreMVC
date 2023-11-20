@@ -59,7 +59,7 @@
                 <span asp-validation-for="Title" class="text-danger"></span>
             </div>
             <div class="row">
-                <div class="col-4">
+                <div class="col-6">
                     <div class="list-group" id="list-tab" role="tablist">
                         @* <a class="list-group-item list-group-item-action active" id="list-home-list" data-bs-toggle="list" href="#list-home" role="tab" aria-controls="list-home">Home</a>
                         <a class="list-group-item list-group-item-action" id="list-profile-list" data-bs-toggle="list" href="#list-profile" role="tab" aria-controls="list-profile">Profile</a>
@@ -69,37 +69,37 @@
                 </div>
 
                 <div class="col-6">
-                    <div class="tab-content" id="nav-tabContent">
+                    <ul style="overflow-y:auto;height:300px" class="list-group tab-content" id="nav-tabContent">
                         @* <div class="tab-pane fade show active" id="list-home" role="tabpanel" aria-labelledby="list-home-list">1</div>
                         <div class="tab-pane fade" id="list-profile" role="tabpanel" aria-labelledby="list-profile-list">2</div>
                         <div class="tab-pane fade" id="list-messages" role="tabpanel" aria-labelledby="list-messages-list">3</div>
                         <div class="tab-pane fade" id="list-settings" role="tabpanel" aria-labelledby="list-settings-list">4</div> *@
-                    </div>
+                    </ul>
                     <ul class="list-group col-6">
                         @* <li class="list-group-item">
-                            <input class="form-check-input me-1" type="checkbox" value="" id="firstCheckboxStretched">
-                            <label class="form-check-label stretched-link" for="firstCheckboxStretched">First checkbox</label>
+                            <input class="form-check-input me-1" type="checkbox" value="" id="1">
+                            <label class="form-check-label stretched-link" for="1">First checkbox</label>
                         </li>
                         <li class="list-group-item">
-                            <input class="form-check-input me-1" type="checkbox" value="" id="secondCheckboxStretched">
-                            <label class="form-check-label stretched-link" for="secondCheckboxStretched">Second checkbox</label>
+                            <input class="form-check-input me-1" type="checkbox" value="" id="2">
+                            <label class="form-check-label stretched-link" for="2">Second checkbox</label>
                         </li>
                         <li class="list-group-item">
-                            <input class="form-check-input me-1" type="checkbox" value="" id="thirdCheckboxStretched">
-                            <label class="form-check-label stretched-link" for="thirdCheckboxStretched">Third checkbox</label>
+                            <input class="form-check-input me-1" type="checkbox" value="" id="3">
+                            <label class="form-check-label stretched-link" for="3">Third checkbox</label>
                         </li> *@
                     </ul>
                 </div>
             </div>
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-default" />
+                <input type="submit" value="送出並發佈" class="btn btn-success" />
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index" class="btn btn-secondary">取消</a>
 </div>
 
 @section Scripts {
@@ -107,11 +107,24 @@
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
     <script>
+        var count = 0;
         const divSkillClasses = document.querySelector('#list-tab');
         const divSkillsGroup = document.querySelector('#nav-tabContent');
         const divSkills = document.querySelector('#divSkills');
-        const divChooseSkillClass = document.querySelector('.list-group-item.active');
-        
+        var chooseClass;
+
+        $('*').click(function (event) {
+            if (event.target.classList.contains('active')) {
+                chooseClass = document.querySelector('.list-group-item.active').textContent;
+                chooseClassID = `list-${chooseClass}`;
+                
+                console.log(chooseClass);
+                console.log(chooseClassID);
+                loadSkills();
+            }
+        })
+
+
         loadSkillClasses();
         // loadSkills();
 
@@ -120,27 +133,26 @@
             const response = await fetch('@Url.Content("~/depute/skillclasses")');
             const datas = await response.json();
             console.log(datas);
-            const skillclasses = datas.map(skillclass => `<a class="list-${skillclass.name}-item-action list-group-item" id="list-${skillclass.name}-list" data-bs-toggle="list" href="#list-${skillclass.name}" role="tab" aria-controls="list-${skillclass.name}">${skillclass.name}<ul id=sel${skillclass.name} class="list-group col-6"></ul></a>`);
-            // const skillsgroup = datas.map(skillclass => `<div class="tab-pane fade" id="list-${skillclass.name}" role="tabpanel" aria-labelledby="list-${skillclass.name}-list">
-            
-            // ${skillclass.name}
-            //         <li class="list-group-item">
-            //                         <input class="form-check-input me-1" type="checkbox" value="" id="firstCheckboxStretched">
-            //                         <label class="form-check-label stretched-link" for="firstCheckboxStretched">First checkbox</label>
-            //                     </li>
 
-            // </div>`)
+            const skillclasses = datas.skillclasses.map(skillclass => `<a class="list-${skillclass.name}-item-action list-group-item" id="list-${skillclass.name}-list" data-bs-toggle="list" href="#list-${skillclass.name}" role="tab" aria-controls="list-${skillclass.name}">${skillclass.name}<ul id=sel${skillclass.name} class="list-group col-6"></ul></a>`);
+            const skillsgroup = datas.skillclasses.map(skillclass => `<div class="tab-pane fade" id="list-${skillclass.name}" role="tabpanel" aria-labelledby="list-${skillclass.name}-list">${skillclass.name}</div>`)
             divSkillClasses.innerHTML = skillclasses.join("");
-            // divSkillsGroup.innerHTML = skillsgroup.join("");
-            if (document.querySelector('.list-group-item.active'))
+            divSkillsGroup.innerHTML = skillsgroup.join("");
+            if (chooseClassID) {
+                console.log("test");
                 loadSkills();
+            }
         }
 
         async function loadSkills() {
-            const response = await fetch(`@Url.Content("~/depute/skills")?skillclass=${document.getElementsByClassName(active).item.name}`);
+            const response = await fetch(`@Url.Content("~/depute/skillss")?skillClass=${chooseClass}`);
             const datas = await response.json();
-            const skills = datas.map(skill => `<a class="list-group-item list-group-item-action" data-bs-toggle="list" href="#${skill}" role="tab">${skill}</a>`)
-            document.querySelector(`#sel${skillclass}`).innerHTML = skills.join("");
+            console.log(datas);
+            const skills = datas.map(skill => `<li class="list-group-item">
+                                            <input class="form-check-input me-1" type="checkbox" value="" id="${skill.name}">
+                                            <label class="form-check-label stretched-link" for="${skill.name}">${skill.name}</label>
+                                </li>`)
+            document.querySelector(`#${chooseClassID}`).innerHTML = skills.join("");
         }
 
 

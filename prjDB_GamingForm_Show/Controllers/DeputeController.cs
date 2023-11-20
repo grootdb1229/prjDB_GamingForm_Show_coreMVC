@@ -237,7 +237,7 @@ namespace prjDB_GamingForm_Show.Controllers
         }
         public IActionResult Skillss(string skillClass)
         {
-            int skillclassid = Convert.ToInt32(_db.SkillClasses.Where(_ => _.Name == skillClass).FirstOrDefault()?.SkillClassId);
+            int skillclassid = Convert.ToInt32(_db.SkillClasses.Where(_ => _.Name == skillClass).FirstOrDefault().SkillClassId);
             var datas = _db.Skills.Where(_ => _.SkillClassId == skillclassid).Select(_ => _);
             return Json(datas);
         }
