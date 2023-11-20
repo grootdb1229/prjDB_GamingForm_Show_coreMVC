@@ -54,20 +54,20 @@
     <div class="container-xxl bg-white p-0">
 
         <!-- Navigation--><!-- 首頁 -->
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <!-- Navigation-->
+        <nav class="navbar navbar-expand-lg navbar-light bg-light" style="background-color:black;">
             <div class="container px-4 px-lg-5">
                 <a class="navbar-brand" href="#!">Groot遊戲資源整合平台</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
-                        <li class="nav-item"><a class="nav-link active" aria-current="page" href="#!">首頁</a></li>
-                        <li class="nav-item"> @Html.ActionLink("論壇", "Index", "Blog", null, new { @class = "nav-link" })</li>
+                        <li class="nav-item"> @Html.ActionLink("論壇", "List", "Blog", null, new { @class = "nav-link" })</li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">委託</a>
                             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <li>@Html.ActionLink("委託", "DeputeMainpage", "Depute", null, new { @class = "dropdown-item" })</li>
+                                <li>@Html.ActionLink("委託", "DeputeMain", "Depute", null, new { @class = "dropdown-item" })</li>
                                 <li><hr class="dropdown-divider" /></li>
-                                <li>@Html.ActionLink("委託管理", "MyDeputeList", "Depute", null, new { @class = "dropdown-item" })</li>
+                                <li>@Html.ActionLink("委託管理", "Personal", "Depute", null, new { @class = "dropdown-item" })</li>
                             </ul>
                         </li>
                         <li class="nav-item dropdown">
@@ -80,6 +80,7 @@
                                 <li><a class="dropdown-item" href="#!">Popular Items</a></li>
                                 <li><a class="dropdown-item" href="#!">New Arrivals</a></li>
                             </ul>
+                            
                         </li>
                     </ul>
                     @{
@@ -91,9 +92,8 @@
                         //    count = car.Count();
                         //}
 
-
                         <form class="d-flex">
-                            <a href="~/Shop/ShoppingCar" class="btn mt-auto btn-outline-dark bi-cart-fill me-1">
+                            <a href="~/Shop/CarView" class="btn mt-auto btn-outline-dark bi-cart-fill me-1" id="car">
                                 <span class="badge bg-dark text-white ms-1 rounded-pill">@count</span>
                             </a>
                         </form>
@@ -114,30 +114,32 @@
         <div class="container-fluid p-0">
             <div class="owl-carousel header-carousel position-relative">
                 <div class="owl-carousel-item position-relative">
-                    <img class="img-fluid" src="~/layout/jobentry-1.0.0/img/carousel-1.jpg" alt="">
+                    <img class="img-fluid" src="~/images/01.jfif" alt="">
                     <div class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center" style="background: rgba(43, 57, 64, .5);">
                         <div class="container">
                             <div class="row justify-content-start">
                                 <div class="col-10 col-lg-8">
-                                    <h1 class="display-3 text-white animated slideInDown mb-4">Find The Perfect Job That You Deserved</h1>
-                                    <p class="fs-5 fw-medium text-white mb-4 pb-2">Vero elitr justo clita lorem. Ipsum dolor at sed stet sit diam no. Kasd rebum ipsum et diam justo clita et kasd rebum sea elitr.</p>
-                                    <a href="" class="btn btn-primary py-md-3 px-md-5 me-3 animated slideInLeft btndp" id="btndp">Search A Job</a>
-                                    <a href="" class="btn btn-secondary py-md-3 px-md-5 animated slideInRight btndp" id="btndp">Find A Talent</a>
+                                    <h1 class="display-3 text-white animated slideInDown mb-4">我們有各式人才~包山包海</h1>
+                                    <p class="fs-5 fw-medium text-white mb-4 pb-2">找繪畫人才?找工程人才?有想委託案件?通通在這裡.</p>
+                                    @Html.ActionLink("發布委託","Create","Depute",null,new{@class ="btn btn-secondary py-md-3 px-md-5 animated slideInRight btndp",@id="btndp"})
+                                    @* <a href="~/../Views/Depute/Create.cshtml" class="btn btn-primary py-md-3 px-md-5 me-3 animated slideInLeft btndp" id="btndp">發布委託</a> *@
+                                    <a href="" class="btn btn-secondary py-md-3 px-md-5 animated slideInRight btndp" id="btndp">找委託</a>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="owl-carousel-item position-relative">
-                    <img class="img-fluid" src="~/layout/jobentry-1.0.0/img/carousel-2.jpg" alt="">
+                    <img class="img-fluid" src="~/images/02.jfif" alt="">
                     <div class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center" style="background: rgba(43, 57, 64, .5);">
                         <div class="container">
                             <div class="row justify-content-start">
                                 <div class="col-10 col-lg-8">
-                                    <h1 class="display-3 text-white animated slideInDown mb-4">Find The Best Startup Job That Fit You</h1>
-                                    <p class="fs-5 fw-medium text-white mb-4 pb-2">Vero elitr justo clita lorem. Ipsum dolor at sed stet sit diam no. Kasd rebum ipsum et diam justo clita et kasd rebum sea elitr.</p>
-                                    <a href="" class="btn btn-primary py-md-3 px-md-5 me-3 animated slideInLeft btndp" id="btndp">Search A Job</a>
-                                    <a href="" class="btn btn-secondary py-md-3 px-md-5 animated slideInRight btndp" id="btndp">Find A Talent</a>
+                                    <h1 class="display-3 text-white animated slideInDown mb-4">Groot委託榜~你今天懸賞了沒?</h1>
+                                    <p class="fs-5 fw-medium text-white mb-4 pb-2">每日更新告訴您哪種技能最搶手.</p>
+                                    @Html.ActionLink("發布委託","Create","Depute",null,new{@class ="btn btn-secondary py-md-3 px-md-5 animated slideInRight btndp",@id="btndp"})
+                                    @* <a href="~/../Views/Depute/Create.cshtml" class="btn btn-primary py-md-3 px-md-5 me-3 animated slideInLeft btndp" id="btndp">發布委託</a> *@
+                                    <a href="" class="btn btn-secondary py-md-3 px-md-5 animated slideInRight btndp" id="btndp">找委託</a>
                                 </div>
                             </div>
                         </div>
@@ -174,7 +176,7 @@
                         </div>
                     </div>
                     <div class="col-md-2">
-                        <button class="btn btn-dark border-0 w-100">Search</button>
+                        <button id="search" name="txtKeyword" class="btn btn-dark border-0 w-100">Search</button>
                     </div>
                 </div>
             </div>
@@ -183,8 +185,8 @@
         <!-- Category Start -->
         <div class="container-xxl py-5">
             <div class="container">
-                <h1 class="text-center mb-5 wow fadeInUp" data-wow-delay="0.1s">Explore By Category</h1>
-                <div class="row g-4">
+                <h1 class="text-center mb-5 wow fadeInUp" data-wow-delay="0.1s">委託種類</h1>
+                <div id="category" class="row g-4">
                     <div class="col-lg-3 col-sm-6 wow fadeInUp" data-wow-delay="0.1s">
                         <a class="cat-item rounded p-4" href="">
                             <i class="fa fa-3x fa-mail-bulk text-primary mb-4"></i>
@@ -256,8 +258,7 @@
     </div>
     <!-- Bootstrap core JS-->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- Core theme JS-->
-    <script src="~/js/scripts.js"></script>
+    
     <!-- JavaScript Libraries -->
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -268,24 +269,17 @@
 
     <!-- Template Javascript -->
     <script src="~/layout/jobentry-1.0.0/js/main.js"></script>
+    
     @await RenderSectionAsync("Scripts", required: false)
-    <script>
-        const button = document.querySelector('.btndp');
-
-        button.addEventListener('mouseover', () => {
-            button.style.backgroundColor = '#a81d1d';
-        });
-
-        button.addEventListener('mouseout', () => {
-            button.style.backgroundColor = '';
-        });
-    </script>
-
+    
+    <!-- Core theme JS-->
+    <script src="~/js/scripts.js"></script>
     <script>
         const selSkillClasses = document.querySelector('#combo1');
         const selectSkills = document.querySelector('#combo2');
-
-        loadSkillClassess()
+        const selCategory = document.querySelector('#category');
+        loadSkillClassess();
+        loadCategory();
         selSkillClasses.addEventListener("change", () => { loadSkill() });
         // selectDist.addEventListener("change", () => { loadSkill() });
         
@@ -295,6 +289,7 @@
             const data = await response.json();
             // console.log(data);
             const SkillClassess = data.map(SkillClassess => `<option value='${SkillClassess.skillClassId}'>${SkillClassess.name}</option>`)
+            
             selSkillClasses.innerHTML = SkillClassess.join("");
             loadSkill();
 
@@ -311,23 +306,55 @@
             
         }
 
-        
-        // $('#buttonJson').click(function () {
-        //     $.getJSON('@Url.Content("~/api/cities")', (datas) => {
-        //         const docFrag = $(document.createDocumentFragment());
-        //         $.each(datas, (index, city) => {
-        //             //console.log(city);
-        //             // <li class="list-group-item" > An item < /li>
-        //             const li = $('<li></li>').text(city).addClass('list-group-item');
-        //             docFrag.append(li);
-        //         })
-        //         $('.list-group').html(docFrag);
-        //     })
-        //     $('#divAlert').text("JSON")
-        // })
+        async function loadCategory() {
+            const ctgFrag = $(document.createDocumentFragment());
+            const response = await fetch(`@Url.Content("~/Depute/DeputeCount")`);
+            // console.log(response);
+            const data = await response.json();
+             console.log(data);
+            const category = data.map(category =>
+                `
+                                <div class="col-lg-3 col-sm-6 wow fadeInUp" data-wow-delay="0.1s">
+                                        <a class="cat-item rounded p-4" href="">
+                                            <i class="fa fa-3x fa-mail-bulk text-primary mb-4"></i>
+                                                                    <h6 class="mb-3">${category.skillname}</h6>
+                                                            <p class="mb-0">${category.count} 筆</p>
+                                        </a>
+                                    </div>
+
+
+                    `)
+            ctgFrag.append(category)
+            selCategory.innerHTML = ctgFrag;
+            $('#category').html(ctgFrag)
+        }
+        $('#search').click(function () {
+            $.getJSON('@Url.Content("~/Depute/DeputeList")', (datas) => {
+                const docFrag = $(document.createDocumentFragment());
+                $.each(datas, (index, city) => {
+                    //console.log(city);
+                    // <li class="list-group-item" > An item < /li>
+                    const li = $('<li></li>').text(city).addClass('list-group-item');
+                    docFrag.append(li);
+                })
+                $('.list-group').html(docFrag);
+            })
+            $('#divAlert').text("JSON")
+        })
 
 
 
+    </script>
+    <script>
+        const button = document.querySelector('#car');
+
+        button.addEventListener('mouseover', () => {
+            button.style.backgroundColor = '#a81d1d';
+        });
+
+        button.addEventListener('mouseout', () => {
+            button.style.backgroundColor = '';
+        });
     </script>
 
 </body>

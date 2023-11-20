@@ -1,0 +1,53 @@
+﻿@*@model IEnumerable<prjDB_GamingForm_Show.ViewModels.CBlogViewModel>*@
+@model prjDB_GamingForm_Show.ViewModels.CBlogViewModel
+@{
+    ViewData["Title"] = "BlogList";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h2>BlogList</h2>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table table-dark table-hover" style="color:white">
+    <thead>
+        <tr>
+            <th>
+                編號
+            </th>
+            <th>
+                名稱
+            </th>
+            <th>
+                所屬分類
+            </th>            
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            string category = "";
+
+            foreach (var item in Model.blogs) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.BlogId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Title)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SubTag.Name)
+            </td>            
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+            </td>
+        </tr>
+}
+}
+    </tbody>
+    
+</table>

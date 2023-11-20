@@ -1,0 +1,42 @@
+﻿@model IEnumerable<prjDB_GamingForm_Show.Models.Entities.SubTag>
+
+@{
+    ViewData["Title"] = "BlogCategoryList";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h2>BlogCategoryList</h2>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table table-dark table-hover" style="color:white">
+    <thead>
+        <tr>
+            <th>
+                分類編號
+            </th>
+            <th>
+                分類名稱
+            </th>            
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.SubTagId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>            
+            <td>
+                @Html.ActionLink("修改", "Edit", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("檢視", "Details", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("刪除", "Delete", new { /* id=item.PrimaryKey */ })
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

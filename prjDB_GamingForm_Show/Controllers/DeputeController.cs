@@ -1,11 +1,13 @@
 ﻿using DB_GamingForm_Show.Job.DeputeClass;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using prjDB_GamingForm_Show.Models.Entities;
 using prjDB_GamingForm_Show.Models.Shop;
 using prjDB_GamingForm_Show.ViewModels;
 using System.Collections.Generic;
+using static prjDB_GamingForm_Show.Controllers.DeputeController;
 
 namespace prjDB_GamingForm_Show.Controllers
 {
@@ -17,34 +19,8 @@ namespace prjDB_GamingForm_Show.Controllers
         {
             _host = host;
             _db = context;
+            ListLoad();
         }
-        //test
-        public List<CDeputeViewModel> List { get; set; }
-        public List<string> HotKeyList { get; set; }
-        public List<SelectListItem> ComboList { get; set; }
-        public List<SelectListItem> ComboList1 { get; set; }
-        public List<SelectListItem> ComboList2 { get; set; }
-        public IActionResult Index()
-        {
-            return View();
-        }
-        public IActionResult SkillClassess()
-        {
-            var SkillClasses = from n in _db.SkillClasses
-                               select n;
-            return Json(SkillClasses);
-        }
-        public IActionResult Skills(int? id)
-        {
-            var Skills = _db.Skills.Where(a => a.SkillClassId == id);
-            return Json(Skills);
-        }
-        public IActionResult DeputeMain() 
-        {
-        
-            return View();
-        }
-
         public void ListLoad()
         {
             //test
@@ -57,6 +33,7 @@ namespace prjDB_GamingForm_Show.Controllers
                        select new
                        {
                            n.DeputeId,
+                           n.Title,
                            Name = n.Provider.Name,
                            SrartDate = n.StartDate.ToString("d"),
                            Modifiedate = n.Modifiedate.ToString("d"),
@@ -72,12 +49,13 @@ namespace prjDB_GamingForm_Show.Controllers
 
                 x = new CDeputeViewModel()
                 {
-                    id = item.DeputeId.ToString(),
+                    id = item.DeputeId,
+                    title = item.Title,
                     providername = item.Name,
                     startdate = item.SrartDate,
                     modifieddate = item.Modifiedate,
-                    content = item.DeputeContent,
-                    salary = item.Salary.ToString(),
+                    DeputeContent = item.DeputeContent,
+                    salary = item.Salary,
                     status = item.Status,
                     region = item.City
                 };
@@ -86,7 +64,7 @@ namespace prjDB_GamingForm_Show.Controllers
 
             }
         }
-        
+
         public IActionResult DeputeList(CKeyWord vm)
         {
             IEnumerable<CDeputeViewModel> datas = null;
@@ -99,21 +77,181 @@ namespace prjDB_GamingForm_Show.Controllers
             }
             else
             {
-                datas = List.Where(n => n.content.Trim().ToLower().Contains(vm.txtKeyword.Trim().ToLower()) ||
+                datas = List.Where(n => n.DeputeContent.Trim().ToLower().Contains(vm.txtKeyword.Trim().ToLower()) ||
                                           n.providername.Trim().ToLower().Contains(vm.txtKeyword.Trim().ToLower()) ||
-                                          n.salary.Trim().ToLower().Contains(vm.txtKeyword.Trim().ToLower()) ||
+                                          n.salary.ToString().Trim().ToLower().Contains(vm.txtKeyword.Trim().ToLower()) ||
                                           n.region.Trim().ToLower().Contains(vm.txtKeyword.Trim().ToLower())
                                           )
                    .OrderByDescending(n => n.modifieddate);
 
             }
-            
+
             return Json(datas);
 
         }
+        //test
+        public List<CDeputeViewModel> List { get; set; }
+        
+        public IActionResult Index()
+        {
+            //測試網頁樣板用
+            return View();
+        }
+        public IActionResult SkillClassess()
+        {
+            var datas = from n in _db.SkillClasses
+                               select n;
+            return Json(datas);
+        }
+        public IActionResult Skills(int? id)
+        {
+            var datas = _db.Skills.Where(a => a.SkillClassId == id);
+            return Json(datas);
+        }
+        public IActionResult DeputeCount()
+        {
+            var SkillClasses = _db.SkillClasses.Select(n => n.Name);
+            List<CDeputeViewModel> slist = new List<CDeputeViewModel>();
+            CDeputeViewModel x = null;
+            foreach (var item in SkillClasses) 
+            {
+                var datas = from n in List.AsEnumerable()
+                            where n.DeputeContent.Contains(item)
+                            select n;
+
+                x = new CDeputeViewModel()
+                {
+                    Skillname = item,
+                    Count = datas.Count()
+                };
+
+                slist.Add(x);
+
+
+            }
+            return Json(slist);
+        }
+
+        public IActionResult NewFive()
+        {
+            var datas = List.OrderByDescending(n=>n.modifieddate).Take(5);
+            return Json(datas);
+        }
+
+        public IActionResult TopFive(int? id)
+        {
+            var datas = _db.Skills.Where(a => a.SkillClassId == id);
+            return Json(datas);
+        }
+        public IActionResult DeputeMain() 
+        {
+        
+            return View();
+        }
+
+        
+
+        public int _memberIdtest = 38;
         public IActionResult test()
         {
             return View();
+        }
+        public IActionResult Apply(int id=7)
+        {
+            ViewBag.memberid = _memberIdtest;
+            Depute o=_db.Deputes.FirstOrDefault(_ => _.DeputeId == id);
+            if (o == null)
+                return RedirectToAction("Index");
+            return View(o);
+        }
+        [HttpPost]
+        public IActionResult Apply(DeputeRecord vm)
+        {
+            _db.DeputeRecords.Add(vm);
+            _db.SaveChanges();
+            return RedirectToAction("DeputeMain");
+        }
+        public IActionResult Edit(int id)
+        {
+            _db.Deputes.Load();
+            Depute n = _db.Deputes.FirstOrDefault(_ => _.DeputeId == id);
+            if (n == null)
+                return RedirectToAction("Personal");
+            return View(n);
+        }
+        [HttpPost]
+        public IActionResult Edit(CDeputeViewModel vm)
+        {
+            Depute o=_db.Deputes.Where(_=>_.DeputeId==vm.id).FirstOrDefault();
+            if (o != null)
+            {
+                o.DeputeId = vm.id;
+                o.ProviderId = _memberIdtest;
+                o.StartDate = Convert.ToDateTime(vm.startdate);
+                o.Modifiedate=DateTime.Now;
+                o.DeputeContent = vm.DeputeContent;
+                o.Salary = vm.salary;
+                //o.StatusId = _db.Statuses.FirstOrDefault(_ => _.Name == vm.status).StatusId;
+                //o.RegionId = _db.Regions.FirstOrDefault(_ => _.City == vm.region).RegionId;
+                o.Title = vm.title;
+                _db.SaveChanges();
+            }
+            
+            return RedirectToAction("Personal");
+        }
+
+        public IActionResult Create()
+        {
+            return View();
+        }
+        [HttpPost]
+        public IActionResult Create(CDeputeViewModel vm)
+        {
+            Depute n= new Depute()
+            {
+                ProviderId= _memberIdtest,
+                StartDate= DateTime.Now,
+                Modifiedate= DateTime.Now,
+                DeputeContent= vm.DeputeContent,
+                Salary= vm.salary,
+                //StatusId = _db.Statuses.FirstOrDefault(_ => _.Name == vm.status).StatusId,
+                //RegionId = _db.Regions.FirstOrDefault(_ => _.City == vm.region).RegionId,
+                Title= vm.title,
+            };
+            _db.Deputes.Add(n);
+            _db.SaveChanges();
+            return RedirectToAction("Personal");
+        }
+        public IActionResult delete()
+        {
+            return RedirectToAction("Personal");
+        }
+        
+        public IActionResult Personal()
+        {
+            return View();
+        }
+        public IActionResult PartialReleaseList()
+        {
+            _db.Deputes.Load();
+            _db.Regions.Load();
+            _db.Statuses.Load();
+            _db.Skills.Load();
+            var q = _db.Deputes.Where(_ => _.ProviderId == _memberIdtest).Select(_ => _);
+            return PartialView(q);
+        }
+        public IActionResult PartialReceiveList()
+        {
+            _db.Deputes.Load();
+            _db.DeputeRecords.Load();
+            _db.Regions.Load();
+            _db.Statuses.Load();
+            var q = _db.DeputeRecords.Where(_ => _.MemberId == _memberIdtest).Select(_ => _);
+            return PartialView(q);
+        }
+        public IActionResult PartialGallery()
+        {
+            return PartialView();
         }
     }
 }

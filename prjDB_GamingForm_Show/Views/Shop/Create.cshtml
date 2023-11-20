@@ -6,7 +6,7 @@
 }
 
 
-@using (Html.BeginForm("Create", "Shop", FormMethod.Post, new { enctype = "multipart/form-data" }))
+@using (Html.BeginForm("Create", "Shop", FormMethod.Post, new { enctype = "multipart/form-data",id="productform" }))
 {
     @Html.AntiForgeryToken()
 
@@ -78,11 +78,11 @@
 
         <hr />
 
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="送出並新增" class="btn btn-outline-dark mt-auto" />
-            </div>
-        </div>
+		<div class="form-group">
+			<div class="col-md-offset-2 col-md-10">
+				<input type="submit" value="送出並新增" class="btn btn-outline-dark mt-auto" id="btnsubmit"/>	
+			</div>
+		</div>
 
     </div>
     @section Scripts
@@ -110,13 +110,29 @@
                 preview.src = reader.result;
             }
 
-            if (file) {
-                reader.readAsDataURL(file);
-            } else {
-                preview.src = "";
-            }
-        }
-    </script>
+			if (file) {
+				reader.readAsDataURL(file);
+			} else {
+				preview.src = "";
+			}
+		}
+		const btn = document.querySelector('#btnsubmit');
+			 
+		btn.addEventListener('click', event => {
+			event.preventDefault();
+			const formData = new FormData(document.querySelector('#productform'));
+			fetch('@Url.Content("~/Shop/Create")', {
+						method: 'POST',
+						body: formData
+					})
+				.then(Swal.fire({
+					title: "新增成功!",
+					//text: "訂單已送至電子信箱!",
+					icon: "success"
+				}))
+		})
+
+	</script>
 
     <!--放Tag-->
     <script>

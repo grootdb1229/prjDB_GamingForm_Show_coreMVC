@@ -7,7 +7,7 @@
 <div class="container px-4 px-lg-5 mt-2">
 <h2>修改商品</h2>
 
-    @using (Html.BeginForm("Edit", "Shop", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    @using (Html.BeginForm("Edit", "Shop", FormMethod.Post, new { enctype = "multipart/form-data", id = "productform" }))
 {
     @Html.AntiForgeryToken()
 
@@ -71,7 +71,7 @@
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="送出並更新" class="btn btn-default" />
+                    <input type="submit" value="送出並更新" class="btn btn-default" id="btnsubmit" />
             </div>
         </div>
     </div>
@@ -97,6 +97,23 @@
                 preview.src = "";
             }
         }
+
+            const btn = document.querySelector('#btnsubmit');
+
+            btn.addEventListener('click', event => {
+                event.preventDefault();
+                const formData = new FormData(document.querySelector('#productform'));
+                fetch('@Url.Content("~/Shop/Edit")', {
+                    method: 'POST',
+                    body: formData
+                })
+                    .then(Swal.fire({
+                        title: "新增成功!",
+                        //text: "訂單已送至電子信箱!",
+                        icon: "success"
+                    }))
+                    //.then()
+            })
     </script>
 
  
