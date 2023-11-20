@@ -1,5 +1,6 @@
 ﻿using DB_GamingForm_Show.Job.DeputeClass;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using prjDB_GamingForm_Show.Models.Entities;
@@ -159,6 +160,21 @@ namespace prjDB_GamingForm_Show.Controllers
         public IActionResult test()
         {
             return View();
+        }
+        public IActionResult Apply(int id=7)
+        {
+            ViewBag.memberid = _memberIdtest;
+            Depute o=_db.Deputes.FirstOrDefault(_ => _.DeputeId == id);
+            if (o == null)
+                return RedirectToAction("Index");
+            return View(o);
+        }
+        [HttpPost]
+        public IActionResult Apply(DeputeRecord vm)
+        {
+            _db.DeputeRecords.Add(vm);
+            _db.SaveChanges();
+            return RedirectToAction("DeputeMain");
         }
         public IActionResult Edit(int id)
         {
