@@ -15,6 +15,8 @@ namespace DB_GamingForm_Show.Job.DeputeClass
 
         public string id { get; set; }
         [DisplayName("懸賞來源")]
+        public string title { get; set; }
+        [DisplayName("懸賞開始時間")]
         public string providername { get; set; }
         [DisplayName("懸賞開始時間")]
         public string startdate { get; set; }

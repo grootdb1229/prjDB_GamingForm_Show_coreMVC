@@ -21,6 +21,8 @@ public partial class Depute
 
     public int RegionId { get; set; }
 
+    public string? Title { get; set; }
+
     public virtual ICollection<DeputeRecord> DeputeRecords { get; set; } = new List<DeputeRecord>();
 
     public virtual ICollection<DeputeSkill> DeputeSkills { get; set; } = new List<DeputeSkill>();
