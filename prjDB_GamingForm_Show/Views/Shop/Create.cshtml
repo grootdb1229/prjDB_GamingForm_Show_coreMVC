@@ -158,7 +158,7 @@
 			console.log(data);
 			const subtagOptions = data.map(x => `
 			  <label>
-						<input type="radio" id="subtag" name="XXXXXXX">${x}
+						<input type="radio" value="subtag" name="XXXXXXX">${x}
 			  </label>
 			`);
 			document.querySelector('#dynamicDiv').innerHTML = subtagOptions.join("");
