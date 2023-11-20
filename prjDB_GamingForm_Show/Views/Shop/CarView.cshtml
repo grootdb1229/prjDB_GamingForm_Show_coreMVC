@@ -9,7 +9,7 @@
 
 <p>
     @Html.ActionLink("繼續購物", "Index", "Shop",null, new { @class = "btn btn-outline-dark mt-auto" })
-    @Html.ActionLink("結帳", "Purchase", "Shop",null, new { @class = "btn btn-outline-dark mt-auto", @id="btnpurchase" })
+    @Html.ActionLink("結帳", "Purchase", "Shop",null, new { @class = "btn btn-outline-dark mt-auto", @id="btnpurchase",@type="button" })
 </p>
 <table class="table">
     <thead>
@@ -83,14 +83,18 @@
 </style>
 <script>
     const btn = document.querySelector('#btnpurchase');
-    btn.addEventListener('click', event => {
-    			event.preventDefault();
+    btn.addEventListener('click', () => {
+
 
         fetch('@Url.Content("~/Shop/Purchase")')
             .then(Swal.fire({
                 title: "結帳成功!",
                 text: "訂單已送至電子信箱!",
-                icon: "success"}))
+                icon: "success",
+                showConfirmButton=false
+            })
+            )
     })
+
 
 </script>
