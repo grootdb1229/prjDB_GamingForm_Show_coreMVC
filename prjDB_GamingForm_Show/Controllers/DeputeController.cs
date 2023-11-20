@@ -201,10 +201,24 @@ namespace prjDB_GamingForm_Show.Controllers
                 o.Title = vm.title;
                 _db.SaveChanges();
             }
-            
             return RedirectToAction("Personal");
         }
+        public IActionResult SkillClasses()
+        {
+            var datas = new
+            {
+                skillclasses = _db.SkillClasses.Select(_ => _),
+                skills=_db.Skills.Select(_ => _)
+            };
 
+            return Json(datas);
+        }
+        public IActionResult Skillss(string skillClass)
+        {
+            int skillclassid = Convert.ToInt32(_db.SkillClasses.Where(_ => _.Name == skillClass).FirstOrDefault()?.SkillClassId);
+            var datas = _db.Skills.Where(_ => _.SkillClassId == skillclassid).Select(_ => _);
+            return Json(datas);
+        }
         public IActionResult Create()
         {
             return View();
@@ -227,13 +241,14 @@ namespace prjDB_GamingForm_Show.Controllers
             _db.SaveChanges();
             return RedirectToAction("Personal");
         }
-        public IActionResult delete()
+        public IActionResult deleteDepute()
         {
             return RedirectToAction("Personal");
         }
         
         public IActionResult Personal()
         {
+            ViewBag.memberid=_memberIdtest;
             return View();
         }
         public IActionResult PartialReleaseList()
