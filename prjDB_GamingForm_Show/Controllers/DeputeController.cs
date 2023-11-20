@@ -1,5 +1,6 @@
 ﻿using DB_GamingForm_Show.Job.DeputeClass;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using prjDB_GamingForm_Show.Models.Entities;
@@ -154,6 +155,16 @@ namespace prjDB_GamingForm_Show.Controllers
         public IActionResult test()
         {
             return View();
+        }
+        public IActionResult Apply(int id)
+        {
+            return View();
+        }
+        [HttpPost]
+        public IActionResult Apply()
+        {
+
+            return RedirectToAction("Index");
         }
         public IActionResult Edit(int id)
         {
