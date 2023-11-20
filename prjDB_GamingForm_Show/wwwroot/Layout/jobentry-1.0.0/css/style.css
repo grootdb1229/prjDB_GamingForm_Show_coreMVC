@@ -72,7 +72,7 @@
 
 
 /*** Navbar ***/
-/*.navbar .dropdown-toggle::after {
+.navbar .dropdown-toggle::after {
     border: none;
     content: "\f107";
     font-family: "Font Awesome 5 Free";
@@ -117,7 +117,7 @@
 
 .navbar-light .navbar-brand,
 .navbar-light a.btn {
-    height: 75px;
+    /*height: 75px;*/
 }
 
 .navbar-light .navbar-nav .nav-link {
@@ -150,7 +150,8 @@
         opacity: 1;
     }
 }
-*/
+
+
 
 /*** Header ***/
 .header-carousel .container,
