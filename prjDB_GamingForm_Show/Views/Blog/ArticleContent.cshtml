@@ -175,15 +175,7 @@
 
 
                                     @* @Html.ActionLink("刪除", "ReplyDelete", new { AFId = Model.articles.FirstOrDefault().ArticleId, RFId =item.ReplyId,FId = Model.blogs.FirstOrDefault().BlogId }, new { onclick = "return confirm ('確定刪除嗎?')" })*@
-                                    <button type="button" class="btn btn-secondary" onclick="ReplyDelete()">刪除回覆</button>
-                                    <script>
-                                        function ReplyDelete() {
-                                            var result = confirm('確定刪除嗎?');
-                                            if (result) {
-                                                location.href = '@Url.Action("ReplyDelete", "Blog", new { AFId = Model.articles.FirstOrDefault().ArticleId, RFId =item.ReplyId,FId = Model.blogs.FirstOrDefault().BlogId })';
-                                            }
-                                        }
-                                    </script>
+                                    <a href="@Url.Action("ReplyDelete", "Blog", new { AFId = Model.articles.FirstOrDefault().ArticleId, RFId = item.ReplyId, FId = Model.blogs.FirstOrDefault().BlogId })" class="btn btn-danger" onclick="return confirm('確定刪除嗎?')">刪除</a>
 
 
                                 </div>

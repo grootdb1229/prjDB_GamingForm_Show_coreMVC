@@ -56,10 +56,13 @@
                         <div id="list" class="row g-4">
                             
                         </div>
+                        
                     </div>
+                    @Html.ActionLink("回懸賞首頁", "DeputeMain", "Depute", null, new { @class = "btn btn-primary py-3 px-5", @id = "btndp" })
                 </div>
                 
             </div>
+            
         </div>
     </div>
 </div>
@@ -105,10 +108,13 @@
                                             <div class="col-sm-12 col-md-4 d-flex flex-column align-items-start align-items-md-end justify-content-center">
                                             <div class="d-flex mb-3">
                                             <a class="btn btn-light btn-square me-3" href=""><i class="far fa-heart text-primary"></i></a>
+                                            @Html.ActionLink("詳細...", "DeputeMain", "Depute", null, new { @class = "btn btn-primary", @id = "btndp" })
                                             @Html.ActionLink("我要應徵","Apply","Depute",null,new{@class ="btn btn-primary",@id="btndp"})
+                                            
                                             </div>
                                                     <small class="text-truncate"><i class="far fa-calendar-alt text-primary me-2"></i>Last Update : ${list.modifieddate}</small>
                                             </div>
+
 
                                     `
 

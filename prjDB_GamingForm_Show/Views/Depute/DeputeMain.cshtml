@@ -3,6 +3,23 @@
     ViewData["Title"] = "DeputeMain";
     Layout = "~/Views/Shared/DeputeLayout2.cshtml";
 }
+<!-- Category Start -->
+<div class="container-xxl py-5">
+    <div class="container">
+        <h1 class="text-center mb-5 wow fadeInUp" data-wow-delay="0.1s">委託種類</h1>
+        <div id="category" class="row g-4">
+            <div class="col-lg-3 col-sm-6 wow fadeInUp" data-wow-delay="0.1s">
+                <a class="cat-item rounded p-4" href="">
+                    <i class="fa fa-3x fa-mail-bulk text-primary mb-4"></i>
+                    <h6 class="mb-3">Marketing</h6>
+                    <p class="mb-0">123 Vacancy</p>
+                </a>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!-- Category End -->
 
 <!-- Jobs Start -->
 <div class="container-xxl py-5">
@@ -260,12 +277,42 @@
                     </div>
                     <a class="btn btn-primary py-3 px-5" href="">Browse More Jobs</a>
                 </div>
+                <input type="hidden" name="txtCategory" value="" />
             </div>
         </div>
     </div>
 </div>
 @section Scripts {
     <script>
+        const selCategory = document.querySelector('#category');
+        loadCategory();
+        async function loadCategory() {
+            const ctgFrag = $(document.createDocumentFragment());
+            const response = await fetch(`@Url.Content("~/Depute/DeputeCount")`);
+            // console.log(response);
+            const data = await response.json();
+            // console.log(data);
+            const category = data.map(category =>
+                `
+                <input type="hidden" name="txtCategory" id="${category.skillname}" value="${category.skillname}" />
+                 <div class="col-lg-3 col-sm-6 wow fadeInUp" data-wow-delay="0.1s">
+                    <a class="cat-item rounded p-4" href="/depute/DeputeList">
+                        <i class="fa fa-3x fa-mail-bulk text-primary mb-4"></i>
+                        <h6 class="mb-3">${category.skillname}</h6>
+                        <p class="mb-0">${category.count} 筆</p>
+                    </a>
+                 </div>
+                 `
+                 
+            )
+            
+
+            ctgFrag.append(category)
+            selCategory.innerHTML = ctgFrag;
+            $('#category').html(ctgFrag)
+
+        }
+
         const title = document.querySelector('#newfive');
         loadList()
         async function loadList() {
@@ -289,7 +336,8 @@
                             <div class="col-sm-12 col-md-4 d-flex flex-column align-items-start align-items-md-end justify-content-center">
                             <div class="d-flex mb-3">
                             <a class="btn btn-light btn-square me-3" href=""><i class="far fa-heart text-primary"></i></a>
-                            <a class="btn btn-primary" href="">我要應徵</a>
+                            @Html.ActionLink("詳細...", "DeputeMain", "Depute", null, new { @class = "btn btn-primary", @id = "btndp" })
+                            @Html.ActionLink("我要應徵", "Apply", "Depute", null, new { @class = "btn btn-primary", @id = "btndp" })
                             </div>
                                     <small class="text-truncate"><i class="far fa-calendar-alt text-primary me-2"></i>Last Update : ${list.modifieddate}</small>
                             </div>

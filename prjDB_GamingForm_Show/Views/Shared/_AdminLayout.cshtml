@@ -1,6 +1,8 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
 <head>
+    @using Microsoft.AspNetCore.Mvc.Rendering
+    @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <!-- Meta, title, CSS, favicons, etc. -->
     <meta charset="utf-8">
@@ -214,7 +216,7 @@
                                         <span>設定</span>
                                     </a>
                                     <a class="dropdown-item" href="~/javascript:;">幫助</a>
-                                    <a class="dropdown-item" href="../AdminHome/Login" id="btnLogout"><i class="fa fa-sign-out pull-right"></i> 登出</a>
+                                    <a class="dropdown-item" id="btnLogout" asp-controller="AdminHome" asp-action="Logout"><i class="fa fa-sign-out pull-right"></i> 登出</a>
                                 </div>
                             </li>
 
@@ -226,56 +228,56 @@
                                 <ul class="dropdown-menu list-unstyled msg_list" role="menu" aria-labelledby="navbarDropdown1">
                                     <li class="nav-item">
                                         <a class="dropdown-item">
-                                            <span class="image"><img src="~/images/img.jpg" alt="Profile Image" /></span>
+                                            <span class="image"><img src="~/production/images/s__92446730_0.jpg" /></span>
                                             <span>
-                                                <span>John Smith</span>
-                                                <span class="time">3 mins ago</span>
+                                                <span>囝囡</span>
+                                                <span class="time">幾 秒鐘 前</span>
                                             </span>
                                             <span class="message">
-                                                Film festivals used to be do-or-die moments for movie makers. They were where...
+                                                喵喵喵，喵嗚喵，咪
                                             </span>
                                         </a>
                                     </li>
                                     <li class="nav-item">
                                         <a class="dropdown-item">
-                                            <span class="image"><img src="~/images/img.jpg" alt="Profile Image" /></span>
+                                            <span class="image"><img src="~/production/images/s__92446730_0.jpg" /></span>
                                             <span>
-                                                <span>John Smith</span>
-                                                <span class="time">3 mins ago</span>
+                                                <span>囝囡</span>
+                                                <span class="time">三 分鐘 前</span>
                                             </span>
                                             <span class="message">
-                                                Film festivals used to be do-or-die moments for movie makers. They were where...
+                                                喵嗚嗚喵嗚嗚，嗚嗚喵嗚喵，咪咪咪喵喵嗚，咪咪咪喵喵嗚
                                             </span>
                                         </a>
                                     </li>
                                     <li class="nav-item">
                                         <a class="dropdown-item">
-                                            <span class="image"><img src="~/images/img.jpg" alt="Profile Image" /></span>
+                                            <span class="image"><img src="~/production/images/s__92446730_0.jpg" /></span>
                                             <span>
-                                                <span>John Smith</span>
-                                                <span class="time">3 mins ago</span>
+                                                <span>囝囡</span>
+                                                <span class="time">二十 分鐘 前</span>
                                             </span>
                                             <span class="message">
-                                                Film festivals used to be do-or-die moments for movie makers. They were where...
+                                                喵嗚喵喵嗚喵，喵咪咪喵，咪嗚
                                             </span>
                                         </a>
                                     </li>
                                     <li class="nav-item">
                                         <a class="dropdown-item">
-                                            <span class="image"><img src="~/images/img.jpg" alt="Profile Image" /></span>
+                                            <span class="image"><img src="~/production/images/s__92446730_0.jpg" /></span>
                                             <span>
-                                                <span>John Smith</span>
-                                                <span class="time">3 mins ago</span>
+                                                <span>囝囡</span>
+                                                <span class="time">三 小時 前</span>
                                             </span>
                                             <span class="message">
-                                                Film festivals used to be do-or-die moments for movie makers. They were where...
+                                                咪嗚喵喵，喵喵，咪喵喵喵
                                             </span>
                                         </a>
                                     </li>
                                     <li class="nav-item">
                                         <div class="text-center">
                                             <a class="dropdown-item">
-                                                <strong>See All Alerts</strong>
+                                                <strong>查看所有訊息</strong>
                                                 <i class="fa fa-angle-right"></i>
                                             </a>
                                         </div>
@@ -334,8 +336,4 @@
 </body>
 
 </html>
-<script>
-    document.querySelector('#btnLogout').addEventListener('click',()=>{
 
-    })
-</script>
