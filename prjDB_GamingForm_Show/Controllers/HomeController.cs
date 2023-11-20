@@ -23,6 +23,7 @@ namespace prjDB_GamingForm_Show.Controllers
 
         public IActionResult HomePage()
         {
+            ViewBag.LoggedUser = CDictionary.SK_Logged_User;
             return View();
         }
         public IActionResult DeputeMain()
@@ -48,15 +49,15 @@ namespace prjDB_GamingForm_Show.Controllers
         [HttpPost]
         public IActionResult Login(CLoginViewModel vm)
         {
-            Member user = _db.Members.FirstOrDefault(m => m.Email.Equals(vm.txtAccount));
-                         
+            Member user = _db.Members.FirstOrDefault(m => m.Email.Equals(vm.txtAccount));             
             if (user != null)
             {
                 if (user.Password.Equals(vm.txtPassword))
                 {
                     string user_Serialized = System.Text.Json.JsonSerializer.Serialize(user);
                     HttpContext.Session.SetString(CDictionary.SK_Logged_User, user_Serialized);
-                    return RedirectToAction("HomePage", "Home");
+                    ViewBag.LoggedUser = user_Serialized ;
+                    return View();
                 }
             }
             return RedirectToAction("Create" , "Member");
