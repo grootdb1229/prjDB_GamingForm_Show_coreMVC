@@ -208,9 +208,9 @@ namespace prjDB_GamingForm_Show.Controllers
             var datas = new
             {
                 skillclasses = _db.SkillClasses.Select(_ => _),
-                skills=_db.Skills.Select(_ => _)
+                skills = _db.Skills.Select(_ => _)
             };
-
+            //var datas = _db.SkillClasses.Select(_ => _);
             return Json(datas);
         }
         public IActionResult Skillss(string skillClass)
