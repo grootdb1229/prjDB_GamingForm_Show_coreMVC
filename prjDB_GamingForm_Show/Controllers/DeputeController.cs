@@ -3,14 +3,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using prjDB_GamingForm_Show.Models;
 using prjDB_GamingForm_Show.Models.Entities;
 using prjDB_GamingForm_Show.Models.Shop;
 using prjDB_GamingForm_Show.ViewModels;
 using System.Collections.Generic;
-using System.Drawing;
 using static prjDB_GamingForm_Show.Controllers.DeputeController;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace prjDB_GamingForm_Show.Controllers
 {
@@ -24,9 +21,6 @@ namespace prjDB_GamingForm_Show.Controllers
             _db = context;
             ListLoad();
         }
-        
-        
-        
         public void ListLoad()
         {
             //test
@@ -77,40 +71,6 @@ namespace prjDB_GamingForm_Show.Controllers
             return View();
 
         }
-        public IActionResult DeputeDetails(int? id)
-        {
-            CDeputeViewModel pln = null;
-            Depute pDb = _db.Deputes.FirstOrDefault(n => n.DeputeId == id);
-
-            if (pDb != null)
-            {
-                pln = new CDeputeViewModel();
-                pln.providername = pDb.Provider.Name;
-                pln.title = pDb.Title;
-                pln.startdate = pDb.StartDate.ToString("yyyy/mm/dd");
-                pln.modifieddate = pDb.Modifiedate.ToString("yyyy/mm/dd");
-                pln.DeputeContent = pDb.DeputeContent;
-                pln.salary = pDb.Salary;
-                pln.status = pDb.Status.Name;
-                pln.region = pDb.Region.City;
-
-            }
-
-            return View(pln);
-
-
-        }
-        public IActionResult Test(int? id)
-        {
-            CDeputeViewModel x = List.FirstOrDefault(n => n.id == id);
-            if (x == null)
-                return RedirectToAction("DeputeList");
-            return View(x);
-
-        }
-
-
-
         public IActionResult Search(CKeyWord vm)
         {
             IEnumerable<CDeputeViewModel> datas = null;
