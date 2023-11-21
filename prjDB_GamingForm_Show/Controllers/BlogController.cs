@@ -16,6 +16,7 @@ namespace prjDB_GamingForm_Show.Controllers
             _host = host;
             _db = db;
         }
+        
         public IActionResult Index()
         {
             return View();
@@ -24,6 +25,8 @@ namespace prjDB_GamingForm_Show.Controllers
         public ActionResult List(CKeyWordViewModel kw, int? FId)
         {
             CBlogViewModel vm = new CBlogViewModel();
+            int? userID = HttpContext.Session.GetInt32("user_id");
+            ViewBag.KK = userID;
             if (!string.IsNullOrEmpty(kw.txtKeyWord))
             {
                 vm = new CBlogViewModel
@@ -130,6 +133,7 @@ namespace prjDB_GamingForm_Show.Controllers
         public ActionResult ArticleDelete(int? FId, int? AFId)
         {
             Article art = _db.Articles.FirstOrDefault(a => a.ArticleId == AFId);
+           
             if (art != null)
             {
                 _db.Articles.Remove(art);
