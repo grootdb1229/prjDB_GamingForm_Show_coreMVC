@@ -113,7 +113,7 @@ namespace prjDB_GamingForm_Show.Controllers
                     _db.Products.Add(x);
                     _db.SaveChanges();
                 }
-                Thread.Sleep(3000);
+                //Thread.Sleep(3000);
                 return RedirectToAction("Index");
             }
 
@@ -152,7 +152,7 @@ namespace prjDB_GamingForm_Show.Controllers
                     //MemberID跟StatusID是寫死在CProduct物件中的
                     _db.SaveChanges();
                 }
-				Thread.Sleep(3000);
+				//Thread.Sleep(3000);
 				return RedirectToAction("Index");
             }
 
