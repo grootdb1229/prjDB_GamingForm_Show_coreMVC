@@ -41,7 +41,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="articles.FirstOrDefault().ArticleContent" class="control-label"></label>
-                <textarea name="ReplyContents" class="form-control" style="height:400px"></textarea>
+                <textarea asp-for="articles.FirstOrDefault().ArticleContent" class="form-control"></textarea>
                 <span asp-validation-for="articles.FirstOrDefault().ArticleContent" class="text-danger"></span>
             </div>
             <input type="hidden" name="ModifiedDate" value="@DateTime.Now" />
