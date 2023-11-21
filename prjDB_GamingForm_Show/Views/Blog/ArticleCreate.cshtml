@@ -6,6 +6,7 @@
 }
 @* <script src="@Url.Content("~/build/ckeditor.js")" type="text/javascript"></script> *@
 <script src="https://cdn.ckeditor.com/ckeditor5/40.1.0/classic/ckeditor.js"></script>
+<link rel="stylesheet" href="~/css/blogstyle.css" type="text/css">
 @section Styles{
     <style>
         .ck{
@@ -21,12 +22,12 @@
     </style>
    
 }
-<h2>ArticleCreate</h2>
-<h4>Article</h4>
-<hr />
+<h2 style="text-align:center;margin:10px auto">文章編輯</h2>
+
+
 <div>
     <div class="row" style="margin:10px auto;width:650px;background-color:#4F4F4F">
-        <div >
+        <div style="background-color:#4F4F4F;border-radius:8px;box-shadow:0px 0px 8px 8px #cccccc">
             <form asp-action="ArticleCreate" method="post">
                 <label style="margin-top:5px" asp-for="blogs.First().Title" class="control-label"></label>
                 <input type="hidden" name="FId" value="@Model.blogs.First().BlogId" />
