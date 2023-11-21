@@ -25,6 +25,8 @@
 <h2 style="text-align:center;margin:10px auto;color:whitesmoke">文章編輯</h2>
 
 
+
+
 <div>
     <div class="row" style="margin:10px auto;width:650px;background-color:#4F4F4F">
         <div style="background-color:#4F4F4F;border-radius:8px;box-shadow:0px 0px 8px 8px #cccccc">
@@ -51,16 +53,28 @@
                 </div>
                 <div class="form-group">                   
                     <input type="hidden" name="ModifiedDate" value="@DateTime.Now" />
-                    <input type="hidden" name="MemberId" value="15" />
+                    <input type="hidden" name="MemberId" value="@ViewBag.KK" />
                 </div>
                 <div>
                     <textarea name="ArticleContent" id="editor" placeholder="請在這裡填寫內容" style="resize:none; height:700px">                    
                 </textarea>
                 </div>
-                <div class="form-group">
+
+                <div class="form-group column">
                     <input type="submit" value="發文" class="btn btn-primary" />
+
+                    <p style="margin:3px; float:right" >
+                        @Html.ActionLink("回列表","ArticleList","Blog",new{AFId= Model.articles.FirstOrDefault().ArticleId,FId=Model.blogs.FirstOrDefault().BlogId},new{
+                            @class="btn btn-warning"
+                        })
+                    </p>
                 </div>
+
+
+
+
             </form>
+
         </div>
     </div>
 </div>
