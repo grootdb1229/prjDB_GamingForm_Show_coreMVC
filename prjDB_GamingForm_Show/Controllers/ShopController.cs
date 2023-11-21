@@ -286,7 +286,7 @@ namespace prjDB_GamingForm_Show.Controllers
                 json = JsonSerializer.Serialize(car);
                 HttpContext.Session.SetString(CDictionary.SK_PURCHASED_PRODUCES_LIST, json);
                 ViewBag.Car = 0;
-                Thread.Sleep(3000);
+                Thread.Sleep(1000);
                 return RedirectToAction("Index");
             }
 
