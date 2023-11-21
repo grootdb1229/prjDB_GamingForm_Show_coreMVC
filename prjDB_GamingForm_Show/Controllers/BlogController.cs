@@ -11,11 +11,15 @@ namespace prjDB_GamingForm_Show.Controllers
     {
         private readonly IWebHostEnvironment _host;
         private readonly DbGamingFormTestContext _db;
+
         public BlogController(IWebHostEnvironment host, DbGamingFormTestContext db)
         {
             _host = host;
             _db = db;
+           
+            
         }
+        
         public IActionResult Index()
         {
             return View();
@@ -24,6 +28,8 @@ namespace prjDB_GamingForm_Show.Controllers
         public ActionResult List(CKeyWordViewModel kw, int? FId)
         {
             CBlogViewModel vm = new CBlogViewModel();
+            
+            ViewBag.KK = HttpContext.Session.GetInt32("user_id");
             if (!string.IsNullOrEmpty(kw.txtKeyWord))
             {
                 vm = new CBlogViewModel
@@ -109,8 +115,16 @@ namespace prjDB_GamingForm_Show.Controllers
 
         public ActionResult ArticleContent(int? FId, int? AFId )
         {
-            CBlogViewModel vm = new CBlogViewModel();
+            if (HttpContext.Session.GetInt32("user_id") == null)
+            {
 
+            }
+            else
+            {
+
+                ViewBag.KK = HttpContext.Session.GetInt32("user_id");
+            }
+            CBlogViewModel vm = new CBlogViewModel();
             vm = new CBlogViewModel
             {
                 tags = _db.Tags.Select(p => p),
@@ -130,6 +144,7 @@ namespace prjDB_GamingForm_Show.Controllers
         public ActionResult ArticleDelete(int? FId, int? AFId)
         {
             Article art = _db.Articles.FirstOrDefault(a => a.ArticleId == AFId);
+           
             if (art != null)
             {
                 _db.Articles.Remove(art);
@@ -153,6 +168,12 @@ namespace prjDB_GamingForm_Show.Controllers
 
         public IActionResult ArticleCreate(int? FId)
         {
+            if (HttpContext.Session.GetInt32("user_id") == null)
+            {
+                return RedirectToAction("Login", "Home");
+            }
+            ViewBag.KK = HttpContext.Session.GetInt32("user_id");
+            
             CBlogViewModel vm = null;
             if (FId == null)
                 return RedirectToAction("ArticleList");
@@ -237,8 +258,10 @@ namespace prjDB_GamingForm_Show.Controllers
 
         public IActionResult Like(int? AFId, int? FId)
         {
-
-            var art = _db.ArticleActions.Where(a => a.ArticleId == AFId && a.MemberId == 16 && a.ActionId == 1).Select(a => a).FirstOrDefault();
+            if (HttpContext.Session.GetInt32("user_id") == null)
+                return RedirectToAction("Login", "Home");
+            int memberId= (int)HttpContext.Session.GetInt32("user_id");
+            var art = _db.ArticleActions.Where(a => a.ArticleId == AFId && a.MemberId == memberId && a.ActionId == 1).Select(a => a).FirstOrDefault();
 
             if (art != null)
             {
@@ -248,7 +271,7 @@ namespace prjDB_GamingForm_Show.Controllers
             {
                 ArticleAction x = new ArticleAction();
                 x.ArticleId = (int)AFId;
-                x.MemberId = 16;
+                x.MemberId = memberId;
                 x.ActionId = 1;
                 _db.ArticleActions.Add(x);
             }
