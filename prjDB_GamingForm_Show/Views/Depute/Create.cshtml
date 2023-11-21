@@ -5,58 +5,64 @@
     Layout = "~/Views/Shared/_Layout_DBM.cshtml";
 }
 
-<h2>Create</h2>
+<h2>發佈委託</h2>
 
-<h4>Depute</h4>
+<h4>請輸入委託資訊</h4>
 <hr />
 <div class="row">
     <div class="col-md-10">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
+            <div class="form-floating mb-3" hidden>
                 <label asp-for="DeputeId" class="control-label"></label>
                 <input asp-for="DeputeId" class="form-control" />
                 <span asp-validation-for="DeputeId" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-floating mb-3" hidden>
                 <label asp-for="ProviderId" class="control-label"></label>
                 <input asp-for="ProviderId" class="form-control" />
                 <span asp-validation-for="ProviderId" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-floating mb-3">
+                <input asp-for="Title" class="form-control" id="Title" placeholder="" />
+                <label asp-for="Title" for="Title"></label>
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+            <div class="form-floating mb-3">
+                <input name="StartDate" value="@DateTime.Now" class="form-control" disabled/>
                 <label asp-for="StartDate" class="control-label"></label>
-                <input asp-for="StartDate" class="form-control" />
                 <span asp-validation-for="StartDate" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-floating mb-3">
+                <input name="Modifiedate" value="@DateTime.Now" class="form-control" disabled />
                 <label asp-for="Modifiedate" class="control-label"></label>
-                <input asp-for="Modifiedate" class="form-control" />
                 <span asp-validation-for="Modifiedate" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="DeputeContent" class="control-label"></label>
-                <textarea asp-for="DeputeContent" class="form-control" rows="4" cols="50" placeholder="在這裡輸入您的委託資訊..."></textarea>
-                <span asp-validation-for="DeputeContent" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Salary" class="control-label"></label>
-                <input asp-for="Salary" class="form-control" />
+            <div class="form-floating mb-3">
+                <input asp-for="Salary" class="form-control" id="Salary" placeholder="" />
+                <label asp-for="Salary" class="control-label" for="Salary"></label>
                 <span asp-validation-for="Salary" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="StatusId" class="control-label"></label>
-                <input asp-for="StatusId" class="form-control" />
+            <div class="form-floating mb-3">
+                <input asp-for="StatusId" class="form-control" id="StatusId" placeholder="" />
+                <label asp-for="StatusId" class="control-label" for="Salary"></label>
                 <span asp-validation-for="StatusId" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="RegionId" class="control-label"></label>
-                <input asp-for="RegionId" class="form-control" />
-                <span asp-validation-for="RegionId" class="text-danger"></span>
+            <div class="form-floating  mb-3">
+                <select class="form-select" id="selRegions" aria-label="Default select example">
+                    <option selected>請選擇地區</option>
+                    <option value="1">One</option>
+                    <option value="2">Two</option>
+                    <option value="3">Three</option>
+                </select>
+                <label asp-for="RegionId" class="control-label" id="RegionId" placeholder=""></label>
+                @* <input asp-for="RegionId" class="form-control" />
+                <span asp-validation-for="RegionId" class="text-danger"></span> *@
             </div>
-            <div class="form-group">
-                <label asp-for="Title" class="control-label"></label>
-                <input asp-for="Title" class="form-control" />
-                <span asp-validation-for="Title" class="text-danger"></span>
+            <div class="form-floating mb-3">
+                <textarea asp-for="DeputeContent" class="form-control" style="height:200px" placeholder="在這裡輸入您的委託資訊..." id="DeputeContent" placeholder=""></textarea>
+                <label asp-for="DeputeContent" class="control-label" for="DeputeContent"></label>
+                <span asp-validation-for="DeputeContent" class="text-danger"></span>
             </div>
             <div class="row">
                 <div class="col-6">
@@ -91,7 +97,7 @@
                     </ul>
                 </div>
             </div>
-            <div class="form-group">
+            <div class="form-floating mb-3">
                 <input type="submit" value="送出並發佈" class="btn btn-success" />
             </div>
         </form>
@@ -124,10 +130,8 @@
             }
         })
 
-
         loadSkillClasses();
-        // loadSkills();
-
+        loadRegions()
 
         async function loadSkillClasses() {
             const response = await fetch('@Url.Content("~/depute/skillclasses")');
@@ -148,13 +152,20 @@
             const response = await fetch(`@Url.Content("~/depute/skillss")?skillClass=${chooseClass}`);
             const datas = await response.json();
             console.log(datas);
-            const skills = datas.map(skill => `<li class="list-group-item">
-                                            <input class="form-check-input me-1" type="checkbox" value="" id="${skill.name}">
-                                            <label class="form-check-label stretched-link" for="${skill.name}">${skill.name}</label>
-                                </li>`)
+            const skills = datas.map(skill => `<li class="list-group-item"><input class="form-check-input me-1" type="checkbox" value="" id="${skill.name}"><label class="form-check-label stretched-link" for="${skill.name}">${skill.name}</label></li>`)
             document.querySelector(`#${chooseClassID}`).innerHTML = skills.join("");
         }
 
+        async function loadRegions() {
+            const response = await fetch(`@Url.Content("~/depute/regions")`);
+            const datas = await response.json();
+            const regions = datas.map(region => `<option value="${region.city}">${region.city}</option>`)
+            console.log(regions);
+            console.log(regions.join(""));
+            var regionsString = "<option selected>請選擇地區</option>".concat(regions.join(""));
+            console.log(regionsString);
+            document.querySelector("#selRegions").innerHTML = regionsString;
+        }
 
     </script>
 

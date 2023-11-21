@@ -235,6 +235,11 @@ namespace prjDB_GamingForm_Show.Controllers
             //var datas = _db.SkillClasses.Select(_ => _);
             return Json(datas);
         }
+        public IActionResult Regions()
+        {
+            var datas=_db.Regions.Select(_ => _);
+            return Json(datas);
+        }
         public IActionResult Skillss(string skillClass)
         {
             int skillclassid = Convert.ToInt32(_db.SkillClasses.Where(_ => _.Name == skillClass).FirstOrDefault().SkillClassId);
@@ -263,8 +268,11 @@ namespace prjDB_GamingForm_Show.Controllers
             _db.SaveChanges();
             return RedirectToAction("Personal");
         }
-        public IActionResult deleteDepute()
+        public IActionResult deleteDepute(int id)
         {
+            Depute o=_db.Deputes.Where(_=>_.DeputeId==id).Select(_=>_).FirstOrDefault();
+            _db.Deputes.Remove(o);
+            _db.SaveChanges();
             return RedirectToAction("Personal");
         }
         
