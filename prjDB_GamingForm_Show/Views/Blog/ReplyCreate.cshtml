@@ -20,7 +20,7 @@
 
 <div>
     <div class="row" style="margin:10px auto;width:650px;background-color:#4F4F4F;border-radius:8px;box-shadow:0px 0px 8px 8px #cccccc">
-        <div class="col-md-4">
+        <div class="col-md-12">
             <form asp-action="ReplyCreate" method="post">
                 <input type="hidden" name="AFId" value=" @Model.articles.First().ArticleId" />
                 <input type="hidden" name="ArticleId" value=" @Model.articles.First().ArticleId" />
@@ -35,7 +35,7 @@
 
                 <div class="form-group">
                     <label asp-for="replies.First().ReplyContents" class="control-label"></label>
-                    <textarea name="ReplyContents" class="form-control" style="width:600px;height:400px"></textarea>
+                    <textarea name="ReplyContents" class="form-control" style="height:400px"></textarea>
                     <span asp-validation-for="replies.First().ReplyContents" class="text-danger"></span>
                 </div>
 
@@ -49,6 +49,13 @@
                 </div>
                 <div class="form-group">
                     <input type="submit" value="回覆" class="btn btn-default" />
+
+                    <p style="margin:3px; float:right;text-align:right">
+                        @Html.ActionLink("回到文章","ArticleContent","Blog",new{AFId= Model.articles.FirstOrDefault().ArticleId,FId=Model.blogs.FirstOrDefault().BlogId},new{
+                        @class="btn btn-warning"
+                        })
+                    </p>
+
                 </div>
 
             </form>

@@ -35,17 +35,21 @@
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <div class="form-group">
                     <label asp-for="replies.First().ReplyContents" class="control-label" style="font-size:24px"></label>
-                    <textarea name="ReplyContents" class="form-control" style="width:600px;height:400px"></textarea>
+                    <textarea name="ReplyContents" class="form-control" style="height:400px"></textarea>
                     <span asp-validation-for="replies.First().ReplyContents" class="text-danger"></span>
                 </div>
                 <div class="form-group">
                     <input type="submit" value="確認修改" class="btn btn-default" />
+
+                    <p style="margin:3px; float:right;text-align:right">
+                        @Html.ActionLink("回到文章","ArticleContent","Blog",new{AFId= Model.articles.FirstOrDefault().ArticleId,FId=Model.blogs.FirstOrDefault().BlogId},new{
+                        @class="btn btn-warning"
+                        })
+                    </p>
                 </div>
 
             </form>
-            <div>
-                <a asp-action="List" >返回</a>
-            </div>
+
         </div>
     </div>
 

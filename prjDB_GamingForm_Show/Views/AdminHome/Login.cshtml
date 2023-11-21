@@ -2,34 +2,41 @@
     ViewData["Title"] = "登入";
     Layout = "~/Views/Shared/_AdminHomeLayout.cshtml";
 }
+@section Style{
+    .pa{
+        opacity: 0;
+        transition: opacity 5s ease-in-out;
+    }
+}
 
 
 <div class="sidenav">    
-    <div class="login-main-text">
-        <img src="~/logo/logo.png" />
-        <h2>Groot管理系統<br> 登入頁面</h2>
-        <p>請從此處登入開始使用</p>
+    <div class="pa login-main-text">
+        <img src="~/logo/logo.png" style="opacity:0 ; transition: opacity 1s ease-in-out" id="imglogo"/>
+        <h2 style="opacity:0 ; transition: opacity 2s ease-in-out" id="txth">Groot管理系統<br> 登入頁面</h2>
+        <p style="opacity:0 ; transition: opacity 3s ease-in-out" id="txtp">請從此處登入開始使用</p>
     </div>
 </div>
+
 @using (Html.BeginForm())
 {
     <div class="main">
         <div class="col-md-6 col-sm-12">
             <div class="login-form">
                 <form>
-                    <div class="form-group">
+                    <div class="form-group" style="opacity:0 ; transition: opacity 3s ease-in-out" id="txtacc">
                         <label>管理者帳號</label>
                         <input type="text" class="form-control" placeholder="帳號" name="txtAccount" id="acc">
                     </div>
-                    <div class="form-group">
+                    <div class="form-group" style="opacity:0 ; transition: opacity 3s ease-in-out" id="txtpwd">
                         <label>管理者密碼</label>
                         <input type="password" class="form-control" placeholder="密碼" name="txtPassword" id="pwd">
                     </div>
-                    <button type="submit" class="btn btn-black">登入</button>
-                    <button type="button" class="btn btn-secondary" id="btnre">重新輸入</button>
+                    <button type="submit" class="btn btn-black" style="opacity:0 ; transition: opacity 3s ease-in-out" id="btn1">登入</button>
+                    <button type="button" class="btn btn-secondary" id="btnre" style="opacity:0 ; transition: opacity 3s ease-in-out">重新輸入</button>
                     <br>
                     <p style="margin:5px"></p>
-                    <button type="button" class="btn btn-black" id="btndemo">Demo</button>
+                    <button type="button" class="btn btn-black" id="btndemo" style="opacity:0 ; transition: opacity 3s ease-in-out">Demo</button>
                 </form>
             </div>
         </div>
@@ -44,6 +51,25 @@
         document.querySelector('#btndemo').addEventListener('click',()=>{
             document.querySelector('#acc').value = "papa@gmail.com";
             document.querySelector('#pwd').value = "papa0625";
+        })
+        document.addEventListener('DOMContentLoaded',()=>{
+            var img = document.getElementById('imglogo');
+            var h = document.getElementById('txth');
+            var p = document.getElementById('txtp');
+            var acc = document.getElementById('txtacc');
+            var pwd = document.getElementById('txtpwd');
+            var b1 = document.getElementById('btn1');
+            var b2 = document.getElementById('btnre');
+            var b3 = document.getElementById('btndemo');
+            img.style.opacity = 1;
+            h.style.opacity = 1;
+            p.style.opacity = 1;
+            acc.style.opacity = 1;
+            pwd.style.opacity = 1;
+            b1.style.opacity = 1;
+            b2.style.opacity = 1;
+            b3.style.opacity = 1;
+            
         })
     </script>
 }
