@@ -115,8 +115,16 @@ namespace prjDB_GamingForm_Show.Controllers
 
         public ActionResult ArticleContent(int? FId, int? AFId )
         {
-            CBlogViewModel vm = new CBlogViewModel();
+            if (HttpContext.Session.GetInt32("user_id") == null)
+            {
 
+            }
+            else
+            {
+
+                ViewBag.KK = HttpContext.Session.GetInt32("user_id");
+            }
+            CBlogViewModel vm = new CBlogViewModel();
             vm = new CBlogViewModel
             {
                 tags = _db.Tags.Select(p => p),
