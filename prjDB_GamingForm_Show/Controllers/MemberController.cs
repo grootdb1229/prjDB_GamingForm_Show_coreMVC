@@ -62,7 +62,7 @@ namespace prjDB_GamingForm_Show.Controllers
             _db.Members.Add(member);
             _db.SaveChanges();
             ViewBag.ID = member.MemberId;
-            return RedirectToAction("MemberPage" , "Member");
+            return RedirectToAction("HomePage" , "Home");
         }
 
         public IActionResult Edit(int? id)
@@ -70,7 +70,7 @@ namespace prjDB_GamingForm_Show.Controllers
             
             Member member = _db.Members.FirstOrDefault(p => p.MemberId == id);
             if (member == null)
-                return RedirectToAction("MemberPage");
+                return RedirectToAction("HomePage", "Home");
             else
                 return View(member);
         }
@@ -91,7 +91,7 @@ namespace prjDB_GamingForm_Show.Controllers
                 dbmember.Password = member.Password;
                 _db.SaveChanges();
             }
-            return RedirectToAction("MemberPage");
+            return RedirectToAction("HomePage", "Home");
         }
 
 

@@ -54,10 +54,13 @@ namespace prjDB_GamingForm_Show.Controllers
             {
                 if (user.Password.Equals(vm.txtPassword))
                 {
-                    string user_Serialized = System.Text.Json.JsonSerializer.Serialize(user);
-                    HttpContext.Session.SetString(CDictionary.SK_Logged_User, user_Serialized);
-                    ViewBag.LoggedUser = user_Serialized ;
-                    return View();
+                    int user_id = user.MemberId;
+                    HttpContext.Session.SetInt32("user_id", user_id);
+                    ViewBag.user_id = user_id;
+                    //string user_Serialized = System.Text.Json.JsonSerializer.Serialize(user);
+                    //HttpContext.Session.SetString(CDictionary.SK_Logged_User, user_Serialized);
+                    //ViewBag.LoggedUser = user_Serialized;
+                    return RedirectToAction("HomePage", "Home");
                 }
             }
             return RedirectToAction("Create" , "Member");

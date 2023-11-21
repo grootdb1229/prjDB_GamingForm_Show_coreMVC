@@ -1,5 +1,5 @@
 ﻿@model prjDB_GamingForm_Show.Models.Entities.Member
-
+@using Microsoft.AspNetCore.Http
 @{
     ViewData["Title"] = "Edit";
 }
@@ -13,7 +13,9 @@
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <p>
-        <input type="hidden" name="MemberId" value="@Model.MemberId" />
+        <input type="hidden" name="MemberId" value=@ViewBag.user_id />
+               @* @Model.MemberId*@
+                @*"@Model.MemberId"*@
             </p>
             <div class="form-group">
                 <label asp-for="Name" class="control-label"></label>
