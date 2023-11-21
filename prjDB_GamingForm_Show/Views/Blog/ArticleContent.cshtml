@@ -90,7 +90,9 @@
                             @like
                         }
                         <p style="float:right">
-
+                            @if ( Model.articles.First().MemberId== ViewBag.KK)
+                            {
+                                
                             <button type="button" class="btn btn-warning" onclick="location.href='@Url.Action( "ArticleEdit","Blog", new { AFId = Model.articles.FirstOrDefault().ArticleId ,FId = Model.blogs.FirstOrDefault().BlogId})'">修改</button>
                             <button type="button" class="btn btn-secondary" onclick="ArticleDelete()">刪除文章</button>
 
@@ -104,6 +106,7 @@
                             </script>
                             @*@Html.ActionLink("修改", "ArticleEdit", new { AFId = Model.articles.FirstOrDefault().ArticleId ,FId = Model.blogs.FirstOrDefault().BlogId})
                             @Html.ActionLink("刪除", "ArticleDelete", new { AFId = Model.articles.FirstOrDefault().ArticleId, FId = Model.blogs.FirstOrDefault().BlogId }, new { onclick = "return confirm ('確定刪除嗎?')" })*@
+                            }
                         </p>
 
                     </div>
