@@ -223,7 +223,7 @@ namespace prjDB_GamingForm_Show.Controllers
         {
             return View();
         }
-        public IActionResult Apply(int id=7)
+        public IActionResult Apply(int id)
         {
             ViewBag.memberid = _memberIdtest;
             Depute o=_db.Deputes.FirstOrDefault(_ => _.DeputeId == id);
