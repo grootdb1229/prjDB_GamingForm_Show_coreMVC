@@ -179,10 +179,7 @@ namespace prjDB_GamingForm_Show.Controllers
         
 
         public int _memberIdtest = 38;
-        public IActionResult test()
-        {
-            return View();
-        }
+        
         public IActionResult Apply(int id)
         {
             ViewBag.memberid = _memberIdtest;
