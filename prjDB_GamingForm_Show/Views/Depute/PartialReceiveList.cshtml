@@ -44,12 +44,13 @@
                     @i.ApplyStatus.Name
                 </td>
                 <td class="col-1">
-                    @i.Depute.Salary.ToString("$###.00")
+                    @i.Depute.Salary
                 </td>
                 <td class="col-1">
-                    @i.Depute.Modifiedate.ToString("yyyy/mm/dd")
+                    @i.Depute.Modifiedate
                 </td>
                 <td class="col-2">
+                    @Html.ActionLink("修改", "Edit", "Depute", new { id = i.DeputeId }, new { @class = "btn btn-success" }) |
                     @Html.ActionLink("詳細資料", "Details", new { id = i.DeputeId }, new { @class = "btn btn-info" }) |
                     @Html.ActionLink("刪除", "Delete", "Depute", new { id = i.DeputeId }, new { @class = "btn btn-danger", onclick = "return confirm('確定要刪除嗎?')" })
                 </td>
