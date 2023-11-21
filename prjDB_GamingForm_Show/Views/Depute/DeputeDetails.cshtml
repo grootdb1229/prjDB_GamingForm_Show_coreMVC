@@ -1,9 +1,170 @@
-﻿@model List<DB_GamingForm_Show.Job.DeputeClass.CDeputeViewModel>
+﻿@model DB_GamingForm_Show.Job.DeputeClass.CDeputeViewModel
 
 @{
     ViewData["Title"] = "DeputeDetails";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    // this.Model
 }
+
+<head>
+    <!-- Depute -->
+    <meta charset="utf-8">
+    <title>JobEntry - Job Portal Website Template</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="" name="keywords">
+    <meta content="" name="description">
+    <!-- Favicon -->
+    <link href="~/layout/jobentry-1.0.0/img/favicon.ico" rel="icon">
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600&family=Inter:wght@700;800&display=swap" rel="stylesheet">
+
+    <!-- Icon Font Stylesheet -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- Libraries Stylesheet -->
+    <link href="~/layout/jobentry-1.0.0/lib/animate/animate.min.css" rel="stylesheet">
+    <link href="~/layout/jobentry-1.0.0/lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+
+    <!-- Customized Bootstrap Stylesheet -->
+
+    <link href="~/layout/jobentry-1.0.0/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Template Stylesheet -->
+    <link href="~/layout/jobentry-1.0.0/css/style.css" rel="stylesheet">
+    <!-- Depute -->
+
+</head>
+<!-- Header End -->
+<div class="container-xxl py-5 bg-dark page-header mb-5">
+    <div class="container my-5 pt-5 pb-4">
+        <h1 class="display-3 text-white mb-3 animated slideInDown">懸賞細節</h1>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb text-uppercase">
+                @Html.ActionLink("懸賞首頁","DeputeMain","Depute",null,new{@class ="breadcrumb-item"})
+                @Html.ActionLink("選賞清單","DeputeList","Depute",null,new{@class ="breadcrumb-item"})
+                <li class="breadcrumb-item text-white active" aria-current="page">詳細資料</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+<!-- Header End -->
+<!-- Job Detail Start -->
+<div class="container-xxl py-5 wow fadeInUp" data-wow-delay="0.1s">
+    <div class="container">
+
+        
+            
+                <div class="row gy-5 gx-4">
+                    <div class="col-lg-8">
+                        <div class="d-flex align-items-center mb-5">
+                            <img class="flex-shrink-0 img-fluid border rounded" src="~/images/04.jfif" alt="" style="width: 80px; height: 80px;">
+                            <div class="text-start ps-4">
+                        <h3 class="mb-3">@Html.DisplayFor(model => model.title)</h3>
+                        <span class="text-truncate me-3"><i class="fa fa-map-marker-alt text-primary me-2"></i>@Html.DisplayFor(model => model.region)</span>
+                        <span class="text-truncate me-3"><i class="far fa-clock text-primary me-2"></i>@Html.DisplayFor(model => model.modifieddate)</span>
+                        <span class="text-truncate me-0"><i class="far fa-money-bill-alt text-primary me-2"></i>@Html.DisplayFor(model => model.salary)</span>
+                            </div>
+                        </div>
+
+                        <div class="mb-5">
+                            <h4 class="mb-3">懸賞內容</h4>
+                    <p>@Html.DisplayFor(model => model.DeputeContent)</p>
+                            <h4 class="mb-3">懸賞職責</h4>
+                        <p></p>
+                            <ul class="list-unstyled">
+                                <li><i class="fa fa-angle-right text-primary me-2"></i>Dolor justo tempor duo ipsum accusam</li>
+                                <li><i class="fa fa-angle-right text-primary me-2"></i>Elitr stet dolor vero clita labore gubergren</li>
+                                <li><i class="fa fa-angle-right text-primary me-2"></i>Rebum vero dolores dolores elitr</li>
+                                <li><i class="fa fa-angle-right text-primary me-2"></i>Est voluptua et sanctus at sanctus erat</li>
+                                <li><i class="fa fa-angle-right text-primary me-2"></i>Diam diam stet erat no est est</li>
+                            </ul>
+                            <h4 class="mb-3">懸賞需求</h4>
+                            <p>Magna et elitr diam sed lorem. Diam diam stet erat no est est. Accusam sed lorem stet voluptua sit sit at stet consetetur, takimata at diam kasd gubergren elitr dolor</p>
+                            <ul class="list-unstyled">
+                                <li><i class="fa fa-angle-right text-primary me-2"></i>Dolor justo tempor duo ipsum accusam</li>
+                                <li><i class="fa fa-angle-right text-primary me-2"></i>Elitr stet dolor vero clita labore gubergren</li>
+                                <li><i class="fa fa-angle-right text-primary me-2"></i>Rebum vero dolores dolores elitr</li>
+                                <li><i class="fa fa-angle-right text-primary me-2"></i>Est voluptua et sanctus at sanctus erat</li>
+                                <li><i class="fa fa-angle-right text-primary me-2"></i>Diam diam stet erat no est est</li>
+                            </ul>
+                        </div>
+
+                        <div class="">
+                            <h4 class="mb-4">Apply For The Job</h4>
+                            <form>
+                                <div class="row g-3">
+                                    <div class="col-12 col-sm-6">
+                                        <input type="text" class="form-control" placeholder="Your Name">
+                                    </div>
+                                    <div class="col-12 col-sm-6">
+                                        <input type="email" class="form-control" placeholder="Your Email">
+                                    </div>
+                                    <div class="col-12 col-sm-6">
+                                        <input type="text" class="form-control" placeholder="Portfolio Website">
+                                    </div>
+                                    <div class="col-12 col-sm-6">
+                                        <input type="file" class="form-control bg-white">
+                                    </div>
+                                    <div class="col-12">
+                                        <textarea class="form-control" rows="5" placeholder="Coverletter"></textarea>
+                                    </div>
+                                    <div class="col-12">
+                                        <button class="btn btn-primary w-100" type="submit">Apply Now</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4">
+                        <div class="bg-light rounded p-5 mb-4 wow slideInUp" data-wow-delay="0.1s">
+                            <h4 class="mb-4">懸賞摘要</h4>
+                    <p><i class="fa fa-angle-right text-primary me-2"></i>開始時間: @Html.DisplayFor(model => model.startdate)</p>
+                    <p><i class="fa fa-angle-right text-primary me-2"></i>最後更新: @Html.DisplayFor(model => model.modifieddate)</p>
+                    <p><i class="fa fa-angle-right text-primary me-2"></i>懸賞金額: @Html.DisplayFor(model => model.salary)</p>
+                    <p><i class="fa fa-angle-right text-primary me-2"></i>懸賞地點: @Html.DisplayFor(model => model.region)</p>
+                    <p class="m-0"><i class="fa fa-angle-right text-primary me-2"></i>懸賞狀態: @Html.DisplayFor(model => model.status)</p>
+                        </div>
+                        <div class="bg-light rounded p-5 wow slideInUp" data-wow-delay="0.1s">
+                            <h4 class="mb-4">自我介紹</h4>
+                    <p><i class="fa fa-angle-right text-primary me-2"></i>懸賞金主: @Html.DisplayFor(model => model.providername)</p>
+                    <p class="m-0">@Html.DisplayFor(model => model.MemeberContent)</p>
+                        </div>
+                    </div>
+                </div>
+            
+        
+    </div>
+
+</div>
+<!-- Job Detail End -->
+<!-- Bootstrap core JS-->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- JavaScript Libraries -->
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="~/layout/jobentry-1.0.0/lib/wow/wow.min.js"></script>
+<script src="~/layout/jobentry-1.0.0/lib/easing/easing.min.js"></script>
+<script src="~/layout/jobentry-1.0.0/lib/waypoints/waypoints.min.js"></script>
+<script src="~/layout/jobentry-1.0.0/lib/owlcarousel/owl.carousel.min.js"></script>
+<script>
+    const button = document.querySelector('#car');
+
+    button.addEventListener('mouseover', () => {
+        button.style.backgroundColor = '#a81d1d';
+    });
+
+    button.addEventListener('mouseout', () => {
+        button.style.backgroundColor = '';
+    });
+</script>
+
+
 
 <h2>DeputeDetails</h2>
 
@@ -14,34 +175,34 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model[0].id)
+                @Html.DisplayNameFor(model => model.id)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model[0].title)
+                @Html.DisplayNameFor(model => model.title)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model[0].providername)
+                @Html.DisplayNameFor(model => model.providername)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model[0].startdate)
+                @Html.DisplayNameFor(model => model.startdate)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model[0].modifieddate)
+                @Html.DisplayNameFor(model => model.modifieddate)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model[0].DeputeContent)
+                @Html.DisplayNameFor(model => model.DeputeContent)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model[0].salary)
+                @Html.DisplayNameFor(model => model.salary)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model[0].status)
+                @Html.DisplayNameFor(model => model.status)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model[0].region)
+                @Html.DisplayNameFor(model => model.region)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model[0].Skillname)
+                @Html.DisplayNameFor(model => model.Skillname)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Count)
@@ -50,40 +211,40 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
+
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.id)
+                @Html.DisplayFor(modelItem => modelItem.id)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.title)
+                @Html.DisplayFor(modelItem => modelItem.title)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.providername)
+                @Html.DisplayFor(modelItem => modelItem.providername)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.startdate)
+                @Html.DisplayFor(modelItem => modelItem.startdate)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.modifieddate)
+                @Html.DisplayFor(modelItem => modelItem.modifieddate)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.DeputeContent)
+                @Html.DisplayFor(modelItem => modelItem.DeputeContent)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.salary)
+                @Html.DisplayFor(modelItem => modelItem.salary)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.status)
+                @Html.DisplayFor(modelItem => modelItem.status)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.region)
+                @Html.DisplayFor(modelItem => modelItem.region)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Skillname)
+                @Html.DisplayFor(modelItem => modelItem.Skillname)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Count)
+                @Html.DisplayFor(modelItem => modelItem.Count)
             </td>
             <td>
                 @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
@@ -91,6 +252,6 @@
                 @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
             </td>
         </tr>
-}
+
     </tbody>
-</table>
+    </table>

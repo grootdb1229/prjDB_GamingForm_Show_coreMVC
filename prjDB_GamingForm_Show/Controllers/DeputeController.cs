@@ -46,7 +46,8 @@ namespace prjDB_GamingForm_Show.Controllers
                            n.DeputeContent,
                            n.Salary,
                            Status = n.Status.Name,
-                           n.Region.City
+                           n.Region.City,
+                           n.Provider.FImagePath
                        };
             CDeputeViewModel x = null;
 
@@ -63,8 +64,9 @@ namespace prjDB_GamingForm_Show.Controllers
                     DeputeContent = item.DeputeContent,
                     salary = item.Salary,
                     status = item.Status,
-                    region = item.City
-                };
+                    region = item.City,
+                    imgfilepath = item.FImagePath
+            };
 
                 List.Add(x);
 
@@ -87,12 +89,14 @@ namespace prjDB_GamingForm_Show.Controllers
                 pln = new CDeputeViewModel();
                 pln.providername = pDb.Provider.Name;
                 pln.title = pDb.Title;
-                pln.startdate = pDb.StartDate.ToString("yyyy/mm/dd");
-                pln.modifieddate = pDb.Modifiedate.ToString("yyyy/mm/dd");
+                pln.startdate = pDb.StartDate.ToString("yyyy/mm/dd HH:mm:ss");
+                pln.modifieddate = pDb.Modifiedate.ToString("yyyy/mm/dd HH:mm:ss");
                 pln.DeputeContent = pDb.DeputeContent;
                 pln.salary = pDb.Salary;
                 pln.status = pDb.Status.Name;
                 pln.region = pDb.Region.City;
+                pln.MemeberContent = pDb.Provider.Mycomment;
+                pln.imgfilepath = pDb.Provider.FImagePath;
 
             }
 
@@ -223,7 +227,7 @@ namespace prjDB_GamingForm_Show.Controllers
         {
             return View();
         }
-        public IActionResult Apply(int id=7)
+        public IActionResult Apply(int? id)
         {
             ViewBag.memberid = _memberIdtest;
             Depute o=_db.Deputes.FirstOrDefault(_ => _.DeputeId == id);
