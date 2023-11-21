@@ -1,4 +1,5 @@
-﻿using prjDB_GamingForm_Show.Models.Entities;
+﻿using Microsoft.AspNetCore.Mvc;
+using prjDB_GamingForm_Show.Models.Entities;
 using System.ComponentModel;
 using static prjDB_GamingForm_Show.Models.Shop.CProductWarp;
 
@@ -77,6 +78,9 @@ namespace prjDB_GamingForm_Show.Models.Shop
         public IFormFile photo { get; set; }
         public int TagID { get; set; }
         public int SubTagID { get; set; }
+
+        public List<int> values {  get; set; }
+
 
     }
 }

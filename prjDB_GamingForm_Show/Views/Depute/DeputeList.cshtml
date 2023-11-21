@@ -3,7 +3,47 @@
     ViewData["Title"] = "DeputeList";
     Layout = "~/Views/Shared/DeputeLayout2.cshtml";
 }
+<!-- Search Start -->
 
+
+<div class="container-fluid bg-primary mb-5 wow fadeIn" data-wow-delay="0.1s" style="padding: 35px;">
+    <div class="container">
+        <div class="row g-2">
+            <div class="col-md-10">
+                <div class="row g-2">
+                    <div class="col-md-4">
+                        <input type="text" id="text" name="txtKeyword" class="form-control border-0" placeholder="Keyword" />
+                    </div>
+                    <div class="col-md-4">
+                        <select id="combo1" class="form-select border-0">
+                        </select>
+                        <select id="combo2" class="form-select border-0">
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <select id="combo3" class="form-select border-0">
+                            <option name="txtSalary" selected>請選擇...</option>
+                            <option name="txtSalary" value="1">10000</option>
+                            <option name="txtSalary" value="2">20000</option>
+                            <option name="txtSalary" value="3">30000</option>
+                            <option name="txtSalary" value="4">50000</option>
+                        </select>
+
+                    </div>
+
+                </div>
+            </div>
+            <div class="col-md-2">
+                <button id="search" name="txtKeyword" class="btn btn-dark border-0 w-100">搜尋</button>
+                @Html.ActionLink("重設","DeputeList","Depute",null,new{@class ="btn btn-dark border-0 w-100",@id="search",name="txtKeyword"})
+                @* <a href="~/../Views/Depute/DeputeList.cshtml" class="button">Go to page</a> *@
+                @* <button id="search" name="txtKeyword" class="btn btn-dark border-0 w-100" href="~/..Depute/DeputeList" />搜尋</button> *@
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Search End -->
 <!-- Jobs Start -->
 <div class="container-xxl py-5">
     <div class="container">
@@ -16,58 +56,110 @@
                         <div id="list" class="row g-4">
                             
                         </div>
+                        
                     </div>
-                    
-                    <a class="btn btn-primary py-3 px-5" href="">Browse More Jobs</a>
+                    @Html.ActionLink("回懸賞首頁", "DeputeMain", "Depute", null, new { @class = "btn btn-primary py-3 px-5", @id = "btndp" })
                 </div>
                 
             </div>
+            
         </div>
     </div>
 </div>
 <!-- Jobs End -->
 @section Scripts {
     <script>
+
+        
         const title = document.querySelector('#list');
         const text = document.querySelector('#text');
         const search = document.querySelector('#search');
-        search.addEventListener("click", loadList())
-        loadList()
+        search.addEventListener("click", () => { loadList() })
+        
+
+
+        const selSkillClasses = document.querySelector('#combo1');
+        const selectSkills = document.querySelector('#combo2');
+        const selSalary = document.querySelector('#combo3');
+        
+
+        loadSkillClassess();
+        
+        selSkillClasses.addEventListener("change", () => { loadSkill() });
         async function loadList() {
             const lstFrag = $(document.createDocumentFragment());
-            const response = await fetch(`@Url.Content("~/Depute/Search")?txtKeyword=${text.text}`);
-            // console.log(response);
+            const response = await fetch
+                (`@Url.Content("~/Depute/Search")?txtKeyword=${text.value}&txtSkillClass=${selSkillClasses.options[selSkillClasses.selectedIndex].text}&txtSkill=${selectSkills.options[selectSkills.selectedIndex].text}&txtSalary=${selSalary.options[selSalary.selectedIndex].text}`);
+            // console.log(response)
             const data = await response.json();
             // console.log(data);
             const list = data.map(list =>
-                `
-                                    <div  class="col-sm-12 col-md-8 d-flex align-items-center">
-                                     <img class="flex-shrink-0 img-fluid border rounded" src="~/layout/jobentry-1.0.0/img/com-logo-1.jpg" alt="" style="width: 80px; height: 80px;">
-                                     <div class="text-start ps-4">
-                                     <h5 class="mb-3">${list.title}</h5>
-                                             <span class="text-truncate me-3"><i class="fa fa-map-marker-alt text-primary me-2"></i>${list.region}</span>
-                                                             <span class="text-truncate me-3"><i class="fa fa-map-marker-alt text-primary me-2"></i>${list.providername}</span>
-                                                     <span class="text-truncate me-3"><i class="far fa-clock text-primary me-2"></i>${list.startdate}</span>
-                                             <span class="text-truncate me-0"><i class="far fa-money-bill-alt text-primary me-2"></i>${list.salary}</span>
-                                    </div>
-                                    </div>
-                                    <div class="col-sm-12 col-md-4 d-flex flex-column align-items-start align-items-md-end justify-content-center">
-                                    <div class="d-flex mb-3">
-                                    <a class="btn btn-light btn-square me-3" href=""><i class="far fa-heart text-primary"></i></a>
-                                    <a class="btn btn-primary" href="">我要應徵</a>
-                                    </div>
-                                            <small class="text-truncate"><i class="far fa-calendar-alt text-primary me-2"></i>Last Update : ${list.modifieddate}</small>
-                                    </div>
+                `                           <input type="hidden" name="${list.id}" value=${list.id}/>
+                                            <div  class="col-sm-12 col-md-8 d-flex align-items-center">
+                                             <img class="flex-shrink-0 img-fluid border rounded" src="~/layout/jobentry-1.0.0/img/com-logo-1.jpg" alt="" style="width: 80px; height: 80px;">
+                                             <div class="text-start ps-4">
+                                             <h5 class="mb-3">${list.title}</h5>
+                                                     <span class="text-truncate me-3"><i class="fa fa-map-marker-alt text-primary me-2"></i>${list.region}</span>
+                                                                     <span class="text-truncate me-3"><i class="fa fa-map-marker-alt text-primary me-2"></i>${list.providername}</span>
+                                                             <span class="text-truncate me-3"><i class="far fa-clock text-primary me-2"></i>${list.startdate}</span>
+                                                     <span class="text-truncate me-0"><i class="far fa-money-bill-alt text-primary me-2"></i>${list.salary}</span>
+                                            </div>
+                                            </div>
+                                            <div class="col-sm-12 col-md-4 d-flex flex-column align-items-start align-items-md-end justify-content-center">
+                                            <div class="d-flex mb-3">
+                                            <a class="btn btn-light btn-square me-3" href=""><i class="far fa-heart text-primary"></i></a>
+                                            @Html.ActionLink("詳細...", "DeputeMain", "Depute", null, new { @class = "btn btn-primary", @id = "btndp" })
+                                            @Html.ActionLink("我要應徵","Apply","Depute",null,new{@class ="btn btn-primary",@id="btndp"})
+                                            
+                                            </div>
+                                                    <small class="text-truncate"><i class="far fa-calendar-alt text-primary me-2"></i>Last Update : ${list.modifieddate}</small>
+                                            </div>
 
-                            `
+
+                                    `
 
 
 
             )
             lstFrag.append(list);
-            console.log(lstFrag)
+            // console.log(lstFrag)
             $('#list').html(lstFrag);
         }
+
+        async function loadSkillClassess() {
+            const SkillClasseFrag = $(document.createDocumentFragment());
+            const response = await fetch('@Url.Content("~/Depute/SkillClassess")');
+            // console.log(fst);
+            const data = await response.json();
+            const fst = '<option name="txtSkillClass" value="0">請選擇...</option>'
+            SkillClasseFrag.append(fst);
+            // console.log(data);
+            const SkillClassess = data.map(SkillClassess => `<option name="txtSkillClass" value='${SkillClassess.skillClassId}'>${SkillClassess.name}</option>`)
+            SkillClasseFrag.append(SkillClassess);
+            $('#combo1').html(SkillClasseFrag)
+            // selSkillClasses.innerHTML = SkillClassesks.join("");
+
+            loadSkill();
+
+        }
+
+
+        async function loadSkill() {
+            const SkillFrag = $(document.createDocumentFragment());
+            const response = await fetch(`@Url.Content("~/Depute/Skills")?id=${selSkillClasses.value}`);
+            // console.log(response);
+            const snd = '<option name="txtSkill" value="null">請選擇...</option>'
+            SkillFrag.append(snd);
+            const data = await response.json();
+            // console.log(data);
+            const Skills = data.map(Skills => `<option name="txtSkill" value='${Skills.skillId}'>${Skills.name}</option>`)
+            SkillFrag.append(Skills);
+            $('#combo2').html(SkillFrag)
+            // selectSkills.innerHTML = Skills.join("");
+            loadList();
+        }
+
+        
 
 
     </script>

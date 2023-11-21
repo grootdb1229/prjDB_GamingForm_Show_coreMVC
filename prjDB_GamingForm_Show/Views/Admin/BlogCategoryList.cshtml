@@ -5,12 +5,18 @@
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
-<h2>BlogCategoryList</h2>
+<h2 style="margin-left:5px ; font-size:45px">論壇分類清單</h2>
+@using (Html.BeginForm())
+{
+    <p style="display:inline;font-size:30px;margin-left:5px;margin-right:10px">名稱關鍵字查詢 : </p> @Html.TextBox("txtKeyWord",null,new{@class = "col-form-label"})
+    <input type="submit" value="查詢" class="btn btn-dark" />
+}
 
-<p>
-    <a asp-action="Create">Create New</a>
+<p style ="margin-left:5px">
+    @Html.ActionLink("上一頁", "", "Admin", null, new  { @class = "btn btn-dark" })
+    @Html.ActionLink("下一頁", "", "Admin", null, new  { @class = "btn btn-dark" })
 </p>
-<table class="table table-dark table-hover" style="color:white">
+<table class="table table-dark table-hover" style="color:white ; font-size:20px">
     <thead>
         <tr>
             <th>
@@ -18,25 +24,26 @@
             </th>
             <th>
                 分類名稱
-            </th>            
+            </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.SubTagId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>            
-            <td>
-                @Html.ActionLink("修改", "Edit", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("檢視", "Details", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("刪除", "Delete", new { /* id=item.PrimaryKey */ })
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SubTagId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.ActionLink("修改", "Edit","Admin", new { /* id=item.PrimaryKey */ },new  { @class = "btn btn-dark" })
+                    @Html.ActionLink("詳細", "Details","Admin", new { /* id=item.PrimaryKey */ },new  { @class = "btn btn-dark" })
+                    @Html.ActionLink("刪除", "Delete","Admin", new { /* id=item.PrimaryKey */ },new  { @class = "btn btn-dark" })
+                </td>
+            </tr>
+        }
     </tbody>
 </table>

@@ -1,6 +1,8 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
 <head>
+    @using Microsoft.AspNetCore.Mvc.Rendering
+    @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <!-- Meta, title, CSS, favicons, etc. -->
     <meta charset="utf-8">
@@ -8,7 +10,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <title>Groot管理系統</title>
-
+    
     <!-- Bootstrap -->
     <link href="~/vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome -->
@@ -27,8 +29,9 @@
         <div class="main_container">
             <div class="col-md-3 left_col">
                 <div class="left_col scroll-view">
+                    
                     <div class="navbar nav_title" style="border: 0;">
-                        <a href="~/index.html" class="site_title"><i class="fa fa-paw"></i> <span>Groot管理系統</span></a>
+                        <a @*href="~/index.html"*@ class="site_title">@*<i class="fa fa-paw"></i>*@<img src="~/logo/imgicon.png" /> <span>Groot管理系統</span></a>
                     </div>
 
                     <div class="clearfix"></div>
@@ -39,8 +42,8 @@
                             <img src="~/production/images/S__33095703.jpg" alt="..." class="img-circle profile_img">
                         </div>
                         <div class="profile_info">
-                            <span>管理者,您好</span>
-                            <h2>小趴</h2>
+                            <span style="font-size:20px">管理者,您好</span>
+                            <h2 style="font-size:20px">小趴</h2>                            
                         </div>
                     </div>
                     <!-- /menu profile quick info -->
@@ -48,34 +51,40 @@
                     <br />
 
                     <!-- sidebar menu -->
-                    <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
+                    <div id="sidebar-menu" class="main_menu_side hidden-print main_menu" style="font-size:20px">
                         <div class="menu_section">
-                            <h3>分類</h3>
+                            <h3 style="font-size:30px">功能列表</h3>
                             <ul class="nav side-menu">
                                 <li>
-                                    <a><i class="fa fa-home"></i> 會員管理 <span class="fa fa-chevron-down"></span> </a>
+                                    <a>
+                                        <i class="fa fa-home" style="color:#a81d1d"></i> 會員管理 <span class="fa fa-chevron-down"></span>
+                                    </a>
                                     <ul class="nav child_menu">
-                                        <li>@Html.ActionLink("會員清單","MemberList","Admin",null,null)</li>
+                                        <li>@Html.ActionLink("會員清單","MemberList","Admin",null,new{@style = "font-size:15px"})</li>
                                         @* <li><a href="~/index2.html">Dashboard2</a></li>
                                         <li><a href="~/index3.html">Dashboard3</a></li> *@
                                     </ul>
                                 </li>
                                 <li>
-                                    <a><i class="fa fa-edit"></i> 商城管理 <span class="fa fa-chevron-down"></span></a>
+                                    <a>
+                                        @*<i class="fa fa-edit"></i>*@<i class="fa fa-table" style="color:#a81d1d"></i> 商城管理 <span class="fa fa-chevron-down"></span>
+                                    </a>
                                     <ul class="nav child_menu">
-                                        <li>@Html.ActionLink("商品清單","ProductList","Admin",null,null)</li>
-                                        <li><a href="~/form_advanced.html">申訴處理</a></li>
-                                        <li><a href="~/form_validation.html">新品審核</a></li>
-                                        <li><a href="~/form_wizards.html">廣告上架</a></li>
-                                        <li><a href="~/form_upload.html">優惠券設定</a></li>
+                                        <li>@Html.ActionLink("商品清單","ProductList","Admin",null,new{@style = "font-size:15px"})</li>
+                                        <li><a href="~/form_advanced.html" style="font-size:15px">申訴處理</a></li>
+                                        <li><a href="~/form_validation.html" style="font-size:15px">新品審核</a></li>
+                                        <li><a href="~/form_wizards.html" style="font-size:15px">廣告上架</a></li>
+                                        <li><a href="~/form_upload.html" style="font-size:15px">優惠券設定</a></li>
                                         @*<li><a href="~/form_buttons.html">Form Buttons</a></li>*@
                                     </ul>
                                 </li>
                                 <li>
-                                    <a><i class="fa fa-desktop"></i> 論壇管理 <span class="fa fa-chevron-down"></span></a>
+                                    <a>
+                                        @*<i class="fa fa-desktop"></i>*@<i class="fa fa-edit" style="color:#a81d1d"></i> 論壇管理 <span class="fa fa-chevron-down"></span>
+                                    </a>
                                     <ul class="nav child_menu">
-                                        <li>@Html.ActionLink("分類清單","BlogCategoryList","Admin",null,null)</li>
-                                        <li>@Html.ActionLink("版面清單","BlogList","Admin",null,null)</li>
+                                        <li>@Html.ActionLink("分類清單","BlogCategoryList","Admin",null,new{@style = "font-size:15px"})</li>
+                                        <li>@Html.ActionLink("版面清單","BlogList","Admin",null,new{@style = "font-size:15px"})</li>
                                         @*<li><a href="~/typography.html">Typography</a></li>
                                         <li><a href="~/icons.html">Icons</a></li>
                                         <li><a href="~/glyphicons.html">Glyphicons</a></li>
@@ -86,14 +95,18 @@
                                     </ul>
                                 </li>
                                 <li>
-                                    <a><i class="fa fa-table"></i> 委託管理 <span class="fa fa-chevron-down"></span></a>
+                                    <a>
+                                        @*<i class="fa fa-table"></i>*@<i class="fa fa-clone" style="color:#a81d1d"></i> 委託管理 <span class="fa fa-chevron-down"></span>
+                                    </a>
                                     <ul class="nav child_menu">
-                                        <li><a href="~/tables.html">申訴處理</a></li>
+                                        <li><a href="~/tables.html" style="font-size:15px">申訴處理</a></li>
                                         @*<li><a href="~/tables_dynamic.html">Table Dynamic</a></li>**@
                                     </ul>
                                 </li>
                                 <li>
-                                    <a href="../Admin/Index"><i class="fa fa-bar-chart-o"></i> 報表檢視 @*<span class="fa fa-chevron-down"></span>*@</a>
+                                    <a href="../Admin/Index">
+                                        <i class="fa fa-bar-chart-o" style="color:#a81d1d"></i> 報表檢視 @*<span class="fa fa-chevron-down"></span>*@
+                                    </a>
                                     @*<ul class="nav child_menu">
                                         <li><a href="~/chartjs.html">Chart JS</a></li>
                                         <li><a href="~/chartjs2.html">Chart JS2</a></li>
@@ -180,6 +193,7 @@
                         </a>
                     </div> *@
                     <!-- /menu footer buttons -->
+                    
                 </div>
             </div>
 
@@ -196,13 +210,13 @@
                                     <img src="~/production/images/S__33095703.jpg" alt="">小趴
                                 </a>
                                 <div class="dropdown-menu dropdown-usermenu pull-right" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="~/javascript:;"> Profile</a>
+                                    <a class="dropdown-item" href="~/javascript:;"> 管理者資料</a>
                                     <a class="dropdown-item" href="~/javascript:;">
-                                        <span class="badge bg-red pull-right">50%</span>
-                                        <span>Settings</span>
+                                        @*<span class="badge bg-red pull-right">50%</span>*@
+                                        <span>設定</span>
                                     </a>
-                                    <a class="dropdown-item" href="~/javascript:;">Help</a>
-                                    <a class="dropdown-item" href="~/login.html"><i class="fa fa-sign-out pull-right"></i> Log Out</a>
+                                    <a class="dropdown-item" href="~/javascript:;">幫助</a>
+                                    <a class="dropdown-item" id="btnLogout" asp-controller="AdminHome" asp-action="Logout"><i class="fa fa-sign-out pull-right"></i> 登出</a>
                                 </div>
                             </li>
 
@@ -214,56 +228,56 @@
                                 <ul class="dropdown-menu list-unstyled msg_list" role="menu" aria-labelledby="navbarDropdown1">
                                     <li class="nav-item">
                                         <a class="dropdown-item">
-                                            <span class="image"><img src="~/images/img.jpg" alt="Profile Image" /></span>
+                                            <span class="image"><img src="~/production/images/s__92446730_0.jpg" /></span>
                                             <span>
-                                                <span>John Smith</span>
-                                                <span class="time">3 mins ago</span>
+                                                <span>囝囡</span>
+                                                <span class="time">幾 秒鐘 前</span>
                                             </span>
                                             <span class="message">
-                                                Film festivals used to be do-or-die moments for movie makers. They were where...
+                                                喵喵喵，喵嗚喵，咪
                                             </span>
                                         </a>
                                     </li>
                                     <li class="nav-item">
                                         <a class="dropdown-item">
-                                            <span class="image"><img src="~/images/img.jpg" alt="Profile Image" /></span>
+                                            <span class="image"><img src="~/production/images/s__92446730_0.jpg" /></span>
                                             <span>
-                                                <span>John Smith</span>
-                                                <span class="time">3 mins ago</span>
+                                                <span>囝囡</span>
+                                                <span class="time">三 分鐘 前</span>
                                             </span>
                                             <span class="message">
-                                                Film festivals used to be do-or-die moments for movie makers. They were where...
+                                                喵嗚嗚喵嗚嗚，嗚嗚喵嗚喵，咪咪咪喵喵嗚，咪咪咪喵喵嗚
                                             </span>
                                         </a>
                                     </li>
                                     <li class="nav-item">
                                         <a class="dropdown-item">
-                                            <span class="image"><img src="~/images/img.jpg" alt="Profile Image" /></span>
+                                            <span class="image"><img src="~/production/images/s__92446730_0.jpg" /></span>
                                             <span>
-                                                <span>John Smith</span>
-                                                <span class="time">3 mins ago</span>
+                                                <span>囝囡</span>
+                                                <span class="time">二十 分鐘 前</span>
                                             </span>
                                             <span class="message">
-                                                Film festivals used to be do-or-die moments for movie makers. They were where...
+                                                喵嗚喵喵嗚喵，喵咪咪喵，咪嗚
                                             </span>
                                         </a>
                                     </li>
                                     <li class="nav-item">
                                         <a class="dropdown-item">
-                                            <span class="image"><img src="~/images/img.jpg" alt="Profile Image" /></span>
+                                            <span class="image"><img src="~/production/images/s__92446730_0.jpg" /></span>
                                             <span>
-                                                <span>John Smith</span>
-                                                <span class="time">3 mins ago</span>
+                                                <span>囝囡</span>
+                                                <span class="time">三 小時 前</span>
                                             </span>
                                             <span class="message">
-                                                Film festivals used to be do-or-die moments for movie makers. They were where...
+                                                咪嗚喵喵，喵喵，咪喵喵喵
                                             </span>
                                         </a>
                                     </li>
                                     <li class="nav-item">
                                         <div class="text-center">
                                             <a class="dropdown-item">
-                                                <strong>See All Alerts</strong>
+                                                <strong>查看所有訊息</strong>
                                                 <i class="fa fa-angle-right"></i>
                                             </a>
                                         </div>
@@ -322,3 +336,4 @@
 </body>
 
 </html>
+

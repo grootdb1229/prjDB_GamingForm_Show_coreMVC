@@ -1,0 +1,58 @@
+﻿@model prjDB_GamingForm_Show.ViewModels.CBlogViewModel
+
+@{
+    ViewData["Title"] = "ReplyEdit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section Styles{
+    <style>
+        input {
+            margin-top: 5px;
+        }
+    </style>
+}
+
+<h2 style="text-align:center;margin:10px auto;color:whitesmoke">留言修改</h2>
+
+<div>
+
+    <div class="row" style="margin:10px auto;width:650px;background-color:#4F4F4F">
+
+        <div class="col-md-12" style="background-color:#4F4F4F;border-radius:8px;box-shadow:0px 0px 8px 8px #cccccc">
+
+            <form asp-action="ReplyEdit">
+                <input type="hidden" name="ModifiedDate" value="@DateTime.Now" />
+                <input type="hidden" name="MemberId" value="15" />
+
+                <input type="hidden" name="FId" value="@Model.blogs.FirstOrDefault().BlogId" />
+                <input type="hidden" name="AFId" value=" @Model.articles.First().ArticleId" />
+                <input type="hidden" name="ArticleId" value=" @Model.articles.First().ArticleId" />
+
+
+                <input type="hidden" name="RFId" value=" @Model.replies.FirstOrDefault().ReplyId" />
+                @*    <input type="hidden" name="ReplyId" value=" @Model.replies.FirstOrDefault().ReplyId" />*@
+
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <label asp-for="replies.First().ReplyContents" class="control-label" style="font-size:24px"></label>
+                    <textarea name="ReplyContents" class="form-control" style="width:600px;height:400px"></textarea>
+                    <span asp-validation-for="replies.First().ReplyContents" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="確認修改" class="btn btn-default" />
+                </div>
+
+            </form>
+            <div>
+                <a asp-action="List" >返回</a>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

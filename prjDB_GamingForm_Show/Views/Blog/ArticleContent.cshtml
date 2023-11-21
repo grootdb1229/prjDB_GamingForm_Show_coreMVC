@@ -4,42 +4,45 @@
     ViewBag.Title = "ArticleContent";
 }
 
-<html lang="zxx">
-<head>
-    <meta charset="UTF-8">
-    <meta name="description" content="Amin Template">
-    <meta name="keywords" content="Amin, unica, creative, html">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Amin | Template</title>
 
-    <!-- Google Font -->
-    <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,500,600,700,800,900&display=swap"
-          rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Cinzel:400,700,900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="~/css/blogstyle.css" type="text/css">
 
-    <!-- Css Styles -->
-    <link rel="stylesheet" href="~/css/bootstrap.min.css" type="text/css">
-    <link rel="stylesheet" href="~/css/font-awesome.min.css" type="text/css">
-    <link rel="stylesheet" href="~/css/elegant-icons.css" type="text/css">
-    <link rel="stylesheet" href="~/css/owl.carousel.min.css" type="text/css">
-    <link rel="stylesheet" href="~/css/barfiller.css" type="text/css">
-    <link rel="stylesheet" href="~/css/magnific-popup.css" type="text/css">
-    <link rel="stylesheet" href="~/css/slicknav.min.css" type="text/css">
-    <link rel="stylesheet" href="~/css/blogstyle.css" type="text/css">
-</head>
-<body>
-    <div class="nav-search search-switch" style="float:right;">
-        @Html.ActionLink("發表回覆", "ReplyCreate", "Blog", new { AFId = Model.articles.FirstOrDefault().ArticleId},null)
+
+<header class="header-section">
+    <div class="nav-options">
+
+        <div class="container">
+            <div class="humberger-menu ">
+                @Html.ActionLink("前往首頁", "List", "Blog")
+            </div>
+            <div class="nav-search search-switch">
+                @Html.ActionLink("發表回覆", "ReplyCreate", "Blog", new { AFId = Model.articles.FirstOrDefault().ArticleId,FId=Model.blogs.FirstOrDefault().BlogId},null)
+            </div>
+            <div class="nav-menu">
+                <ul>
+                    <li class="active">
+                        <a href="@Url.Action("ArticleList", "Blog", new { FId = Model.blogs.FirstOrDefault().BlogId})">全部</a>
+                    </li>
+                    @{
+                        foreach (var item in Model.subBlogs.GroupBy(p => p.Title))
+                        {
+                            <li>
+                                <a href="@Url.Action("ArticleList", "Blog", new {FId=item.First().BlogId ,SFId = item.FirstOrDefault().SubBlogId})">@item.Key</a>
+                            </li>
+                        }
+                    }
+                </ul>
+            </div>
+        </div>
     </div>
+</header>
+@*-----------------------------------<!-- ArticleContent -->---------------------------------------------------*@
+<div>
+    <div style="margin: 0 auto; width: 940px;">
 
 
 
-    <div style="margin: 0 auto; width: 800px;">
-
-        <!-- ArticleContent -->
-
-        <div style="border: 2px solid red; padding: 3px; margin: 5px; border-radius: 5px; display: flex;">
+        <div style="border: 2px solid red; padding: 3px; margin: 5px; border-radius: 5px; display:flex;">
             <div style="display: flex;">
                 <div style="margin-right: 10px;">
                     @{
@@ -58,7 +61,7 @@
                         </h1>
                     </div>
                     <div>
-                        @* 超連結個人葉面 *@
+                        @* 超連結個人頁面 *@
                         樓主
                         <h3 style="color:white">
                             @Html.DisplayFor(modelItem => Model.articles.FirstOrDefault().Member.Name)
@@ -68,40 +71,55 @@
                         發表時間: @Html.DisplayFor(modelItem => Model.articles.FirstOrDefault().ModifiedDate)
                     </p>
                     <div style="max-width:800px; overflow: hidden; word-wrap: break-word; white-space: pre-line; display: flex;">
-                        <p style="margin: 0; max-width:650px">
+                        <p style="margin: 0; max-width:650px;font-size:30px ">
                             @Html.DisplayFor(modelItem => Model.articles.FirstOrDefault().ArticleContent)
                         </p>
                     </div>
                     <br />
-                    <div>
-                        @*讚用ajax*@
+
+                    <div style="width:800px">
+                        @*//Todo:讚用ajax*@
                         @{
                             int like = 0;
-                            // foreach (var item in Model.articles)
-                            // {
-                            //      @Html.ActionLink("讚", "Like", "Blog", new { AFId = item.ArticleId }, null)
-                            // }
-                            @Html.ActionLink("讚", "Like", "Blog", new { AFId = Model.articles.FirstOrDefault().ArticleId, FId = Model.blogs.FirstOrDefault().BlogId }, null)
+
+                            <button type="button" class="btn btn-danger" onclick="location.href='@Url.Action("Like", "Blog", new { AFId = Model.articles.FirstOrDefault().ArticleId, FId = Model.blogs.FirstOrDefault().BlogId })'">
+                                <img src="~/images/like.png" alt="Like" width="20px" height="20px" />
+                            </button>
 
                             like = Model.articleActions.Count(a => a.ActionId == 1);
                             @like
                         }
-                    </div>
-                    @Html.ActionLink("修改", "ArticleEdit", new { AFId = Model.articles.FirstOrDefault().ArticleId ,FId = Model.blogs.FirstOrDefault().BlogId})
-                    @Html.ActionLink("刪除", "ArticleDelete", new { AFId = Model.articles.FirstOrDefault().ArticleId, FId = Model.blogs.FirstOrDefault().BlogId }, new { onclick = "return confirm ('確定刪除嗎?')" })
+                        <p style="float:right">
 
+                            <button type="button" class="btn btn-warning" onclick="location.href='@Url.Action( "ArticleEdit","Blog", new { AFId = Model.articles.FirstOrDefault().ArticleId ,FId = Model.blogs.FirstOrDefault().BlogId})'">修改</button>
+                            <button type="button" class="btn btn-secondary" onclick="ArticleDelete()">刪除文章</button>
+
+                            <script>
+                                function ArticleDelete() {
+                                    var result = confirm('確定刪除嗎?');
+                                    if (result) {
+                                        location.href = '@Html.Raw(Url.Action("ArticleDelete", "Blog", new { FId = Model.blogs.FirstOrDefault().BlogId,AFId = Model.articles.FirstOrDefault().ArticleId }))';
+                                    }
+                                }
+                            </script>
+                            @*@Html.ActionLink("修改", "ArticleEdit", new { AFId = Model.articles.FirstOrDefault().ArticleId ,FId = Model.blogs.FirstOrDefault().BlogId})
+                            @Html.ActionLink("刪除", "ArticleDelete", new { AFId = Model.articles.FirstOrDefault().ArticleId, FId = Model.blogs.FirstOrDefault().BlogId }, new { onclick = "return confirm ('確定刪除嗎?')" })*@
+                        </p>
+
+                    </div>
                 </div>
             </div>
         </div>
 
         <!-- Replies -->
-        <div style="min-height: 800px;">
+        <div style="margin: 0 auto; width: 940px;">
+
             @{
                 int count = 0;
                 foreach (var item in Model.replies)
                 {
                     count++;
-                    <div style="border: 2px solid red; padding: 3px; margin: 5px; border-radius: 5px; display: flex;">
+                    <div style="border: 2px solid red; padding: 3px; margin: 5px; border-radius: 5px;display: flex;">
                         <div div style="margin-right: 10px;">
                             @{
                                 var replyAuthor = item.Member;
@@ -119,29 +137,39 @@
                                 @item.Member.Name
                             </h3>
                             <p style="font-size:15px">
-                            發表時間: @Html.DisplayFor(modelitem => item.ModifiedDate)
+                                發表時間: @Html.DisplayFor(modelitem => item.ModifiedDate)
                             </p>
                             <div style="overflow: hidden; word-wrap: break-word; white-space: pre-line; display: flex;">
-                                <p style="margin:0; max-width:650px">
+                                <p style="margin:0; max-width:650px;font-size:30px">
                                     @Html.DisplayFor(modelitem => item.ReplyContents)
                                 </p>
                             </div>
                             <br />
+                            <div style="width:800px">
+                                @* @Html.ActionLink("修改", "ReplyEdit", new { AFId = Model.articles.FirstOrDefault().ArticleId ,FId = Model.blogs.FirstOrDefault().BlogId, RFId =item.ReplyId})*@
+                                <button type="button" class="btn btn-warning" onclick="location.href='@Url.Action( "ReplyEdit","Blog", new { AFId = Model.articles.FirstOrDefault().ArticleId ,FId = Model.blogs.FirstOrDefault().BlogId, RFId =item.ReplyId})'">修改</button>
+
+
+
+
+                                @* @Html.ActionLink("刪除", "ReplyDelete", new { AFId = Model.articles.FirstOrDefault().ArticleId, RFId =item.ReplyId,FId = Model.blogs.FirstOrDefault().BlogId }, new { onclick = "return confirm ('確定刪除嗎?')" })*@
+                                <button type="button" class="btn btn-secondary" onclick="ReplyDelete()">刪除回覆</button>
+                                <script>
+                                    function ReplyDelete() {
+                                        var result = confirm('確定刪除嗎?');
+                                        if (result) {
+                                            location.href = '@Url.Action("ReplyDelete", "Blog", new { AFId = Model.articles.FirstOrDefault().ArticleId, RFId =item.ReplyId,FId = Model.blogs.FirstOrDefault().BlogId })';
+                                        }
+                                    }
+                                </script>
+
+
+                            </div>
                         </div>
                     </div>
                 }
             }
         </div>
     </div>
+</div>
 
-    <script src="~/js/jquery-3.3.1.min.js"></script>
-    <script src="~/js/jquery-3.3.1.min.js"></script>
-    <script src="~/js/bootstrap.min.js"></script>
-    <script src="~/js/jquery.magnific-popup.min.js"></script>
-    <script src="~/js/circle-progress.min.js"></script>
-    <script src="~/js/jquery.barfiller.js"></script>
-    <script src="~/js/jquery.slicknav.js"></script>
-    <script src="~/js/owl.carousel.min.js"></script>
-    <script src="~/js/blogmain.js"></script>
-</body>
-</html>

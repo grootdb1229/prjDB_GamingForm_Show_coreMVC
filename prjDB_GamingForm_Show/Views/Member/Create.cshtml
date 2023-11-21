@@ -10,7 +10,7 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Create">
+        <form asp-action="Create" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Name" class="control-label"></label>
@@ -42,30 +42,33 @@
                 <input asp-for="ImageId" class="form-control" />
                 <span asp-validation-for="ImageId" class="text-danger"></span> *@
             </div>
-            <div class="form-group">
+            @*<div class="form-group">
                 <label asp-for="Mycomment" class="control-label"></label>
                 <input asp-for="Mycomment" class="form-control" />
                 <span asp-validation-for="Mycomment" class="text-danger"></span>
-            </div>
-            <div class="form-group">
+            </div>*@
+           @* <div class="form-group">
                 <label asp-for="BonusPoint" class="control-label"></label>
                 <input asp-for="BonusPoint" class="form-control" />
                 <span asp-validation-for="BonusPoint" class="text-danger"></span>
-            </div>
+            </div>*@
             <div class="form-group">
                 <label asp-for="Gender" class="control-label"></label>
                 <input asp-for="Gender" class="form-control" />
                 <span asp-validation-for="Gender" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="file" name="photo" />
+            </div>
+            <div class="form-group">
+                <input type="submit" value="註冊" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-controller="Home" asp-action="HomePage">放棄並回到首頁</a>
 </div>
 
 @section Scripts {

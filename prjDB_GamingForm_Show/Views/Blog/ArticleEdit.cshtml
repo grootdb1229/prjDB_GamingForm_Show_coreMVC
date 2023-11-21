@@ -3,13 +3,22 @@
 @{
     ViewData["Title"] = "ArticleEdit";
 }
+@section Styles{
+    <style>
+        input{
+            margin:3px 0px;
 
-<h2>ArticleEdit</h2>
+        }
+        label{
+            margin:3px 0px;
+        }
+    </style>
+}
+<h2 style="text-align:center;margin:10px auto;color:whitesmoke">修改文章</h2>
 
-<h4>Article</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
+
+<div class="row" style="margin:10px auto;width:650px;background-color:#4F4F4F">
+    <div class="col-md-12" style="background-color:#4F4F4F;border-radius:8px;box-shadow:0px 0px 8px 8px #cccccc">
         <form asp-action="ArticleEdit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
         
@@ -18,7 +27,7 @@
             <input type="hidden" name="FId" value="@Model.blogs.FirstOrDefault().BlogId" />
             @{
 
-                <select name="SubBlogID" class="form-select">
+                <select name="SubBlogID" class="form-select" style="margin-top:8px">
                     @foreach (var i in Model.subBlogs)
                     {
                         <option value="@i.SubBlogId">@i.Title</option>
@@ -37,7 +46,7 @@
             </div>
             <input type="hidden" name="ModifiedDate" value="@DateTime.Now" />
             <input type="hidden" name="MemberId" value="15" />
-         
+        
             <div class="form-group">
                 <input type="submit" value="修改" class="btn btn-default" />
             </div>
@@ -46,7 +55,7 @@
 </div>
 
 <div>
-    @Html.ActionLink("回列表","ArticleList","Blog",new{FId= Model.blogs.First().BlogId},null)
+    @Html.ActionLink("回列表","ArticleContent","Blog",new{AFId= Model.articles.FirstOrDefault().ArticleId,FId=Model.blogs.FirstOrDefault().BlogId},null)
 </div>
 
 @section Scripts {

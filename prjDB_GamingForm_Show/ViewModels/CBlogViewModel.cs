@@ -9,11 +9,9 @@ namespace prjDB_GamingForm_Show.ViewModels
         public IEnumerable<SubBlog>? subBlogs { get; set; }
         public IEnumerable<SubTag>? subTags { get; set; }
         public IEnumerable<Tag>? tags { get; set; }
-
         public IEnumerable<Models.Entities.Action>? actions { get; set; }
         public IEnumerable<ArticleAction>? articleActions { get; set; }
         public IEnumerable<Reply>? replies { get; set; }
-
         public IEnumerable<Member>? members { get; set; }
 
         public IEnumerable<Image>? Images { get; set; }
