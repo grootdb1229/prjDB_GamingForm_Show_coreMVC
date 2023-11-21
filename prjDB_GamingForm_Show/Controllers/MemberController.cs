@@ -26,6 +26,11 @@ namespace prjDB_GamingForm_Show.Controllers
         {
             //if (id == null)
             //    return RedirectToAction("Create");
+            id = HttpContext.Session.GetInt32("user_id");
+            if (id == null) 
+            {
+                return RedirectToAction("Login", "Home");
+            }
             IEnumerable<Member> datas = null;
             datas = from m in _db.Members
                     where m.MemberId == id
@@ -67,10 +72,10 @@ namespace prjDB_GamingForm_Show.Controllers
 
         public IActionResult Edit(int? id)
         {
-            
+            id = HttpContext.Session.GetInt32("user_id");
             Member member = _db.Members.FirstOrDefault(p => p.MemberId == id);
             if (member == null)
-                return RedirectToAction("HomePage", "Home");
+                return RedirectToAction("MemberPage", "Member");
             else
                 return View(member);
         }
@@ -91,7 +96,7 @@ namespace prjDB_GamingForm_Show.Controllers
                 dbmember.Password = member.Password;
                 _db.SaveChanges();
             }
-            return RedirectToAction("HomePage", "Home");
+            return RedirectToAction("MemberPage", "Member");
         }
 
 

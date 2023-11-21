@@ -13,8 +13,8 @@
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <p>
-        <input type="hidden" name="MemberId" value=@ViewBag.user_id />
-               @* @Model.MemberId*@
+                <input type="hidden" name="MemberId" value=@Model.MemberId />
+               
                 @*"@Model.MemberId"*@
             </p>
             <div class="form-group">
