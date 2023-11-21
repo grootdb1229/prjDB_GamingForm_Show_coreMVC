@@ -11,10 +11,13 @@ namespace prjDB_GamingForm_Show.Controllers
     {
         private readonly IWebHostEnvironment _host;
         private readonly DbGamingFormTestContext _db;
+
         public BlogController(IWebHostEnvironment host, DbGamingFormTestContext db)
         {
             _host = host;
             _db = db;
+           
+            
         }
         
         public IActionResult Index()
@@ -25,8 +28,8 @@ namespace prjDB_GamingForm_Show.Controllers
         public ActionResult List(CKeyWordViewModel kw, int? FId)
         {
             CBlogViewModel vm = new CBlogViewModel();
-            int? userID = HttpContext.Session.GetInt32("user_id");
-            ViewBag.KK = userID;
+            
+            ViewBag.KK = HttpContext.Session.GetInt32("user_id");
             if (!string.IsNullOrEmpty(kw.txtKeyWord))
             {
                 vm = new CBlogViewModel
@@ -157,6 +160,8 @@ namespace prjDB_GamingForm_Show.Controllers
 
         public IActionResult ArticleCreate(int? FId)
         {
+            ViewBag.KK = HttpContext.Session.GetInt32("user_id");
+
             CBlogViewModel vm = null;
             if (FId == null)
                 return RedirectToAction("ArticleList");
