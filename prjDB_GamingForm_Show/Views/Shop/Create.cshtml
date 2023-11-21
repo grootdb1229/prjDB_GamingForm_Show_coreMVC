@@ -135,7 +135,6 @@
     <script>
         const SelTag = document.querySelector('#Tags');
         const SubDiv = document.querySelector('#dynamicDiv');
-        //const SelSub = document.querySelector('input[name="subtag"]');
         const SelDiv = document.querySelector('#SelTagDiv');
         const SelSubButton = document.querySelector('#DoNotSubmit');
         
@@ -174,41 +173,47 @@
             const data = await response.json(); 
             const subtagOptions = data.map(x =>
                 `<label>
-                   <p type="checkbox" id="SelSubtag" name="SelSubTags" value="${x.subTagId}">${x.name}</p>      
-                    </label>`);
+                          <p type="checkbox" class="SelSubtag"  name="SelSubTags" value="${x.subTagId}">${x.name}</p>
+                            </label>    `);
             SelDiv.innerHTML += subtagOptions.join("");
         }
-        //////這個我真的不會寫。
-        // function putinList() {
-        //     var values = [];
-        //     var goestolist = document.querySelectorAll('#SelTagDiv p');
 
-        //     goestolist.forEach(function (p) {
-        //         var match = p.innerHTML.match(/value="(\d+)"/);  //印出P  改成CLASS 不然ID是唯一值 
-        //         if (match && match.length > 1) {
-        //             var intValue = parseInt(match[1]);
-        //             if (!isNaN(intValue)) {
-        //                 values.push(intValue);
-        //             }
-        //         } console.log(values);
-        //     });
+         function putinList() {
+            var values = [];
+            var goestolist = document.querySelectorAll('.SelSubtag p');
+            goestolist.forEach(x => {
+                const checkboxvalue = x.value;
+            console.log(checkboxvalue)}); 
+         }
+                 
+                 
+                 
+                 //function (p) {
+             //    var match = p.innerHTML.match(/value="(\d+)"/);  
+             //    if (match && match.length > 1) {
+             //        var intValue = parseInt(match[1]);
+             //        if (!isNaN(intValue)) {
+             //            values.push(intValue);
+             //        }
+             //    } console.log(values);
+             //});
 
-        //     // 使用 AJAX 发送数据到后端
-        //     var xhr = new XMLHttpRequest();
-        //     xhr.open('POST', '/YourController/YourAction', true);
-        //     xhr.setRequestHeader('Content-Type', 'application/json');
+             //// 使用 AJAX 发送数据到后端
+             //var xhr = new XMLHttpRequest();
+             //xhr.open('POST', '/YourController/YourAction', true);
+             //xhr.setRequestHeader('Content-Type', 'application/json');
 
-        //     // 将 values 数组转换为 JSON 字符串
-        //     var jsonValues = JSON.stringify({ values: values });
+             //// 将 values 数组转换为 JSON 字符串
+             //var jsonValues = JSON.stringify({ values: values });
 
-        //     xhr.onreadystatechange = function () {
-        //         if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
-        //             console.log('Data sent successfully.');
-        //         }
-        //     };
+             //xhr.onreadystatechange = function () {
+             //    if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+             //        console.log('Data sent successfully.');
+             //    }
+             //};
 
-        //     xhr.send(jsonValues);
-        // }
+             //xhr.send(jsonValues);
+         //}
 
                     
     </script>
