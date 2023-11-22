@@ -33,8 +33,12 @@ namespace DB_GamingForm_Show.Job.DeputeClass
         public string status { get; set; }
         [DisplayName("懸賞區域")]
         public string region { get; set; }
-
+        [DisplayName("懸賞技能")]
         public string Skillname { get; set; }
+        [DisplayName("懸賞金主")]
+        public string MemeberContent { get; set; }
+
+        public string imgfilepath { get; set; }
         public int Count { get; set; }
         
 

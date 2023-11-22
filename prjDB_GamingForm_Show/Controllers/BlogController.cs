@@ -117,13 +117,9 @@ namespace prjDB_GamingForm_Show.Controllers
         {
             if (HttpContext.Session.GetInt32("user_id") == null)
             {
-
             }
             else
-            {
-
                 ViewBag.KK = HttpContext.Session.GetInt32("user_id");
-            }
             CBlogViewModel vm = new CBlogViewModel();
             vm = new CBlogViewModel
             {

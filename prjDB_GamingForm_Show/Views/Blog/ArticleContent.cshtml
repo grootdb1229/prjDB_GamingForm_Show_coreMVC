@@ -90,7 +90,7 @@
                             @like
                         }
                         <p style="float:right">
-                            @if ( Model.articles.First().MemberId== ViewBag.KK)
+                            @if (Model.articles.First().MemberId == ViewBag.KK)
                             {
                                 
                             <button type="button" class="btn btn-warning" onclick="location.href='@Url.Action( "ArticleEdit","Blog", new { AFId = Model.articles.FirstOrDefault().ArticleId ,FId = Model.blogs.FirstOrDefault().BlogId})'">修改</button>
@@ -152,8 +152,8 @@
                                 <p style="float:right">
                                     @if (Model.replies.First().MemberId == ViewBag.KK)
                                     {
-                                        
-                                    @* @Html.ActionLink("修改", "ReplyEdit", new { AFId = Model.articles.FirstOrDefault().ArticleId ,FId = Model.blogs.FirstOrDefault().BlogId, RFId =item.ReplyId})*@
+
+                                @* @Html.ActionLink("修改", "ReplyEdit", new { AFId = Model.articles.FirstOrDefault().ArticleId ,FId = Model.blogs.FirstOrDefault().BlogId, RFId =item.ReplyId})*@
                                 <button type="button" class="btn btn-warning" onclick="location.href='@Url.Action( "ReplyEdit","Blog", new { AFId = Model.articles.FirstOrDefault().ArticleId ,FId = Model.blogs.FirstOrDefault().BlogId, RFId =item.ReplyId})'">修改</button>
 
                                 @* @Html.ActionLink("刪除", "ReplyDelete", new { AFId = Model.articles.FirstOrDefault().ArticleId, RFId =item.ReplyId,FId = Model.blogs.FirstOrDefault().BlogId }, new { onclick = "return confirm ('確定刪除嗎?')" })*@
