@@ -8,7 +8,7 @@ https://templatemo.com/tm-555-upright
 	Color Codes
 	=============
 	Primary blue: #a81d1d
-	Gray text: #999999
+	Gray text: #D0D0D0
 	Light gray nav button bg: #F2F2F2
 
 	Credit
@@ -19,7 +19,7 @@ https://templatemo.com/tm-555-upright
 
 html, body { overflow-x: hidden; }
 body { font-family: 'Kumbh Sans', sans-serif; }
-div, a, p { color: #999999; }
+div, a, p { color: #D0D0D0; }
 p, address { line-height: 1.8; }
 a {	transition: all 0.3s ease; }
 a:hover {
@@ -257,7 +257,7 @@ hr { border-top: 4px solid #CCC; }
 	color: #a81d1d;	
 }
 
-.tm-gallery-link.active { color: #999999; }
+.tm-gallery-link.active { color: #D0D0D0; }
 .tm-gallery-link-icon { width: 25px; }
 
 .tm-paging {
