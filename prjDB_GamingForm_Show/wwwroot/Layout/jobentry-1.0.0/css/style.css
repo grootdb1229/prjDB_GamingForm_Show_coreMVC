@@ -1,6 +1,6 @@
 /********** Template CSS **********/
 :root {
-    --primary: #a81d1d;
+    --primary: #00B074;
     --secondary: #2B9BFF;
     --light: #EFFDF5;
     --dark: #2B3940;
@@ -158,21 +158,21 @@
 .page-header .container {
     position: relative;
     padding: 45px 0 45px 35px;
-    border-left: 15px solid #a81d1d;
+    border-left: 15px solid var(--primary);
 }
 
-    .header-carousel .container::before,
-    .header-carousel .container::after,
-    .page-header .container::before,
-    .page-header .container::after {
-        position: absolute;
-        content: "";
-        top: 0;
-        left: 0;
-        width: 100px;
-        height: 15px;
-        background: #a81d1d;
-    }
+.header-carousel .container::before,
+.header-carousel .container::after,
+.page-header .container::before,
+.page-header .container::after {
+    position: absolute;
+    content: "";
+    top: 0;
+    left: 0;
+    width: 100px;
+    height: 15px;
+    background: var(--primary);
+}
 
 .header-carousel .container::after,
 .page-header .container::after {
@@ -236,7 +236,7 @@
     }
 
 .page-header {
-    background: linear-gradient(rgba(43, 57, 64, .5), rgba(43, 57, 64, .5)), url(../../../images/04.jfif) center center no-repeat;
+    background: linear-gradient(rgba(43, 57, 64, .5), rgba(43, 57, 64, .5)), url(../img/carousel-1.jpg) center center no-repeat;
     background-size: cover;
 }
 

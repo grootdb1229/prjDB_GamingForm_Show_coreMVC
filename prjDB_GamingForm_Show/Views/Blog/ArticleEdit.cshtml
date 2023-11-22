@@ -41,11 +41,11 @@
             </div>
             <div class="form-group">
                 <label asp-for="articles.FirstOrDefault().ArticleContent" class="control-label"></label>
-                <textarea asp-for="articles.FirstOrDefault().ArticleContent" class="form-control"></textarea>
+                <textarea name="ReplyContents" class="form-control" style="height:400px"></textarea>
                 <span asp-validation-for="articles.FirstOrDefault().ArticleContent" class="text-danger"></span>
             </div>
             <input type="hidden" name="ModifiedDate" value="@DateTime.Now" />
-            <input type="hidden" name="MemberId" value="@ViewBag.KK" />
+            <input type="hidden" name="MemberId" value="15" />
         
             <div class="form-group">
                 <input type="submit" value="修改" class="btn btn-default" />
