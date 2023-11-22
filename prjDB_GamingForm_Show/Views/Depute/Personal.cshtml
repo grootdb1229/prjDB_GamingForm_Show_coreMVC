@@ -4,10 +4,11 @@
     Layout = "~/Views/Shared/_Layout_DB.cshtml";
 }
 
-<h2>Personal</h2>
+
 
 @section scripts{
     <script>
+        
         function loadReleaseList() {
             $('#divReleasePart').load('@Url.Content("~/depute/PartialReleaseList")');
         }
@@ -22,5 +23,6 @@
             $('#divGalleryPart').load('@Url.Content("~/depute/PartialGallery")');
         }
         loadGallery()
+        
     </script>
 }

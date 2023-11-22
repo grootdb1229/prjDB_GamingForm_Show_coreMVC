@@ -313,7 +313,7 @@ namespace prjDB_GamingForm_Show.Controllers
         
         public IActionResult Personal()
         {
-            ViewBag.memberid=_memberIdtest;
+            ViewBag.memberid = _memberIdtest;
             return View();
         }
         public IActionResult PartialReleaseList()
