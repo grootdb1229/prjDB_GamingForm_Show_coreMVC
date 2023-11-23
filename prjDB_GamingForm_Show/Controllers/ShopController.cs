@@ -93,6 +93,11 @@ namespace prjDB_GamingForm_Show.Controllers
             [HttpPost]
             public ActionResult Create(CProductWarp product) //原Product物件
             {
+                if (!ModelState.IsValid) 
+                {
+                return View(product);
+                }
+               
                 Product x = new Product();
                 if (_db != null)
                 {
@@ -103,7 +108,7 @@ namespace prjDB_GamingForm_Show.Controllers
                         product.photo.CopyTo(new FileStream(_host.WebRootPath + "/images/shop/" + photoName, FileMode.Create));
                     }
                     x.ProductName = product.ProductName;
-                    x.Price = product.Price;
+                    x.Price = (decimal)product.Price;
                     x.AvailableDate = product.AvailableDate;
                     x.ProductContent = product.ProductContent;
                     x.UnitStock = product.UnitStock;
@@ -132,6 +137,10 @@ namespace prjDB_GamingForm_Show.Controllers
             [HttpPost]
             public ActionResult Edit(CProductWarp product) //原Product物件   
             {
+                if (!ModelState.IsValid)
+                {
+                    return View(product);
+                }
                 Product x = _db.Products.FirstOrDefault(p => p.ProductId == product.ProductID);
                 if (x != null)
                 {
@@ -142,7 +151,7 @@ namespace prjDB_GamingForm_Show.Controllers
                         product.photo.CopyTo(new FileStream(_host.WebRootPath + "/images/shop/" + photoName, FileMode.Create));
                     }
                     x.ProductName = product.ProductName;
-                    x.Price = product.Price;
+                    x.Price = (decimal)product.Price;
                     x.AvailableDate = product.AvailableDate;
                     x.ProductContent = product.ProductContent;
                     x.UnitStock = product.UnitStock;
@@ -286,7 +295,7 @@ namespace prjDB_GamingForm_Show.Controllers
                 json = JsonSerializer.Serialize(car);
                 HttpContext.Session.SetString(CDictionary.SK_PURCHASED_PRODUCES_LIST, json);
                 ViewBag.Car = 0;
-                Thread.Sleep(3000);
+                Thread.Sleep(1000);
                 return RedirectToAction("Index");
             }
 

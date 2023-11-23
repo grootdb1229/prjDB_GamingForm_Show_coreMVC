@@ -40,7 +40,8 @@ namespace prjDB_GamingForm_Show.Controllers
                            n.DeputeContent,
                            n.Salary,
                            Status = n.Status.Name,
-                           n.Region.City
+                           n.Region.City,
+                           n.Provider.FImagePath
                        };
             CDeputeViewModel x = null;
 
@@ -57,8 +58,9 @@ namespace prjDB_GamingForm_Show.Controllers
                     DeputeContent = item.DeputeContent,
                     salary = item.Salary,
                     status = item.Status,
-                    region = item.City
-                };
+                    region = item.City,
+                    imgfilepath = item.FImagePath
+            };
 
                 List.Add(x);
 
@@ -71,6 +73,42 @@ namespace prjDB_GamingForm_Show.Controllers
             return View();
 
         }
+        public IActionResult DeputeDetails(int? id)
+        {
+            CDeputeViewModel pln = null;
+            Depute pDb = _db.Deputes.FirstOrDefault(n => n.DeputeId == id);
+
+            if (pDb != null)
+            {
+                pln = new CDeputeViewModel();
+                pln.providername = pDb.Provider.Name;
+                pln.title = pDb.Title;
+                pln.startdate = pDb.StartDate.ToString("yyyy/mm/dd HH:mm:ss");
+                pln.modifieddate = pDb.Modifiedate.ToString("yyyy/mm/dd HH:mm:ss");
+                pln.DeputeContent = pDb.DeputeContent;
+                pln.salary = pDb.Salary;
+                pln.status = pDb.Status.Name;
+                pln.region = pDb.Region.City;
+                pln.MemeberContent = pDb.Provider.Mycomment;
+                pln.imgfilepath = pDb.Provider.FImagePath;
+
+            }
+
+            return View(pln);
+
+
+        }
+        public IActionResult Test(int? id)
+        {
+            CDeputeViewModel x = List.FirstOrDefault(n => n.id == id);
+            if (x == null)
+                return RedirectToAction("DeputeList");
+            return View(x);
+
+        }
+
+
+
         public IActionResult Search(CKeyWord vm)
         {
             IEnumerable<CDeputeViewModel> datas = null;
@@ -179,11 +217,8 @@ namespace prjDB_GamingForm_Show.Controllers
         
 
         public int _memberIdtest = 38;
-        public IActionResult test()
-        {
-            return View();
-        }
-        public IActionResult Apply(int id=7)
+        
+        public IActionResult Apply(int id)
         {
             ViewBag.memberid = _memberIdtest;
             Depute o=_db.Deputes.FirstOrDefault(_ => _.DeputeId == id);
@@ -235,6 +270,11 @@ namespace prjDB_GamingForm_Show.Controllers
             //var datas = _db.SkillClasses.Select(_ => _);
             return Json(datas);
         }
+        public IActionResult Regions()
+        {
+            var datas=_db.Regions.Select(_ => _);
+            return Json(datas);
+        }
         public IActionResult Skillss(string skillClass)
         {
             int skillclassid = Convert.ToInt32(_db.SkillClasses.Where(_ => _.Name == skillClass).FirstOrDefault().SkillClassId);
@@ -263,14 +303,17 @@ namespace prjDB_GamingForm_Show.Controllers
             _db.SaveChanges();
             return RedirectToAction("Personal");
         }
-        public IActionResult deleteDepute()
+        public IActionResult deleteDepute(int id)
         {
+            Depute o=_db.Deputes.Where(_=>_.DeputeId==id).Select(_=>_).FirstOrDefault();
+            _db.Deputes.Remove(o);
+            _db.SaveChanges();
             return RedirectToAction("Personal");
         }
         
         public IActionResult Personal()
         {
-            ViewBag.memberid=_memberIdtest;
+            ViewBag.memberid = _memberIdtest;
             return View();
         }
         public IActionResult PartialReleaseList()

@@ -6,7 +6,7 @@
 }
 
 
-@using (Html.BeginForm("Create", "Shop", FormMethod.Post, new { enctype = "multipart/form-data",id="productform" }))
+@using (Html.BeginForm("Create", "Shop", FormMethod.Post, new { enctype = "multipart/form-data", id = "productform" }))
 {
     @Html.AntiForgeryToken()
 
@@ -23,7 +23,8 @@
                 <img id="imagePreview" style="max-width: 300px; max-height: 300px; margin-top: 10px;" />
             </div>
         </div>
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @* @Html.ValidationSummary(true, "", new { @class = "text-danger" }) *@
+
         <div class="form-group">
             @Html.LabelFor(model => model.ProductName, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
@@ -31,14 +32,17 @@
                 @Html.ValidationMessageFor(model => model.ProductName, "", new { @class = "text-danger" })
             </div>
         </div>
+    @*     @Html.ValidationSummary(true, "", new { @class = "text-danger" }) *@
+
 
         <div class="form-group">
             @Html.LabelFor(model => model.Price, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.Price, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.EditorFor(model => model.Price, new { htmlAttributes = new { @class = "form-control", id="Price" } })
                 @Html.ValidationMessageFor(model => model.Price, "", new { @class = "text-danger" })
             </div>
         </div>
+        @* @Html.ValidationSummary(true, "", new { @class = "text-danger" }) *@
 
         <div class="form-group">
 
@@ -58,33 +62,38 @@
         <div class="form-group">
             @Html.LabelFor(model => model.ProductContent, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @*@Html.EditorFor(model => model.ProductContent, new { htmlAttributes = new { @class = "form-control" } })*@
-                <textarea style="width: 50vw; height: 45vh; resize: none;" name="ProductContent" cols="120"></textarea>
-                @Html.ValidationMessageFor(model => model.ProductContent, "", new { @class = "text-danger" })
-            </div>
+                @Html.EditorFor(model => model.ProductContent, new { htmlAttributes = new { @class = "form-control", style = "width:50vw; height:45vh; resize: none;", id = "ProductContentCss" } })
+                @* <textarea style="width: 50vw; height: 45vh; resize: none;" name="ProductContent" cols="120"></textarea> *@
+
+            </div>  @Html.ValidationMessageFor(model => model.ProductContent, "", new { @class = "text-danger" })
         </div>
 
         <div class="form-group">
             @Html.LabelFor(model => model.UnitStock, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.UnitStock, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.EditorFor(model => model.UnitStock, new { htmlAttributes = new { @class = "form-control" ,id="Unitstock"} })
                 @Html.ValidationMessageFor(model => model.UnitStock, "", new { @class = "text-danger" })
             </div>
         </div>
-
         <hr />
 
-		<div class="form-group">
-			<div class="col-md-offset-2 col-md-10">
-				<input type="submit" value="送出並新增" class="btn btn-outline-dark mt-auto" id="btnsubmit"/>	
-			</div>
-		</div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="送出並新增" class="btn btn-outline-dark mt-auto" id="btnsubmit" />
+            </div>
+        </div>
 
     </div>
     @section Scripts
     {
     <!--子標籤視窗大小-->
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script>
+        // var PC = document.getElementById('ProductContent');
+        // PC.style.width = 50vw; PC.style.height = 45vh;
+        document.getElementById('Price').value = 0;
+        document.getElementById('Unitstock').value = 0;
+    </script>
     <script>
         $(document).ready(function () {
             // 監聽textarea內容變化
@@ -106,112 +115,116 @@
                 preview.src = reader.result;
             }
 
-			if (file) {
-				reader.readAsDataURL(file);
-			} else {
-				preview.src = "";
-			}
-		}
-		const btn = document.querySelector('#btnsubmit');
-			 
-		btn.addEventListener('click', event => {
-			event.preventDefault();
-			const formData = new FormData(document.querySelector('#productform'));
-			fetch('@Url.Content("~/Shop/Create")', {
-						method: 'POST',
-						body: formData
-					})
-				.then(Swal.fire({
-					title: "新增成功!",
-					//text: "訂單已送至電子信箱!",
-					icon: "success",
-					showConfirmButton=false
-				}))
-		})
-
-	</script>
-
-    <!--放Tag-->
-    <script>
-        const SelTag = document.querySelector('#Tags');
-        const SubDiv = document.querySelector('#dynamicDiv');
-        //const SelSub = document.querySelector('input[name="subtag"]');
-        const SelDiv = document.querySelector('#SelTagDiv');
-        const SelSubButton = document.querySelector('#DoNotSubmit');
-        
-        
-        //監聽事件--選擇大標籤
-        SelTag.addEventListener('change', () => {
-            Subtag();
-        })
-        SubDiv.addEventListener('change', () => { 
-            SelDiv.style.display = 'block';
-            SelSubTag();
-            putinList();
-        })
-        async function BigTag() 
-        {
-            const response = await fetch(`@Url.Content("~/Shop/CreateTag")`);
-            const data = await response.json();
-            const tags = data.map(x => `<option value="${x.tagId}">${x.name}</option>`);
-            SelTag.innerHTML = tags.join("");
-            Subtag();
+            if (file) {
+                reader.readAsDataURL(file);
+            } else {
+                preview.src = "";
+            }
         }
-        BigTag();
+        const btn = document.querySelector('#btnsubmit');
+
+        btn.addEventListener('click', event => {
+            event.preventDefault();
+            const formData = new FormData(document.querySelector('#productform'));
+            fetch('@Url.Content("~/Shop/Create")', {
+                    method: 'POST',
+                    body: formData
+                })
+                    .then(Swal.fire({
+                        title: "新增成功!",
+                        //text: "訂單已送至電子信箱!",
+                        icon: "success",
+                        showConfirmButton=false
+                    }))
+            })
+
+        </script>
+
+        <!--放Tag-->
+        <script>
+            const SelTag = document.querySelector('#Tags');
+            const SubDiv = document.querySelector('#dynamicDiv');
+            const SelDiv = document.querySelector('#SelTagDiv');
+            const SelSubButton = document.querySelector('#DoNotSubmit');
 
 
-        async function Subtag() 
-        {
-            const response = await fetch(`@Url.Content("~/Shop/SubTag")?id=${SelTag.value}`);
-            const data = await response.json();
-            const tags = data.map(x => `<option value="${x.subTagId}">${x.name} </option>`);
-            SubDiv.innerHTML = tags.join("");
-        }
+            //監聽事件--選擇大標籤
+            SelTag.addEventListener('change', () => {
+                Subtag();
+            })
+            SubDiv.addEventListener('change', () => {
+                SelDiv.style.display = 'block';
+                SelSubTag();
+                putinList();
+            })
+            async function BigTag() {
+                const response = await fetch(`@Url.Content("~/Shop/CreateTag")`);
+                const data = await response.json();
+                const tags = data.map(x => `<option value="${x.tagId}">${x.name}</option>`);
+                SelTag.innerHTML = tags.join("");
+                Subtag();
+            }
+            BigTag();
 
-        async function SelSubTag()///這是被選中在div加入的程式碼
-        {
-            const response = await fetch(`@Url.Content("~/Shop/SelSubTag")?id=${SubDiv.value}`);
-            const data = await response.json(); 
-            const subtagOptions = data.map(x =>
-                `<label>
-                   <p type="checkbox" id="SelSubtag" name="SelSubTags" value="${x.subTagId}">${x.name}</p>      
-                    </label>`);
-            SelDiv.innerHTML += subtagOptions.join("");
-        }
-        //////這個我真的不會寫。
-        // function putinList() {
-        //     var values = [];
-        //     var goestolist = document.querySelectorAll('#SelTagDiv p');
 
-        //     goestolist.forEach(function (p) {
-        //         var match = p.innerHTML.match(/value="(\d+)"/);  //印出P  改成CLASS 不然ID是唯一值 
-        //         if (match && match.length > 1) {
-        //             var intValue = parseInt(match[1]);
-        //             if (!isNaN(intValue)) {
-        //                 values.push(intValue);
-        //             }
-        //         } console.log(values);
-        //     });
+            async function Subtag() {
+                const response = await fetch(`@Url.Content("~/Shop/SubTag")?id=${SelTag.value}`);
+                const data = await response.json();
+                const tags = data.map(x => `<option value="${x.subTagId}">${x.name} </option>`);
+                SubDiv.innerHTML = tags.join("");
+            }
 
-        //     // 使用 AJAX 发送数据到后端
-        //     var xhr = new XMLHttpRequest();
-        //     xhr.open('POST', '/YourController/YourAction', true);
-        //     xhr.setRequestHeader('Content-Type', 'application/json');
+            async function SelSubTag()///這是被選中在div加入的程式碼
+            {
+                const response = await fetch(`@Url.Content("~/Shop/SelSubTag")?id=${SubDiv.value}`);
+                const data = await response.json();
+                const subtagOptions = data.map(x =>
+                    `<label>
+                                      <p type="checkbox" class="SelSubtag"  name="SelSubTags" value="${x.subTagId}">${x.name}</p>
+                                        </label>    `);
+                SelDiv.innerHTML += subtagOptions.join("");
+            }
 
-        //     // 将 values 数组转换为 JSON 字符串
-        //     var jsonValues = JSON.stringify({ values: values });
+            function putinList() {
+                var values = [];
+                var goestolist = document.querySelectorAll('.SelSubtag p');
+                goestolist.forEach(x => {
+                    const checkboxvalue = x;
+                    console.log(checkboxvalue)
+                });
+            }
 
-        //     xhr.onreadystatechange = function () {
-        //         if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
-        //             console.log('Data sent successfully.');
-        //         }
-        //     };
 
-        //     xhr.send(jsonValues);
-        // }
 
-                    
-    </script>
+            //function (p) {
+            //    var match = p.innerHTML.match(/value="(\d+)"/);
+            //    if (match && match.length > 1) {
+            //        var intValue = parseInt(match[1]);
+            //        if (!isNaN(intValue)) {
+            //            values.push(intValue);
+            //        }
+            //    } console.log(values);
+            //});
+
+            //// 使用 AJAX 发送数据到后端
+            //var xhr = new XMLHttpRequest();
+            //xhr.open('POST', '/YourController/YourAction', true);
+            //xhr.setRequestHeader('Content-Type', 'application/json');
+
+            //// 将 values 数组转换为 JSON 字符串
+            //var jsonValues = JSON.stringify({ values: values });
+
+            //xhr.onreadystatechange = function () {
+            //    if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+            //        console.log('Data sent successfully.');
+            //    }
+            //};
+
+            //xhr.send(jsonValues);
+            //}
+
+
+        </script>
 
     }
 
