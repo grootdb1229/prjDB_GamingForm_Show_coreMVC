@@ -11,7 +11,7 @@
 <hr />
 <div class="row">
     <div class="col-md-10">
-        <form asp-action="Create">
+        <form asp-action="Create" >
             <div class="p-3 mb-3 bg-opacity-10 border border-danger border-start-0 rounded-end">
                 <div class="form-check form-switch form-check " style="padding-left:0">
                     <label class="form-check-label" style="color:white" for="flexSwitchCheckReverse">開立專屬委託</label>
@@ -50,11 +50,10 @@
                 <label asp-for="Salary" class="control-label" for="Salary"></label>
                 <span asp-validation-for="Salary" class="text-danger"></span>
             </div>
-            
             <div>
             </div>
-            <div class="form-floating mb-3">
-                <input asp-for="StatusId" class="form-control" id="StatusId" placeholder="" />
+            <div class="form-floating mb-3" hidden>
+                <input asp-for="StatusId" class="form-control" id="StatusId" placeholder="statusid"/>
                 <label asp-for="StatusId" class="control-label" for="Salary"></label>
                 <span asp-validation-for="StatusId" class="text-danger"></span>
             </div>
@@ -65,7 +64,7 @@
                     <option value="2">Two</option>
                     <option value="3">Three</option>
                 </select>
-                <label asp-for="RegionId" class="control-label" id="RegionId" placeholder=""></label>
+                <label asp-for="RegionId" class="control-label" id="RegionId" placeholder="">18</label>
                 @* <input asp-for="RegionId" class="form-control" />
                 <span asp-validation-for="RegionId" class="text-danger"></span> *@
             </div>
@@ -98,7 +97,7 @@
 </div>
 
 <div>
-    <a asp-action="Index" class="btn btn-secondary">取消</a>
+    <a asp-action="personal" class="btn btn-secondary">取消</a>
 </div>
 
 @section Scripts {
@@ -113,11 +112,13 @@
         var chooseClass;
 
         document.addEventListener('DOMContentLoaded', () => {
-            const privateCbx = document.getElementById('flexSwitchCheckReverse');
-            const privateTxt = document.getElementById('privatetxt');
+            const privateCbx = document.getElementById('flexSwitchCheckReverse'),
+                privateTxt = document.getElementById('privatetxt'),
+                statusTxt = document.getElementById('StatusId');
 
             privateCbx.addEventListener('change', () => {
                 privateTxt.hidden = !privateCbx.checked;
+                privateCbx.checked ? statusTxt.innerHTML = 9 : statusTxt.innerHTML=18
             })
 
         })

@@ -4,7 +4,7 @@
     For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 *@
 
-<table class="table table-striped table-bordered">
+<table class="table table-dark table-striped table-bordered">
 
     <tr>
         <th hidden></th>
@@ -21,7 +21,7 @@
             報酬
         </th>
         <th class="col-1">
-            更新日期
+            更新時間
         </th>
         <th class="col-2"></th>
     </tr>
@@ -44,7 +44,7 @@
                     @i.ApplyStatus.Name
                 </td>
                 <td class="col-1">
-                    @i.Depute.Salary.ToString("$###,###,###.00")
+                    @i.Depute.Salary.ToString("$###,###,##0.##")
                 </td>
                 <td class="col-1">
                     @i.Depute.Modifiedate

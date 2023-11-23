@@ -274,6 +274,11 @@ namespace prjDB_GamingForm_Show.Controllers
             var datas=_db.Regions.Select(_ => _);
             return Json(datas);
         }
+        public IActionResult Status()
+        {
+            var datas = _db.Statuses.Select(_ => _);
+            return Json(datas);
+        }
         public IActionResult Skillss(string skillClass)
         {
             int skillclassid = Convert.ToInt32(_db.SkillClasses.Where(_ => _.Name == skillClass).FirstOrDefault().SkillClassId);
