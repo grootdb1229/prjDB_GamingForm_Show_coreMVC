@@ -82,7 +82,7 @@ namespace prjDB_GamingForm_Show.Models.Shop
   
         [DisplayName("上架會員ID")] //在系統完成前先使用 id34號作業
         public int? MemberID {
-            get { return _product.MemberId; }
+            get { return _product.MemberId=34; }
             set { _product.MemberId = 34; }
         }
     
@@ -96,12 +96,13 @@ namespace prjDB_GamingForm_Show.Models.Shop
             set { _product.FImagePath = value; }
         }
 
-
-      //public virtual Status Status
-      //  {
-      //      get { return _product.Status; }
-      //      set { _product.Status = null!; }
-      //  }
+        [BindNever]
+        public virtual Status? Status
+        
+            //get { return _product.Status; }
+            //set { _product.Status = null!; }
+          { get; set; } = null;
+    
 
 
 
