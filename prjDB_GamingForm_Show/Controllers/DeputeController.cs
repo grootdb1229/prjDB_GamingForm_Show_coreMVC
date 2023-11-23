@@ -3,14 +3,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using prjDB_GamingForm_Show.Models;
 using prjDB_GamingForm_Show.Models.Entities;
 using prjDB_GamingForm_Show.Models.Shop;
 using prjDB_GamingForm_Show.ViewModels;
 using System.Collections.Generic;
-using System.Drawing;
 using static prjDB_GamingForm_Show.Controllers.DeputeController;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace prjDB_GamingForm_Show.Controllers
 {
@@ -24,9 +21,6 @@ namespace prjDB_GamingForm_Show.Controllers
             _db = context;
             ListLoad();
         }
-        
-        
-        
         public void ListLoad()
         {
             //test
@@ -46,7 +40,8 @@ namespace prjDB_GamingForm_Show.Controllers
                            n.DeputeContent,
                            n.Salary,
                            Status = n.Status.Name,
-                           n.Region.City
+                           n.Region.City,
+                           n.Provider.FImagePath
                        };
             CDeputeViewModel x = null;
 
@@ -63,8 +58,9 @@ namespace prjDB_GamingForm_Show.Controllers
                     DeputeContent = item.DeputeContent,
                     salary = item.Salary,
                     status = item.Status,
-                    region = item.City
-                };
+                    region = item.City,
+                    imgfilepath = item.FImagePath
+            };
 
                 List.Add(x);
 
@@ -87,12 +83,14 @@ namespace prjDB_GamingForm_Show.Controllers
                 pln = new CDeputeViewModel();
                 pln.providername = pDb.Provider.Name;
                 pln.title = pDb.Title;
-                pln.startdate = pDb.StartDate.ToString("yyyy/mm/dd");
-                pln.modifieddate = pDb.Modifiedate.ToString("yyyy/mm/dd");
+                pln.startdate = pDb.StartDate.ToString("yyyy/mm/dd HH:mm:ss");
+                pln.modifieddate = pDb.Modifiedate.ToString("yyyy/mm/dd HH:mm:ss");
                 pln.DeputeContent = pDb.DeputeContent;
                 pln.salary = pDb.Salary;
                 pln.status = pDb.Status.Name;
                 pln.region = pDb.Region.City;
+                pln.MemeberContent = pDb.Provider.Mycomment;
+                pln.imgfilepath = pDb.Provider.FImagePath;
 
             }
 
@@ -219,11 +217,8 @@ namespace prjDB_GamingForm_Show.Controllers
         
 
         public int _memberIdtest = 38;
-        public IActionResult test()
-        {
-            return View();
-        }
-        public IActionResult Apply(int id=7)
+        
+        public IActionResult Apply(int id)
         {
             ViewBag.memberid = _memberIdtest;
             Depute o=_db.Deputes.FirstOrDefault(_ => _.DeputeId == id);
@@ -318,7 +313,7 @@ namespace prjDB_GamingForm_Show.Controllers
         
         public IActionResult Personal()
         {
-            ViewBag.memberid=_memberIdtest;
+            ViewBag.memberid = _memberIdtest;
             return View();
         }
         public IActionResult PartialReleaseList()

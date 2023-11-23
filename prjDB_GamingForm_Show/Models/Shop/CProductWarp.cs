@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using prjDB_GamingForm_Show.Models.Entities;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using static prjDB_GamingForm_Show.Models.Shop.CProductWarp;
 
 namespace prjDB_GamingForm_Show.Models.Shop
@@ -18,7 +19,7 @@ namespace prjDB_GamingForm_Show.Models.Shop
             get { return _product; }
             set { _product = value; }
         }
-
+ 
         [DisplayName("產品編號")]
         public int ProductID
         {
@@ -26,6 +27,7 @@ namespace prjDB_GamingForm_Show.Models.Shop
             set { _product.ProductId = value; }
         }
 
+        [Required( ErrorMessage= "您尚未輸入資訊")]
         [DisplayName("產品名稱")]
         public string ProductName
         {
@@ -33,6 +35,9 @@ namespace prjDB_GamingForm_Show.Models.Shop
             set { _product.ProductName = value; }
         }
 
+
+     
+        [Range(1, (double)decimal.MaxValue, ErrorMessage = "商品金額必須是合理的數字")]
         [DisplayName("價格")]
         public decimal Price
         {
@@ -45,6 +50,8 @@ namespace prjDB_GamingForm_Show.Models.Shop
 
 
 
+        [Required(ErrorMessage = "您尚未輸入資訊")]
+        [StringLength(7999,ErrorMessage ="請輸入至少10個字元，讓客人更好了解您的商品",MinimumLength =10)]
         [DisplayName("商品描述")]
         public string ProductContent
         {
@@ -52,12 +59,15 @@ namespace prjDB_GamingForm_Show.Models.Shop
             set { _product.ProductContent = value; }
         }
 
+
+
+        [Range(1, int.MaxValue, ErrorMessage = "商品庫存必須是合理的數字")]
         [DisplayName("庫存")]
         public int UnitStock
         {
             get { return _product.UnitStock; }
             set { _product.UnitStock = value; }
-        }
+        } 
 
 
         [DisplayName("狀態ID")]  //預設商品為"上架中"狀態
@@ -83,4 +93,6 @@ namespace prjDB_GamingForm_Show.Models.Shop
 
 
     }
+
+
 }
