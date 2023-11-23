@@ -3,14 +3,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using prjDB_GamingForm_Show.Models;
 using prjDB_GamingForm_Show.Models.Entities;
 using prjDB_GamingForm_Show.Models.Shop;
 using prjDB_GamingForm_Show.ViewModels;
 using System.Collections.Generic;
-using System.Drawing;
 using static prjDB_GamingForm_Show.Controllers.DeputeController;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace prjDB_GamingForm_Show.Controllers
 {
@@ -24,9 +21,6 @@ namespace prjDB_GamingForm_Show.Controllers
             _db = context;
             ListLoad();
         }
-        
-        
-        
         public void ListLoad()
         {
             //test
@@ -223,11 +217,8 @@ namespace prjDB_GamingForm_Show.Controllers
         
 
         public int _memberIdtest = 38;
-        public IActionResult test()
-        {
-            return View();
-        }
-        public IActionResult Apply(int? id)
+        
+        public IActionResult Apply(int id)
         {
             ViewBag.memberid = _memberIdtest;
             Depute o=_db.Deputes.FirstOrDefault(_ => _.DeputeId == id);
@@ -322,7 +313,7 @@ namespace prjDB_GamingForm_Show.Controllers
         
         public IActionResult Personal()
         {
-            ViewBag.memberid=_memberIdtest;
+            ViewBag.memberid = _memberIdtest;
             return View();
         }
         public IActionResult PartialReleaseList()

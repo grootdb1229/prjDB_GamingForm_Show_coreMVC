@@ -14,7 +14,7 @@
     <!-- Core theme CSS (includes Bootstrap)-->
     <link href="~/layout/templatemo_555_upright/css/styles.css" rel="stylesheet" />
     <!-- 首頁-->
-
+    
     <link href="https://fonts.googleapis.com/css2?family=Kumbh+Sans&display=swap" rel="stylesheet"> <!-- https://fonts.google.com/specimen/Kumbh+Sans -->
     <link rel="stylesheet" href="~/layout/templatemo_555_upright/fontawesome/css/all.min.css">  <!-- https://fontawesome.com/-->
     <link rel="stylesheet" href="~/layout/templatemo_555_upright/css/magnific-popup.css">       <!-- https://dimsemenov.com/plugins/magnific-popup/ -->
@@ -57,18 +57,18 @@
                 @{
 
                     int count = 0;
-            //if (HttpContext.Session.Keys.Contains(prjDB_GamingForm_Show.Models.CDictionary.SK_PURCHASED_PRODUCES_LIST) != null)
+                    //if (HttpContext.Session.Keys.Contains(prjDB_GamingForm_Show.Models.CDictionary.SK_PURCHASED_PRODUCES_LIST) != null)
                     //{
                     //    List<prjDB_GamingForm_Show.Models.ShoppingCar> car = Session[prjDB_GamingForm_Show.Models.CDictionary.SK_PURCHASED_PRODUCES_LIST] as List<prjDB_GamingForm_Show.Models.ShoppingCar>;
                     //    count = car.Count();
                     //}
 
 
-                    <form class="d-flex">
-                        <a href="~/Shop/CarView" class="btn mt-auto btn-outline-dark bi-cart-fill me-1" id="car">
-                            <span class="badge bg-dark text-white ms-1 rounded-pill" id="carcount">@ViewBag.Car</span>
-                        </a>
-                    </form>
+                        <form class="d-flex">
+                            <a href="~/Shop/CarView" class="btn mt-auto btn-outline-dark me-1" id="car">
+                                會員編號:@ViewBag.memberid
+                            </a>
+                        </form>
                 }
             </div>
         </div>
@@ -156,43 +156,65 @@
                         <div class="row">
                             <div class="col-lg-6 tm-col-home mb-4">
                                 <div class="tm-text-container">
-                                    <div class="card border-white mb-3 bg-transparent">
-                                        <div class="card-header bg-transparent border-white"><h4>我發送的委託</h4></div>
-                                        <div class="card-body text-light mx-auto">
-                                            <a class="btn btn-lg btn-outline-danger position-relative">
-                                                <img src="~/layout/templatemo_555_upright/img/me/message-circle.svg" />
-                                                會員提問
-                                                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                                                    99+
-                                                    <span class="visually-hidden">unread messages</span>
-                                                </span>
-                                            </a>
-                                            <a class="btn btn-lg btn-outline-danger position-relative">
-                                                <img src="~/layout/templatemo_555_upright/img/me/users.svg" />
-                                                待接受
-                                                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                                                    10
-                                                    <span class="visually-hidden">unread messages</span>
-                                                </span>
-                                            </a>
-                                        </div>
-                                        <div class="card-body text-light mx-auto ">
-                                            <a class="btn btn-lg btn-outline-danger position-relative">
-                                                <img src="~/layout/templatemo_555_upright/img/me/edit.svg" />
-                                                待收件
-                                                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                                                    5
-                                                    <span class="visually-hidden">unread messages</span>
-                                                </span>
-                                            </a>
-                                            <a class="btn btn-lg btn-outline-danger position-relative">
-                                                <img src="~/layout/templatemo_555_upright/img/me/check.svg" />
-                                                已完成
-                                                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                                                    1
-                                                    <span class="visually-hidden">unread messages</span>
-                                                </span>
-                                            </a>
+                                    @* <div class="tm-icon-container mb-5 mr-0 ml-auto">
+                                    <i class="fas fa-satellite-dish fa-4x tm-text-primary"></i>
+                                    </div> *@
+                                    <div class="card border-white mb-3 bg-transparent" style="max-width: 36rem;">
+                                        <div class="card-header bg-transparent border-white text-center"><h4>我發送的委託</h4></div>
+                                        <div class="card-body text-light">
+                                            @* <h5 class="card-title">Success card title</h5> *@
+                                            <table class="table table-borderless text-center">
+                                                <tbody>
+                                                    <tr>
+                                                        <td class="col-6" >
+                                                            <a class="btn btn-outline-danger position-relative col">
+                                                                <img src="~/layout/templatemo_555_upright/img/me/message-circle.svg" />
+                                                                會員提問
+                                                                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                                                    99+
+                                                                    <span class="visually-hidden">unread messages</span>
+                                                                </span>
+                                                            </a>
+                                                        </td>
+                                                        <td class="col-6">
+                                                            <a class="btn btn-outline-danger position-relative col">
+                                                                <img src="~/layout/templatemo_555_upright/img/me/users.svg" />
+                                                                待接受
+                                                                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                                                    10
+                                                                    <span class="visually-hidden">unread messages</span>
+                                                                </span>
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <a class="btn btn-outline-danger position-relative col-12">
+                                                                <img src="~/layout/templatemo_555_upright/img/me/edit.svg" />
+                                                                待收件
+                                                                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                                                    5
+                                                                    <span class="visually-hidden">unread messages</span>
+                                                                </span>
+                                                            </a>
+                                                        </td>
+                                                        <td>
+                                                            <a class="btn btn-outline-danger position-relative col-12">
+                                                                <img src="~/layout/templatemo_555_upright/img/me/check.svg" />
+                                                                已完成
+                                                                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                                                    1
+                                                                    <span class="visually-hidden">unread messages</span>
+                                                                </span>
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                            
+                                            
+                                            
+                                            
                                         </div>
                                         @* <div class="card-footer bg-transparent border-success">Footer</div> *@
                                     </div>
@@ -200,50 +222,67 @@
                             </div>
                             <div class="col-lg-6 tm-col-home mb-4">
                                 <div class="tm-text-container">
-                                    <div class="card border-white mb-3 bg-transparent">
-                                        <div class="card-header bg-transparent border-white"><h4>我接受的委託</h4></div>
-                                        <div class="card-body text-light mx-auto">
-                                            <a class="btn btn-lg btn-outline-danger position-relative">
-                                                <img src="~/layout/templatemo_555_upright/img/me/message-circle.svg" />
-                                                新委託
-                                                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                                                    99+
-                                                    <span class="visually-hidden">unread messages</span>
-                                                </span>
-                                            </a>
-                                            <a class="btn btn-lg btn-outline-danger position-relative">
-                                                <img src="~/layout/templatemo_555_upright/img/me/users.svg" />
-                                                進行中
-                                                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                                                    10
-                                                    <span class="visually-hidden">unread messages</span>
-                                                </span>
-                                            </a>
-                                        </div>
-                                        <div class="card-body text-light mx-auto">
-                                            <a class="btn btn-lg btn-outline-danger position-relative">
-                                                <img src="~/layout/templatemo_555_upright/img/me/edit.svg" />
-                                                待確認
-                                                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                                                    5
-                                                    <span class="visually-hidden">unread messages</span>
-                                                </span>
-                                            </a>
-                                            <a class="btn btn-lg btn-outline-danger position-relative">
-                                                <img src="~/layout/templatemo_555_upright/img/me/check.svg" />
-                                                已完成
-                                                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                                                    1
-                                                    <span class="visually-hidden">unread messages</span>
-                                                </span>
-                                            </a>
+                                    @* <div class="tm-icon-container mb-5 mr-0 ml-auto">
+                                    <i class="fas fa-broadcast-tower fa-4x tm-text-primary"></i>
+                                    </div> *@
+                                    <div class="card border-white mb-3 bg-transparent" style="max-width: 36rem;">
+                                        <div class="card-header bg-transparent border-white text-center"><h4>我接受的委託</h4></div>
+                                        <div class="card-body text-light">
+                                            <table class="table table-borderless text-center">
+                                                <tbody>
+                                                    <tr>
+                                                        <td class="col-6">
+                                                            <a class="btn btn-outline-danger position-relative col">
+                                                                <img src="~/layout/templatemo_555_upright/img/me/message-circle.svg" />
+                                                                新委託
+                                                                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                                                    99+
+                                                                    <span class="visually-hidden">unread messages</span>
+                                                                </span>
+                                                            </a>
+                                                        </td>
+                                                        <td class="col-6">
+                                                            <a class="btn btn-outline-danger position-relative col">
+                                                                <img src="~/layout/templatemo_555_upright/img/me/users.svg" />
+                                                                進行中
+                                                                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                                                    10
+                                                                    <span class="visually-hidden">unread messages</span>
+                                                                </span>
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <a class="btn btn-outline-danger position-relative col-12">
+                                                                <img src="~/layout/templatemo_555_upright/img/me/edit.svg" />
+                                                                待確認
+                                                                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                                                    5
+                                                                    <span class="visually-hidden">unread messages</span>
+                                                                </span>
+                                                            </a>
+                                                        </td>
+                                                        <td>
+                                                            <a class="btn btn-outline-danger position-relative col-12">
+                                                                <img src="~/layout/templatemo_555_upright/img/me/check.svg" />
+                                                                已完成
+                                                                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                                                    1
+                                                                    <span class="visually-hidden">unread messages</span>
+                                                                </span>
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
                                         </div>
                                         @* <div class="card-footer bg-transparent border-success">Footer</div> *@
                                     </div>
+                                    <div class="text-right">
+                                        <a href="#gallery" class="btn btn-primary tm-btn-next">下一頁</a>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="text-right">
-                                <a href="#gallery" class="btn btn-primary tm-btn-next">下一頁</a>
                             </div>
                         </div>
                         <hr class="tm-hr-short mb-5">
@@ -590,7 +629,7 @@
                                         <iframe class="w-100" @* width="100%" *@ height="520" id="gmap_canvas" src="https://maps.google.com/maps?q=Av.+L%C3%BAcio+Costa,+Rio+de+Janeiro+-+RJ,+Brazil&amp;t=&amp;z=13&amp;ie=UTF8&amp;iwloc=&amp;output=embed" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"></iframe>
                                     </div>
                                 </div>
-
+                                
                                 <!-- Address -->
                                 <address class="mb-4">
                                     120-240 eget purus luctus sodales. Sed<br>
@@ -635,6 +674,7 @@
             </div> <!-- .tm-main -->
         </div> <!-- .row -->
     </div> <!-- .container-fluid -->
+    
     <!-- Footer-->
     <footer class="py-5 bg-dark">
         <div class="container"><p class="m-0 text-center text-white">Copyright &copy; Your Website 2023</p></div>
@@ -653,6 +693,7 @@
         button.addEventListener('mouseout', () => {
             button.style.backgroundColor = '';
         });
+        
     </script>
 
     <script src="~/layout/templatemo_555_upright/js/jquery-3.4.1.min.js"></script>          <!-- https://jquery.com/ -->
@@ -664,5 +705,7 @@
     <script src="~/layout/templatemo_555_upright/slick/slick.min.js"></script>              <!-- https://kenwheeler.github.io/slick/ -->
     <script src="~/layout/templatemo_555_upright/js/templatemo-script.js"></script>
     @await RenderSectionAsync("scripts", required: false)
+    
+
 </body>
 </html>
