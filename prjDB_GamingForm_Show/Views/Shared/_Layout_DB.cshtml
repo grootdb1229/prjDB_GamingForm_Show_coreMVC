@@ -64,11 +64,11 @@
                     //}
 
 
-                        <form class="d-flex">
-                            <a href="~/Shop/CarView" class="btn mt-auto btn-outline-dark me-1" id="car">
-                                會員編號:@ViewBag.memberid
-                            </a>
-                        </form>
+                                <form class="d-flex">
+                                    <a href="~/Shop/CarView" class="btn mt-auto btn-outline-dark me-1" id="car">
+                                        會員編號:@ViewBag.memberid
+                                    </a>
+                                </form>
                 }
             </div>
         </div>
@@ -279,6 +279,7 @@
                                         </div>
                                         @* <div class="card-footer bg-transparent border-success">Footer</div> *@
                                     </div>
+                                    
                                     <div class="text-right">
                                         <a href="#gallery" class="btn btn-primary tm-btn-next">下一頁</a>
                                     </div>
@@ -668,12 +669,14 @@
                     <div class="col-12">
                         <div class="text-right">
                             @* Copyright 2020 Upright Company *@
+                            
                         </div>
                     </div>
                 </div>
             </div> <!-- .tm-main -->
         </div> <!-- .row -->
     </div> <!-- .container-fluid -->
+  
     
     <!-- Footer-->
     <footer class="py-5 bg-dark">
@@ -693,9 +696,10 @@
         button.addEventListener('mouseout', () => {
             button.style.backgroundColor = '';
         });
-        
     </script>
 
+    
+    
     <script src="~/layout/templatemo_555_upright/js/jquery-3.4.1.min.js"></script>          <!-- https://jquery.com/ -->
     <script src="~/layout/templatemo_555_upright/js/jquery.singlePageNav.min.js"></script>  <!-- https://github.com/ChrisWojcik/single-page-nav -->
     <script src="~/layout/templatemo_555_upright/js/parallax/parallax.min.js"></script>     <!-- https://pixelcog.github.io/parallax.js/ -->
@@ -704,8 +708,7 @@
     <script src="~/layout/templatemo_555_upright/js/jquery.magnific-popup.min.js"></script> <!-- https://dimsemenov.com/plugins/magnific-popup/ -->
     <script src="~/layout/templatemo_555_upright/slick/slick.min.js"></script>              <!-- https://kenwheeler.github.io/slick/ -->
     <script src="~/layout/templatemo_555_upright/js/templatemo-script.js"></script>
+    <script src="~/js/sweetalert2.all.js"></script>
     @await RenderSectionAsync("scripts", required: false)
-    
-
 </body>
 </html>

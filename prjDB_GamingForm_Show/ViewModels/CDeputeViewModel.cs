@@ -1,4 +1,5 @@
 ﻿using prjDB_GamingForm_Show.Models;
+using prjDB_GamingForm_Show.Models.Entities;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -25,7 +26,7 @@ namespace DB_GamingForm_Show.Job.DeputeClass
         public string modifieddate { get; set; }
 
         [DisplayName("懸賞內容")]
-        public string DeputeContent { get; set; }
+        public string deputeContent { get; set; }
 
         [DisplayName("懸賞金額")]
         public decimal salary { get; set; }
@@ -34,12 +35,12 @@ namespace DB_GamingForm_Show.Job.DeputeClass
         [DisplayName("懸賞區域")]
         public string region { get; set; }
         [DisplayName("懸賞技能")]
-        public string Skillname { get; set; }
+        public string skillname { get; set; }
         [DisplayName("懸賞金主")]
-        public string MemeberContent { get; set; }
+        public string memeberContent { get; set; }
 
         public string imgfilepath { get; set; }
-        public int Count { get; set; }
+        public int count { get; set; }
         
 
 

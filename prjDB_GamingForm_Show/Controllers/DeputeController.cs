@@ -55,7 +55,7 @@ namespace prjDB_GamingForm_Show.Controllers
                     providername = item.Name,
                     startdate = item.SrartDate,
                     modifieddate = item.Modifiedate,
-                    DeputeContent = item.DeputeContent,
+                    deputeContent = item.DeputeContent,
                     salary = item.Salary,
                     status = item.Status,
                     region = item.City,
@@ -85,11 +85,11 @@ namespace prjDB_GamingForm_Show.Controllers
                 pln.title = pDb.Title;
                 pln.startdate = pDb.StartDate.ToString("yyyy/mm/dd HH:mm:ss");
                 pln.modifieddate = pDb.Modifiedate.ToString("yyyy/mm/dd HH:mm:ss");
-                pln.DeputeContent = pDb.DeputeContent;
+                pln.deputeContent = pDb.DeputeContent;
                 pln.salary = pDb.Salary;
                 pln.status = pDb.Status.Name;
                 pln.region = pDb.Region.City;
-                pln.MemeberContent = pDb.Provider.Mycomment;
+                pln.memeberContent = pDb.Provider.Mycomment;
                 pln.imgfilepath = pDb.Provider.FImagePath;
 
             }
@@ -133,14 +133,14 @@ namespace prjDB_GamingForm_Show.Controllers
                     vm.txtSkillClass = "";
                 if (vm.txtSalary == "請選擇...")
                     vm.txtSalary = "0";
-                datas = List.Where(n => (n.DeputeContent.Trim().ToLower().Contains(vm.txtKeyword.Trim().ToLower()) ||
+                datas = List.Where(n => (n.deputeContent.Trim().ToLower().Contains(vm.txtKeyword.Trim().ToLower()) ||
                                           n.providername.Trim().ToLower().Contains(vm.txtKeyword.Trim().ToLower()) ||
                                           n.salary.ToString().Trim().ToLower().Contains(vm.txtKeyword.Trim().ToLower()) ||
                                           n.region.Trim().ToLower().Contains(vm.txtKeyword.Trim().ToLower()))
                                           &&
-                                          (n.DeputeContent.Trim().ToLower().Contains(vm.txtSkill.Trim().ToLower()))
+                                          (n.deputeContent.Trim().ToLower().Contains(vm.txtSkill.Trim().ToLower()))
                                           &&
-                                          (n.DeputeContent.Trim().ToLower().Contains(vm.txtKeyword.Trim().ToLower()))
+                                          (n.deputeContent.Trim().ToLower().Contains(vm.txtKeyword.Trim().ToLower()))
                                           &&
                                           (n.salary>=(Convert.ToInt32(vm.txtSalary)))
                                           )
@@ -181,13 +181,13 @@ namespace prjDB_GamingForm_Show.Controllers
             foreach (var item in SkillClasses) 
             {
                 var datas = from n in List.AsEnumerable()
-                            where n.DeputeContent.Contains(item)
+                            where n.deputeContent.Contains(item)
                             select n;
 
                 x = new CDeputeViewModel()
                 {
-                    Skillname = item,
-                    Count = datas.Count()
+                    skillname = item,
+                    count = datas.Count()
                 };
 
                 slist.Add(x);
@@ -217,7 +217,6 @@ namespace prjDB_GamingForm_Show.Controllers
         
 
         public int _memberIdtest = 38;
-        
         public IActionResult Apply(int id)
         {
             ViewBag.memberid = _memberIdtest;
@@ -251,7 +250,7 @@ namespace prjDB_GamingForm_Show.Controllers
                 o.ProviderId = _memberIdtest;
                 o.StartDate = Convert.ToDateTime(vm.startdate);
                 o.Modifiedate=DateTime.Now;
-                o.DeputeContent = vm.DeputeContent;
+                o.DeputeContent = vm.deputeContent;
                 o.Salary = vm.salary;
                 //o.StatusId = _db.Statuses.FirstOrDefault(_ => _.Name == vm.status).StatusId;
                 //o.RegionId = _db.Regions.FirstOrDefault(_ => _.City == vm.region).RegionId;
@@ -293,7 +292,7 @@ namespace prjDB_GamingForm_Show.Controllers
                 ProviderId= _memberIdtest,
                 StartDate= DateTime.Now,
                 Modifiedate= DateTime.Now,
-                DeputeContent= vm.DeputeContent,
+                DeputeContent= vm.deputeContent,
                 Salary= vm.salary,
                 //StatusId = _db.Statuses.FirstOrDefault(_ => _.Name == vm.status).StatusId,
                 //RegionId = _db.Regions.FirstOrDefault(_ => _.City == vm.region).RegionId,
@@ -310,19 +309,47 @@ namespace prjDB_GamingForm_Show.Controllers
             _db.SaveChanges();
             return RedirectToAction("Personal");
         }
-        
+        public IActionResult DeputeDetial(int? id)
+        {
+            _db.DeputeRecords.Load();
+            Depute o = _db.Deputes.FirstOrDefault(_ => _.DeputeId == id);
+            if (o == null)
+                return RedirectToAction("Personal");
+            CDeputeViewModel n = new CDeputeViewModel()
+            {
+                id=o.DeputeId,
+                title = o.Title,
+                status = o.Status.Name,
+                count =o.DeputeRecords.Count(),
+                deputeContent = o.DeputeContent,
+                //imgfilepath=,
+                providername = o.Provider.Name,
+                region = o.Region.City,
+                salary = o.Salary,
+                startdate = o.StartDate.ToString("yyyyMMdd"),
+                modifieddate = o.Modifiedate.ToString("yyyyMMdd"),
+            };
+            return Json(n);
+        }
+
+        #region mainView
         public IActionResult Personal()
         {
             ViewBag.memberid = _memberIdtest;
             return View();
         }
+        #endregion
+
+        #region PartialView
         public IActionResult PartialReleaseList()
         {
             _db.Deputes.Load();
             _db.Regions.Load();
             _db.Statuses.Load();
             _db.Skills.Load();
-            var q = _db.Deputes.Where(_ => _.ProviderId == _memberIdtest).Select(_ => _);
+            _db.DeputeRecords.Load();
+            //使用include:為計算該筆委託被應徵的次數(出現在deputerecord的次數)
+            var q = _db.Deputes.Where(_ => _.ProviderId == _memberIdtest).Select(_ => _).Include(_=>_.DeputeRecords);
             return PartialView(q);
         }
         public IActionResult PartialReceiveList()
@@ -338,5 +365,6 @@ namespace prjDB_GamingForm_Show.Controllers
         {
             return PartialView();
         }
+        #endregion
     }
 }
