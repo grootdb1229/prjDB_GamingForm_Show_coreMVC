@@ -91,11 +91,15 @@ namespace prjDB_GamingForm_Show.Controllers
             }
 
             [HttpPost]
-            public ActionResult Create(CProductWarp product) //原Product物件
+            public ActionResult Create(CProductWarp product) 
             {
+                ModelState.Remove("Status");
+
+
                 if (!ModelState.IsValid) 
                 {
-                return View(product);
+                    var errors = ModelState.Values.SelectMany(v => v.Errors);
+                    return View(product);
                 }
                
                 Product x = new Product();
@@ -108,11 +112,11 @@ namespace prjDB_GamingForm_Show.Controllers
                         product.photo.CopyTo(new FileStream(_host.WebRootPath + "/images/shop/" + photoName, FileMode.Create));
                     }
                     x.ProductName = product.ProductName;
-                    x.Price = (decimal)product.Price;
+                    x.Price = product.Price;
                     x.AvailableDate = product.AvailableDate;
                     x.ProductContent = product.ProductContent;
                     x.UnitStock = product.UnitStock;
-                    x.StatusId = product.StatusID;
+                    x.StatusId = (int)product.StatusID;
                     x.MemberId = product.MemberID;
 
                     _db.Products.Add(x);
@@ -137,10 +141,7 @@ namespace prjDB_GamingForm_Show.Controllers
             [HttpPost]
             public ActionResult Edit(CProductWarp product) //原Product物件   
             {
-                if (!ModelState.IsValid)
-                {
-                    return View(product);
-                }
+              
                 Product x = _db.Products.FirstOrDefault(p => p.ProductId == product.ProductID);
                 if (x != null)
                 {
@@ -155,7 +156,7 @@ namespace prjDB_GamingForm_Show.Controllers
                     x.AvailableDate = product.AvailableDate;
                     x.ProductContent = product.ProductContent;
                     x.UnitStock = product.UnitStock;
-                    x.StatusId = product.StatusID;
+                    x.StatusId = (int)product.StatusID;
                     x.MemberId = product.MemberID;
                     //目前沒有FirmID跟圖片功能
                     //MemberID跟StatusID是寫死在CProduct物件中的
