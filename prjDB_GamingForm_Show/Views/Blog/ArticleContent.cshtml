@@ -4,8 +4,13 @@
     ViewBag.Title = "ArticleContent";
 }
 
-
+<head>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.8/clipboard.min.js"></script>
+    <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+</head>
 <link rel="stylesheet" href="~/css/blogstyle.css" type="text/css">
+
+
 
 
 <header class="header-section">
@@ -92,9 +97,21 @@
                         <p style="float:right">
                             @if (Model.articles.First().MemberId == ViewBag.KK)
                             {
-                                
+
+
+
                             <button type="button" class="btn btn-warning" onclick="location.href='@Url.Action( "ArticleEdit","Blog", new { AFId = Model.articles.FirstOrDefault().ArticleId ,FId = Model.blogs.FirstOrDefault().BlogId})'">修改</button>
                             <button type="button" class="btn btn-secondary" onclick="ArticleDelete()">刪除文章</button>
+
+                            }
+                                
+
+                                <!-- HTML 中的按鈕 -->
+                                <button id="copyButton" class="btn btn-info" data-clipboard-target="#urlToCopy">分享</button>
+                                <!-- 顯示的網址 -->
+                                <input type="text" id="urlToCopy" value="" readonly>
+
+
 
                             <script>
                                 function ArticleDelete() {
@@ -177,4 +194,30 @@
         </div>
     </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // 獲取當前網址
+        var currentUrl = window.location.href;
+
+        // 將當前網址設定到輸入框中
+        document.getElementById('urlToCopy').value = currentUrl;
+
+        // 初始化 Clipboard.js
+        var clipboard = new ClipboardJS('#copyButton', {
+            text: function () {
+                return currentUrl;
+            }
+        });
+
+        // 處理複製成功事件
+        clipboard.on('success', function (e) {
+            console.log('已複製到剪貼簿');
+            e.clearSelection(); // 清除選擇，使輸入框不被選中
+            alert("網址已複製成功");
+        });
+
+    });
+</script>
+
 
