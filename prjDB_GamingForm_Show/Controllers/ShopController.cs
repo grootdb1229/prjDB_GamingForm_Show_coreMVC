@@ -93,15 +93,15 @@ namespace prjDB_GamingForm_Show.Controllers
             [HttpPost]
             public ActionResult Create(CProductWarp product) 
             {
-                ModelState.Remove("Status");
+               
 
 
-                if (!ModelState.IsValid) 
+                if (!ModelState.IsValid)
                 {
                     var errors = ModelState.Values.SelectMany(v => v.Errors);
                     return View(product);
                 }
-               
+
                 Product x = new Product();
                 if (_db != null)
                 {
