@@ -1,0 +1,69 @@
+﻿
+@{
+    ViewData["Title"] = "Vision";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div class="container">
+    <div class="form-group">
+        <label class="form-label">網址:</label>
+        <input id="imgUrl" class="form-control" value="https://www.thesprucepets.com/thmb/XYbPm6oUgDzU7fYX1v8Ml5K2Y0s=/1595x0/filters:no_upscale():strip_icc()/GettyImages-1198704735-69e2d11cba434cb28a3c9e6caae9d128.jpg" />
+    </div>
+    <div class="form-group" >
+        <img id="imgPreview" style="width:50%;height:50%" src="~/images/noimage.jpg" />
+    </div>
+    <div class="form-group">
+        <button class="btn btn-primary" onclick="analyzeImage()">分析</button>
+    </div>
+
+</div>
+
+
+<h2>Vision</h2>
+@section Scripts
+{   
+        
+    <script type="text/javascript">
+        var endpoint = "https://msitgroot.cognitiveservices.azure.com/";
+        function analyzeImage() {
+            // alert("分析");
+            var imgUrl = $("#imgUrl").val();
+            $("#imgPreview").attr("src", imgUrl);
+            var data =
+            {
+                url: imgUrl
+
+            };
+            var params = {
+                // Request parameters
+                "visualFeatures": "Description,Tags",
+                "details": "Landmarks",
+                "language": "en",
+                "model-version": "latest",
+            };
+
+            $.ajax({
+                url: `${endpoint}vision/v3.2/analyze?${$.param(params)}`,
+                beforeSend: function (xhrObj) {
+                    // Request headers
+                    xhrObj.setRequestHeader("Content-Type", "application/json");
+                    xhrObj.setRequestHeader("Ocp-Apim-Subscription-Key", "1d8f622a5a7d4502982cead1aee634c5");
+                },
+                type: "POST",
+                // Request body
+                data: JSON.stringify(data),
+            })
+                .done(function (data) {
+                    var text = data["description"]["captions"][0]["text"];
+                    var confidence = data["description"]["captions"][0]["confidence"];
+                    alert(`內容 :${text},信心指數:${(confidence*100).toFixed(2)}%`);
+                })
+                .fail(function () {
+                    alert(err.statusText);
+                });
+        };
+    </script>
+    <a href="c:\msit153\db_gamingform_show\db_gamingform_show - coremvc\prjdb_gamingform_show_coremvc\prjdb_gamingform_show\vision.json">c:\msit153\db_gamingform_show\db_gamingform_show - coremvc\prjdb_gamingform_show_coremvc\prjdb_gamingform_show\vision.json</a>
+
+}
