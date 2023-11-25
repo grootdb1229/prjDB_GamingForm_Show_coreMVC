@@ -152,6 +152,7 @@ namespace prjDB_GamingForm_Show.Controllers
         public ActionResult ReplyDelete(int? RFId, int? AFId , int? FId)
         {
             Reply re = _db.Replies.FirstOrDefault(a => a.ReplyId == RFId);
+            
             if (re != null)
             {
                 _db.Replies.Remove(re);
@@ -164,10 +165,14 @@ namespace prjDB_GamingForm_Show.Controllers
 
         public IActionResult ArticleCreate(int? FId)
         {
+
             if (HttpContext.Session.GetInt32("user_id") == null)
             {
+                // 如果未登入，將原始頁面的 URL 存儲在 Session 中
+                HttpContext.Session.SetString("returnUrl", Url.Action("ArticleCreate", "Blog", new { FId }));
                 return RedirectToAction("Login", "Home");
             }
+
             ViewBag.KK = HttpContext.Session.GetInt32("user_id");
             
             CBlogViewModel vm = null;
@@ -280,6 +285,18 @@ namespace prjDB_GamingForm_Show.Controllers
 
         public IActionResult ReplyCreate(int? AFId,int? FId)
         {
+            //if (HttpContext.Session.GetInt32("user_id") == null)
+            //    return RedirectToAction("Login", "Home");
+            //int memberId = (int)HttpContext.Session.GetInt32("user_id");
+
+            if (HttpContext.Session.GetInt32("user_id") == null)
+            {
+                // 如果未登入，將原始頁面的 URL 存儲在 Session 中
+                HttpContext.Session.SetString("returnUrl", Url.Action("ReplyCreate", "Blog", new { AFId, FId }));
+                return RedirectToAction("Login", "Home");
+            }
+
+            ViewBag.KK = HttpContext.Session.GetInt32("user_id");
             CBlogViewModel vm = null;
             if (AFId == null)
                 return RedirectToAction("ArticleList");
@@ -306,10 +323,10 @@ namespace prjDB_GamingForm_Show.Controllers
         // Todo:CKeditor 補完整
         //
 
-        //public IActionResult ReplyCreate()
-        //{
-        //    return Content();
-        //}
+
+
+
+
 
     }
 }

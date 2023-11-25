@@ -5,8 +5,12 @@
 }
 
 <head>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.8/clipboard.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.8/clipboard.min.js"></script>
     <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-pzjw8BO+DqSnC6xBg8yIcWHPXzxJsKn3XA2Tlkg8r7U5MDzY1ra2Qx54Vl8iIYiC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-eZt+q1LQ4lO/dZ7JkqUy5m4qGu2zTpuKQFq6wC2FKeWBqy0i+xn2dOQ6BQFuMI6B" crossorigin="anonymous"></script>
+
+
 </head>
 <link rel="stylesheet" href="~/css/blogstyle.css" type="text/css">
 
@@ -95,23 +99,19 @@
                             @like
                         }
                         <p style="float:right">
+
+                            <!-- HTML 中的按鈕 -->
+                            <button id="copyButton" class="btn btn-info" data-clipboard-target="#urlToCopy">分享</button>
+                            <!-- 顯示的網址 -->
+                            <input type="hidden" id="urlToCopy" value="" readonly>
+
                             @if (Model.articles.First().MemberId == ViewBag.KK)
                             {
 
-
-
-                            <button type="button" class="btn btn-warning" onclick="location.href='@Url.Action( "ArticleEdit","Blog", new { AFId = Model.articles.FirstOrDefault().ArticleId ,FId = Model.blogs.FirstOrDefault().BlogId})'">修改</button>
-                            <button type="button" class="btn btn-secondary" onclick="ArticleDelete()">刪除文章</button>
+                                <button type="button" class="btn btn-warning" onclick="location.href='@Url.Action( "ArticleEdit","Blog", new { AFId = Model.articles.FirstOrDefault().ArticleId ,FId = Model.blogs.FirstOrDefault().BlogId})'">修改</button>
+                                <button type="button" class="btn btn-secondary" onclick="ArticleDelete()">刪除文章</button>
 
                             }
-                                
-
-                                <!-- HTML 中的按鈕 -->
-                                <button id="copyButton" class="btn btn-info" data-clipboard-target="#urlToCopy">分享</button>
-                                <!-- 顯示的網址 -->
-                                <input type="text" id="urlToCopy" value="" readonly>
-
-
 
                             <script>
                                 function ArticleDelete() {
@@ -123,7 +123,7 @@
                             </script>
                             @*@Html.ActionLink("修改", "ArticleEdit", new { AFId = Model.articles.FirstOrDefault().ArticleId ,FId = Model.blogs.FirstOrDefault().BlogId})
                             @Html.ActionLink("刪除", "ArticleDelete", new { AFId = Model.articles.FirstOrDefault().ArticleId, FId = Model.blogs.FirstOrDefault().BlogId }, new { onclick = "return confirm ('確定刪除嗎?')" })*@
-                            }
+                            
                         </p>
 
                     </div>
@@ -170,20 +170,20 @@
                                     @if (Model.replies.First().MemberId == ViewBag.KK)
                                     {
 
-                                @* @Html.ActionLink("修改", "ReplyEdit", new { AFId = Model.articles.FirstOrDefault().ArticleId ,FId = Model.blogs.FirstOrDefault().BlogId, RFId =item.ReplyId})*@
-                                <button type="button" class="btn btn-warning" onclick="location.href='@Url.Action( "ReplyEdit","Blog", new { AFId = Model.articles.FirstOrDefault().ArticleId ,FId = Model.blogs.FirstOrDefault().BlogId, RFId =item.ReplyId})'">修改</button>
+                                        @* @Html.ActionLink("修改", "ReplyEdit", new { AFId = Model.articles.FirstOrDefault().ArticleId ,FId = Model.blogs.FirstOrDefault().BlogId, RFId =item.ReplyId})*@
+                                        <button type="button" class="btn btn-warning" onclick="location.href='@Url.Action( "ReplyEdit","Blog", new { AFId = Model.articles.FirstOrDefault().ArticleId ,FId = Model.blogs.FirstOrDefault().BlogId, RFId =item.ReplyId})'">修改</button>
 
-                                @* @Html.ActionLink("刪除", "ReplyDelete", new { AFId = Model.articles.FirstOrDefault().ArticleId, RFId =item.ReplyId,FId = Model.blogs.FirstOrDefault().BlogId }, new { onclick = "return confirm ('確定刪除嗎?')" })*@
-                                <button type="button" class="btn btn-secondary" onclick="ReplyDelete()">刪除回覆</button>
+                                        @Html.ActionLink("刪除回覆", "ReplyDelete", new { AFId = Model.articles.FirstOrDefault().ArticleId, RFId =item.ReplyId,FId = Model.blogs.FirstOrDefault().BlogId }, new { onclick = "return confirm ('確定刪除嗎?')", @class="btn btn-secondary"})
+                                       
                                     }
-                                <script>
-                                    function ReplyDelete() {
-                                        var result = confirm('確定刪除嗎?');
-                                        if (result) {
-                                            location.href = '@Url.Action("ReplyDelete", "Blog", new { AFId = Model.articles.FirstOrDefault().ArticleId, RFId =item.ReplyId,FId = Model.blogs.FirstOrDefault().BlogId })';
+                                    @*<script>
+                                        function ReplyDelete() {
+                                            var result = confirm('確定刪除嗎?');
+                                            if (result) {
+                                                location.href = @Html.()'@Url.Action("ReplyDelete", "Blog", new { AFId = Model.articles.FirstOrDefault().ArticleId, RFId =item.ReplyId,FId = Model.blogs.FirstOrDefault().BlogId })';
+                                            }
                                         }
-                                    }
-                                </script>
+                                    </script>*@
                                 </p>
 
                             </div>
@@ -210,13 +210,15 @@
             }
         });
 
+
         // 處理複製成功事件
         clipboard.on('success', function (e) {
             console.log('已複製到剪貼簿');
             e.clearSelection(); // 清除選擇，使輸入框不被選中
             alert("網址已複製成功");
+            
         });
-
+        
     });
 </script>
 
