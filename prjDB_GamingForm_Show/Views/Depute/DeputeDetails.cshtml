@@ -72,7 +72,7 @@
 
                         <div class="mb-5">
                             <h4 class="mb-3">懸賞內容</h4>
-                    <p>@Html.DisplayFor(model => model.DeputeContent)</p>
+                    <p>@Html.DisplayFor(model => model.deputeContent)</p>
                             <h4 class="mb-3">懸賞職責</h4>
                         <p></p>
                             <ul class="list-unstyled">
@@ -132,7 +132,7 @@
                         <div class="bg-light rounded p-5 wow slideInUp" data-wow-delay="0.1s">
                             <h4 class="mb-4">自我介紹</h4>
                     <p><i class="fa fa-angle-right text-primary me-2"></i>懸賞金主: @Html.DisplayFor(model => model.providername)</p>
-                    <p class="m-0">@Html.DisplayFor(model => model.MemeberContent)</p>
+                    <p class="m-0">@Html.DisplayFor(model => model.memeberContent)</p>
                         </div>
                     </div>
                 </div>
@@ -190,7 +190,7 @@
                 @Html.DisplayNameFor(model => model.modifieddate)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.DeputeContent)
+                @Html.DisplayNameFor(model => model.deputeContent)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.salary)
@@ -202,10 +202,10 @@
                 @Html.DisplayNameFor(model => model.region)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Skillname)
+                @Html.DisplayNameFor(model => model.skillname)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Count)
+                @Html.DisplayNameFor(model => model.count)
             </th>
             <th></th>
         </tr>
@@ -229,7 +229,7 @@
                 @Html.DisplayFor(modelItem => modelItem.modifieddate)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => modelItem.DeputeContent)
+                @Html.DisplayFor(modelItem => modelItem.deputeContent)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => modelItem.salary)
@@ -241,10 +241,10 @@
                 @Html.DisplayFor(modelItem => modelItem.region)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => modelItem.Skillname)
+                @Html.DisplayFor(modelItem => modelItem.skillname)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => modelItem.Count)
+                @Html.DisplayFor(modelItem => modelItem.count)
             </td>
             <td>
                 @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |

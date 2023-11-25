@@ -6,7 +6,7 @@
 
 @Html.ActionLink("發佈委託","Create","Depute",null,new{@class="btn btn-primary tm-btn-next"})
 @Html.ActionLink("TEST我要應徵","Apply","Depute",null,new{@class="btn btn-primary tm-btn-next"})
-<table class="table table-striped table-bordered">
+<table class="table table-dark table-striped table-bordered">
 
     <tr>
         <th class="col-1">
@@ -15,12 +15,10 @@
         <th class="col-1">
             標題
         </th>
-        <th class="col-2">
+        <th class="col-4">
             內容
         </th>
-        <th class="col-1">
-            地區
-        </th>
+        
         <th class="col-1">
             狀態
         </th>
@@ -28,15 +26,9 @@
             報酬
         </th>
         <th class="col-1">
-            更新日期
-        </th>
-        <th class="col-1">
-            發佈日期
-        </th>
-        <th class="col-1">
             應徵人數
         </th>
-        <th class="col-2"></th>
+        <th class="col-3"></th>
     </tr>
 
 
@@ -46,38 +38,111 @@
         {
             count++;
             <tr>
-                <td class="col-1">
+                <td >
                     @count
                 </td>
-                <td class="col-1">
+                <td >
                     @i.Title
                 </td>
-                <td class="col-3">
+                <td >
                     @i.DeputeContent
                 </td>
-                <td class="col-1">
-                    @i.Region.City
-                </td>
-                <td class="col-1">
+                <td >
                     @i.Status.Name
                 </td>
-                <td class="col-1">
+                <td >
                     @i.Salary.ToString("$###,###,###.00")
                 </td>
-                <td class="col-1">
-                    @i.Modifiedate.ToString("yyyy/mm/dd")
+                
+                <td >
+                    @i.DeputeRecords.Count()
                 </td>
-                <td class="col-1">
-                    @i.StartDate.ToString("yyyy/mm/dd")
-                </td>
-                <td class="col-1">
-                </td>
-                <td class="col-2">
+                <td >
                     @Html.ActionLink("修改", "Edit", "Depute", new { id = i.DeputeId }, new { @class = "btn btn-success" })
-                    @Html.ActionLink("詳細資料", "Details", new { id = i.DeputeId }, new { @class = "btn btn-info" })
-                    @Html.ActionLink("刪除", "deletedepute", "Depute", new { id = i.DeputeId },new { @class = "btn btn-danger", onclick = "return confirm('確定要刪除嗎?')" })
+                    <button class="btn btn-info btn-ReleaseDeputeDetails" onclick="detailsDepute(@i.DeputeId)">詳細資料</button>
+                    <button class="btn btn-danger btn-ReleaseDeputeDelete" data_deputeid=@i.DeputeId>刪除</button>
                 </td>
             </tr>
         }
     }
 </table>
+
+<script>
+
+    async function detailsDepute(deputeID) {
+        const response = await fetch(`@Url.Content("~/depute/DeputeDetial")?id=${deputeID}`);
+        const data = await response.json();
+        console.log(data);
+
+        Swal.fire({
+            title: `<div class=" bg-dark">詳細資料</div>`,
+            html: ` <div class="text-reset"> <ul class="list-group ">
+                    <li class="list-group-item bg-dark d-flex justify-content-between align-items-start">
+                  <div class="ms-2 me-auto"  >
+                            <div class="fw-bold" style="text-align:left;">標題</div>
+                            <div style="text-align:left;">${data.title}</div>
+                  </div>
+                </li>
+                    <li class="list-group-item bg-dark d-flex justify-content-between align-items-start">
+                      <div class="ms-2 me-auto" style=":black">
+                                <div class="fw-bold" style="text-align:left;">內容</div>
+                                        <div style="text-align:left;">${data.deputeContent}</div>
+                      </div>
+                    </li>
+                <li class="list-group-item bg-dark d-flex justify-content-between align-items-start">
+                  <div class="ms-2 me-auto" style=":black">
+                            <div class="fw-bold" style="text-align:left;">地區</div>
+                            <div style="text-align:left;">${data.region}</div>
+                  </div>
+                </li>
+                    <li class="list-group-item bg-dark d-flex justify-content-between align-items-start">
+                      <div class="ms-2 me-auto" style=":black">
+                                <div class="fw-bold" style="text-align:left;">狀態</div>
+                                    <div style="text-align:left;">${data.status}</div>
+                      </div>
+                    </li>
+                        <li class="list-group-item bg-dark d-flex justify-content-between align-items-start">
+                          <div class="ms-2 me-auto" style=":black">
+                                    <div class="fw-bold" style="text-align:left;">應徵人數</div>
+                                            <div style="text-align:left;">${data.count}</div>
+                          </div>
+                        </li>
+                            <li class="list-group-item bg-dark d-flex justify-content-between align-items-start">
+                              <div class="ms-2 me-auto" style=":black">
+                                        <div class="fw-bold" style="text-align:left;">報酬</div>
+                                                    <div style="text-align:left;">${data.salary}</div>
+                              </div>
+                            </li>
+                                <li class="list-group-item bg-dark d-flex justify-content-between align-items-start">
+                                  <div class="ms-2 me-auto" style=":black">
+                                            <div class="fw-bold" style="text-align:left;">雇主姓名</div>
+                                                            <div style="text-align:left;">${data.providername}</div>
+                                  </div>
+                                </li>
+                                    <li class="list-group-item bg-dark d-flex justify-content-between align-items-start">
+                                      <div class="ms-2 me-auto" style=":black">
+                                                <div class="fw-bold" style="text-align:left;">發佈日期</div>
+                                                                    <div style="text-align:left;">${data.startdate}</div>
+                                      </div>
+                                    </li>
+                                        <li class="list-group-item bg-dark d-flex justify-content-between align-items-start">
+                                          <div class="ms-2 me-auto" style=":black">
+                                                    <div class="fw-bold" style="text-align:left;">更新日期</div>
+                                                                            <div style="text-align:left;">${data.modifieddate}</div>
+                                          </div>
+                                        </li>
+                                            <li class="list-group-item bg-dark d-flex justify-content-between align-items-start">
+                                              <div class="ms-2 me-auto" style=":black">
+                                                        <div class="fw-bold" style="text-align:left;">更新日期</div>
+                                                                                <div style="text-align:left;">${data.modifieddate}</div>
+                                              </div>
+                                            </li>
+              </ul></div>`,
+            background: "#343a40"
+        });
+
+    }
+    function deleteDepute() {
+
+    }
+</script>

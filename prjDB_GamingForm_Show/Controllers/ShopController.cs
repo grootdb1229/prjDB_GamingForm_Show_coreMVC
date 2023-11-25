@@ -91,13 +91,17 @@ namespace prjDB_GamingForm_Show.Controllers
             }
 
             [HttpPost]
-            public ActionResult Create(CProductWarp product) //原Product物件
+            public ActionResult Create(CProductWarp product) 
             {
-                if (!ModelState.IsValid) 
-                {
-                return View(product);
-                }
                
+
+
+                if (!ModelState.IsValid)
+                {
+                    //var errors = ModelState.Values.SelectMany(v => v.Errors);測試錯誤用程式碼
+                    return View(product);
+                }
+
                 Product x = new Product();
                 if (_db != null)
                 {
@@ -108,11 +112,11 @@ namespace prjDB_GamingForm_Show.Controllers
                         product.photo.CopyTo(new FileStream(_host.WebRootPath + "/images/shop/" + photoName, FileMode.Create));
                     }
                     x.ProductName = product.ProductName;
-                    x.Price = (decimal)product.Price;
+                    x.Price = product.Price;
                     x.AvailableDate = product.AvailableDate;
                     x.ProductContent = product.ProductContent;
                     x.UnitStock = product.UnitStock;
-                    x.StatusId = product.StatusID;
+                    x.StatusId = (int)product.StatusID;
                     x.MemberId = product.MemberID;
 
                     _db.Products.Add(x);
@@ -123,15 +127,23 @@ namespace prjDB_GamingForm_Show.Controllers
             }
 
 
-
+            //作兩層 第一層取出物件放到warp >葉面改warp參考 >改入DB中ID一樣的地方
             public ActionResult Edit(int? id)
-            {
+            {   
 
                 Product pdb = _db.Products.FirstOrDefault(p => p.ProductId == id);
                 if (pdb == null)
-                    return RedirectToAction("Index");
+                { return RedirectToAction("Index"); }
+                CProductWarp cProductWarp = new CProductWarp();
 
-                return View(pdb);
+                cProductWarp.ProductID = pdb.ProductId;
+                cProductWarp.ProductName = pdb.ProductName;
+                cProductWarp.Price = pdb.Price;
+                cProductWarp.ProductContent = pdb.ProductContent;
+                cProductWarp.UnitStock= pdb.UnitStock;
+                cProductWarp.StatusID = (int)pdb.StatusId;
+                cProductWarp.MemberID = pdb.MemberId;
+                return View(cProductWarp);
             }
 
             [HttpPost]
@@ -139,8 +151,10 @@ namespace prjDB_GamingForm_Show.Controllers
             {
                 if (!ModelState.IsValid)
                 {
-                    return View(product);
+                    var errors = ModelState.Values.SelectMany(v => v.Errors);
+                    return View((CProductWarp)product);
                 }
+
                 Product x = _db.Products.FirstOrDefault(p => p.ProductId == product.ProductID);
                 if (x != null)
                 {
@@ -155,7 +169,7 @@ namespace prjDB_GamingForm_Show.Controllers
                     x.AvailableDate = product.AvailableDate;
                     x.ProductContent = product.ProductContent;
                     x.UnitStock = product.UnitStock;
-                    x.StatusId = product.StatusID;
+                    x.StatusId = (int)product.StatusID;
                     x.MemberId = product.MemberID;
                     //目前沒有FirmID跟圖片功能
                     //MemberID跟StatusID是寫死在CProduct物件中的

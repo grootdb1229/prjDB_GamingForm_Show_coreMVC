@@ -1,4 +1,5 @@
-﻿@model prjDB_GamingForm_Show.Models.Entities.Product
+﻿@model prjDB_GamingForm_Show.Models.Shop.CProductWarp
+@* .Entities.Product *@
 
 @{
     ViewBag.Title = "Edit";
@@ -15,7 +16,7 @@
         <h4>請輸入商品資料</h4>
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        @Html.HiddenFor(model => model.ProductId)
+        @Html.HiddenFor(model => model.ProductID)
 
             <div class="form-group">
 

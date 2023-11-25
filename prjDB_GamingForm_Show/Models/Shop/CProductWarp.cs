@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using prjDB_GamingForm_Show.Models.Entities;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using static prjDB_GamingForm_Show.Models.Shop.CProductWarp;
 
 namespace prjDB_GamingForm_Show.Models.Shop
@@ -19,7 +21,9 @@ namespace prjDB_GamingForm_Show.Models.Shop
             get { return _product; }
             set { _product = value; }
         }
- 
+
+
+
         [DisplayName("產品編號")]
         public int ProductID
         {
@@ -39,12 +43,12 @@ namespace prjDB_GamingForm_Show.Models.Shop
      
         [Range(1, (double)decimal.MaxValue, ErrorMessage = "商品金額必須是合理的數字")]
         [DisplayName("價格")]
-        public decimal Price
+       public decimal Price
         {
             get { return _product.Price; }
             set { _product.Price = value; }
         }
-
+ 
         [DisplayName("上市日期")]//是否轉換成string呢    如上課所教   //同時先暫時移除DateTime?
         public DateTime AvailableDate { get { return DateTime.Now; } }  //.ToString("yyyyMMddHH");
 
@@ -67,29 +71,42 @@ namespace prjDB_GamingForm_Show.Models.Shop
         {
             get { return _product.UnitStock; }
             set { _product.UnitStock = value; }
-        } 
+        }
 
-
+        
         [DisplayName("狀態ID")]  //預設商品為"上架中"狀態
-        public int StatusID { get { return 1; } }
-
+        public int? StatusID {
+            get { return _product.StatusId=1; }
+            set { _product.StatusId = 1; }
+        }
+  
         [DisplayName("上架會員ID")] //在系統完成前先使用 id34號作業
-        public int MemberID { get { return 34; } }
-
+        public int? MemberID {
+            get { return _product.MemberId=34; }
+            set { _product.MemberId = 34; }
+        }
+    
+     
         [DisplayName("圖片ID")]//
         public int ImageID { get; set; }
 
-
+   
         public string? FImagePath { 
             get { return _product.FImagePath; }
             set { _product.FImagePath = value; }
         }
 
-        public IFormFile photo { get; set; }
-        public int TagID { get; set; }
-        public int SubTagID { get; set; }
+        [BindNever]
+        public virtual Status? Status
+        
+            //get { return _product.Status; }
+            //set { _product.Status = null!; }
+          { get; set; } = null;
+    
 
-        public List<int> values {  get; set; }
+
+
+        public IFormFile? photo { get; set; }
 
 
     }

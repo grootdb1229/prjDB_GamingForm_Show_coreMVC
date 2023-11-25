@@ -1,0 +1,74 @@
+{
+  "categories": [
+    {
+      "name": "animal_cat",
+      "score": 0.99609375
+    }
+  ],
+  "tags": [
+    {
+      "name": "animal",
+      "confidence": 0.9992718696594238
+    },
+    {
+      "name": "cat",
+      "confidence": 0.9984216094017029
+    },
+    {
+      "name": "mammal",
+      "confidence": 0.9981231689453125
+    },
+    {
+      "name": "small to medium-sized cats",
+      "confidence": 0.9618067741394043
+    },
+    {
+      "name": "felidae",
+      "confidence": 0.9478325843811035
+    },
+    {
+      "name": "whiskers",
+      "confidence": 0.9468598365783691
+    },
+    {
+      "name": "domestic cat",
+      "confidence": 0.9395358562469482
+    },
+    {
+      "name": "fur",
+      "confidence": 0.9119341373443604
+    },
+    {
+      "name": "outdoor",
+      "confidence": 0.8770613670349121
+    },
+    {
+      "name": "wildcat",
+      "confidence": 0.8500748872756958
+    },
+    {
+      "name": "snow",
+      "confidence": 0.8376233577728271
+    },
+    {
+      "name": "winter",
+      "confidence": 0.7848953008651733
+    }
+  ],
+  "description": {
+    "tags": [ "cat", "outdoor", "domestic cat" ],
+    "captions": [
+      {
+        "text": "a cat sitting in the snow",
+        "confidence": 0.5784469842910767
+      }
+    ]
+  },
+  "requestId": "ed24f97c-5ece-4b08-a8fa-359bdc222b31",
+  "metadata": {
+    "height": 1063,
+    "width": 1595,
+    "format": "Jpeg"
+  },
+  "modelVersion": "2021-05-01"
+}
