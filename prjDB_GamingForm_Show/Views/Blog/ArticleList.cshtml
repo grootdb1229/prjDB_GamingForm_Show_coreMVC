@@ -1,92 +1,102 @@
-﻿@* @model IEnumerable<prjDB_GamingForm_Show.ViewModels.CBlogViewModel> *@
-@model prjDB_GamingForm_Show.ViewModels.CBlogViewModel
+﻿@model prjDB_GamingForm_Show.ViewModels.CBlogViewModel
 @{
     ViewBag.Title = "ArticleList";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-    <link rel="stylesheet" href="~/css/blogstyle.css" type="text/css">
-    
+<link rel="stylesheet" href="~/css/blogstyle.css" type="text/css">
 
-    <header class="header-section">
-        <div class="nav-options">
 
-            <div class="container">
-                <div class="humberger-menu ">
-                    @Html.ActionLink("前往首頁", "List", "Blog")
-                </div>
-                <div class="nav-search search-switch">
-                    @Html.ActionLink("發表文章", "ArticleCreate", "Blog", new { FId = Model.blogs.FirstOrDefault().BlogId},null)
-                </div>
-                <div class="nav-menu">
-                    <ul>
-                        <li class="active">
-                            <a href="@Url.Action("ArticleList", "Blog", new { FId = Model.blogs.FirstOrDefault().BlogId})">全部</a>
-                        </li>
-                        @{
-                            foreach (var item in Model.subBlogs.GroupBy(p => p.Title))
-                            {
-                                <li>
-                                    <a href="@Url.Action("ArticleList", "Blog", new {FId=item.First().BlogId ,SFId = item.FirstOrDefault().SubBlogId})">@item.Key</a>
-                                </li>
-                            }
-                        }
-                    </ul>
-                </div>
-                @using (Html.BeginForm())
-                {
-                    @:關鍵字 @Html.TextBox("txtKeyword")
-                    <input type="submit" value="查詢" />
-                }
+<header class="header-section">
+    <div class="nav-options">
+
+        <div class="container">
+            <div class="humberger-menu ">
+                @Html.ActionLink("前往首頁", "List", "Blog")
             </div>
+            <div class="nav-search search-switch">
+                @Html.ActionLink("發表文章", "ArticleCreate", "Blog", new { FId = Model.blogs.FirstOrDefault().BlogId},null)
+            </div>
+            <div class="nav-menu">
+                <ul>
+                    <li class="active">
+                        <a href="@Url.Action("ArticleList", "Blog", new { FId = Model.blogs.FirstOrDefault().BlogId})">全部</a>
+                    </li>
+                    @{
+                        foreach (var item in Model.subBlogs.GroupBy(p => p.Title))
+                        {
+                            <li>
+                                <a href="@Url.Action("ArticleList", "Blog", new {FId=item.First().BlogId ,SFId = item.FirstOrDefault().SubBlogId})">@item.Key</a>
+                            </li>
+                        }
+                    }
+                </ul>
+            </div>
+            @using (Html.BeginForm())
+            {
+                @:關鍵字 @Html.TextBox("txtKeyword")
+                <input type="submit" value="查詢" />
+            }
         </div>
-    </header>
+    </div>
+</header>
 
 
 
-    <div style="margin:0px auto;margin-top:30px;width:940px;background-color:#4F4F4F;box-shadow:0px 0px 8px 8px #cccccc;border-radius:8px">
+<div style="margin:0px auto;margin-top:30px;width:940px;background-color:#4F4F4F;box-shadow:0px 0px 8px 8px #cccccc;border-radius:8px">
 
-        <table class="table">
-            <tr>
+    <table class="table">
+        <tr>
 
-                <th>
-                    <h4 style="color:antiquewhite;text-align:center">
+            <th>
+                <h4 style="color:antiquewhite;text-align:center">
 
                     @Html.DisplayNameFor(model => model.articles.FirstOrDefault().Title)
-                    </h4>
-                </th>
-                <th>
-                    <h4 style="color:antiquewhite;text-align:center">
+                </h4>
+            </th>
+
+
+            <th>
+                <h4 style="color:antiquewhite;text-align:center">
                     @Html.DisplayNameFor(model => model.articles.FirstOrDefault().ModifiedDate)
-                    </h4>
-                </th>
-        
+                </h4>
+            </th>
+            <th>
+                <h4 style="color:antiquewhite;text-align:center">
 
-            </tr>
+                    @Html.DisplayNameFor(model => model.articles.FirstOrDefault().ViewCount)
+                </h4>
+            </th>
 
-            @{
-                foreach (var item in Model.articles)
-                {
-                    <tr>
 
-                        <td>
-                            <a style="text-decoration:none" href="@Url.Action("ArticleContent", "Blog", new {FId=item.SubBlog.BlogId, AFId =item.ArticleId}) ">
-                                <span style="color:	#FF8000">
-                            【@item.SubBlog.Title】
-                                </span>
-                                <span>
-                            @item.Title
-                                </span>
-                            </a>
-                        </td>
-                        <td style="color:wheat;font-size:10px ">
-                              @Html.DisplayFor(modelItem => item.ModifiedDate)
-                            <p>@Html.DisplayFor(modelItem => item.Member.Name)</p>   @* 預計顯示作者名稱在發文時間下面 *@
-                        </td>
+        </tr>
 
-                    </tr>
-                }
+        @{
+            foreach (var item in Model.articles)
+            {
+                <tr>
+
+                    <td>
+                        <a style="text-decoration:none" href="@Url.Action("ArticleContent", "Blog", new {FId=item.SubBlog.BlogId, AFId =item.ArticleId}) ">
+                            <span style="color:	#FF8000">
+                                【@item.SubBlog.Title】
+                            </span>
+                            <span>
+                                @item.Title
+                            </span>
+                        </a>
+                    </td>
+                    <td style="color:wheat;font-size:10px ">
+                        @Html.DisplayFor(modelItem => item.ModifiedDate)
+                        <p>@Html.DisplayFor(modelItem => item.Member.Name)</p>   @* 預計顯示作者名稱在發文時間下面 *@
+                    </td>
+                    <td style="color:wheat;font-size:10px ">                        
+                        @Html.DisplayFor(modelItem => item.ViewCount)
+                    </td>
+
+                </tr>
             }
+        }
 
-        </table>
-    </div>
+    </table>
+</div></div>

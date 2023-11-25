@@ -18,6 +18,11 @@ public partial class Article
     [DisplayName("最後發文時間")]
     public DateTime ModifiedDate { get; set; }
 
+    //1125克銘 ViewCount觀看次數
+    [DisplayName("觀看次數")]
+    public int? ViewCount { get; set; }
+
+
     public int MemberId { get; set; }
 
     public int? ReplyArticleId { get; set; }
