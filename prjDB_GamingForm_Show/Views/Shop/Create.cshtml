@@ -19,11 +19,16 @@
         <div class="form-group">
             @Html.LabelFor(model => model.ImageID, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                <input type="file" name="photo" id="imageInput" onchange="previewImage(this)" />
+				<label class="btn btn-info">
+					<input id="upload_img" name="photo" style="display:none;" onchange="previewImage(this)" type="file">
+                    <i class="fa-solid fa-file"></i>上傳圖片
+				</label>
                 <img id="imagePreview" style="max-width: 300px; max-height: 300px; margin-top: 10px;" />
             </div>
         </div>
-        @* @Html.ValidationSummary(true, "", new { @class = "text-danger" }) *@
+
+       
+
 
         <div class="form-group">
             @Html.LabelFor(model => model.ProductName, htmlAttributes: new { @class = "control-label col-md-2" })
@@ -32,7 +37,7 @@
                 @Html.ValidationMessageFor(model => model.ProductName, "", new { @class = "text-danger" })
             </div>
         </div>
-    @*     @Html.ValidationSummary(true, "", new { @class = "text-danger" }) *@
+ 
 
 
         <div class="form-group">
@@ -42,8 +47,7 @@
                 @Html.ValidationMessageFor(model => model.Price, "", new { @class = "text-danger" })
             </div>
         </div>
-        @* @Html.ValidationSummary(true, "", new { @class = "text-danger" }) *@
-       
+      
         <div class="form-group">
 
             <label for="Tags" class="control-label col-md-2">選擇標籤：</label>
@@ -62,11 +66,12 @@
         <div class="form-group">
             @Html.LabelFor(model => model.ProductContent, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.ProductContent, new { htmlAttributes = new { @class = "form-control", style = "width:50vw; height:45vh; resize: none;", id = "ProductContentCss" } })
-                @* <textarea style="width: 50vw; height: 45vh; resize: none;" name="ProductContent" cols="120"></textarea> *@
-
-            </div>  @Html.ValidationMessageFor(model => model.ProductContent, "", new { @class = "text-danger" })
+                @*@Html.EditorFor(model => model.ProductContent, new { htmlAttributes = new { @class = "form-control" } })*@
+                <textarea style="width: 50vw; height: 45vh; resize: none;" name="ProductContent" cols="120"></textarea>
+                @Html.ValidationMessageFor(model => model.ProductContent, "", new { @class = "text-danger" })
+            </div>
         </div>
+
 
         <div class="form-group">
             @Html.LabelFor(model => model.UnitStock, htmlAttributes: new { @class = "control-label col-md-2" })
@@ -88,8 +93,7 @@
     <!--子標籤視窗大小-->
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script>
-        // var PC = document.getElementById('ProductContent');
-        // PC.style.width = 50vw; PC.style.height = 45vh;
+
         document.getElementById('Price').value = 0;
         document.getElementById('Unitstock').value = 0;
     </script>
@@ -120,23 +124,27 @@
                 preview.src = "";
             }
         };
-        const btn = document.querySelector('#btnsubmit');
+        //以下程式碼SomeHow會影響到圖片的顯示 
+        // const btn = document.querySelector('#btnsubmit');
 
-        btn.addEventListener('click', event => {
-            event.preventDefault();
-            const formData = new FormData(document.querySelector('#productform'));
-            fetch('@Url.Content("~/Shop/Create")', {
-                    method: 'POST',
-                    body: formData
-                })
-                    .then(Swal.fire({
-                        title: "新增成功!",
-                        //text: "訂單已送至電子信箱!",
-                        icon: "success",
-                        showConfirmButton=false
-                    }))
-            })
+        // btn.addEventListener('click', event => {
+        //     event.preventDefault();
+        //     const formData = new FormData(document.querySelector('#productform'));
+        //     fetch('@Url.Content("~/Shop/Create")',
+        //     {
+        //             method: 'POST',
+        //             body: formData
+        //         }).then(response => response.json())
+        //             .then(Swal.fire({
+        //                 title: "新增成功!",
+        //                 //text: "訂單已送至電子信箱!",
+        //                 icon: "success",
+        //                 showConfirmButton=false
+        //             }))
+        //     })
 
+
+   
         </script>
 
         <!--放Tag-->

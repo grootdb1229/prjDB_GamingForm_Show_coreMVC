@@ -27,12 +27,11 @@ namespace prjDB_GamingForm_Show.Controllers
             {
                 //UI相關
                 //Todo 商品切成XX個一頁，下面要有1~XX個頁，上面要有選項讓客人決定一頁呈現 20 OR 40個   //補充 蝦皮沒分 大約60件一頁
-                //Todo 商品圖片大小不一需要修正
-                //Todo 篩選 價格排序 上架日期排序 銷售件數排序
-                //Todo 研究一下商品上架/修改的選擇圖片那區，檔案名移除+讓他好看點
+                //Todo 篩選 價格排序 上架日期排序 銷售件數排序 寫成Json放到下面在作篩選?
+
 
                 //軟體功能相關
-                //Todo  你的交易邏輯有待考據。請洽GPT或者芳芳老師
+                //Todo  你的交易邏輯這個版本根本還沒寫上去
                 //Todo  tag選擇後要有DIV去接客人選擇的Subtag，可視化讓客人選擇自己商品的標籤，再用迴圈塞入資料庫
                 //Todo  產品留言功能目前未實作
 
@@ -94,8 +93,6 @@ namespace prjDB_GamingForm_Show.Controllers
             public ActionResult Create(CProductWarp product) 
             {
                
-
-
                 if (!ModelState.IsValid)
                 {
                     //var errors = ModelState.Values.SelectMany(v => v.Errors);測試錯誤用程式碼
@@ -127,7 +124,7 @@ namespace prjDB_GamingForm_Show.Controllers
             }
 
 
-            //作兩層 第一層取出物件放到warp >葉面改warp參考 >改入DB中ID一樣的地方
+       
             public ActionResult Edit(int? id)
             {   
 
