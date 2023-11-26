@@ -15,7 +15,7 @@
                 @Html.ActionLink("前往首頁", "List", "Blog")
             </div>
             <div class="nav-search search-switch">
-                @Html.ActionLink("發表文章", "ArticleCreate", "Blog", new { FId = Model.blogs.FirstOrDefault().BlogId},null)
+                @Html.ActionLink("發表文章", "ArticleCreate", "Blog", new { FId = Model.blogs.FirstOrDefault().BlogId }, null)
             </div>
             <div class="nav-menu">
                 <ul>
@@ -63,8 +63,8 @@
             </th>
             <th>
                 <h4 style="color:antiquewhite;text-align:center">
-
-                    @Html.DisplayNameFor(model => model.articles.FirstOrDefault().ViewCount)
+                    互動 / 人氣
+                    @* @Html.DisplayNameFor(model => model.articles.FirstOrDefault().ViewCount) *@
                 </h4>
             </th>
 
@@ -86,12 +86,13 @@
                             </span>
                         </a>
                     </td>
-                    <td style="color:wheat;font-size:10px ">
-                        @Html.DisplayFor(modelItem => item.ModifiedDate)
-                        <p>@Html.DisplayFor(modelItem => item.Member.Name)</p>   @* 預計顯示作者名稱在發文時間下面 *@
+                    <td style="color:wheat;font-size:10px ;">
+                        <p style="text-align:center"> @Html.DisplayFor(modelItem => item.ModifiedDate)</p>  @* 發文時間 *@
+                        <p style="text-align:center"> @Html.DisplayFor(modelItem => item.Member.Name) </p>  @* 預計顯示作者名稱在發文時間下面 *@
                     </td>
-                    <td style="color:wheat;font-size:10px ">                        
-                        @Html.DisplayFor(modelItem => item.ViewCount)
+                    <td style="color:wheat;font-size:20px;text-align:center">
+                        @((item.Replies != null) ? item.Replies.Count() : 0) /      @* 回文次數 *@
+                        @Html.DisplayFor(modelItem => item.ViewCount)               @* 瀏覽次數 *@
                     </td>
 
                 </tr>

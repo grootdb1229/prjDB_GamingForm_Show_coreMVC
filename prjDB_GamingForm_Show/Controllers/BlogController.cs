@@ -78,9 +78,11 @@ namespace prjDB_GamingForm_Show.Controllers
                 {
                     blogs = _db.Blogs.Where(b => b.BlogId == FId).Select(p => p),
                     subBlogs = _db.SubBlogs.Where(s => s.BlogId == FId).Select(p => p),
-                    articles = _db.Articles.Include(a => a.Member).Where(a => a.SubBlog.BlogId == FId && a.Title.Contains(kw.txtKeyWord)).OrderByDescending(a => a.ModifiedDate).Select(p => p),
+                    articles = _db.Articles.Include(a => a.Replies).Include(a => a.Member).Where(a => a.SubBlog.BlogId == FId && a.Title.Contains(kw.txtKeyWord)).OrderByDescending(a => a.ModifiedDate).Select(p => p),
                     tags = _db.Tags.Select(p => p),
                     subTags = _db.SubTags.Where(s => s.TagId == 4 && s.SubTagId != 14).Select(p => p),
+
+                    
                 };
             }
             else
@@ -93,9 +95,11 @@ namespace prjDB_GamingForm_Show.Controllers
                     {
                         blogs = _db.Blogs.Where(b => b.BlogId == FId).Select(p => p),
                         subBlogs = _db.SubBlogs.Where(s => s.BlogId == FId).Select(p => p),
-                        articles = _db.Articles.Include(a => a.Member).Where(a => a.SubBlog.BlogId == FId).OrderByDescending(a => a.ModifiedDate).Select(p => p),
+                        articles = _db.Articles.Include(a => a.Replies).Include(a => a.Member).Where(a => a.SubBlog.BlogId == FId).OrderByDescending(a => a.ModifiedDate).Select(p => p),
                         tags = _db.Tags.Select(p => p),
                         subTags = _db.SubTags.Where(s => s.TagId == 4 && s.SubTagId != 14).Select(p => p),
+
+                        
                     };
                 }
                 else
@@ -106,7 +110,9 @@ namespace prjDB_GamingForm_Show.Controllers
                         subTags = _db.SubTags.Where(s => s.TagId == 4 && s.SubTagId != 14).Select(p => p),
                         blogs = _db.Blogs.Where(b => b.BlogId == FId).Select(p => p),
                         subBlogs = _db.SubBlogs.Where(s => s.BlogId == FId).Select(p => p),
-                        articles = _db.Articles.Include(a => a.Member).Include(a => a.Replies).Where(a => a.SubBlogId == SFId).OrderByDescending(a => a.ModifiedDate).Select(p => p),
+                        articles = _db.Articles.Include(a => a.Replies).Include(a => a.Member).Include(a => a.Replies).Where(a => a.SubBlogId == SFId).OrderByDescending(a => a.ModifiedDate).Select(p => p),
+
+                        
                     };
                 }
             }
