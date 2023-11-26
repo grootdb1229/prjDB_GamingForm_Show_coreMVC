@@ -35,9 +35,9 @@
                     @{
                         foreach (var item in Model.subBlogs.GroupBy(p => p.Title))
                         {
-                            <li>
-                                <a href="@Url.Action("ArticleList", "Blog", new {FId=item.First().BlogId ,SFId = item.FirstOrDefault().SubBlogId})">@item.Key</a>
-                            </li>
+                                        <li>
+                                            <a href="@Url.Action("ArticleList", "Blog", new {FId=item.First().BlogId ,SFId = item.FirstOrDefault().SubBlogId})">@item.Key</a>
+                                        </li>
                         }
                     }
                 </ul>
@@ -48,9 +48,6 @@
 @*-----------------------------------<!-- ArticleContent -->---------------------------------------------------*@
 <div>
     <div style="margin: 0 auto; width: 940px;">
-
-
-
         <div style="border: 2px solid red; padding: 3px; margin: 5px; border-radius: 5px; display:flex;">
             <div style="display: flex;">
                 <div style="margin-right: 10px;">
@@ -58,7 +55,7 @@
                         var author = Model.articles.FirstOrDefault()?.Member;
                         if (author != null)
                         {
-                            <img src="~/images/@author.FImagePath" alt="" style="max-width: 100px;border-radius: 50%;">
+                                        <img src="~/images/@author.FImagePath" alt="" style="max-width: 100px;border-radius: 50%;">
                         }
                     }
                 </div>
@@ -91,12 +88,14 @@
                         @{
                             int like = 0;
 
-                            <button type="button" class="btn btn-danger" onclick="location.href='@Url.Action("Like", "Blog", new { AFId = Model.articles.FirstOrDefault().ArticleId, FId = Model.blogs.FirstOrDefault().BlogId })'">
-                                <img src="~/images/like.png" alt="Like" width="20px" height="20px" />
-                            </button>
+                                        <button type="button" class="btn btn-danger" id="btnLike">
+                                            <img src="~/images/like.png" alt="Like" width="20px" height="20px" />
+                                        </button>
 
                             like = Model.articleActions.Count(a => a.ActionId == 1);
-                            @like
+                            <span id="spLike">
+                                        @like
+                            </span>
                         }
                         <p style="float:right">
 
@@ -123,7 +122,7 @@
                             </script>
                             @*@Html.ActionLink("修改", "ArticleEdit", new { AFId = Model.articles.FirstOrDefault().ArticleId ,FId = Model.blogs.FirstOrDefault().BlogId})
                             @Html.ActionLink("刪除", "ArticleDelete", new { AFId = Model.articles.FirstOrDefault().ArticleId, FId = Model.blogs.FirstOrDefault().BlogId }, new { onclick = "return confirm ('確定刪除嗎?')" })*@
-                            
+
                         </p>
 
                     </div>
@@ -139,87 +138,103 @@
                 foreach (var item in Model.replies)
                 {
                     count++;
-                    <div style="border: 2px solid red; padding: 3px; margin: 5px; border-radius: 5px;display: flex;">
-                        <div div style="margin-right: 10px;">
-                            @{
+                                <div style="border: 2px solid red; padding: 3px; margin: 5px; border-radius: 5px;display: flex;">
+                                    <div div style="margin-right: 10px;">
+                                        @{
                                 var replyAuthor = item.Member;
                                 if (replyAuthor != null)
                                 {
-                                    <img src="~/images/@replyAuthor.FImagePath" alt="" style="max-width: 100px; border-radius: 50%;">
+                                                            <img src="~/images/@replyAuthor.FImagePath" alt="" style="max-width: 100px; border-radius: 50%;">
                                 }
-                            }
-                        </div>
-                        <div style="flex-grow: 1;">
-                            <div>
-                                @count 樓
-                            </div>
-                            <h3 style="color:white">
-                                @item.Member.Name
-                            </h3>
-                            <p style="font-size:15px">
-                                發表時間: @Html.DisplayFor(modelitem => item.ModifiedDate)
-                            </p>
-                            <div style="overflow: hidden; word-wrap: break-word; white-space: pre-line; display: flex;">
-                                <p style="margin:0; max-width:650px;font-size:30px">
-                                    @Html.DisplayFor(modelitem => item.ReplyContents)
-                                </p>
-                            </div>
-                            <br />
-                            <div style="width:800px">
-                                <p style="float:right">
-                                    @if (Model.replies.First().MemberId == ViewBag.KK)
-                                    {
-
-                                        @* @Html.ActionLink("修改", "ReplyEdit", new { AFId = Model.articles.FirstOrDefault().ArticleId ,FId = Model.blogs.FirstOrDefault().BlogId, RFId =item.ReplyId})*@
-                                        <button type="button" class="btn btn-warning" onclick="location.href='@Url.Action( "ReplyEdit","Blog", new { AFId = Model.articles.FirstOrDefault().ArticleId ,FId = Model.blogs.FirstOrDefault().BlogId, RFId =item.ReplyId})'">修改</button>
-
-                                        @Html.ActionLink("刪除回覆", "ReplyDelete", new { AFId = Model.articles.FirstOrDefault().ArticleId, RFId =item.ReplyId,FId = Model.blogs.FirstOrDefault().BlogId }, new { onclick = "return confirm ('確定刪除嗎?')", @class="btn btn-secondary"})
-                                       
-                                    }
-                                    @*<script>
-                                        function ReplyDelete() {
-                                            var result = confirm('確定刪除嗎?');
-                                            if (result) {
-                                                location.href = @Html.()'@Url.Action("ReplyDelete", "Blog", new { AFId = Model.articles.FirstOrDefault().ArticleId, RFId =item.ReplyId,FId = Model.blogs.FirstOrDefault().BlogId })';
-                                            }
                                         }
-                                    </script>*@
-                                </p>
+                                    </div>
+                                    <div style="flex-grow: 1;">
+                                        <div>
+                                            @count 樓
+                                        </div>
+                                        <h3 style="color:white">
+                                            @item.Member.Name
+                                        </h3>
+                                        <p style="font-size:15px">
+                                            發表時間: @Html.DisplayFor(modelitem => item.ModifiedDate)
+                                        </p>
+                                        <div style="overflow: hidden; word-wrap: break-word; white-space: pre-line; display: flex;">
+                                            <p style="margin:0; max-width:650px;font-size:30px">
+                                                @Html.DisplayFor(modelitem => item.ReplyContents)
+                                            </p>
+                                        </div>
+                                        <br />
+                                        <div style="width:800px">
+                                            <p style="float:right">
+                                                @if (Model.replies.First().MemberId == ViewBag.KK)
+                                    {
+                                                    @* @Html.ActionLink("修改", "ReplyEdit", new { AFId = Model.articles.FirstOrDefault().ArticleId ,FId = Model.blogs.FirstOrDefault().BlogId, RFId =item.ReplyId})*@
+                                                    <button type="button" class="btn btn-warning" onclick="location.href='@Url.Action( "ReplyEdit","Blog", new { AFId = Model.articles.FirstOrDefault().ArticleId ,FId = Model.blogs.FirstOrDefault().BlogId, RFId =item.ReplyId})'">修改</button>
 
-                            </div>
-                        </div>
-                    </div>
+                                                    @Html.ActionLink("刪除回覆", "ReplyDelete", new { AFId = Model.articles.FirstOrDefault().ArticleId, RFId =item.ReplyId,FId = Model.blogs.FirstOrDefault().BlogId }, new { onclick = "return confirm ('確定刪除嗎?')", @class="btn btn-secondary"})
+
+                                    }
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
                 }
             }
         </div>
     </div>
 </div>
 
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        // 獲取當前網址
-        var currentUrl = window.location.href;
 
-        // 將當前網址設定到輸入框中
-        document.getElementById('urlToCopy').value = currentUrl;
+@section Scripts{
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // 獲取當前網址
+            var currentUrl = window.location.href;
 
-        // 初始化 Clipboard.js
-        var clipboard = new ClipboardJS('#copyButton', {
-            text: function () {
-                return currentUrl;
-            }
+            // 將當前網址設定到輸入框中
+            document.getElementById('urlToCopy').value = currentUrl;
+
+            // 初始化 Clipboard.js
+            var clipboard = new ClipboardJS('#copyButton', {
+                text: function () {
+                    return currentUrl;
+                }
+            });
+
+            // 處理複製成功事件
+            clipboard.on('success', function (e) {
+                console.log('已複製到剪貼簿');
+                e.clearSelection(); // 清除選擇，使輸入框不被選中
+                alert("網址已複製成功");
+            });
         });
 
+        //彈出MODAL   
+        const btnlike = document.getElementById("btnLike");
+        var splike=document.getElementById("spLike")
 
-        // 處理複製成功事件
-        clipboard.on('success', function (e) {
-            console.log('已複製到剪貼簿');
-            e.clearSelection(); // 清除選擇，使輸入框不被選中
-            alert("網址已複製成功");
-            
-        });
-        
-    });
-</script>
+        //判斷是否登入   暫時是這樣寫
+        fetch('@Url.Content("~/Blog/LogOrNot")')
+            .then(respones => respones.json())
+            .then(datas => {
+                       // 綁定自  data - bs - toggle="modal" data - bs - target="#staticBackdrop
+                if (datas == null) {
+                    btnlike.setAttribute('data-bs-toggle', 'modal');
+                    btnlike.setAttribute('data-bs-target', '#staticBackdrop');
+                }
+                else 
+                {
+                    //綁定LIKE事件
+                    btnlike.addEventListener('click',()=>{
+                        fetch('@Url.Content("~/Blog/Like")?AFId=@Model.articles.FirstOrDefault().ArticleId')
+                            .then(response => response.text())
+                            .then(data => {
+                                console.log(data)
+                                splike.innerHTML = data
+                            })
+                    })             
+                }
+            })
 
-
+    </script>
+}

@@ -82,6 +82,24 @@
     </nav>
 
     @RenderBody()
+    <!-- Modal   沒登入專用彈窗 -->
+    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="staticBackdropLabel">訊息</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" style="color:black">
+                    是否要登入?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">關閉</button>
+                    @Html.ActionLink("登入", "Login","Home",null, new { @class="btn btn-primary"})                 
+                </div>
+            </div>
+        </div>
+    </div>
     <!-- Footer-->
     <footer class="py-5 bg-dark" style="position:relative;bottom:0;width:100%">
         <div class="container"><p class="m-0 text-center text-white">Copyright &copy; Your Website 2023</p></div>
