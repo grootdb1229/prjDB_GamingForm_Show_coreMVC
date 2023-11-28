@@ -101,9 +101,10 @@
         async function next(){
             const response = await fetch('@Url.Content("~/Admin/MemberListNexttest")');
             const datas = await response.json();
-            const memberid = datas.map(m => `${m.MemberID}`)
+            
+            const memberid = datas.map(m => datas[0]['memberId'])
             document.querySelector('#mid').innerHTML = memberid.join("")
-            console.log(memberid)
+            
         }
 
     </script>
