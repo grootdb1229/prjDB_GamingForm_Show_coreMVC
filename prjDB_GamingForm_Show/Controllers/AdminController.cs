@@ -299,21 +299,22 @@ namespace prjDB_GamingForm_Show.Controllers
         {
             return View();
         }
-        public IActionResult MemberListNexttest()
-        {
-            if (HttpContext.Session.Keys.Contains(CDictionary.SK_管理者觀看會員清單頁數使用關鍵字))
-            {
-                i頁數 = (int)HttpContext.Session.GetInt32(CDictionary.SK_管理者觀看會員清單頁數使用關鍵字);
-            }
-            if (i頁數 < _db.Members.Count() / i每頁筆數)
-            {
-                i頁數++;
-            }
+        //public IActionResult MemberListNexttest()
+        //{
+        //    if (HttpContext.Session.Keys.Contains(CDictionary.SK_管理者觀看會員清單頁數使用關鍵字))
+        //    {
+        //        i頁數 = (int)HttpContext.Session.GetInt32(CDictionary.SK_管理者觀看會員清單頁數使用關鍵字);
+        //    }
+        //    if (i頁數 < _db.Members.Count() / i每頁筆數)
+        //    {
+        //        i頁數++;
+        //    }
 
-            HttpContext.Session.SetInt32(CDictionary.SK_管理者觀看會員清單頁數使用關鍵字, i頁數);
-            var members = from m in _db.Members.Skip(i每頁筆數 * i頁數).Take(i每頁筆數)
-                          select m;
-            return Json(members);
-        }
+        //    HttpContext.Session.SetInt32(CDictionary.SK_管理者觀看會員清單頁數使用關鍵字, i頁數);
+        //    var members = from m in _db.Members.Skip(i每頁筆數 * i頁數).Take(i每頁筆數)
+        //                  select m;
+        //    return Json(members);
+        //}
+
     }
 }
