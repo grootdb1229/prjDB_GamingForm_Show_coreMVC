@@ -31,6 +31,8 @@ public partial class DbGamingFormTestContext : DbContext
 
     public virtual DbSet<Certificate> Certificates { get; set; }
 
+    public virtual DbSet<Chat> Chats { get; set; }
+
     public virtual DbSet<Depute> Deputes { get; set; }
 
     public virtual DbSet<DeputeRecord> DeputeRecords { get; set; }
@@ -62,6 +64,8 @@ public partial class DbGamingFormTestContext : DbContext
     public virtual DbSet<Product> Products { get; set; }
 
     public virtual DbSet<ProductAdvertise> ProductAdvertises { get; set; }
+
+    public virtual DbSet<ProductComplain> ProductComplains { get; set; }
 
     public virtual DbSet<ProductEvaluate> ProductEvaluates { get; set; }
 
@@ -105,7 +109,10 @@ public partial class DbGamingFormTestContext : DbContext
 
     public virtual DbSet<WishList> WishLists { get; set; }
 
-   
+//    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+//#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+//        => optionsBuilder.UseSqlServer("Data Source=.;Initial Catalog=DB_GamingForm_test;Integrated Security=True;Trust Server Certificate=True");
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Action>(entity =>
@@ -239,6 +246,25 @@ public partial class DbGamingFormTestContext : DbContext
 
             entity.Property(e => e.CertificateId).HasColumnName("CertificateID");
             entity.Property(e => e.Name).HasMaxLength(50);
+        });
+
+        modelBuilder.Entity<Chat>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToTable("Chat");
+
+            entity.Property(e => e.Id).HasColumnName("ID");
+
+            entity.HasOne(d => d.ReceiveAdminNavigation).WithMany()
+                .HasForeignKey(d => d.ReceiveAdmin)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Chat_Admin1");
+
+            entity.HasOne(d => d.SenderAdminNavigation).WithMany()
+                .HasForeignKey(d => d.SenderAdmin)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Chat_Admin");
         });
 
         modelBuilder.Entity<Depute>(entity =>
@@ -530,9 +556,7 @@ public partial class DbGamingFormTestContext : DbContext
             entity.Property(e => e.ProductId).HasColumnName("ProductID");
             entity.Property(e => e.AvailableDate).HasColumnType("date");
             entity.Property(e => e.FImagePath).HasColumnName("fImagePath");
-            entity.Property(e => e.FirmId)
-                .HasDefaultValueSql("((0))")
-                .HasColumnName("FirmID");
+            entity.Property(e => e.FirmId).HasColumnName("FirmID");
             entity.Property(e => e.MemberId)
                 .HasDefaultValueSql("((0))")
                 .HasColumnName("MemberID");
@@ -567,6 +591,21 @@ public partial class DbGamingFormTestContext : DbContext
                 .HasForeignKey(d => d.ProductId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_ProductAdvertise_Product");
+        });
+
+        modelBuilder.Entity<ProductComplain>(entity =>
+        {
+            entity.ToTable("ProductComplain");
+
+            entity.HasOne(d => d.Memeber).WithMany(p => p.ProductComplains)
+                .HasForeignKey(d => d.MemeberId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_ProductComplain_Member");
+
+            entity.HasOne(d => d.Product).WithMany(p => p.ProductComplains)
+                .HasForeignKey(d => d.ProductId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_ProductComplain_Product");
         });
 
         modelBuilder.Entity<ProductEvaluate>(entity =>

@@ -13,5 +13,9 @@ public partial class Admin
 
     public int RankId { get; set; }
 
+    public string? Name { get; set; }
+
+    public string? ImgPath { get; set; }
+
     public virtual AdminRank Rank { get; set; } = null!;
 }
