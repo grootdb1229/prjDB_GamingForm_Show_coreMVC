@@ -39,11 +39,11 @@
                     <!-- menu profile quick info -->
                     <div class="profile clearfix">
                         <div class="profile_pic">
-                            <img src="~/production/images/pa.jpg" alt="..." class="img-circle profile_img">
+                            <img src="~/production/images/@Context.Request.HttpContext.Session.GetString(CDictionary.SK_管理者照片路徑)" alt="..." class="img-circle profile_img">
                         </div>
                         <div class="profile_info">
                             <span style="font-size:20px">管理者,您好</span>
-                            <h2 style="font-size:20px">小趴</h2>                            
+                            <h2 style="font-size:20px">@Context.Request.HttpContext.Session.GetString(CDictionary.SK_管理者名稱)</h2>
                         </div>
                     </div>
                     <!-- /menu profile quick info -->
@@ -212,7 +212,7 @@
                         <ul class=" navbar-right">
                             <li class="nav-item dropdown open" style="padding-left: 15px;">
                                 <a href="~/javascript:;" class="user-profile dropdown-toggle" aria-haspopup="true" id="navbarDropdown" data-toggle="dropdown" aria-expanded="false">
-                                    <img src="~/production/images/S__33095703.jpg" alt="">小趴
+                                    <img src="~/production/images/@Context.Request.HttpContext.Session.GetString(CDictionary.SK_管理者照片路徑)" alt="">@Context.Request.HttpContext.Session.GetString(CDictionary.SK_管理者名稱)
                                 </a>
                                 <div class="dropdown-menu dropdown-usermenu pull-right" aria-labelledby="navbarDropdown">
                                     <a class="dropdown-item" href="~/javascript:;"> 管理者資料</a>
