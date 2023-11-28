@@ -48,7 +48,7 @@
                 </div>
                 <div class="form-group">
                     <label asp-for="articles.First().ArticleContent" class="control-label"></label>
-                    <input name="ArticleContent" class="form-control" />
+                    <textarea asp-for="articles.FirstOrDefault().ArticleContent" class="form-control" rows="4"></textarea>
                     <span asp-validation-for="articles.First().ArticleContent" class="text-danger"></span>
                 </div>
                 <div class="form-group">                   
