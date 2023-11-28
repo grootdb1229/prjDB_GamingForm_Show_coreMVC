@@ -304,6 +304,15 @@ namespace prjDB_GamingForm_Show.Controllers
         {
             return View();
         }
+        public IActionResult ProductReview()
+        {
+            CAdminCheckProductViewModel vm = new CAdminCheckProductViewModel
+            {
+                Products = _db.Products.Include(m => m.Member).Where(p => p.StatusId == 4),
+                Members = _db.Members
+            };            
+            return View(vm);
+        }
         //public IActionResult MemberListNexttest()
         //{
         //    if (HttpContext.Session.Keys.Contains(CDictionary.SK_管理者觀看會員清單頁數使用關鍵字))
@@ -320,6 +329,5 @@ namespace prjDB_GamingForm_Show.Controllers
         //                  select m;
         //    return Json(members);
         //}
-
     }
 }

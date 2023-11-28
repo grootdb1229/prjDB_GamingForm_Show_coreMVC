@@ -57,6 +57,10 @@
                 {
                     s = "尚未開始販售";
                 }
+                else if (item.StatusId == 4)
+                {
+                    s = "審核中";
+                }
                 string d = item.AvailableDate.ToString("yyyy / MM / dd");
                 string p = item.Price.ToString("0.##");
                 <tr>
