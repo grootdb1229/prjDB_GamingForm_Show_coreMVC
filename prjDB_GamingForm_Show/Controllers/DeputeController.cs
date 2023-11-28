@@ -47,7 +47,6 @@ namespace prjDB_GamingForm_Show.Controllers
 
             foreach (var item in data)
             {
-
                 x = new CDeputeViewModel()
                 {
                     id = item.DeputeId,
