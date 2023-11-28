@@ -1,0 +1,221 @@
+﻿{
+   "CodeGenerationMode": 3,
+   "ContextClassName": "DB_GamingForm_testContext",
+   "ContextNamespace": null,
+   "DefaultDacpacSchema": null,
+   "FilterSchemas": false,
+   "IncludeConnectionString": true,
+   "ModelNamespace": null,
+   "OutputContextPath": null,
+   "OutputPath": "Models",
+   "PreserveCasingWithRegex": true,
+   "ProjectRootNamespace": "prjDB_GamingForm_Show",
+   "Schemas": null,
+   "SelectedHandlebarsLanguage": 2,
+   "SelectedToBeGenerated": 0,
+   "T4TemplatePath": null,
+   "Tables": [
+      {
+         "Name": "[dbo].[Action]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Admin]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[AdminRank]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Advertise]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Article]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ArticleAction]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Blog]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Certificate]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Depute]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[DeputeRecord]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[DeputeSkill]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Education]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Firm]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Image]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[JobAdvertise]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[JobCertificate]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Member]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[MemberStatus]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[MemberTag]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Order]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[OrderProduct]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Payment]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Product]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ProductAdvertise]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ProductEvaluate]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ProductTag]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Region]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[RegionDistrict]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Reply]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ReplyAction]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ReplyImage]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Resume]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ResumeCertificate]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ResumeSkill]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ResumeStyle]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[SerachRecord]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ShipMethod]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Skill]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[SkillClass]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Status]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[SubBlog]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[SubBolgCategories]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[SubTag]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Tag]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[WishList]",
+         "ObjectType": 0
+      }
+   ],
+   "UiHint": "desktop-rae7e6c.DB_GamingForm_test.dbo",
+   "UncountableWords": null,
+   "UseBoolPropertiesWithoutDefaultSql": false,
+   "UseDatabaseNames": false,
+   "UseDateOnlyTimeOnly": false,
+   "UseDbContextSplitting": false,
+   "UseDecimalDataAnnotationForSprocResult": true,
+   "UseFluentApiOnly": true,
+   "UseHandleBars": false,
+   "UseHierarchyId": false,
+   "UseInflector": true,
+   "UseLegacyPluralizer": false,
+   "UseManyToManyEntity": false,
+   "UseNoDefaultConstructor": false,
+   "UseNoNavigations": false,
+   "UseNoObjectFilter": false,
+   "UseNodaTime": false,
+   "UseNullableReferences": false,
+   "UseSchemaFolders": false,
+   "UseSchemaNamespaces": false,
+   "UseSpatial": false,
+   "UseT4": false
+}
