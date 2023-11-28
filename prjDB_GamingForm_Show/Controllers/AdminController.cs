@@ -295,9 +295,5 @@ namespace prjDB_GamingForm_Show.Controllers
             }
             return RedirectToAction("ProductList");
         }
-        public IActionResult SignalRTest()
-        {
-            return View();
-        }
     }
 }
