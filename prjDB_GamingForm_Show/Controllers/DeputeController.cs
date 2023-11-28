@@ -7,6 +7,7 @@ using prjDB_GamingForm_Show.Models.Entities;
 using prjDB_GamingForm_Show.Models.Shop;
 using prjDB_GamingForm_Show.ViewModels;
 using System.Collections.Generic;
+using System.Text.Json;
 using static prjDB_GamingForm_Show.Controllers.DeputeController;
 
 namespace prjDB_GamingForm_Show.Controllers
@@ -362,6 +363,21 @@ namespace prjDB_GamingForm_Show.Controllers
             };
             _db.Deputes.Add(n);
             _db.SaveChanges();
+
+            //以下存該委託所需的技能(多類別)
+            List<CDeputeSkillViewModel> list = JsonSerializer.Deserialize<List<CDeputeSkillViewModel>>(vm.skilllist);
+
+            DeputeSkill ndsk = new DeputeSkill();
+            foreach (var item in list)
+            {
+                int skillclassID = _db.SkillClasses.FirstOrDefault(_ => _.Name == item.skillclass).SkillClassId;
+                int skillID = _db.Skills.FirstOrDefault(_ => _.SkillClassId == skillclassID && _.Name == item.skill).SkillId;
+                ndsk.Id = 0;
+                ndsk.DeputeId = n.DeputeId;
+                ndsk.SkillId = skillID;
+                _db.DeputeSkills.Add(ndsk);
+                _db.SaveChanges();
+            }
             return RedirectToAction("Personal");
         }
         public IActionResult deleteDepute(int id)
