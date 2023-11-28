@@ -1,5 +1,4 @@
-﻿
-@{
+﻿@{
     ViewData["Title"] = "DeputeList";
     Layout = "~/Views/Shared/DeputeLayout2.cshtml";
 }
@@ -15,13 +14,11 @@
                         <input type="text" id="text" name="txtKeyword" class="form-control border-0" placeholder="Keyword" />
                     </div>
                     <div class="col-md-4">
-                        <select id="combo1" class="form-select border-0">
-                        </select>
-                        <select id="combo2" class="form-select border-0">
+                        <select id="regions" class="form-select border-0">
                         </select>
                     </div>
                     <div class="col-md-4">
-                        <select id="combo3" class="form-select border-0">
+                        <select id="money" class="form-select border-0">
                             <option name="txtSalary" selected>請選擇...</option>
                             <option name="txtSalary" value="1">10000</option>
                             <option name="txtSalary" value="2">20000</option>
@@ -45,24 +42,34 @@
 
 <!-- Search End -->
 <!-- Jobs Start -->
+<div class="container">
+    <span style="float:left">test</span>
+    <span style="float:left">test</span>
+    <span style="float:left">test</span>
+    <ul>
+        <li style="float:right;list-style:none"><select id="skill" class="form-select border-0"></select></li>
+        <li style="float:right;list-style:none"><select id="skillclass" class="form-select border-0"></select></li>
+    </ul>
+</div>
 <div class="container-xxl py-5">
+    
     <div class="container">
         <h1 class="text-center mb-5 wow fadeInUp" data-wow-delay="0.1s">Job Listing</h1>
+
         <div class="tab-class text-center wow fadeInUp" data-wow-delay="0.3s">
-            
+
             <div class="tab-content">
                 <div id="tab-1" class="tab-pane fade show p-0 active">
                     <div class="job-item p-4 mb-4">
                         <div id="list" class="row g-4">
-                            
                         </div>
-                        
+
                     </div>
                     @Html.ActionLink("回懸賞首頁", "DeputeMain", "Depute", null, new { @class = "btn btn-primary py-3 px-5", @id = "btndp" })
-                    </div>
-                
+                </div>
+
             </div>
-            
+
         </div>
     </div>
 </div>
@@ -70,53 +77,54 @@
 @section Scripts {
     <script>
 
-        
+
         const title = document.querySelector('#list');
         const text = document.querySelector('#text');
         const search = document.querySelector('#search');
+        const skillclass = document.querySelector('#skillclass');
+        const skill = document.querySelector('#skill');
         search.addEventListener("click", () => { loadList() })
-        
+        skillclass.addEventListener("change", () => { loadList() })
+        skill.addEventListener("change", () => { loadList() })
 
+        const selSkillClasses = document.querySelector('#skillclass');
+        const selectSkills = document.querySelector('#skill');
+        const selectRegions = document.querySelector('#regions');
+        const selSalary = document.querySelector('#money');
 
-        const selSkillClasses = document.querySelector('#combo1');
-        const selectSkills = document.querySelector('#combo2');
-        const selSalary = document.querySelector('#combo3');
-        
-
-        loadSkillClassess();
-        
-        selSkillClasses.addEventListener("change", () => { loadSkill() });
+        //基本搜尋&&進階搜尋
+        loadRegion();
         async function loadList() {
             const lstFrag = $(document.createDocumentFragment());
             const response = await fetch
-                (`@Url.Content("~/Depute/Search")?txtKeyword=${text.value}&txtSkillClass=${selSkillClasses.options[selSkillClasses.selectedIndex].text}&txtSkill=${selectSkills.options[selectSkills.selectedIndex].text}&txtSalary=${selSalary.options[selSalary.selectedIndex].text}`);
+                (`@Url.Content("~/Depute/Search")?txtKeyword=${text.value}&txtRegion=${selectRegions.options[selectRegions.selectedIndex].text}&txtSalary=${selSalary.options[selSalary.selectedIndex].text}`);
             // console.log(response)
             const data = await response.json();
-             console.log(data);
+            // console.log(data);
             const list = data.map(list =>
                 `                           <input type="hidden" name="${list.id}" value=${list.id}/>
-                                            <div  class="col-sm-12 col-md-8 d-flex align-items-center">
-                                             <img class="flex-shrink-0 img-fluid border rounded" src="/images/${list.imgfilepath}" alt="" style="width: 80px; height: 80px;">
-                                             <div class="text-start ps-4">
-                                             <h5 class="mb-3">${list.title}</h5>
-                                                     <span class="text-truncate me-3"><i class="fa fa-map-marker-alt text-primary me-2"></i>${list.region}</span>
-                                                                     <span class="text-truncate me-3"><i class="fa fa-map-marker-alt text-primary me-2"></i>${list.providername}</span>
-                                                             <span class="text-truncate me-3"><i class="far fa-clock text-primary me-2"></i>${list.startdate}</span>
-                                                     <span class="text-truncate me-0"><i class="far fa-money-bill-alt text-primary me-2"></i>${list.salary}</span>
-                                            </div>
-                                            </div>
-                                            <div class="col-sm-12 col-md-4 d-flex flex-column align-items-start align-items-md-end justify-content-center">
-                                            <div class="d-flex mb-3">
-                                            <a class="btn btn-light btn-square me-3" href=""><i class="far fa-heart text-primary"></i></a>
-                                            <a href="/Depute/DeputeDetails/${list.id}" class="btn btn-primary id=" btndp"">詳細...</a>
-                                                            <a href="/Depute/Apply/${list.id}" class="btn btn-primary id=" btndp"">我要應徵...</a>
-                                            
-                                            </div>
-                                                    <small class="text-truncate"><i class="far fa-calendar-alt text-primary me-2"></i>Last Update : ${list.modifieddate}</small>
-                                            </div>
+                                                    <div  class="col-sm-12 col-md-8 d-flex align-items-center">
+                                                     <img class="flex-shrink-0 img-fluid border rounded" src="/images/${list.imgfilepath}" alt="" style="width: 80px; height: 80px;">
+                                                     <div class="text-start ps-4">
+                                                     <h5 class="mb-3">${list.title}</h5>
+                                                             <span class="text-truncate me-3"><i class="fa fa-map-marker-alt text-primary me-2"></i>${list.region}</span>
+                                                                             <span class="text-truncate me-3"><i class="fa fa-map-marker-alt text-primary me-2"></i>${list.providername}</span>
+                                                                     <span class="text-truncate me-3"><i class="far fa-clock text-primary me-2"></i>${list.startdate}</span>
+                                                             <span class="text-truncate me-0"><i class="far fa-money-bill-alt text-primary me-2"></i>${list.salary}</span>
+                                                    </div>
+                                                    </div>
+                                                    <div class="col-sm-12 col-md-4 d-flex flex-column align-items-start align-items-md-end justify-content-center">
+                                                    <div class="d-flex mb-3">
+                                                    <a class="btn btn-light btn-square me-3" href=""><i class="far fa-heart text-primary"></i></a>
+                                                    <a href="/Depute/DeputeDetails/${list.id}" class="btn btn-primary id=" btndp"">詳細...</a>
+                                                                    <a href="/Depute/Apply/${list.id}" class="btn btn-primary id=" btndp"">我要應徵...</a>
+
+                                                    </div>
+                                                            <small class="text-truncate"><i class="far fa-calendar-alt text-primary me-2"></i>Last Update : ${list.modifieddate}</small>
+                                                    </div>
 
 
-                                    `
+                                            `
 
 
 
@@ -126,6 +134,7 @@
             $('#list').html(lstFrag);
         }
 
+        //下拉式選單
         async function loadSkillClassess() {
             const SkillClasseFrag = $(document.createDocumentFragment());
             const response = await fetch('@Url.Content("~/Depute/SkillClassess")');
@@ -136,13 +145,12 @@
             // console.log(data);
             const SkillClassess = data.map(SkillClassess => `<option name="txtSkillClass" value='${SkillClassess.skillClassId}'>${SkillClassess.name}</option>`)
             SkillClasseFrag.append(SkillClassess);
-            $('#combo1').html(SkillClasseFrag)
+            $('#skillclass').html(SkillClasseFrag)
             // selSkillClasses.innerHTML = SkillClassesks.join("");
 
             loadSkill();
 
         }
-
 
         async function loadSkill() {
             const SkillFrag = $(document.createDocumentFragment());
@@ -154,11 +162,25 @@
             // console.log(data);
             const Skills = data.map(Skills => `<option name="txtSkill" value='${Skills.skillId}'>${Skills.name}</option>`)
             SkillFrag.append(Skills);
-            $('#combo2').html(SkillFrag)
+            $('#skill').html(SkillFrag)
             // selectSkills.innerHTML = Skills.join("");
             loadList();
         }
 
+        async function loadRegion() {
+            const RegionFrag = $(document.createDocumentFragment());
+            const response = await fetch(`@Url.Content("~/Depute/Region")`);
+            console.log(response);
+            const snd = '<option name="txtRegion" value="null">請選擇...</option>'
+            RegionFrag.append(snd);
+            const data = await response.json();
+            console.log(data);
+            const Regions = data.map(Regions => `<option name="txtRegion" value='${Regions.regionId}'>${Regions.city}</option>`)
+            RegionFrag.append(Regions);
+            $('#regions').html(RegionFrag)
+            loadSkillClassess();
+        }
+        
         
 
 

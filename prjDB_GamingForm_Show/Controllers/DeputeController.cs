@@ -106,15 +106,27 @@ namespace prjDB_GamingForm_Show.Controllers
             return View(x);
 
         }
+        public IActionResult HotKey(int id)
+        {
+            var value = (from n in _db.SerachRecords.AsEnumerable()
+                        group n by n.Name into q
+                        orderby q.Count() descending
+                        select q.Key).Take(id);
 
+            if (value == null)
+                return RedirectToAction("DeputeList");
+
+            return View(value);
+
+
+        }
 
 
         public IActionResult Search(CKeyWord vm)
         {
             IEnumerable<CDeputeViewModel> datas = null;
             if (string.IsNullOrEmpty(vm.txtKeyword) &&
-                vm.txtSkill == "請選擇..." && 
-                vm.txtSkillClass == "請選擇..." && 
+                vm.txtRegion == "請選擇..." && 
                 vm.txtSalary == "請選擇...")
             {
                 ListLoad();
@@ -127,10 +139,8 @@ namespace prjDB_GamingForm_Show.Controllers
                 
                 if (string.IsNullOrEmpty(vm.txtKeyword))
                     vm.txtKeyword = "";
-                if (vm.txtSkill== "請選擇...")
-                    vm.txtSkill = "";
-                if (vm.txtSkillClass== "請選擇...")
-                    vm.txtSkillClass = "";
+                if (vm.txtRegion == "請選擇...")
+                    vm.txtRegion = "";
                 if (vm.txtSalary == "請選擇...")
                     vm.txtSalary = "0";
                 datas = List.Where(n => (n.deputeContent.Trim().ToLower().Contains(vm.txtKeyword.Trim().ToLower()) ||
@@ -138,9 +148,7 @@ namespace prjDB_GamingForm_Show.Controllers
                                           n.salary.ToString().Trim().ToLower().Contains(vm.txtKeyword.Trim().ToLower()) ||
                                           n.region.Trim().ToLower().Contains(vm.txtKeyword.Trim().ToLower()))
                                           &&
-                                          (n.deputeContent.Trim().ToLower().Contains(vm.txtSkill.Trim().ToLower()))
-                                          &&
-                                          (n.deputeContent.Trim().ToLower().Contains(vm.txtKeyword.Trim().ToLower()))
+                                          (n.region.Trim().ToLower().Contains(vm.txtRegion.Trim().ToLower()))
                                           &&
                                           (n.salary>=(Convert.ToInt32(vm.txtSalary)))
                                           )
@@ -153,7 +161,45 @@ namespace prjDB_GamingForm_Show.Controllers
             }
             return Json(datas);
         }
+        public IActionResult DetailsSearch(CKeyWord vm)
+        {
+            IEnumerable<CDeputeViewModel> datas = null;
+            if (string.IsNullOrEmpty(vm.txtKeyword) &&
+                vm.txtRegion == "請選擇..." &&
+                vm.txtSalary == "請選擇...")
+            {
+                ListLoad();
+                datas = from n in List
+                        select n;
 
+            }
+            else
+            {
+
+                if (string.IsNullOrEmpty(vm.txtKeyword))
+                    vm.txtKeyword = "";
+                if (vm.txtRegion == "請選擇...")
+                    vm.txtRegion = "";
+                if (vm.txtSalary == "請選擇...")
+                    vm.txtSalary = "0";
+                datas = List.Where(n => (n.deputeContent.Trim().ToLower().Contains(vm.txtKeyword.Trim().ToLower()) ||
+                                          n.providername.Trim().ToLower().Contains(vm.txtKeyword.Trim().ToLower()) ||
+                                          n.salary.ToString().Trim().ToLower().Contains(vm.txtKeyword.Trim().ToLower()) ||
+                                          n.region.Trim().ToLower().Contains(vm.txtKeyword.Trim().ToLower()))
+                                          &&
+                                          (n.region.Trim().ToLower().Contains(vm.txtRegion.Trim().ToLower()))
+                                          &&
+                                          (n.salary >= (Convert.ToInt32(vm.txtSalary)))
+                                          )
+                   .OrderByDescending(n => n.modifieddate);
+
+            }
+            if (datas == null || datas.Count() == 0)
+            {
+                return Content("No result");
+            }
+            return Json(datas);
+        }
         //test
         public List<CDeputeViewModel> List { get; set; }
         
@@ -166,6 +212,12 @@ namespace prjDB_GamingForm_Show.Controllers
         {
             var datas = from n in _db.SkillClasses
                                select n;
+            return Json(datas);
+        }
+        public IActionResult Region()
+        {
+            var datas = from n in _db.Regions
+                        select n;
             return Json(datas);
         }
         public IActionResult Skills(int? id)
