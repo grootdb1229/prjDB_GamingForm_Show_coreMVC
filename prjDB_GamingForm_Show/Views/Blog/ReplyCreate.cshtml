@@ -68,4 +68,19 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
+    
+    <script>
+        ClassicEditor
+            .create(document.querySelector('#editor'), {
+                toolbar: ['undo', 'redo', '|', 'bold', 'italic', 'fontfamily', 'fontsize', 'fontColor', 'fontBackgroundColor'],
+                extraAllowedContent: 'iframe[src, width, height, frameborder, allow, allowfullscreen]'
+            })
+            .then(editor => {
+                console.log(editor);
+            })
+            .catch(error => {
+                console.error(error);
+            });
+    </script>
+}
 }

@@ -30,67 +30,83 @@
     <link rel="stylesheet" href="~/css/magnific-popup.css" type="text/css">
     <link rel="stylesheet" href="~/css/slicknav.min.css" type="text/css">
     <link rel="stylesheet" href="~/css/blogstyle.css" type="text/css"> *@
-    <link rel="stylesheet" href="~/css/blogstyle.css" type="text/css">
+<link rel="stylesheet" href="~/css/blogstyle.css" type="text/css">
 @* </head>
 
 <body>
  *@
-    <header class="header-section" >
-        <div class="nav-options">
+<header class="header-section">
 
-            <div class="container">
+    <div class="nav-options">
 
-                <div class="nav-menu" >
-                    <ul>
-                        <li>
-                            <a href="@Url.Action("List", "Blog")"><span>全部</span></a>
-                        </li>
-                        @{
-                            foreach (var item in Model.subTags)
-                            {
-                                <li>
-                                    <a href="@Url.Action("List", "Blog", new { FId =item.SubTagId})"><span>@item.Name </span></a>
-                                </li>
-                            }
-                        }
-                    </ul>
-                </div>
-                        @using (Html.BeginForm())
-                        {
-                            @:關鍵字 @Html.TextBox("txtKeyword")
-                            <input type="submit" value="查詢" />
-                        }
-            </div>
-        </div>
-    </header>
-    <section class="instagram-post-section spad" style="background-color:#272727">
-        <div>@ViewBag.KK</div>
         <div class="container">
-            <div class="row" style="border-radius:8px;box-shadow:0px 0px 8px 8px #cccccc">
-                <div class="col-lg-12" style="background-color:#4F4F4F;border-radius:8px">                   
+
+            <div class="nav-menu">
+                <ul>
+                    <li>
+                        <a href="@Url.Action("List", "Blog")"><span>全部</span></a>
+                    </li>
                     @{
-                        foreach (var item in Model.blogs)
+                        foreach (var item in Model.subTags)
                         {
-                            <div class="ip-item" style="border-bottom:1px dotted black;padding:12px;margin:0px;">
-                                <div class="ip-pic">
-                                    <a href="@Url.Action("ArticleList", "Blog", new { FId =item.BlogId})">
-                                        <img src="~/images/@item.FImagePath" width="360" height="108" alt="">
-                                    </a>
-                                </div>
-                                <div class="ip-text">
-                                    <a style="text-decoration:none" href="@Url.Action("ArticleList", "Blog", new { FId =item.BlogId})">
-                                        <span style="color: #FFFFFF;font-size:32px">@item.Title</span>
-                                    </a>
-                                   
-                                    <p style="font-size:24px">@Html.DisplayFor(modelItem => item.SubBlogs.FirstOrDefault().Articles.LastOrDefault().Title)</p>                                                                        
-                                </div>
-                            </div>
+                            <li>
+                                <a href="@Url.Action("List", "Blog", new { FId =item.SubTagId})"><span>@item.Name </span></a>
+                            </li>
                         }
                     }
-                </div>
+                </ul>
+            </div>
+            @using (Html.BeginForm())
+            {
+                @:關鍵字 @Html.TextBox("txtKeyword")
+                <input type="submit" value="查詢" />
+            }
+        </div>
+    </div>
+</header>
+<section class="instagram-post-section spad" style="background-color:#272727">
+    <div>@ViewBag.KK</div>
+    <div style="float:left;padding:10px">
+        <div style="padding:10px;display:flex">
+            <a href="@Url.Action("Details","Shop",new{id=20})">
+            <img src="~/images/D4AD.png" width="330" height="450" alt="">
+            </a>
+        </div>
+        <br />
+        <div style="padding:10px;display:flex">
+            <a href="@Url.Action("Depute","DeputeList",new{id=20})">
+                <img src="~/images/D4AD.png" width="330" height="450" alt="">
+            </a>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row" style="border-radius:8px;box-shadow:0px 0px 8px 8px #cccccc">
+            <div class="col-lg-12" style="background-color:#4F4F4F;border-radius:8px">
+
+                @{
+                    foreach (var item in Model.blogs)
+                    {
+                        <div class="ip-item" style="border-bottom:1px dotted black;padding:12px;margin:0px;">
+                            <div class="ip-pic">
+                                <a href="@Url.Action("ArticleList", "Blog", new { FId =item.BlogId})">
+                                    <img src="~/images/@item.FImagePath" width="360" height="108" alt="">
+                                </a>
+                            </div>
+                            <div class="ip-text">
+                                <a style="text-decoration:none" href="@Url.Action("ArticleList", "Blog", new { FId =item.BlogId})">
+                                    <span style="color: #FFFFFF;font-size:32px">@item.Title</span>
+                                </a>
+
+                                <p style="font-size:24px">@Html.DisplayFor(modelItem => item.SubBlogs.FirstOrDefault().Articles.LastOrDefault().Title)</p>
+                            </div>
+                        </div>
+                    }
+                }
             </div>
         </div>
-    </section>
+    </div>
+</section>
 
 @*     <script src="~/js/jquery-3.3.1.min.js"></script>
     <script src="~/js/bootstrap.min.js"></script>
