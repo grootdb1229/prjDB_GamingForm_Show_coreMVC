@@ -58,12 +58,28 @@ namespace prjDB_GamingForm_Show.Controllers
                 return View(Pdb);
 
             }
-            public IActionResult IndexPage(int? id) //拿來跳page用的 id用變數去計算，++--一個變數去控制讀取到的最後一個商品控制Page
-            {
+
+          
+            public IActionResult IndexbyDate(String CK)
+            {  
                 IEnumerable<Product> Pdb = null;
-                Pdb = (from aa in _db.Products select aa).Skip((int)id).Take(25);//到最後一頁之後不能按 邏輯再補充
+                if (string.IsNullOrEmpty(CK))
+                {
+                    Pdb = _db.Products.Where(x => x.StatusId == 1).OrderByDescending(x => x.AvailableDate.Date);
+				}
+                else
+                {
+                    Pdb = _db.Products.Where(p => p.ProductName.Contains(CK) && p.StatusId == 1)
+                        .OrderByDescending(x => x.AvailableDate.Date);
+                }
                 return Json(Pdb);
             }
+            //    public IActionResult IndexPage(int? id) //拿來跳page用的 id用變數去計算，++--一個變數去控制讀取到的最後一個商品控制Page
+            //{
+            //    IEnumerable<Product> Pdb = null;
+            //    Pdb = (from aa in _db.Products select aa).Skip((int)id).Take(25);//到最後一頁之後不能按 邏輯再補充
+            //    return Json(Pdb);
+            //}
             public ActionResult Create()
             {
                 _db.Products.Load();

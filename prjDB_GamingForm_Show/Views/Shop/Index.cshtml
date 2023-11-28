@@ -1,121 +1,203 @@
 ﻿@model IEnumerable<prjDB_GamingForm_Show.Models.Entities.Product>
 
 @{
-    ViewBag.Title = "產品目錄";
+	ViewBag.Title = "產品目錄";
 }
 
 <!-- Header-->
 <header class="bg-dark py-5 bg-image">
-    <div class="container px-4 px-lg-5 my-5">
-        <div class="text-center text-white">
-            <h1 class="display-4 fw-bolder">Shop in style</h1>
-            <p class="lead fw-normal text-white-50 mb-0">With this shop hompeage template</p>
-        </div>
-    </div>
+	<div class="container px-4 px-lg-5 my-5">
+		<div class="text-center text-white">
+			<h1 class="display-4 fw-bolder">Shop in style</h1>
+			<p class="lead fw-normal text-white-50 mb-0">With this shop hompeage template</p>
+		</div>
+	</div>
 </header>
 <p>
-    @using (Html.BeginForm())
-    {
-@*        @: 關鍵字 @Html.TextBox("txtKeyword")
-        <input type="submit" value="查詢" />*@
-    
+	@using (Html.BeginForm())
+	{
+		@*        @: 關鍵字 @Html.TextBox("txtKeyword")
+	<input type="submit" value="查詢" />*@
 
-    <!-- Search Start -->
-    <div class="container-fluid bg-primary mb-5 wow fadeIn" data-wow-delay="0.1s" style="padding: 35px;">
-        <div class="container">
-            <div class="row g-2">
-                <div class="col-md-10">
-                    <div class="row g-2">
-                        <div class="col-md-4">
-                            <input type="text" class="form-control border-0" placeholder="Keyword" name="txtKeyword" />
-                        </div>
-                        <div class="col-md-4">
-                            <select class="form-select border-0">
-                                <option selected>Category</option>
-                                <option value="1">Category 1</option>
-                                <option value="2">Category 2</option>
-                                <option value="3">Category 3</option>
-                            </select>
-                        </div>
-                        <div class="col-md-4">
-                            <select class="form-select border-0">
-                                <option selected>Location</option>
-                                <option value="1">最熱銷</option>
-                                <option value="2">最新上架</option>
-                                <option value="3">價格:高到低</option>
-                                <option value="3">價格:低到高</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-2">
-                        <input type="submit" value="查詢" />
-                </div>
-            </div>
-        </div>
-    </div>
-    }
-    <!-- Search End -->
- </p>  
-    @Html.ActionLink("我要上架", "Create", "Shop",null, new { @class = "btn btn-outline-dark mt-auto" })
 
-    <div class="container px-4 px-lg-5 mt-5">
-        <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
-            @foreach (var item in Model)
-            {
-            <div class="col mb-5">
-                <div class="card h-100">
-                        
-                    <!-- Sale badge-->
-                    <div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem">Sale</div>
-                    <!-- Product image-->
-                    <img class="card-img-top" src="~/images/shop/@item.FImagePath" alt="..." style="height:25vh; width=25vw;" />
-                    <!-- Product details-->
-                    <div class="card-body p-4">
-                        <div class="text-center">
-                            <!-- Product name-->
-                                <h5 class="fw-bolder">@Html.DisplayFor(modelItem => item.ProductName)</h5>
-                            <!-- Product reviews-->
-                            <div class="d-flex justify-content-center small text-warning mb-2">
-                                <div class="bi-star-fill"></div>
-                                <div class="bi-star-fill"></div>
-                                <div class="bi-star-fill"></div>
-                                <div class="bi-star-fill"></div>
-                                <div class="bi-star-fill"></div>
-                            </div>
-                            <!-- Product price-->
-                                <span class="text-muted text-decoration-line-through">@Html.DisplayFor(modelItem => item.Price)</span>
-                            <span style="color:black">@Html.DisplayFor(modelItem => item.Price)</span>
-                        </div>
-                    </div>
-                    <!-- Product actions-->
-                    <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
- @using (Html.BeginForm("AddToCar", "Shop", FormMethod.Post))
-                            {
-@Html.TextBox("txtCount", "1", new { @class = "form-control text-center me-3 textbox"})
-                        <div class="text-center">
-                                @Html.ActionLink("查看商品", "Details", "Shop", new { id = item.ProductId }, new { @class = "btn btn-outline-dark mt-auto" })
-                        </div>
-                        <div class="text-center">
-                                @Html.ActionLink("測試修改", "Edit", "Shop", new { id = item.ProductId }, new { @class = "btn btn-outline-dark mt-auto" })
-                            </div>
-                           
-                                <input type="hidden" name="ProductID" value="@item.ProductId" />
-                        <div class="text-center">
-                                    
-                                    <input type="submit" value="加入購物車" class="btn btn-outline-dark mt-auto" />
-                       </div>
-                            }
+		<!-- Search Start -->
+		<div class="container-fluid bg-primary mb-5 wow fadeIn" data-wow-delay="0.1s" style="padding: 35px;">
+			<div class="container">
+				<div class="row g-2">
+					<div class="col-md-10">
+						<div class="row g-2">
+							<div class="col-md-4">
+								<input type="text" class="form-control border-0" placeholder="Keyword" id="Kw" name="txtKeyword" />
+							</div>
+							<div class="col-md-4">
+								<select class="form-select border-0">
+									<option selected>Category</option>
+									<option value="1">Category 1</option>
+									<option value="2">Category 2</option>
+									<option value="3">Category 3</option>
+								</select>
+							</div>
+							<div class="col-md-4">
+								<select id="SortControl" class="form-select border-0">
+									<option selected>Location</option>
+									<option value="1" >最熱銷</option>
+									<option value="2"  >最新上架</option>
+									<option value="3">價格:高到低</option>
+									<option value="3">價格:低到高</option>
+								</select>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-2">
+						<input type="submit" value="查詢" />
+					</div>
+				</div>
+			</div>
+		</div>
+	}
+	<!-- Search End -->
+</p>
+@Html.ActionLink("我要上架", "Create", "Shop",null, new { @class = "btn btn-outline-dark mt-auto" })
 
-                    </div>
-                </div>
-            </div>
-            }
-        </div>
-    </div>
-    <style>
-        .textbox{
-        max-width: 3rem;
-        justify-content:center
-        }
-    </style>
+<div class="container px-4 px-lg-5 mt-5">
+	<div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center" id="ContentProduct">
+		@foreach (var item in Model)
+		{
+			<div class="col mb-5">
+				<div class="card h-100">
+
+					<!-- Sale badge-->
+					<div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem">Sale</div>
+					<!-- Product image-->
+					<img class="card-img-top" src="~/images/shop/@item.FImagePath" alt="..." style="height:25vh; width=25vw;" />
+					<!-- Product details-->
+					<div class="card-body p-4">
+						<div class="text-center">
+							<!-- Product name-->
+							<h5 class="fw-bolder">@Html.DisplayFor(modelItem => item.ProductName)</h5>
+							<!-- Product reviews-->
+							<div class="d-flex justify-content-center small text-warning mb-2">
+								<div class="bi-star-fill"></div>
+								<div class="bi-star-fill"></div>
+								<div class="bi-star-fill"></div>
+								<div class="bi-star-fill"></div>
+								<div class="bi-star-fill"></div>
+							</div>
+							<!-- Product price-->
+							<span class="text-muted text-decoration-line-through">@Html.DisplayFor(modelItem => item.Price)</span>
+							<span style="color:black">@Html.DisplayFor(modelItem => item.Price)</span>
+						</div>
+					</div>
+					<!-- Product actions-->
+					<div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+						@using (Html.BeginForm("AddToCar", "Shop", FormMethod.Post))
+						{
+							@Html.TextBox("txtCount", "1", new { @class = "form-control text-center me-3 textbox"})
+							<div class="text-center">
+								@Html.ActionLink("查看商品", "Details", "Shop", new { id = item.ProductId }, new { @class = "btn btn-outline-dark mt-auto" })
+							</div>
+							<div class="text-center">
+								@Html.ActionLink("測試修改", "Edit", "Shop", new { id = item.ProductId }, new { @class = "btn btn-outline-dark mt-auto" })
+							</div>
+
+							<input type="hidden" name="ProductID" value="@item.ProductId" />
+							<div class="text-center">
+
+								<input type="submit" value="加入購物車" class="btn btn-outline-dark mt-auto" />
+							</div>
+						}
+
+					</div>
+				</div>
+			</div>
+		}
+	</div>
+</div>
+<style>
+	.textbox {
+		max-width: 3rem;
+		justify-content: center
+	}
+</style>
+@section  Scripts
+	{
+	<script>
+		
+		var ProductContent = document.querySelector('#ContentProduct');
+		var DataControl = document.querySelector('#SortControl');//選項
+		
+
+		DataControl.addEventListener('change', () => {
+			var selectedValue = DataControl.value;
+
+			switch (selectedValue) {
+				case '1':
+					console.log('最熱銷');
+					break;
+				case '2':
+					SortByDate();
+					break;
+				case '3':
+					console.log('bb');
+					break;
+				case '4':
+					console.log('aa');
+					break;
+				default:		
+					console.log('不確定要不要先放');
+					break;
+			}
+		});
+		
+		
+			async function SortByDate() {
+				var queryKeyword = document.querySelector('#Kw').value;
+				
+				ProductContent.innerHTML = '';
+				const response = await fetch(`@Url.Content("~/Shop/IndexbyDate")?CK=${queryKeyword}`);
+				const data = await response.json();
+				console.log(data);
+				const sortbydate = data.map(x =>
+					`
+						 <div class="col mb-5">
+				<div class="card h-100">
+					<div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem">Sale</div>
+						<img class="card-img-top" src="~/images/shop/${x.fImagePath}" alt="..." style="height:25vh; width=25vw;" />
+					<div class="card-body p-4">
+						<div class="text-center">
+									<h5 class="fw-bolder">${x.productName}</h5>
+							<div class="d-flex justify-content-center small text-warning mb-2">
+								<div class="bi-star-fill"></div>
+								<div class="bi-star-fill"></div>
+								<div class="bi-star-fill"></div>
+								<div class="bi-star-fill"></div>
+								<div class="bi-star-fill"></div>
+							</div>
+							<span class="text-muted text-decoration-line-through">${x.price}</span>
+							<span style="color:black">${x.price}</span>
+						</div>
+					</div>
+					<div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+						<form action="/Shop/AddToCar" method="post">
+							<input type="text" name="txtCount" value="1" class="form-control text-center me-3 textbox" />
+							<div class="text-center">
+										<a href="/Shop/Details?id=${x.productId}" class="btn btn-outline-dark mt-auto">查看商品</a>
+							</div>
+							<div class="text-center">
+										<a href="/Shop/Edit?id=${x.productId}" class="btn btn-outline-dark mt-auto">測試修改</a>
+							</div>
+									<input type="hidden" name="ProductID" value="${x.productId}" />
+							<div class="text-center">
+								<input type="submit" value="加入購物車" class="btn btn-outline-dark mt-auto" />
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+								`);
+				ProductContent.innerHTML = sortbydate.join("");
+			console.log(ProductContent.innerHTML);
+			}
+
+</script>
+}
