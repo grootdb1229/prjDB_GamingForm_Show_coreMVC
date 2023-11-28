@@ -1,0 +1,68 @@
+﻿@*@model IEnumerable<prjDB_GamingForm_Show.Models.Entities.Product>*@
+@model prjDB_GamingForm_Show.ViewModels.CAdminCheckProductViewModel
+
+@{
+    ViewData["Title"] = "ProductReview";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h2>ProductReview</h2>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table table-dark table-hover" style="color:white ; font-size:20px">
+    <thead>
+        <tr>
+            <th>
+                商品編號
+            </th>
+            <th>
+                商品名稱
+            </th>
+            <th>
+                內容描述
+            </th>
+            <th>
+                申請會員
+            </th>
+            <th>
+                商品圖片
+            </th>
+            <th>
+                申請審核日期
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Products)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ProductId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ProductName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ProductContent)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Member.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FImagePath)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.AvailableDate)
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                    @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                    @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
