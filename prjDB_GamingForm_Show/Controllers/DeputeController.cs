@@ -60,7 +60,7 @@ namespace prjDB_GamingForm_Show.Controllers
                     status = item.Status,
                     region = item.City,
                     imgfilepath = item.FImagePath
-            };
+                };
 
                 List.Add(x);
 
@@ -69,7 +69,7 @@ namespace prjDB_GamingForm_Show.Controllers
 
         public IActionResult DeputeList()
         {
-            
+
             return View();
 
         }
@@ -109,9 +109,9 @@ namespace prjDB_GamingForm_Show.Controllers
         public IActionResult HotKey(int id)
         {
             var value = (from n in _db.SerachRecords.AsEnumerable()
-                        group n by n.Name into q
-                        orderby q.Count() descending
-                        select q.Key).Take(id);
+                         group n by n.Name into q
+                         orderby q.Count() descending
+                         select q.Key).Take(id);
 
             if (value == null)
                 return RedirectToAction("DeputeList");
@@ -126,8 +126,10 @@ namespace prjDB_GamingForm_Show.Controllers
         {
             IEnumerable<CDeputeViewModel> datas = null;
             if (string.IsNullOrEmpty(vm.txtKeyword) &&
-                vm.txtRegion == "請選擇..." && 
-                vm.txtSalary == "請選擇...")
+                vm.txtSkillClass == "請選擇..." &&
+                vm.txtSkill == "請選擇..." &&
+                vm.txtSalary == "請選擇..." &&
+                vm.txtRegion == "請選擇...")
             {
                 ListLoad();
                 datas = from n in List
@@ -136,26 +138,30 @@ namespace prjDB_GamingForm_Show.Controllers
             }
             else
             {
-                
+
                 if (string.IsNullOrEmpty(vm.txtKeyword))
                     vm.txtKeyword = "";
+                if (vm.txtSkillClass == "請選擇...")
+                    vm.txtSkillClass = "";
+                if (vm.txtSkill == "請選擇...")
+                    vm.txtSkill = "";
                 if (vm.txtRegion == "請選擇...")
                     vm.txtRegion = "";
                 if (vm.txtSalary == "請選擇...")
                     vm.txtSalary = "0";
-                datas = List.Where(n => (n.deputeContent.Trim().ToLower().Contains(vm.txtKeyword.Trim().ToLower()) ||
+                datas = List.Where(n => ((n.deputeContent.Trim().ToLower().Contains(vm.txtKeyword.Trim().ToLower()) ||
                                           n.providername.Trim().ToLower().Contains(vm.txtKeyword.Trim().ToLower()) ||
-                                          n.salary.ToString().Trim().ToLower().Contains(vm.txtKeyword.Trim().ToLower()) ||
-                                          n.region.Trim().ToLower().Contains(vm.txtKeyword.Trim().ToLower()))
-                                          &&
-                                          (n.region.Trim().ToLower().Contains(vm.txtRegion.Trim().ToLower()))
-                                          &&
-                                          (n.salary>=(Convert.ToInt32(vm.txtSalary)))
+                                          n.region.Trim().ToLower().Contains(vm.txtKeyword.Trim().ToLower())))&&
+                                          (n.region.Trim().ToLower().Contains(vm.txtRegion.Trim().ToLower()))&&
+                                          (n.salary >= (Convert.ToInt32(vm.txtSalary))&&
+                                          n.deputeContent.Trim().ToLower().Contains(vm.txtSkillClass.Trim().ToLower()) &&
+                                          n.deputeContent.Trim().ToLower().Contains(vm.txtSkill.Trim().ToLower())
+                                          )
                                           )
                    .OrderByDescending(n => n.modifieddate);
 
             }
-            if(datas==null || datas.Count()==0)
+            if (datas == null || datas.Count() == 0)
             {
                 return Content("No result");
             }
@@ -202,7 +208,7 @@ namespace prjDB_GamingForm_Show.Controllers
         }
         //test
         public List<CDeputeViewModel> List { get; set; }
-        
+
         public IActionResult Index()
         {
             //測試網頁樣板用
@@ -211,7 +217,7 @@ namespace prjDB_GamingForm_Show.Controllers
         public IActionResult SkillClassess()
         {
             var datas = from n in _db.SkillClasses
-                               select n;
+                        select n;
             return Json(datas);
         }
         public IActionResult Region()
@@ -230,7 +236,7 @@ namespace prjDB_GamingForm_Show.Controllers
             var SkillClasses = _db.SkillClasses.Select(n => n.Name);
             List<CDeputeViewModel> slist = new List<CDeputeViewModel>();
             CDeputeViewModel x = null;
-            foreach (var item in SkillClasses) 
+            foreach (var item in SkillClasses)
             {
                 var datas = from n in List.AsEnumerable()
                             where n.deputeContent.Contains(item)
@@ -251,7 +257,7 @@ namespace prjDB_GamingForm_Show.Controllers
 
         public IActionResult NewFive()
         {
-            var datas = List.OrderByDescending(n=>n.modifieddate).Take(5);
+            var datas = List.OrderByDescending(n => n.modifieddate).Take(5);
             return Json(datas);
         }
 
@@ -260,19 +266,19 @@ namespace prjDB_GamingForm_Show.Controllers
             var datas = _db.Skills.Where(a => a.SkillClassId == id);
             return Json(datas);
         }
-        public IActionResult DeputeMain() 
+        public IActionResult DeputeMain()
         {
-        
+
             return View();
         }
 
-        
+
 
         public int _memberIdtest = 38;
         public IActionResult Apply(int id)
         {
             ViewBag.memberid = _memberIdtest;
-            Depute o=_db.Deputes.FirstOrDefault(_ => _.DeputeId == id);
+            Depute o = _db.Deputes.FirstOrDefault(_ => _.DeputeId == id);
             if (o == null)
                 return RedirectToAction("deputemain");
             return View(o);
@@ -295,13 +301,13 @@ namespace prjDB_GamingForm_Show.Controllers
         [HttpPost]
         public IActionResult Edit(CDeputeViewModel vm)
         {
-            Depute o=_db.Deputes.Where(_=>_.DeputeId==vm.id).FirstOrDefault();
+            Depute o = _db.Deputes.Where(_ => _.DeputeId == vm.id).FirstOrDefault();
             if (o != null)
             {
                 o.DeputeId = vm.id;
                 o.ProviderId = _memberIdtest;
                 o.StartDate = Convert.ToDateTime(vm.startdate);
-                o.Modifiedate=DateTime.Now;
+                o.Modifiedate = DateTime.Now;
                 o.DeputeContent = vm.deputeContent;
                 o.Salary = vm.salary;
                 //o.StatusId = _db.Statuses.FirstOrDefault(_ => _.Name == vm.status).StatusId;
@@ -323,7 +329,7 @@ namespace prjDB_GamingForm_Show.Controllers
         }
         public IActionResult Regions()
         {
-            var datas=_db.Regions.Select(_ => _);
+            var datas = _db.Regions.Select(_ => _);
             return Json(datas);
         }
         public IActionResult Status()
@@ -344,16 +350,16 @@ namespace prjDB_GamingForm_Show.Controllers
         [HttpPost]
         public IActionResult Create(CDeputeViewModel vm)
         {
-            Depute n= new Depute()
+            Depute n = new Depute()
             {
-                ProviderId= _memberIdtest,
-                StartDate= DateTime.Now,
-                Modifiedate= DateTime.Now,
-                DeputeContent= vm.deputeContent,
-                Salary= vm.salary,
-                StatusId=18,
+                ProviderId = _memberIdtest,
+                StartDate = DateTime.Now,
+                Modifiedate = DateTime.Now,
+                DeputeContent = vm.deputeContent,
+                Salary = vm.salary,
+                StatusId = 18,
                 //RegionId = _db.Regions.FirstOrDefault(_ => _.City == vm.region).RegionId,
-                Title= vm.title,
+                Title = vm.title,
             };
             _db.Deputes.Add(n);
             _db.SaveChanges();
@@ -361,7 +367,7 @@ namespace prjDB_GamingForm_Show.Controllers
         }
         public IActionResult deleteDepute(int id)
         {
-            Depute o=_db.Deputes.Where(_=>_.DeputeId==id).Select(_=>_).FirstOrDefault();
+            Depute o = _db.Deputes.Where(_ => _.DeputeId == id).Select(_ => _).FirstOrDefault();
             _db.Deputes.Remove(o);
             _db.SaveChanges();
             return RedirectToAction("Personal");
@@ -374,10 +380,10 @@ namespace prjDB_GamingForm_Show.Controllers
                 return RedirectToAction("Personal");
             CDeputeViewModel n = new CDeputeViewModel()
             {
-                id=o.DeputeId,
+                id = o.DeputeId,
                 title = o.Title,
                 status = o.Status.Name,
-                count =o.DeputeRecords.Count(),
+                count = o.DeputeRecords.Count(),
                 deputeContent = o.DeputeContent,
                 //imgfilepath=,
                 providername = o.Provider.Name,
@@ -406,7 +412,7 @@ namespace prjDB_GamingForm_Show.Controllers
             _db.Skills.Load();
             _db.DeputeRecords.Load();
             //使用include:為計算該筆委託被應徵的次數(出現在deputerecord的次數)
-            var q = _db.Deputes.Where(_ => _.ProviderId == _memberIdtest).Select(_ => _).Include(_=>_.DeputeRecords);
+            var q = _db.Deputes.Where(_ => _.ProviderId == _memberIdtest).Select(_ => _).Include(_ => _.DeputeRecords);
             return PartialView(q);
         }
         public IActionResult PartialReceiveList()
