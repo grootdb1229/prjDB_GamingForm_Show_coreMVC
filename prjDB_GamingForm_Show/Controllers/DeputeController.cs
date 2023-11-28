@@ -222,7 +222,7 @@ namespace prjDB_GamingForm_Show.Controllers
             ViewBag.memberid = _memberIdtest;
             Depute o=_db.Deputes.FirstOrDefault(_ => _.DeputeId == id);
             if (o == null)
-                return RedirectToAction("Index");
+                return RedirectToAction("deputemain");
             return View(o);
         }
         [HttpPost]
@@ -299,7 +299,7 @@ namespace prjDB_GamingForm_Show.Controllers
                 Modifiedate= DateTime.Now,
                 DeputeContent= vm.deputeContent,
                 Salary= vm.salary,
-                //StatusId = _db.Statuses.FirstOrDefault(_ => _.Name == vm.status).StatusId,
+                StatusId=18,
                 //RegionId = _db.Regions.FirstOrDefault(_ => _.City == vm.region).RegionId,
                 Title= vm.title,
             };

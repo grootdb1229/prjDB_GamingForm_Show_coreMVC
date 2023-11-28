@@ -47,9 +47,9 @@
                     @i.Depute.Salary.ToString("$###,###,##0.##")
                 </td>
                 <td class="col-1">
-                    @i.Depute.Modifiedate
+                    @i.Depute.Modifiedate.ToString("yyyy/MM/dd HH:mm")
                 </td>
-                <td class="col-2">
+                <td class="col-3">
                     @Html.ActionLink("修改", "Edit", "Depute", new { id = i.DeputeId }, new { @class = "btn btn-success" }) |
                     @Html.ActionLink("詳細資料", "Details", new { id = i.DeputeId }, new { @class = "btn btn-info" }) |
                     @Html.ActionLink("刪除", "Delete", "Depute", new { id = i.DeputeId }, new { @class = "btn btn-danger" })
