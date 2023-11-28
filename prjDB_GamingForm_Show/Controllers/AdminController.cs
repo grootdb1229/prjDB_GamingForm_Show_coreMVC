@@ -17,12 +17,15 @@ namespace prjDB_GamingForm_Show.Controllers
         }
         public IActionResult Index()
         {
+            string name = TempData["AdminName"] as string;
+            ViewBag.Name = name;
             return View();
         }
         int i每頁筆數 = 8;
         int i頁數 = 0;
         public IActionResult MemberList(CKeyWordViewModel vm)
         {
+            HttpContext.Session.Remove(CDictionary.SK_管理者觀看會員清單頁數使用關鍵字);
             if (string.IsNullOrEmpty(vm.txtKeyWord))
             {
                 var members = from m in _db.Members.Skip(i每頁筆數 * i頁數).Take(i每頁筆數)
@@ -105,6 +108,7 @@ namespace prjDB_GamingForm_Show.Controllers
         }
         public IActionResult BlogList(CKeyWordViewModel kyvm)
         {
+            HttpContext.Session.Remove(CDictionary.SK_管理者觀看版面清單頁數使用關鍵字);
             CBlogViewModel vm = null;
             if (string.IsNullOrEmpty(kyvm.txtKeyWord))
             {
@@ -189,6 +193,7 @@ namespace prjDB_GamingForm_Show.Controllers
         }
         public IActionResult ProductList(CKeyWordViewModel kyvm)
         {
+            HttpContext.Session.Remove(CDictionary.SK_管理者觀看商品清單頁數使用關鍵字);
             CAdminCheckProductViewModel vm = null;
             if (string.IsNullOrEmpty(kyvm.txtKeyWord))
             {
@@ -299,6 +304,15 @@ namespace prjDB_GamingForm_Show.Controllers
         {
             return View();
         }
+        public IActionResult ProductReview()
+        {
+            CAdminCheckProductViewModel vm = new CAdminCheckProductViewModel
+            {
+                Products = _db.Products.Include(m => m.Member).Where(p => p.StatusId == 4),
+                Members = _db.Members
+            };            
+            return View(vm);
+        }
         //public IActionResult MemberListNexttest()
         //{
         //    if (HttpContext.Session.Keys.Contains(CDictionary.SK_管理者觀看會員清單頁數使用關鍵字))
@@ -315,6 +329,5 @@ namespace prjDB_GamingForm_Show.Controllers
         //                  select m;
         //    return Json(members);
         //}
-
     }
 }
