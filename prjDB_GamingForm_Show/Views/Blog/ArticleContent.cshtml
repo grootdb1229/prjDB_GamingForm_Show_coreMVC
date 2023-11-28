@@ -78,7 +78,8 @@
                     </p>
                     <div style="max-width:800px; overflow: hidden; word-wrap: break-word; white-space: pre-line; display: flex;">
                         <p style="margin: 0; max-width:650px;font-size:30px ">
-                            @Html.DisplayFor(modelItem => Model.articles.FirstOrDefault().ArticleContent)
+                            @*@Html.Raw(modelItem => Model.articles.FirstOrDefault().ArticleContent)*@
+                            @Html.Raw(Model.articles.FirstOrDefault().ArticleContent)  
                         </p>
                     </div>
                     <br />
@@ -162,8 +163,6 @@
                                 <p style="margin:0; max-width:650px;font-size:30px">
                                     @*@Html.DisplayFor(modelitem => item.ReplyContents) *@
                                      @Html.Raw(item.ReplyContents)
-                                    
-
                                 </p>
                             </div>
                             <br />
