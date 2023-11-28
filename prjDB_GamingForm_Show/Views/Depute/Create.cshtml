@@ -53,9 +53,7 @@
             <div>
             </div>
             <div class="form-floating mb-3" hidden>
-                <input asp-for="StatusId" class="form-control" id="StatusId" placeholder="statusid"/>
-                <label asp-for="StatusId" class="control-label" for="Salary"></label>
-                <span asp-validation-for="StatusId" class="text-danger"></span>
+                <input name="StatusId" class="form-control" id="StatusId" placeholder="statusid" value="18"/>
             </div>
             <div class="form-floating  mb-3">
                 <select class="form-select" id="selRegions" aria-label="Default select example">
@@ -64,7 +62,7 @@
                     <option value="2">Two</option>
                     <option value="3">Three</option>
                 </select>
-                <label asp-for="RegionId" class="control-label" id="RegionId" placeholder="">18</label>
+                <label asp-for="RegionId" class="control-label" id="RegionId" placeholder=""></label>
                 @* <input asp-for="RegionId" class="form-control" />
                 <span asp-validation-for="RegionId" class="text-danger"></span> *@
             </div>
