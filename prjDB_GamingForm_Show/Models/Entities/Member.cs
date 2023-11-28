@@ -29,9 +29,13 @@ public partial class Member
 
     public virtual ICollection<Article> Articles { get; set; } = new List<Article>();
 
+    public virtual ICollection<DeputeAction> DeputeActions { get; set; } = new List<DeputeAction>();
+
     public virtual ICollection<DeputeRecord> DeputeRecords { get; set; } = new List<DeputeRecord>();
 
     public virtual ICollection<Depute> Deputes { get; set; } = new List<Depute>();
+
+    public virtual ICollection<MemberCoupon> MemberCoupons { get; set; } = new List<MemberCoupon>();
 
     public virtual ICollection<MemberStatus> MemberStatuses { get; set; } = new List<MemberStatus>();
 
