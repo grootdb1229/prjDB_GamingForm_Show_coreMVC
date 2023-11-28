@@ -87,6 +87,7 @@
                     </ul>
                 </div>
             </div>
+            <div name="skills" id="select-skills"></div>
             <div class="form-floating mb-3">
                 <input type="submit" value="送出並發佈" class="btn btn-success" />
             </div>
@@ -165,6 +166,10 @@
             var regionsString = "<option selected>請選擇地區</option>".concat(regions.join(""));
             console.log(regionsString);
             document.querySelector("#selRegions").innerHTML = regionsString;
+        }
+
+        function addSkills() {
+            $('')
         }
     </script>
 
