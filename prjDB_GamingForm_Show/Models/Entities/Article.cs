@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
 
 namespace prjDB_GamingForm_Show.Models.Entities;
 
@@ -11,21 +9,17 @@ public partial class Article
 
     public int SubBlogId { get; set; }
 
-    [DisplayName("文章標題")]
     public string Title { get; set; } = null!;
-    [DisplayName("文章內容")]
+
     public string ArticleContent { get; set; } = null!;
-    [DisplayName("最後發文時間")]
+
     public DateTime ModifiedDate { get; set; }
-
-    //1125克銘 ViewCount觀看次數
-    [DisplayName("觀看次數")]
-    public int? ViewCount { get; set; }
-
 
     public int MemberId { get; set; }
 
     public int? ReplyArticleId { get; set; }
+
+    public int ViewCount { get; set; }
 
     public virtual ICollection<ArticleAction> ArticleActions { get; set; } = new List<ArticleAction>();
 
