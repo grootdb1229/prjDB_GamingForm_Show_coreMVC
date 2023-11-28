@@ -11,6 +11,8 @@ public partial class Status
 
     public virtual ICollection<Advertise> Advertises { get; set; } = new List<Advertise>();
 
+    public virtual ICollection<Coupon> Coupons { get; set; } = new List<Coupon>();
+
     public virtual ICollection<DeputeRecord> DeputeRecords { get; set; } = new List<DeputeRecord>();
 
     public virtual ICollection<Depute> Deputes { get; set; } = new List<Depute>();
