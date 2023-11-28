@@ -43,7 +43,7 @@
 									<option value="1" >最熱銷</option>
 									<option value="2"  >最新上架</option>
 									<option value="3">價格:高到低</option>
-									<option value="3">價格:低到高</option>
+									<option value="4">價格:低到高</option>
 								</select>
 							</div>
 						</div>
@@ -138,10 +138,10 @@
 					SortByDate();
 					break;
 				case '3':
-					SortByPrice_H();
+					SortByPrice_h();//由高到低
 					break;
 				case '4':
-					SortByPrice_L();
+					SortByPrice_l();//由低到高
 					break;
 				default:		
 					console.log('不確定要不要先放');
@@ -150,7 +150,7 @@
 		});
 		
 		
-		async function SortByPrice_H() {
+		async function SortByPrice_h() {
 				var queryKeyword = document.querySelector('#Kw').value;
 				
 				ProductContent.innerHTML = '';
@@ -196,7 +196,7 @@
 			</div>
 								`);
 				ProductContent.innerHTML = sortbydate.join("");
-			console.log(ProductContent.innerHTML);
+			
 			}
 
 		async function SortByDate() {
@@ -245,10 +245,10 @@
 					</div>
 										`);
 			ProductContent.innerHTML = sortbydate.join("");
-			console.log(ProductContent.innerHTML);
+		
 		}
 
-		async function SortByPrice_L() {
+		async function SortByPrice_l() {
 			var queryKeyword = document.querySelector('#Kw').value;
 
 			ProductContent.innerHTML = '';
@@ -294,7 +294,8 @@
 							</div>
 												`);
 			ProductContent.innerHTML = sortbydate.join("");
-			console.log(ProductContent.innerHTML);
+
 		}
+
 </script>
 }
