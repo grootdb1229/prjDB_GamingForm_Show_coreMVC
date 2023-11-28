@@ -159,11 +159,21 @@
                             <p style="font-size:15px">
                                 發表時間: @Html.DisplayFor(modelitem => item.ModifiedDate)
                             </p>
-                            <div style="overflow: hidden; word-wrap: break-word; white-space: pre-line; display: flex;">
-                                <p style="margin:0; max-width:650px;font-size:30px">
+                            @*<div style="overflow: hidden; word-wrap: break-word; white-space: pre-line;">
+
+                                    @Html.Raw(item.ReplyContents)
+                            
+                            </div>*@
+
+                            <div style="max-width:800px; overflow: hidden; word-wrap: break-word; white-space: pre-line;">
+                                <p style="margin: 0; max-width:650px;font-size:30px ">
+                                    @* @Html.DisplayFor(modelItem => Model.articles.FirstOrDefault().ArticleContent) *@
                                     @Html.Raw(item.ReplyContents)
                                 </p>
                             </div>
+
+
+
                             <br />
                             <div style="width:800px">
                                 <p style="float:right">
