@@ -11,7 +11,7 @@
 <hr />
 <div class="row">
     <div class="col-md-10">
-        <form asp-action="Create" >
+        <form asp-action="Create">
             <div class="p-3 mb-3 bg-opacity-10 border border-danger border-start-0 rounded-end">
                 <div class="form-check form-switch form-check " style="padding-left:0">
                     <label class="form-check-label" style="color:white" for="flexSwitchCheckReverse">開立專屬委託</label>
@@ -31,7 +31,7 @@
                 <span asp-validation-for="ProviderId" class="text-danger"></span>
             </div>
             <div class="form-floating mb-3">
-                <input name="標題" class="form-control" id="Title" placeholder="" />
+                <input name="標題" class="form-control" id="Title" placeholder="" required/>
                 <label asp-for="Title" for="Title"></label>
                 <span asp-validation-for="Title" class="text-danger"></span>
             </div>
@@ -46,14 +46,14 @@
                 <span asp-validation-for="Modifiedate" class="text-danger"></span>
             </div>
             <div class="form-floating mb-3">
-                <input name="報酬" class="form-control" id="Salary" placeholder="" />
+                <input name="報酬" class="form-control" id="Salary" placeholder="" required />
                 <label asp-for="Salary" class="control-label" for="Salary"></label>
                 <span asp-validation-for="Salary" class="text-danger"></span>
             </div>
             <div>
             </div>
             <div class="form-floating mb-3" hidden>
-                <input name="StatusId" class="form-control" id="StatusId" placeholder="statusid" value="18"/>
+                <input name="StatusId" class="form-control" id="StatusId" placeholder="statusid" value="18" />
             </div>
             <div class="form-floating  mb-3">
                 <select class="form-select" id="selRegions" aria-label="Default select example">
@@ -67,36 +67,32 @@
                 <span asp-validation-for="RegionId" class="text-danger"></span> *@
             </div>
             <div class="form-floating mb-3">
-                <textarea asp-for="DeputeContent" class="form-control" style="height:200px" placeholder="在這裡輸入您的委託資訊..." id="DeputeContent" placeholder=""></textarea>
+                <textarea asp-for="DeputeContent" class="form-control" style="height:200px" placeholder="在這裡輸入您的委託資訊..." id="DeputeContent" placeholder="" required></textarea>
                 <label asp-for="DeputeContent" class="control-label" for="DeputeContent"></label>
                 <span asp-validation-for="DeputeContent" class="text-danger"></span>
             </div>
             <div class="row">
                 <div class="col-6">
                     <div class="list-group" id="list-tab" role="tablist">
-                        
                     </div>
                 </div>
 
                 <div class="col-6">
                     <ul style="overflow-y:auto;height:300px" class="list-group tab-content" id="nav-tabContent">
-                        
                     </ul>
                     <ul class="list-group col-6">
-                        
                     </ul>
                 </div>
             </div>
+            <input name="skilllist" id="select-skills" hidden>
             <div class="form-floating mb-3">
-                <input type="submit" value="送出並發佈" class="btn btn-success" />
+                <a asp-action="personal" class="btn btn-secondary" >取消</a>
+                <input type="submit" value="送出並發佈" class="btn btn-success" onclick="prepareAndSubmit()"/>
             </div>
         </form>
     </div>
 </div>
 
-<div>
-    <a asp-action="personal" class="btn btn-secondary">取消</a>
-</div>
 
 @section Scripts {
     @{
@@ -104,9 +100,9 @@
     }
     <script>
         var count = 0;
-        const divSkillClasses = document.querySelector('#list-tab');
-        const divSkillsGroup = document.querySelector('#nav-tabContent');
-        const divSkills = document.querySelector('#divSkills');
+        const divSkillClasses = document.querySelector('#list-tab'),
+            divSkillsGroup = document.querySelector('#nav-tabContent');
+
         var chooseClass;
 
         document.addEventListener('DOMContentLoaded', () => {
@@ -116,9 +112,8 @@
 
             privateCbx.addEventListener('change', () => {
                 privateTxt.hidden = !privateCbx.checked;
-                privateCbx.checked ? statusTxt.innerHTML = 9 : statusTxt.innerHTML=18
+                privateCbx.checked ? statusTxt.innerHTML = 9 : statusTxt.innerHTML = 18
             })
-
         })
 
         $('*').click(function (event) {
@@ -130,41 +125,62 @@
             }
         })
 
-        loadSkillClasses();
-        loadRegions()
-
         async function loadSkillClasses() {
             const response = await fetch('@Url.Content("~/depute/skillclasses")');
             const datas = await response.json();
-            console.log(datas);
-
             const skillclasses = datas.skillclasses.map(skillclass => `<a class="list-${skillclass.name}-item-action list-group-item" id="list-${skillclass.name}-list" data-bs-toggle="list" href="#list-${skillclass.name}" role="tab" aria-controls="list-${skillclass.name}">${skillclass.name}<ul id=sel${skillclass.name} class="list-group col-6"></ul></a>`);
             const skillsgroup = datas.skillclasses.map(skillclass => `<div class="tab-pane fade" id="list-${skillclass.name}" role="tabpanel" aria-labelledby="list-${skillclass.name}-list">${skillclass.name}</div>`)
             divSkillClasses.innerHTML = skillclasses.join("");
             divSkillsGroup.innerHTML = skillsgroup.join("");
             if (chooseClassID) {
-                console.log("test");
                 loadSkills();
             }
         }
+        loadSkillClasses();
 
+        const selSkills = [];
         async function loadSkills() {
             const response = await fetch(`@Url.Content("~/depute/skillss")?skillClass=${chooseClass}`);
             const datas = await response.json();
-            console.log(datas);
             const skills = datas.map(skill => `<li class="list-group-item"><input class="form-check-input me-1" type="checkbox" value="" id="${skill.name}"><label class="form-check-label stretched-link" for="${skill.name}">${skill.name}</label></li>`)
             document.querySelector(`#${chooseClassID}`).innerHTML = skills.join("");
+
+            const divSkills = document.getElementsByClassName('me-1');
+            Array.from(divSkills).forEach(divSkill => {
+                divSkill.addEventListener('change', function (event) {
+                    // console.log(chooseClass);
+                    // console.log(event.target.labels[0].textContent);
+                    var selSK = event.target.labels[0].textContent;
+                    var convertSK = chooseClass +'-'+ event.target.labels[0].textContent;
+                    console.log(convertSK);
+                    
+                    if(event.target.checked){
+                        selSkills.push({ skillclass: chooseClass, skill: selSK });
+                        console.log(selSkills);
+                    }else{
+                        const index = selSkills.findIndex(i => i.skillclass == chooseClass && i.skill == selSK);
+                        console.log(index);
+                        selSkills.splice(index,1);
+                        console.log(selSkills);
+                    }
+                })
+            })
         }
 
         async function loadRegions() {
             const response = await fetch(`@Url.Content("~/depute/regions")`);
             const datas = await response.json();
             const regions = datas.map(region => `<option value="${region.city}">${region.city}</option>`)
-            console.log(regions);
-            console.log(regions.join(""));
             var regionsString = "<option selected>請選擇地區</option>".concat(regions.join(""));
             console.log(regionsString);
             document.querySelector("#selRegions").innerHTML = regionsString;
+        }
+        loadRegions();
+
+        const inputSkill = document.getElementById('select-skills');
+        function prepareAndSubmit() {
+            inputSkill.value = JSON.stringify(selSkills);
+            document.forms.submit();
         }
     </script>
 

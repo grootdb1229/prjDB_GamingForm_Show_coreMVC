@@ -8,7 +8,7 @@
 <p>@Html.ActionLink("登入", "Login",  "Home",   /*new { id = item.fID }*/new { @class = "btn btn-success" })</p>
 <p>@Html.ActionLink("註冊", "Create", "Member", new { @class = "btn btn-success" })</p>
 <p>@Html.ActionLink("會員中心" , "MemberPage" , "Member" , new { @class = "btn btn-success" })</p>
-        @*TODO:1.所有的連結都要改成各版的連結 
+@*TODO:1.所有的連結都要改成各版的連結
         2.各版面的資料之後全部都要改成用抓資料的
         3.要重新看抓圖片的部分*@
 <section id="hero-slider" class="hero-slider">
@@ -18,10 +18,10 @@
                 <div class="swiper sliderFeaturedPosts">
                     <div class="swiper-wrapper">
                         @*討論版*@
-                        <div class="swiper-slide">
+                        <div class="swiper-slide" style="float:left">
                             @*<a href= @Url.Action("ArticleList" , "Blog") class="img-bg d-flex align-items-end" background-image:url('~/HomePageTemImage/HomePage_LOL.jpg');>*@
-                                <a href="@Url.Action("List", "Blog")">
-                                <img src="~/HomePageTemImage/HomePage_LOL.jpg"  width="1290" height="500" alt="">
+                            <a href="@Url.Action("List", "Blog")">
+                                <img src="~/HomePageTemImage/HomePage_LOL.jpg" width="430" height="500" alt="">
                                 <div class="img-bg-inner">
                                     <h2>論壇首頁</h2>
                                     <p>各式遊戲文章</p>
@@ -30,16 +30,16 @@
 
                         </div>
                         @*商城入口*@
-                            <a href="@Url.Action("Index" , "Shop")">
-                                <img src="~/HomePageTemImage/AOE4.png" width="1290" height="500" alt="">
-                                <div class="img-bg-inner">
+                        <a href="@Url.Action("Index" , "Shop")">
+                            <img src="~/HomePageTemImage/AOE4.png" width="1290" height="500" alt="">
+                            <div class="img-bg-inner">
                                 <h2>商城首頁</h2>
                                 <p>購買各式好玩遊戲</p>
-                                </div>
-                            </a>
-                        </div>
-                        @*最新委託*@
-                        <div class="swiper-slide">
+                            </div>
+                        </a>
+                    </div>
+                    @*最新委託*@
+                    <div class="swiper-slide">
                         <a href="@Url.Action("DeputeMain" , "Depute")">
                             <img src="~/HomePageTemImage/GetyourFKJOB.jpg" width="1290" height="500" alt="">
                             <div class="img-bg-inner">
@@ -48,35 +48,35 @@
                             </div>
                         </a>
                     </div>
-                        </div>
-                        @*之後再考慮要放什麼*@
-                       @* <div class="swiper-slide">
-                            <a href="single-post.html" class="img-bg d-flex align-items-end" style="background-image: url('~/Layout/ZenBlog/assets/img/post-slide-4.jpg');">
-                                <div class="img-bg-inner">
-                                    <h2>預留版面</h2>
-                                    <p>暫時沒有要放東西</p>
-                                </div>
-                            </a>
-                        </div>*@
-                    </div>
-                   @* <div class="custom-swiper-button-next">
-                        <span class="bi-chevron-right"></span>
-                    </div>
-                    <div class="custom-swiper-button-prev">
-                        <span class="bi-chevron-left"></span>
-                    </div>
-
-                    <div class="swiper-pagination"></div>*@
                 </div>
+                @*之後再考慮要放什麼*@
+                @* <div class="swiper-slide">
+                <a href="single-post.html" class="img-bg d-flex align-items-end" style="background-image: url('~/Layout/ZenBlog/assets/img/post-slide-4.jpg');">
+                <div class="img-bg-inner">
+                <h2>預留版面</h2>
+                <p>暫時沒有要放東西</p>
+                </div>
+                </a>
+                </div>*@
             </div>
+            @* <div class="custom-swiper-button-next">
+            <span class="bi-chevron-right"></span>
+            </div>
+            <div class="custom-swiper-button-prev">
+            <span class="bi-chevron-left"></span>
+            </div>
+
+            <div class="swiper-pagination"></div>*@
+        </div>
+    </div>
 </section><!-- End Hero Slider Section -->
 <!-- ======= Post Grid Section ======= -->
 <section id="posts" class="posts">
     <div class="container" data-aos="fade-up">
 
-       <div class="section-header d-flex justify-content-between align-items-center mb-5">
+        <div class="section-header d-flex justify-content-between align-items-center mb-5">
             <h2>各類商品</h2>
-            <div><a href= @Url.Action("Index" , "Shop") class="more">查看所有熱門商品</a></div>
+            <div><a href=@Url.Action("Index" , "Shop") class="more">查看所有熱門商品</a></div>
         </div>
 
         <div class="row g-5">
@@ -87,11 +87,11 @@
                     <h2><a href=@Url.Action("Index" , "Shop")>蘇丹飛升已經開放下載</a></h2>
                     <p class="mb-4 d-block">世紀帝國四首部大型資料片正式發布,遊戲本體內容現在只要399!!趕快加入一同見證聖殿騎士團和中東文明的壯絕激鬥吧</p>
 
-                   @* <div class="d-flex align-items-center author">
-                        <div class="photo"><img src="~/Layout/ZenBlog/assets/img/person-1.jpg" alt="" class="img-fluid"></div>
-                        <div class="name">
-                            <h3 class="m-0 p-0">Cameron Williamson</h3>
-                        </div>
+                    @* <div class="d-flex align-items-center author">
+                    <div class="photo"><img src="~/Layout/ZenBlog/assets/img/person-1.jpg" alt="" class="img-fluid"></div>
+                    <div class="name">
+                    <h3 class="m-0 p-0">Cameron Williamson</h3>
+                    </div>
                     </div>*@
                 </div>
 
@@ -104,7 +104,7 @@
                             <a href=@Url.Action("Index" , "Shop")><img src="~/HomePageTemImage/WhiteAlbum2.jpg" alt="" class="img-fluid"></a>
                             <div class="post-meta"><span class="date">遊戲商城</span> <span class="mx-1">&bullet;</span> <span>2023/11/11</span></div>
                             <h2><a href=@Url.Action("Index" , "Shop")>~驀然雪化，且靜候飛雪再臨之時~</a></h2>
-                             <p class="mb-4 d-block">聖誕佳期倒數一個月!還不快和你的心上人再次重溫白色相簿2三人組那剪不斷理還亂的三角愛戀?白色相簿2幸福的另一側限時下殺199元!!!</p>
+                            <p class="mb-4 d-block">聖誕佳期倒數一個月!還不快和你的心上人再次重溫白色相簿2三人組那剪不斷理還亂的三角愛戀?白色相簿2幸福的另一側限時下殺199元!!!</p>
                         </div>
                         <div class="post-entry-1">
                             <a href=@Url.Action("Index" , "Shop")><img src="~/HomePageTemImage/人中之龍7.jpg" alt="" class="img-fluid"></a>
@@ -115,7 +115,7 @@
                         <div class="post-entry-1">
                             <a href=@Url.Action("Index" , "Shop")><img src="~/HomePageTemImage/EldenRing.jpg" alt="" class="img-fluid"></a>
                             <div class="post-meta"><span class="date">遊戲商城</span> <span class="mx-1">&bullet;</span> <span>2023/10/09</span></div>
-                            <h2><a href= @Url.Action("Index" , "Shop")>千呼萬喚 艾爾登法環正式上線</a></h2>
+                            <h2><a href=@Url.Action("Index" , "Shop")>千呼萬喚 艾爾登法環正式上線</a></h2>
                             <p class="mb-4 d-block">宮崎英高最新力作 壯麗的世界觀正在那黃金樹下等你!!!</p>
                         </div>
                     </div>
@@ -129,13 +129,13 @@
                         <div class="post-entry-1">
                             <a href=@Url.Action("Index" , "Shop")><img src="~/HomePageTemImage/Cyberpunk2077.jpg" alt="" class="img-fluid"></a>
                             <div class="post-meta"><span class="date">遊戲商城</span> <span class="mx-1">&bullet;</span> <span>2023/08/05</span></div>
-                            <h2><a href= @Url.Action("Index" , "Shop")>知名科幻巨作 賽博龐克來了!!!</a></h2>
+                            <h2><a href=@Url.Action("Index" , "Shop")>知名科幻巨作 賽博龐克來了!!!</a></h2>
                             <p class="mb-4 d-block">喜歡超現代的遊戲風格嗎? 這款賽博龐克就是你的最佳拍檔!</p>
                         </div>
                         <div class="post-entry-1">
                             <a href=@Url.Action("Index" , "Shop")><img src="~/HomePageTemImage/Zelda.jpg" alt="" class="img-fluid"></a>
                             <div class="post-meta"><span class="date">遊戲商城</span> <span class="mx-1">&bullet;</span> <span>2023/09/13</span></div>
-                            <h2><a href= @Url.Action("Index" , "Shop")>薩爾達傳說又一傳奇新作 王國之淚正式發售!!</a></h2>
+                            <h2><a href=@Url.Action("Index" , "Shop")>薩爾達傳說又一傳奇新作 王國之淚正式發售!!</a></h2>
                             <p class="mb-4 d-block">任天堂經典IP 薩爾達傳說來了 快點跟著林克一起在未知的廣大世界裡探險吧!</p>
                         </div>
                     </div>
@@ -147,35 +147,35 @@
                             <h3>熱門商品</h3>
                             <ul class="trending-post">
                                 <li>
-                                    <a href= @Url.Action("Index" , "Shop")>
+                                    <a href=@Url.Action("Index" , "Shop")>
                                         <span class="number">1</span>
                                         <h3>世紀帝國4</h3>
                                         <span class="author">Relics</span>
                                     </a>
                                 </li>
                                 <li>
-                                    <a href= @Url.Action("Index" , "Shop")>
+                                    <a href=@Url.Action("Index" , "Shop")>
                                         <span class="number">2</span>
                                         <h3>白色相簿2．幸福的另一側</h3>
                                         <span class="author">Leaf社</span>
                                     </a>
                                 </li>
                                 <li>
-                                    <a href= @Url.Action("Index" , "Shop")>
+                                    <a href=@Url.Action("Index" , "Shop")>
                                         <span class="number">3</span>
                                         <h3>人中之龍7外傳 英雄無名</h3>
                                         <span class="author">SEGA</span>
                                     </a>
                                 </li>
                                 <li>
-                                    <a href= @Url.Action("Index" , "Shop")>
+                                    <a href=@Url.Action("Index" , "Shop")>
                                         <span class="number">4</span>
                                         <h3>艾爾登法環</h3>
                                         <span class="author">FromSoftware</span>
                                     </a>
                                 </li>
                                 <li>
-                                    <a href= @Url.Action("Index" , "Shop")>
+                                    <a href=@Url.Action("Index" , "Shop")>
                                         <span class="number">5</span>
                                         <h3>薩爾達傳說 王國之淚</h3>
                                         <span class="author">任天堂</span>
@@ -197,19 +197,19 @@
 
         <div class="section-header d-flex justify-content-between align-items-center mb-5">
             <h2>各類論壇及熱門文章</h2>
-            <div><a href= @Url.Action("List", "Blog") class="more">查看所有熱門文章</a></div>
+            <div><a href=@Url.Action("List", "Blog") class="more">查看所有熱門文章</a></div>
         </div>
 
         <div class="row">
             <div class="col-md-9">
 
                 <div class="d-lg-flex post-entry-2">
-                    <a href= @Url.Action("List", "Blog") class="me-4 thumbnail mb-4 mb-lg-0 d-inline-block">
+                    <a href=@Url.Action("List", "Blog") class="me-4 thumbnail mb-4 mb-lg-0 d-inline-block">
                         <img src="~/HomePageTemImage/LOL論壇版.jpg" alt="" class="img-fluid">
                     </a>
                     <div>
                         <div class="post-meta"><span class="date">英雄聯盟版</span> <span class="mx-1">&bullet;</span> <span>2023/11/15</span></div>
-                        <a href= @Url.Action("ArticleList" , "Blog" , new {FId=9}) style="font-size:xx-large">這個趙信只會出雄心之鋼跟泰坦九頭蛇是怎樣!??</a>
+                        <a href=@Url.Action("ArticleList" , "Blog" , new {FId=9}) style="font-size:xx-large">這個趙信只會出雄心之鋼跟泰坦九頭蛇是怎樣!??</a>
                         <p>同場ARAM有多達六人都在出雄心之鋼，雄心之鋼是否過於ＯＰ？</p>
                         <div class="d-flex align-items-center author">
                             <div class="photo"><img src="~/HomePageTemImage/雄心之鋼迷因圖.jpg" alt="" class="img-fluid"></div>
@@ -223,16 +223,16 @@
                 <div class="row">
                     <div class="col-lg-4">
                         <div class="post-entry-1 border-bottom">
-                            <a href= @Url.Action("ArticleList" , "Blog" , new {FId=9}) ><img src="~/HomePageTemImage/Faker奪冠.jpg" alt="" class="img-fluid"></a>
+                            <a href=@Url.Action("ArticleList" , "Blog" , new {FId=9})><img src="~/HomePageTemImage/Faker奪冠.jpg" alt="" class="img-fluid"></a>
                             <div class="post-meta"><span class="date">英雄聯盟版</span> <span class="mx-1">&bullet;</span> <span>2023/11/20</span></div>
-                            <h2 class="mb-2"><a href= @Url.Action("ArticleList" , "Blog" , new {FId=9})>暌違多年T1再次擊敗LPL奪下世界大賽冠軍</a></h2>
+                            <h2 class="mb-2"><a href=@Url.Action("ArticleList" , "Blog" , new {FId=9})>暌違多年T1再次擊敗LPL奪下世界大賽冠軍</a></h2>
                             <span class="author mb-3 d-block">邱炫嘉</span>
                             <p class="mb-4 d-block">2023年11月19日,在韓國釜山FAKER再次帶領T1隊友奪下睽違已久的冠軍,讓我們再次恭喜大魔王!</p>
                         </div>
 
                         <div class="post-entry-1">
                             <div class="post-meta"><span class="date">歐卡2</span> <span class="mx-1">&bullet;</span> <span>2023/11/09</span></div>
-                            <h2 class="mb-2"><a href= @Url.Action("List", "Blog")>到底還有誰還沒有上車</a></h2>
+                            <h2 class="mb-2"><a href=@Url.Action("List", "Blog")>到底還有誰還沒有上車</a></h2>
                             <span class="author mb-3 d-block">老朱</span>
                         </div>
                     </div>
@@ -251,13 +251,13 @@
             <div class="col-md-3">
                 <div class="post-entry-1 border-bottom">
                     <div class="post-meta"><span class="date">熱門文章</span> <span class="mx-1">&bullet;</span> <span>2023/11/19</span></div>
-                    <h2 class="mb-2"><a href= @Url.Action("List", "Blog")>T1這次世界大賽要靠Gumayusi吧!?那個走位</a></h2>
+                    <h2 class="mb-2"><a href=@Url.Action("List", "Blog")>T1這次世界大賽要靠Gumayusi吧!?那個走位</a></h2>
                     <span class="author mb-3 d-block">邱炫嘉</span>
                 </div>
 
                 <div class="post-entry-1 border-bottom">
                     <div class="post-meta"><span class="date">熱門文章</span> <span class="mx-1">&bullet;</span> <span>2023/11/17</span></div>
-                    <h2 class="mb-2"><a href= @Url.Action("List", "Blog")>阿烏拉跟芙莉蓮根本就不是同一個層級的魔法使</a></h2>
+                    <h2 class="mb-2"><a href=@Url.Action("List", "Blog")>阿烏拉跟芙莉蓮根本就不是同一個層級的魔法使</a></h2>
                     <span class="author mb-3 d-block">圈圈</span>
                 </div>
 
@@ -269,19 +269,19 @@
 
                 <div class="post-entry-1 border-bottom">
                     <div class="post-meta"><span class="date">熱門文章</span> <span class="mx-1">&bullet;</span> <span>2023/11/19</span></div>
-                    <h2 class="mb-2"><a href= @Url.Action("List", "Blog")>我就說阿育布王朝那個駱駝騎士根本做壞了</a></h2>
+                    <h2 class="mb-2"><a href=@Url.Action("List", "Blog")>我就說阿育布王朝那個駱駝騎士根本做壞了</a></h2>
                     <span class="author mb-3 d-block">倫</span>
                 </div>
 
                 <div class="post-entry-1 border-bottom">
                     <div class="post-meta"><span class="date">熱門文章</span> <span class="mx-1">&bullet;</span> <span>2023/11/18</span></div>
-                    <h2 class="mb-2"><a href= @Url.Action("List", "Blog")>到底是誰歐卡還沒有上車!?</a></h2>
+                    <h2 class="mb-2"><a href=@Url.Action("List", "Blog")>到底是誰歐卡還沒有上車!?</a></h2>
                     <span class="author mb-3 d-block">老朱</span>
                 </div>
 
                 <div class="post-entry-1 border-bottom">
                     <div class="post-meta"><span class="date">熱門文章</span> <span class="mx-1">&bullet;</span> <span>2023/11/19</span></div>
-                    <h2 class="mb-2"><a href= @Url.Action("List", "Blog")>下禮拜要去日本有沒有推薦的景點</a></h2>
+                    <h2 class="mb-2"><a href=@Url.Action("List", "Blog")>下禮拜要去日本有沒有推薦的景點</a></h2>
                     <span class="author mb-3 d-block">小郭</span>
                 </div>
             </div>
@@ -294,19 +294,19 @@
 
         <div class="section-header d-flex justify-content-between align-items-center mb-5">
             <h2>工作和委託</h2>
-            <div><a href= @Url.Action("DeputeMain" , "Depute") class="more">查看所有工作及委託</a></div>
+            <div><a href=@Url.Action("DeputeMain" , "Depute") class="more">查看所有工作及委託</a></div>
         </div>
 
         <div class="row">
             <div class="col-md-9 order-md-2">
 
                 <div class="d-lg-flex post-entry-2">
-                    <a href= @Url.Action("DeputeMain" , "Depute") class="me-4 thumbnail d-inline-block mb-4 mb-lg-0">
+                    <a href=@Url.Action("DeputeMain" , "Depute") class="me-4 thumbnail d-inline-block mb-4 mb-lg-0">
                         <img src="~/HomePageTemImage/Software.jpg" alt="" class="img-fluid">
                     </a>
                     <div>
                         <div class="post-meta"><span class="date">工作及委託</span> <span class="mx-1">&bullet;</span> <span>2023/11/20</span></div>
-                        <h3><a href= @Url.Action("DeputeMain" , "Depute")>徵熟悉AI方面的專家</a></h3>
+                        <h3><a href=@Url.Action("DeputeMain" , "Depute")>徵熟悉AI方面的專家</a></h3>
                         <p>需要會深度學習的AI專家來協助訓練AI</p>
                         <div class="d-flex align-items-center author">
                             <div class="photo"><img src="~/HomePageTemImage/AI.jpg" alt="" class="img-fluid"></div>
@@ -320,7 +320,7 @@
                 <div class="row">
                     <div class="col-lg-4">
                         <div class="post-entry-1 border-bottom">
-                            <a href= @Url.Action("DeputeMain" , "Depute")><img src="~/HomePageTemImage/Drawing_job.jpg" alt="" class="img-fluid"></a>
+                            <a href=@Url.Action("DeputeMain" , "Depute")><img src="~/HomePageTemImage/Drawing_job.jpg" alt="" class="img-fluid"></a>
                             <div class="post-meta"><span class="date">工作及委託</span> <span class="mx-1">&bullet;</span> <span>2023/11/17</span></div>
                             <h2 class="mb-2"><a href="single-post.html">徵繪畫方面的人才</a></h2>
                             <span class="author mb-3 d-block">圈圈</span>
@@ -329,7 +329,7 @@
 
                         <div class="post-entry-1">
                             <div class="post-meta"><span class="date">工作及委託</span> <span class="mx-1">&bullet;</span> <span>2023/11/10</span></div>
-                            <h2 class="mb-2"><a href= @Url.Action("DeputeMain" , "Depute")>徵CSS Html熟悉者</a></h2>
+                            <h2 class="mb-2"><a href=@Url.Action("DeputeMain" , "Depute")>徵CSS Html熟悉者</a></h2>
                             <span class="author mb-3 d-block">老邊</span>
                         </div>
                     </div>
@@ -337,7 +337,7 @@
                         <div class="post-entry-1">
                             <a href=@Url.Action("DeputeMain" , "Depute")><img src="~/HomePageTemImage/Tanks.jpg" alt="" class="img-fluid"></a>
                             <div class="post-meta"><span class="date">工作及委託</span> <span class="mx-1">&bullet;</span> <span>2023/11/19</span></div>
-                            <h2 class="mb-2"><a href= @Url.Action("DeputeMain" , "Depute")>徵歐卡2戰車模組製作</a></h2>
+                            <h2 class="mb-2"><a href=@Url.Action("DeputeMain" , "Depute")>徵歐卡2戰車模組製作</a></h2>
                             <span class="author mb-3 d-block">老朱</span>
                             <p class="mb-4 d-block">歐卡2的模組有點少不夠我裝了 希望來個戰車的模組讓我爽爽</p>
                         </div>
@@ -347,31 +347,31 @@
             <div class="col-md-3">
                 <div class="post-entry-1 border-bottom">
                     <div class="post-meta"><span class="date">工作及委託</span> <span class="mx-1">&bullet;</span> <span>2023/10/13</span></div>
-                    <h2 class="mb-2"><a href= @Url.Action("DeputeMain" , "Depute") >徵有辯論社經歷的人 教我怎麼把人噴爆</a></h2>
+                    <h2 class="mb-2"><a href=@Url.Action("DeputeMain" , "Depute")>徵有辯論社經歷的人 教我怎麼把人噴爆</a></h2>
                     <span class="author mb-3 d-block">老邊</span>
                 </div>
 
                 <div class="post-entry-1 border-bottom">
                     <div class="post-meta"><span class="date">工作及委託</span> <span class="mx-1">&bullet;</span> <span>2023/10/23</span></div>
-                    <h2 class="mb-2"><a href= @Url.Action("DeputeMain" , "Depute") >徵遊戲音樂製作相關人士</a></h2>
+                    <h2 class="mb-2"><a href=@Url.Action("DeputeMain" , "Depute")>徵遊戲音樂製作相關人士</a></h2>
                     <span class="author mb-3 d-block">倫</span>
                 </div>
 
                 <div class="post-entry-1 border-bottom">
                     <div class="post-meta"><span class="date">工作及委託</span> <span class="mx-1">&bullet;</span> <span>2023/10/29</span></div>
-                    <h2 class="mb-2"><a href=@Url.Action("DeputeMain" , "Depute") >徵熟悉VS的人協助開發程式</a></h2>
+                    <h2 class="mb-2"><a href=@Url.Action("DeputeMain" , "Depute")>徵熟悉VS的人協助開發程式</a></h2>
                     <span class="author mb-3 d-block">專業甩頭</span>
                 </div>
 
                 <div class="post-entry-1 border-bottom">
                     <div class="post-meta"><span class="date">工作及委託</span> <span class="mx-1">&bullet;</span> <span>2023/10/31</span></div>
-                    <h2 class="mb-2"><a href= @Url.Action("DeputeMain" , "Depute")>徵熟悉SQL SERVER的人幫忙設計資料庫架構</a></h2>
+                    <h2 class="mb-2"><a href=@Url.Action("DeputeMain" , "Depute")>徵熟悉SQL SERVER的人幫忙設計資料庫架構</a></h2>
                     <span class="author mb-3 d-block">克銘</span>
                 </div>
 
                 <div class="post-entry-1 border-bottom">
                     <div class="post-meta"><span class="date">工作及委託</span> <span class="mx-1">&bullet;</span> <span>2023/11/09</span></div>
-                    <h2 class="mb-2"><a href=@Url.Action("DeputeMain" , "Depute") >徵JAVASCRIPTS熟人幫我寫作業</a></h2>
+                    <h2 class="mb-2"><a href=@Url.Action("DeputeMain" , "Depute")>徵JAVASCRIPTS熟人幫我寫作業</a></h2>
                     <span class="author mb-3 d-block">倫</span>
                 </div>
 

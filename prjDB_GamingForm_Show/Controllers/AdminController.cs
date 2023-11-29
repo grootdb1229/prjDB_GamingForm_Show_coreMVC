@@ -17,12 +17,15 @@ namespace prjDB_GamingForm_Show.Controllers
         }
         public IActionResult Index()
         {
+            string name = TempData["AdminName"] as string;
+            ViewBag.Name = name;
             return View();
         }
         int i每頁筆數 = 8;
         int i頁數 = 0;
         public IActionResult MemberList(CKeyWordViewModel vm)
         {
+            HttpContext.Session.Remove(CDictionary.SK_管理者觀看會員清單頁數使用關鍵字);
             if (string.IsNullOrEmpty(vm.txtKeyWord))
             {
                 var members = from m in _db.Members.Skip(i每頁筆數 * i頁數).Take(i每頁筆數)
@@ -35,7 +38,7 @@ namespace prjDB_GamingForm_Show.Controllers
                 var members = from m in _db.Members.Where(m => m.Email.Contains(vm.txtKeyWord)).Skip(i每頁筆數 * i頁數).Take(i每頁筆數)
                               select m;
                 return View(members);
-            }            
+            }
         }
         public IActionResult MemberListNext(CKeyWordViewModel vm)
         {
@@ -61,7 +64,7 @@ namespace prjDB_GamingForm_Show.Controllers
                               select m;
                 return View(members);
             }
-            
+
         }
         public IActionResult MemberListPrevious(CKeyWordViewModel vm)
         {
@@ -86,7 +89,7 @@ namespace prjDB_GamingForm_Show.Controllers
                 var members = from m in _db.Members.Where(m => m.Email.Contains(vm.txtKeyWord)).Skip(i每頁筆數 * i頁數).Take(i每頁筆數)
                               select m;
                 return View(members);
-            }            
+            }
         }
         public IActionResult BlogCategoryList(CKeyWordViewModel kyvm)
         {
@@ -105,6 +108,7 @@ namespace prjDB_GamingForm_Show.Controllers
         }
         public IActionResult BlogList(CKeyWordViewModel kyvm)
         {
+            HttpContext.Session.Remove(CDictionary.SK_管理者觀看版面清單頁數使用關鍵字);
             CBlogViewModel vm = null;
             if (string.IsNullOrEmpty(kyvm.txtKeyWord))
             {
@@ -123,7 +127,7 @@ namespace prjDB_GamingForm_Show.Controllers
                     subTags = _db.SubTags
                 };
                 return View(vm);
-            }            
+            }
         }
         public IActionResult BlogListNext(CKeyWordViewModel kyvm)
         {
@@ -154,7 +158,7 @@ namespace prjDB_GamingForm_Show.Controllers
                     subTags = _db.SubTags
                 };
                 return View(vm);
-            }            
+            }
         }
         public IActionResult BlogListPrevious(CKeyWordViewModel kyvm)
         {
@@ -189,6 +193,7 @@ namespace prjDB_GamingForm_Show.Controllers
         }
         public IActionResult ProductList(CKeyWordViewModel kyvm)
         {
+            HttpContext.Session.Remove(CDictionary.SK_管理者觀看商品清單頁數使用關鍵字);
             CAdminCheckProductViewModel vm = null;
             if (string.IsNullOrEmpty(kyvm.txtKeyWord))
             {
@@ -209,7 +214,7 @@ namespace prjDB_GamingForm_Show.Controllers
                 };
                 return View(vm);
             }
-            
+
         }
         public IActionResult ProductListNext(CKeyWordViewModel kyvm)
         {
@@ -283,11 +288,11 @@ namespace prjDB_GamingForm_Show.Controllers
             }
             else
             {
-                if(product.StatusId == 1)
+                if (product.StatusId == 1)
                 {
                     product.StatusId = 2;
                 }
-                else if(product.StatusId == 2)
+                else if (product.StatusId == 2)
                 {
                     product.StatusId = 1;
                 }
@@ -299,5 +304,30 @@ namespace prjDB_GamingForm_Show.Controllers
         {
             return View();
         }
+        public IActionResult ProductReview()
+        {
+            CAdminCheckProductViewModel vm = new CAdminCheckProductViewModel
+            {
+                Products = _db.Products.Include(m => m.Member).Where(p => p.StatusId == 4),
+                Members = _db.Members
+            };            
+            return View(vm);
+        }
+        //public IActionResult MemberListNexttest()
+        //{
+        //    if (HttpContext.Session.Keys.Contains(CDictionary.SK_管理者觀看會員清單頁數使用關鍵字))
+        //    {
+        //        i頁數 = (int)HttpContext.Session.GetInt32(CDictionary.SK_管理者觀看會員清單頁數使用關鍵字);
+        //    }
+        //    if (i頁數 < _db.Members.Count() / i每頁筆數)
+        //    {
+        //        i頁數++;
+        //    }
+
+        //    HttpContext.Session.SetInt32(CDictionary.SK_管理者觀看會員清單頁數使用關鍵字, i頁數);
+        //    var members = from m in _db.Members.Skip(i每頁筆數 * i頁數).Take(i每頁筆數)
+        //                  select m;
+        //    return Json(members);
+        //}
     }
 }

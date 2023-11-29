@@ -1,4 +1,5 @@
-﻿using System;
+﻿using prjDB_GamingForm_Show.ViewModels;
+using System;
 using System.Collections.Generic;
 
 namespace prjDB_GamingForm_Show.Models.Entities;
@@ -22,6 +23,10 @@ public partial class Depute
     public int RegionId { get; set; }
 
     public string? Title { get; set; }
+
+    public int ViewCount { get; set; }
+
+    public virtual ICollection<DeputeAction> DeputeActions { get; set; } = new List<DeputeAction>();
 
     public virtual ICollection<DeputeRecord> DeputeRecords { get; set; } = new List<DeputeRecord>();
 

@@ -10,15 +10,26 @@
 <h4>請輸入您的應徵資訊</h4>
 <hr />
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-10">
         <form asp-action="Apply">
             <input type="text" name="Id" hidden>
-            
+            <div class="form-group">
+                <label class="control-label">委託主題</label>
+                <input class="form-control" type="text" value="@Model.Title" disabled />
+            </div>
+            <div class="form-group">
+                <label class="control-label">委託內容</label>
+                <textarea class="form-control" type="text" rows="6" disabled>@Model.DeputeContent</textarea>
+            </div>
+            <div class="form-group">
+                <label class="control-label">提供報酬</label>
+                <input class="form-control" type="text" value="@Model.Salary.ToString("$###,###,##0.00")" disabled />
+            </div>
             <div class="form-group" hidden>
                 <label asp-for="DeputeId" class="control-label"></label>
                 <input name="DeputeId" value="@Model.DeputeId" class="form-control" />
             </div>
-            <div class="form-group">
+            <div class="form-group" hidden>
                 <label  class="control-label">會員編號</label>
                 <input name="MemberId" value="@ViewBag.memberid"class="form-control" disabled/>
             </div>
@@ -28,17 +39,14 @@
             </div>
             <div>
                 <label  class="control-label">應徵補充資訊</label>
-                <textarea name="RecordContent" rows="4" cols="50" placeholder="在這裡輸入您的應徵補充資訊..."></textarea>
+                <textarea class="form-control" name="RecordContent" rows="4" cols="50" placeholder="在這裡輸入您的應徵補充資訊..."></textarea>
             </div>
-            <div class="form-group">
+            <div class="form-group mt-3">
+                <a asp-action="DeputeMain" class="btn btn-secondary">返回</a>
                 <input type="submit" value="送出並應徵" class="btn btn-success" />
             </div>
         </form>
     </div>
-</div>
-
-<div>
-    <a asp-action="DeputeMain">Back to List</a>
 </div>
 
 @section Scripts {

@@ -28,6 +28,8 @@ namespace prjDB_GamingForm_Show.Controllers
             {
                 string json使用者 = JsonSerializer.Serialize(admin);
                 HttpContext.Session.SetString(CDictionary.SK_管理者登入資訊使用關鍵字, json使用者);
+                HttpContext.Session.SetString(CDictionary.SK_管理者名稱, admin.Name);
+                HttpContext.Session.SetString(CDictionary.SK_管理者照片路徑, admin.ImgPath);
                 return RedirectToAction("Index","Admin");
             }
             return View();

@@ -29,11 +29,13 @@ public partial class DbGamingFormTestContext : DbContext
 
     public virtual DbSet<Blog> Blogs { get; set; }
 
-    public virtual DbSet<Certificate> Certificates { get; set; }
-
     public virtual DbSet<Chat> Chats { get; set; }
 
+    public virtual DbSet<Coupon> Coupons { get; set; }
+
     public virtual DbSet<Depute> Deputes { get; set; }
+
+    public virtual DbSet<DeputeAction> DeputeActions { get; set; }
 
     public virtual DbSet<DeputeRecord> DeputeRecords { get; set; }
 
@@ -50,6 +52,8 @@ public partial class DbGamingFormTestContext : DbContext
     public virtual DbSet<JobCertificate> JobCertificates { get; set; }
 
     public virtual DbSet<Member> Members { get; set; }
+
+    public virtual DbSet<MemberCoupon> MemberCoupons { get; set; }
 
     public virtual DbSet<MemberStatus> MemberStatuses { get; set; }
 
@@ -240,14 +244,6 @@ public partial class DbGamingFormTestContext : DbContext
                 .HasConstraintName("FK_Blog_SubTag");
         });
 
-        modelBuilder.Entity<Certificate>(entity =>
-        {
-            entity.ToTable("Certificate");
-
-            entity.Property(e => e.CertificateId).HasColumnName("CertificateID");
-            entity.Property(e => e.Name).HasMaxLength(50);
-        });
-
         modelBuilder.Entity<Chat>(entity =>
         {
             entity
@@ -265,6 +261,28 @@ public partial class DbGamingFormTestContext : DbContext
                 .HasForeignKey(d => d.SenderAdmin)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Chat_Admin");
+        });
+
+        modelBuilder.Entity<Coupon>(entity =>
+        {
+            entity.HasKey(e => e.CouponId).HasName("PK_Certificate");
+
+            entity.ToTable("Coupon");
+
+            entity.Property(e => e.CouponId).HasColumnName("CouponID");
+            entity.Property(e => e.Discount).HasMaxLength(50);
+            entity.Property(e => e.EndDate).HasMaxLength(50);
+            entity.Property(e => e.Reduce).HasMaxLength(50);
+            entity.Property(e => e.StartDate).HasMaxLength(50);
+            entity.Property(e => e.StatusId).HasColumnName("StatusID");
+            entity.Property(e => e.Title)
+                .HasMaxLength(50)
+                .HasColumnName("title");
+
+            entity.HasOne(d => d.Status).WithMany(p => p.Coupons)
+                .HasForeignKey(d => d.StatusId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Coupon_Status");
         });
 
         modelBuilder.Entity<Depute>(entity =>
@@ -303,6 +321,31 @@ public partial class DbGamingFormTestContext : DbContext
                 .HasForeignKey(d => d.StatusId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Depute_Status");
+        });
+
+        modelBuilder.Entity<DeputeAction>(entity =>
+        {
+            entity.ToTable("DeputeAction");
+
+            entity.Property(e => e.Id).HasColumnName("ID");
+            entity.Property(e => e.ActionId).HasColumnName("ActionID");
+            entity.Property(e => e.DeputeId).HasColumnName("DeputeID");
+            entity.Property(e => e.MemberId).HasColumnName("MemberID");
+
+            entity.HasOne(d => d.Action).WithMany(p => p.DeputeActions)
+                .HasForeignKey(d => d.ActionId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_DeputeAction_ArticleAction");
+
+            entity.HasOne(d => d.Depute).WithMany(p => p.DeputeActions)
+                .HasForeignKey(d => d.DeputeId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_DeputeAction_Depute");
+
+            entity.HasOne(d => d.Member).WithMany(p => p.DeputeActions)
+                .HasForeignKey(d => d.MemberId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_DeputeAction_Member");
         });
 
         modelBuilder.Entity<DeputeRecord>(entity =>
@@ -428,6 +471,27 @@ public partial class DbGamingFormTestContext : DbContext
             entity.Property(e => e.Mycomment).HasColumnType("ntext");
             entity.Property(e => e.Name).HasMaxLength(50);
             entity.Property(e => e.Phone).HasMaxLength(24);
+        });
+
+        modelBuilder.Entity<MemberCoupon>(entity =>
+        {
+            entity.ToTable("MemberCoupon");
+
+            entity.Property(e => e.Id)
+                .ValueGeneratedNever()
+                .HasColumnName("ID");
+            entity.Property(e => e.CouponId).HasColumnName("CouponID");
+            entity.Property(e => e.MemberId).HasColumnName("MemberID");
+
+            entity.HasOne(d => d.Coupon).WithMany(p => p.MemberCoupons)
+                .HasForeignKey(d => d.CouponId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_MemberCoupon_Coupon");
+
+            entity.HasOne(d => d.Member).WithMany(p => p.MemberCoupons)
+                .HasForeignKey(d => d.MemberId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_MemberCoupon_Member");
         });
 
         modelBuilder.Entity<MemberStatus>(entity =>

@@ -4,6 +4,7 @@ using prjDB_GamingForm_Show.Models;
 using prjDB_GamingForm_Show.Models.Entities;
 using prjDB_GamingForm_Show.Models.Shop;
 using prjDB_GamingForm_Show.ViewModels;
+using System.Diagnostics;
 using System.Reflection.PortableExecutable;
 using System.Security.Cryptography.Xml;
 using System.Text.Json;
@@ -58,13 +59,61 @@ namespace prjDB_GamingForm_Show.Controllers
                 return View(Pdb);
 
             }
-            public IActionResult IndexPage(int? id) //拿來跳page用的 id用變數去計算，++--一個變數去控制讀取到的最後一個商品控制Page
-            {
-                IEnumerable<Product> Pdb = null;
-                Pdb = (from aa in _db.Products select aa).Skip((int)id).Take(25);//到最後一頁之後不能按 邏輯再補充
+
+          
+            public IActionResult IndexbyDate(String CK)
+			{
+				Trace.WriteLine("AAAA" + CK);
+				IEnumerable<Product> Pdb = null;
+                if (string.IsNullOrEmpty(CK))
+                {
+                    Pdb = _db.Products.Where(x => x.StatusId == 1).OrderByDescending(x => x.AvailableDate.Date);
+				}
+                else
+                {
+                    Pdb = _db.Products.Where(p => p.ProductName.Contains(CK) && p.StatusId == 1)
+                        .OrderByDescending(x => x.AvailableDate.Date);
+                }
                 return Json(Pdb);
             }
-            public ActionResult Create()
+			public IActionResult IndexbyPrice_H(String CK)
+			{
+				Trace.WriteLine("CCC" + CK);
+				IEnumerable<Product> Pdb = null;
+				if (string.IsNullOrEmpty(CK))
+				{
+					Pdb = _db.Products.Where(x => x.StatusId == 1).OrderByDescending(x => x.Price);
+				}
+				else
+				{
+					Pdb = _db.Products.Where(p => p.ProductName.Contains(CK) && p.StatusId == 1)
+						.OrderByDescending(x => x.Price);
+				}
+				return Json(Pdb);
+			}
+			public IActionResult IndexbyPrice_L(String CK)
+			{
+                Trace.WriteLine("AAAA"+CK);
+				IEnumerable<Product> Pdb = null;
+				if (string.IsNullOrEmpty(CK))
+				{
+					Pdb = _db.Products.Where(x => x.StatusId == 1).OrderBy(x => x.Price);
+				}
+				else
+				{
+					Pdb = _db.Products.Where(p => p.ProductName.Contains(CK) && p.StatusId == 1)
+						.OrderBy(x => x.Price);
+				}
+				Trace.WriteLine("BBBB" + Pdb);
+				return Json(Pdb);
+			}
+			//    public IActionResult IndexPage(int? id) //拿來跳page用的 id用變數去計算，++--一個變數去控制讀取到的最後一個商品控制Page
+			//{
+			//    IEnumerable<Product> Pdb = null;
+			//    Pdb = (from aa in _db.Products select aa).Skip((int)id).Take(25);//到最後一頁之後不能按 邏輯再補充
+			//    return Json(Pdb);
+			//}
+			public ActionResult Create()
             {
                 _db.Products.Load();
                 return View();

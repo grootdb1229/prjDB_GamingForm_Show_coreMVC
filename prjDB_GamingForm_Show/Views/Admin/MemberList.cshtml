@@ -94,15 +94,17 @@
     <script>
         const lastbtn = document.querySelector('#last');
         const nextbtn = document.querySelector('#next');
-        lastbtn.addEventListener('click',() =>{
-            last();
+        nextbtn.addEventListener('click', () => {
+            next();
         });
 
-        async function last(){
-            const response = await fetch('@Url.Content("~/Admin/MemberListPrevious")');
+        async function next(){
+            const response = await fetch('@Url.Content("~/Admin/MemberListNexttest")');
             const datas = await response.json();
-            const memberid = datas.map(m => `${m.MemberID}`)
-            document.querySelector('mid').innerHTML = memberid.join("")
+            
+            const memberid = datas.map(m => datas[0]['memberId'])
+            document.querySelector('#mid').innerHTML = memberid.join("")
+            
         }
 
     </script>

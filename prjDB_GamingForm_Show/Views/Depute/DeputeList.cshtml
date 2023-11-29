@@ -84,6 +84,7 @@
         const skillclass = document.querySelector('#skillclass');
         const skill = document.querySelector('#skill');
         search.addEventListener("click", () => { loadList() })
+        skillclass.addEventListener("change", () => { loadSkill() })
         skillclass.addEventListener("change", () => { loadList() })
         skill.addEventListener("change", () => { loadList() })
 
@@ -92,12 +93,12 @@
         const selectRegions = document.querySelector('#regions');
         const selSalary = document.querySelector('#money');
 
-        //基本搜尋&&進階搜尋
+        //基本搜尋&&進階搜尋///
         loadRegion();
         async function loadList() {
             const lstFrag = $(document.createDocumentFragment());
             const response = await fetch
-                (`@Url.Content("~/Depute/Search")?txtKeyword=${text.value}&txtRegion=${selectRegions.options[selectRegions.selectedIndex].text}&txtSalary=${selSalary.options[selSalary.selectedIndex].text}`);
+                (`@Url.Content("~/Depute/Search")?txtKeyword=${text.value}&txtRegion=${selectRegions.options[selectRegions.selectedIndex].text}&txtSalary=${selSalary.options[selSalary.selectedIndex].text}&txtSkillClass=${selSkillClasses.options[selSkillClasses.selectedIndex].text}&txtSkill=${selectSkills.options[selectSkills.selectedIndex].text}`);
             // console.log(response)
             const data = await response.json();
             // console.log(data);
@@ -155,11 +156,11 @@
         async function loadSkill() {
             const SkillFrag = $(document.createDocumentFragment());
             const response = await fetch(`@Url.Content("~/Depute/Skills")?id=${selSkillClasses.value}`);
-            // console.log(response);
+             console.log(response);
             const snd = '<option name="txtSkill" value="null">請選擇...</option>'
             SkillFrag.append(snd);
             const data = await response.json();
-            // console.log(data);
+             console.log(data);
             const Skills = data.map(Skills => `<option name="txtSkill" value='${Skills.skillId}'>${Skills.name}</option>`)
             SkillFrag.append(Skills);
             $('#skill').html(SkillFrag)
