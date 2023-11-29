@@ -1,4 +1,5 @@
-﻿@model prjDB_GamingForm_Show.ViewModels.CShopPageViewModel
+﻿@model IEnumerable<prjDB_GamingForm_Show.ViewModels.CShopPageViewModel>
+@* @model prjDB_GamingForm_Show.ViewModels.CShopPageViewModel *@
 
 @{
     ViewBag.Title = "產品目錄";
@@ -81,7 +82,7 @@
 
 <div class="container px-4 px-lg-5 mt-5">
     <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center" id="ContentProduct">
-       @* @foreach (var item in Model)
+       @foreach (var item in Model)
         {
             <div class="col mb-5">
                 <div class="card h-100">
@@ -111,7 +112,7 @@
                     
                        
                             <div>
-                        <span class="badge text-bg-light">@Html.DisplayFor(modelItem => item.ProductId)</span>
+                        <span class="badge text-bg-light">@Html.DisplayFor(modelItem => item.SubTagName)</span>
                             </div>
                         
 
@@ -139,7 +140,7 @@
                     </div>
                 </div>
             </div>
-        }*@
+        }
     </div>
 </div>
 <style>

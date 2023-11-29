@@ -47,17 +47,21 @@ namespace prjDB_GamingForm_Show.Controllers
                                    n.Product.ProductName,
                                    n.Product.Price,
                                    n.Product.FImagePath,
-                                   SubTagName = n.SubTag.Name
-                               });
+                                   n.SubTag.Name
+                               }).ToList();
                     foreach (var item in data)
                     {
+                    //var tagname = _db.ProductTags.Where(x => x.ProductId == item.ProductId).Select(x => x.SubTag.Name ).ToList();
+                        //from x in _db.ProductTags
+                        //          where x.ProductId == item.ProductId
+                        //          select x.SubTag.Name;
                         Pdb = new CShopPageViewModel
                         {
                             ProductId = item.ProductId,
                             ProductName = item.ProductName,
                             Price = item.Price,
                             FImagePath = item.FImagePath,
-                            //SubTagName = item.SubTagName
+                            SubTagName = item.Name
                         };
                     List.Add(Pdb);
                     };
@@ -108,9 +112,12 @@ namespace prjDB_GamingForm_Show.Controllers
                 //Todo  你的交易邏輯這個版本根本還沒寫上去
                 //Todo  tag選擇後要有DIV去接客人選擇的Subtag，可視化讓客人選擇自己商品的標籤，再用迴圈塞入資料庫
                 //Todo  產品留言功能目前未實作
-
+                _db.ProductTags.Load();
+                _db.Products.Load();
+                _db.SubTags.Load();
+                List = new List<CShopPageViewModel>();
+                CShopPageViewModel Pdb = null;
                 String CK = ck.txtKeyword;
-                CShopPageViewModel Pdb = new CShopPageViewModel();
                 if (string.IsNullOrEmpty(CK))
                 {
                     var data = from n in _db.ProductTags
@@ -121,7 +128,7 @@ namespace prjDB_GamingForm_Show.Controllers
                                    n.Product.ProductName,
                                    n.Product.Price,
                                    n.Product.FImagePath,
-                                   SubTagName = n.SubTag.Name
+                                   n.SubTag.Name
                                };
                     foreach (var item in data)
                     {
@@ -131,8 +138,9 @@ namespace prjDB_GamingForm_Show.Controllers
                             ProductName=item.ProductName,
                             Price = item.Price,
                             FImagePath = item.FImagePath,
-                            //SubTagName = item.SubTagName
+                            SubTagName = item.Name
                         };
+                        List.Add(Pdb);
                     };
                    
                 }
@@ -146,7 +154,7 @@ namespace prjDB_GamingForm_Show.Controllers
                                    n.Product.ProductName,
                                    n.Product.Price,
                                    n.Product.FImagePath,
-                                   SubTagName = n.SubTag.Name
+                                   n.SubTag.Name
                                };
                     foreach (var item in data)
                     {
@@ -156,8 +164,9 @@ namespace prjDB_GamingForm_Show.Controllers
                             ProductName = item.ProductName,
                             Price = item.Price,
                             FImagePath = item.FImagePath,
-                            //SubTagName = item.SubTagName
+                            SubTagName = item.Name
                         };
+                        List.Add(Pdb);
                     };
                 }
                 string json = "";
@@ -168,7 +177,7 @@ namespace prjDB_GamingForm_Show.Controllers
                     List<ShoppingCar> car = JsonSerializer.Deserialize<List<ShoppingCar>>(json);
                     ViewBag.Car = car.Count();
                 }
-                return View(Pdb);
+                return View(List);
 
             }
 
