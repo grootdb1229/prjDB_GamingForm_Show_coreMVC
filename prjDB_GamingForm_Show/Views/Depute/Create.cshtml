@@ -31,7 +31,7 @@
                 <span asp-validation-for="ProviderId" class="text-danger"></span>
             </div>
             <div class="form-floating mb-3">
-                <input name="標題" class="form-control" id="Title" placeholder="" />
+                <input name="標題" class="form-control" id="Title" placeholder="" required/>
                 <label asp-for="Title" for="Title"></label>
                 <span asp-validation-for="Title" class="text-danger"></span>
             </div>
@@ -46,7 +46,7 @@
                 <span asp-validation-for="Modifiedate" class="text-danger"></span>
             </div>
             <div class="form-floating mb-3">
-                <input name="報酬" class="form-control" id="Salary" placeholder="" />
+                <input name="報酬" class="form-control" id="Salary" placeholder="" required />
                 <label asp-for="Salary" class="control-label" for="Salary"></label>
                 <span asp-validation-for="Salary" class="text-danger"></span>
             </div>
@@ -67,7 +67,7 @@
                 <span asp-validation-for="RegionId" class="text-danger"></span> *@
             </div>
             <div class="form-floating mb-3">
-                <textarea asp-for="DeputeContent" class="form-control" style="height:200px" placeholder="在這裡輸入您的委託資訊..." id="DeputeContent" placeholder=""></textarea>
+                <textarea asp-for="DeputeContent" class="form-control" style="height:200px" placeholder="在這裡輸入您的委託資訊..." id="DeputeContent" placeholder="" required></textarea>
                 <label asp-for="DeputeContent" class="control-label" for="DeputeContent"></label>
                 <span asp-validation-for="DeputeContent" class="text-danger"></span>
             </div>
@@ -84,18 +84,15 @@
                     </ul>
                 </div>
             </div>
-            <div name="skills" id="select-skills"></div>
+            <input name="skilllist" id="select-skills" hidden>
             <div class="form-floating mb-3">
-                <input type="submit" value="送出並發佈" class="btn btn-success" />
+                <a asp-action="personal" class="btn btn-secondary" >取消</a>
+                <input type="submit" value="送出並發佈" class="btn btn-success" onclick="prepareAndSubmit()"/>
             </div>
-            <button type="button" id="test">test</button>
         </form>
     </div>
 </div>
 
-<div>
-    <a asp-action="personal" class="btn btn-secondary">取消</a>
-</div>
 
 @section Scripts {
     @{
@@ -141,6 +138,7 @@
         }
         loadSkillClasses();
 
+        const selSkills = [];
         async function loadSkills() {
             const response = await fetch(`@Url.Content("~/depute/skillss")?skillClass=${chooseClass}`);
             const datas = await response.json();
@@ -152,9 +150,19 @@
                 divSkill.addEventListener('change', function (event) {
                     // console.log(chooseClass);
                     // console.log(event.target.labels[0].textContent);
-                    var selSK = chooseClass +'-'+ event.target.labels[0].textContent;
+                    var selSK = event.target.labels[0].textContent;
+                    var convertSK = chooseClass +'-'+ event.target.labels[0].textContent;
+                    console.log(convertSK);
                     
-                    console.log(selSK);
+                    if(event.target.checked){
+                        selSkills.push({ skillclass: chooseClass, skill: selSK });
+                        console.log(selSkills);
+                    }else{
+                        const index = selSkills.findIndex(i => i.skillclass == chooseClass && i.skill == selSK);
+                        console.log(index);
+                        selSkills.splice(index,1);
+                        console.log(selSkills);
+                    }
                 })
             })
         }
@@ -169,7 +177,11 @@
         }
         loadRegions();
 
-
+        const inputSkill = document.getElementById('select-skills');
+        function prepareAndSubmit() {
+            inputSkill.value = JSON.stringify(selSkills);
+            document.forms.submit();
+        }
     </script>
 
 }

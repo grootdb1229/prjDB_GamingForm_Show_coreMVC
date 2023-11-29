@@ -10,31 +10,16 @@
         <div class="row g-2">
             <div class="col-md-10">
                 <div class="row g-2">
-                    <div class="col-md-4">
+                    <div class="col-md-15">
                         <input type="text" id="text" name="txtKeyword" class="form-control border-0" placeholder="Keyword" />
                     </div>
-                    <div class="col-md-4">
-                        <select id="regions" class="form-select border-0">
-                        </select>
-                    </div>
-                    <div class="col-md-4">
-                        <select id="money" class="form-select border-0">
-                            <option name="txtSalary" selected>請選擇...</option>
-                            <option name="txtSalary" value="1">10000</option>
-                            <option name="txtSalary" value="2">20000</option>
-                            <option name="txtSalary" value="3">30000</option>
-                            <option name="txtSalary" value="4">50000</option>
-                        </select>
-
-                    </div>
-
                 </div>
             </div>
-            <div class="col-md-2">
+            <div class="col-md-1">
                 <button id="search" name="txtKeyword" class="btn btn-dark border-0 w-100">搜尋</button>
+            </div>
+            <div class="col-md-1">
                 @Html.ActionLink("重設","DeputeList","Depute",null,new{@class ="btn btn-dark border-0 w-100",@id="search",name="txtKeyword"})
-                @* <a href="~/../Views/Depute/DeputeList.cshtml" class="button">Go to page</a> *@
-                @* <button id="search" name="txtKeyword" class="btn btn-dark border-0 w-100" href="~/..Depute/DeputeList" />搜尋</button> *@
             </div>
         </div>
     </div>
@@ -47,9 +32,21 @@
     <span style="float:left">test</span>
     <span style="float:left">test</span>
     <ul>
+        <li style="float:right;list-style:none">
+            <select id="money" class="form-select border-0">
+                <option name="txtSalary" selected>請選擇...</option>
+                <option name="txtSalary" value="1">10000</option>
+                <option name="txtSalary" value="2">20000</option>
+                <option name="txtSalary" value="3">30000</option>
+                <option name="txtSalary" value="4">50000</option>
+            </select>
+        </li>
+        <li style="float:right;list-style:none"> <select id="regions" class="form-select border-0"></select></li>
         <li style="float:right;list-style:none"><select id="skill" class="form-select border-0"></select></li>
         <li style="float:right;list-style:none"><select id="skillclass" class="form-select border-0"></select></li>
+        
     </ul>
+ 
 </div>
 <div class="container-xxl py-5">
     
@@ -109,8 +106,8 @@
                                                      <div class="text-start ps-4">
                                                      <h5 class="mb-3">${list.title}</h5>
                                                              <span class="text-truncate me-3"><i class="fa fa-map-marker-alt text-primary me-2"></i>${list.region}</span>
-                                                                             <span class="text-truncate me-3"><i class="fa fa-map-marker-alt text-primary me-2"></i>${list.providername}</span>
-                                                                     <span class="text-truncate me-3"><i class="far fa-clock text-primary me-2"></i>${list.startdate}</span>
+                                                             <span class="text-truncate me-3"><i class="fa fa-map-marker-alt text-primary me-2"></i>${list.providername}</span>
+                                                             <span class="text-truncate me-3"><i class="far fa-clock text-primary me-2"></i>${list.startdate}</span>
                                                              <span class="text-truncate me-0"><i class="far fa-money-bill-alt text-primary me-2"></i>${list.salary}</span>
                                                     </div>
                                                     </div>

@@ -43,7 +43,7 @@
 									<option value="1" >最熱銷</option>
 									<option value="2"  >最新上架</option>
 									<option value="3">價格:高到低</option>
-									<option value="3">價格:低到高</option>
+									<option value="4">價格:低到高</option>
 								</select>
 							</div>
 						</div>
@@ -132,16 +132,16 @@
 
 			switch (selectedValue) {
 				case '1':
-					console.log('最熱銷');
+					//最熱銷
 					break;
 				case '2':
 					SortByDate();
 					break;
 				case '3':
-					console.log('bb');
+					SortByPrice_h();//由高到低
 					break;
 				case '4':
-					console.log('aa');
+					SortByPrice_l();//由低到高
 					break;
 				default:		
 					console.log('不確定要不要先放');
@@ -150,11 +150,11 @@
 		});
 		
 		
-			async function SortByDate() {
+		async function SortByPrice_h() {
 				var queryKeyword = document.querySelector('#Kw').value;
 				
 				ProductContent.innerHTML = '';
-				const response = await fetch(`@Url.Content("~/Shop/IndexbyDate")?CK=${queryKeyword}`);
+			const response = await fetch(`@Url.Content("~/Shop/IndexbyPrice_H")?CK=${queryKeyword}`);
 				const data = await response.json();
 				console.log(data);
 				const sortbydate = data.map(x =>
@@ -162,7 +162,7 @@
 						 <div class="col mb-5">
 				<div class="card h-100">
 					<div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem">Sale</div>
-						<img class="card-img-top" src="~/images/shop/${x.fImagePath}" alt="..." style="height:25vh; width=25vw;" />
+						<img class="card-img-top" src="../images/shop/${x.fImagePath}" alt="..." style="height:25vh; width=25vw;" />
 					<div class="card-body p-4">
 						<div class="text-center">
 									<h5 class="fw-bolder">${x.productName}</h5>
@@ -196,8 +196,106 @@
 			</div>
 								`);
 				ProductContent.innerHTML = sortbydate.join("");
-			console.log(ProductContent.innerHTML);
+			
 			}
+
+		async function SortByDate() {
+			var queryKeyword = document.querySelector('#Kw').value;
+
+			ProductContent.innerHTML = '';
+			const response = await fetch(`@Url.Content("~/Shop/IndexbyDate")?CK=${queryKeyword}`);
+			const data = await response.json();
+			console.log(data);
+			const sortbydate = data.map(x =>
+				`
+								 <div class="col mb-5">
+						<div class="card h-100">
+							<div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem">Sale</div>
+								<img class="card-img-top" src="../images/shop/${x.fImagePath}" alt="..." style="height:25vh; width=25vw;" />
+							<div class="card-body p-4">
+								<div class="text-center">
+											<h5 class="fw-bolder">${x.productName}</h5>
+									<div class="d-flex justify-content-center small text-warning mb-2">
+										<div class="bi-star-fill"></div>
+										<div class="bi-star-fill"></div>
+										<div class="bi-star-fill"></div>
+										<div class="bi-star-fill"></div>
+										<div class="bi-star-fill"></div>
+									</div>
+									<span class="text-muted text-decoration-line-through">${x.price}</span>
+									<span style="color:black">${x.price}</span>
+								</div>
+							</div>
+							<div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+								<form action="/Shop/AddToCar" method="post">
+									<input type="text" name="txtCount" value="1" class="form-control text-center me-3 textbox" />
+									<div class="text-center">
+												<a href="/Shop/Details?id=${x.productId}" class="btn btn-outline-dark mt-auto">查看商品</a>
+									</div>
+									<div class="text-center">
+												<a href="/Shop/Edit?id=${x.productId}" class="btn btn-outline-dark mt-auto">測試修改</a>
+									</div>
+											<input type="hidden" name="ProductID" value="${x.productId}" />
+									<div class="text-center">
+										<input type="submit" value="加入購物車" class="btn btn-outline-dark mt-auto" />
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+										`);
+			ProductContent.innerHTML = sortbydate.join("");
+		
+		}
+
+		async function SortByPrice_l() {
+			var queryKeyword = document.querySelector('#Kw').value;
+
+			ProductContent.innerHTML = '';
+			const response = await fetch(`@Url.Content("~/Shop/IndexbyPrice_L")?CK=${queryKeyword}`);
+			const data = await response.json();
+			console.log(data);
+			const sortbydate = data.map(x =>
+				`
+										 <div class="col mb-5">
+								<div class="card h-100">
+									<div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem">Sale</div>
+										<img class="card-img-top" src="../images/shop/${x.fImagePath}" alt="..." style="height:25vh; width=25vw;" />
+									<div class="card-body p-4">
+										<div class="text-center">
+													<h5 class="fw-bolder">${x.productName}</h5>
+											<div class="d-flex justify-content-center small text-warning mb-2">
+												<div class="bi-star-fill"></div>
+												<div class="bi-star-fill"></div>
+												<div class="bi-star-fill"></div>
+												<div class="bi-star-fill"></div>
+												<div class="bi-star-fill"></div>
+											</div>
+											<span class="text-muted text-decoration-line-through">${x.price}</span>
+											<span style="color:black">${x.price}</span>
+										</div>
+									</div>
+									<div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+										<form action="/Shop/AddToCar" method="post">
+											<input type="text" name="txtCount" value="1" class="form-control text-center me-3 textbox" />
+											<div class="text-center">
+														<a href="/Shop/Details?id=${x.productId}" class="btn btn-outline-dark mt-auto">查看商品</a>
+											</div>
+											<div class="text-center">
+														<a href="/Shop/Edit?id=${x.productId}" class="btn btn-outline-dark mt-auto">測試修改</a>
+											</div>
+													<input type="hidden" name="ProductID" value="${x.productId}" />
+											<div class="text-center">
+												<input type="submit" value="加入購物車" class="btn btn-outline-dark mt-auto" />
+											</div>
+										</form>
+									</div>
+								</div>
+							</div>
+												`);
+			ProductContent.innerHTML = sortbydate.join("");
+
+		}
 
 </script>
 }

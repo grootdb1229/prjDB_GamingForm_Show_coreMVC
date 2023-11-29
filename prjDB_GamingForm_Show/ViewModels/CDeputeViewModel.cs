@@ -1,5 +1,6 @@
 ﻿using prjDB_GamingForm_Show.Models;
 using prjDB_GamingForm_Show.Models.Entities;
+using prjDB_GamingForm_Show.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -41,10 +42,10 @@ namespace DB_GamingForm_Show.Job.DeputeClass
 
         public string imgfilepath { get; set; }
         public int count { get; set; }
+
+        public string ?skilllist {  get; set; }
+
         
-
-
-
 
     }
 
