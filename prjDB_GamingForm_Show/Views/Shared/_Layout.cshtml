@@ -63,8 +63,20 @@
                 </ul>
                 <div>
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
-                    <li class="nav-item"> @Html.ActionLink("登入", "Home", "Login", null, new { @class = "nav-link" })</li>
-                    <li class="nav-item"> @Html.ActionLink("註冊", "Member", "Create", null, new { @class = "nav-link" })</li>
+
+                        @{
+                            if (Context.Session.GetInt32(CDictionary.SK_UserID) == null)
+                            {
+                                <li class="nav-item"> @Html.ActionLink("登入", "Login", "Home", null,  new { @class = "nav-link" })</li>
+                                <li class="nav-item"> @Html.ActionLink("註冊", "Create", "Member", null, new { @class = "nav-link" })</li>
+                            }
+                            else
+                            {
+                                <li class="nav-item"> @Html.ActionLink("登出", "Logout", "Home", null, new { @class = "nav-link" })</li>
+                                <li>歡迎回來 @Context.Session.GetString(CDictionary.SK_UserName)</li>
+                            }
+                        }
+                    
                 </ul>
                 </div>
 
