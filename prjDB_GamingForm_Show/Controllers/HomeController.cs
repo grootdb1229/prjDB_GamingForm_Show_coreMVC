@@ -46,6 +46,16 @@ namespace prjDB_GamingForm_Show.Controllers
             return View();
         }
 
+        public IActionResult Logout() 
+        {
+            if (HttpContext.Session.GetInt32(CDictionary.SK_UserID) != null)
+            {
+                HttpContext.Session.Remove(CDictionary.SK_UserID);
+                HttpContext.Session.Remove(CDictionary.SK_UserName);
+            }
+           return RedirectToAction("HomePage");
+        }
+
         [HttpPost]
         public IActionResult Login(CLoginViewModel vm)
         {
@@ -55,8 +65,11 @@ namespace prjDB_GamingForm_Show.Controllers
                 if (user.Password.Equals(vm.txtPassword))
                 {
                     int user_id = user.MemberId;
-                    HttpContext.Session.SetInt32("user_id", user_id);
+                    string user_name = user.Name;
+                    HttpContext.Session.SetInt32(CDictionary.SK_UserID, user_id);
+                    HttpContext.Session.SetString(CDictionary.SK_UserName, user_name);
                     ViewBag.user_id = user_id;
+                    ViewBag.user_name = user_name;
                     //string user_Serialized = System.Text.Json.JsonSerializer.Serialize(user);
                     //HttpContext.Session.SetString(CDictionary.SK_Logged_User, user_Serialized);
                     //ViewBag.LoggedUser = user_Serialized;
