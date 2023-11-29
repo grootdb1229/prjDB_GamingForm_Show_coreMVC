@@ -69,13 +69,61 @@ namespace prjDB_GamingForm_Show.Controllers
                 List.Add(x);
 
             }
-            Temp = List;
         }
 
-        public IActionResult DeputeList()
+        public IActionResult DeputeList(int? id)
         {
+            IEnumerable<CDeputeViewModel> datas = null;
+            if (id ==null)
+            {
+                ListLoad();
+                datas = from n in List
+                        select n;
+                return View(datas);
+            }
+            else
+            {
 
-            return View();
+                var data = (from n in _db.DeputeSkills
+                           where n.Skill.SkillClassId == id
+                           select new
+                           {
+                               n.DeputeId,
+                               n.Depute.Title,
+                               Name = n.Depute.Provider.Name,
+                               SrartDate = n.Depute.StartDate.ToString("d"),
+                               Modifiedate = n.Depute.Modifiedate.ToString("d"),
+                               n.Depute.DeputeContent,
+                               n.Depute.Salary,
+                               Status = n.Depute.Status.Name,
+                               n.Depute.Region.City,
+                               n.Depute.Provider.FImagePath
+
+
+                           }).Distinct();
+                CDeputeViewModel x = null;
+                foreach (var item in data)
+                {
+                    x = new CDeputeViewModel()
+                    {
+                        id = item.DeputeId,
+                        title = item.Title,
+                        providername = item.Name,
+                        startdate = item.SrartDate,
+                        modifieddate = item.Modifiedate,
+                        deputeContent = item.DeputeContent,
+                        salary = item.Salary,
+                        status = item.Status,
+                        region = item.City,
+                        imgfilepath = item.FImagePath
+                    };
+                    Temp.Add(x);
+
+                }
+                return View(Temp);
+            }
+            
+            
 
         }
         public IActionResult Search(CKeyWord vm)
@@ -94,6 +142,7 @@ namespace prjDB_GamingForm_Show.Controllers
                     vm.txtKeyword = "";
                 datas = List.Where(n => (n.deputeContent.Trim().ToLower().Contains(vm.txtKeyword.Trim().ToLower()) ||
                                           n.providername.Trim().ToLower().Contains(vm.txtKeyword.Trim().ToLower()) ||
+                                          n.title.Trim().ToLower().Contains(vm.txtKeyword.Trim().ToLower()) ||
                                           n.region.Trim().ToLower().Contains(vm.txtKeyword.Trim().ToLower()))
                                           )
                 .OrderByDescending(n => n.modifieddate);
@@ -124,12 +173,12 @@ namespace prjDB_GamingForm_Show.Controllers
                 if (vm.txtSkillClass == "請選擇...")
                     vm.txtSkillClass = "";
                 if (vm.txtSkill == "請選擇...")
-                    
-                if (vm.txtRegion == "請選擇...")
-                    vm.txtRegion = "";
+
+                    if (vm.txtRegion == "請選擇...")
+                        vm.txtRegion = "";
                 if (vm.txtSalary == "請選擇...")
                     vm.txtSalary = "0";
-                datas = List.Where(n => ((n.deputeContent.Trim().ToLower().Contains(vm.txtKeyword.Trim().ToLower()) ||
+                datas = Temp.Where(n => ((n.deputeContent.Trim().ToLower().Contains(vm.txtKeyword.Trim().ToLower()) ||
                                           n.providername.Trim().ToLower().Contains(vm.txtKeyword.Trim().ToLower()) ||
                                           n.region.Trim().ToLower().Contains(vm.txtKeyword.Trim().ToLower()))) &&
                                           (n.region.Trim().ToLower().Contains(vm.txtRegion.Trim().ToLower())) &&
@@ -139,7 +188,7 @@ namespace prjDB_GamingForm_Show.Controllers
                                           )
                                           )
                    .OrderByDescending(n => n.modifieddate);
-
+                Temp = datas.ToList();
             }
             if (datas == null || datas.Count() == 0)
             {
@@ -213,18 +262,19 @@ namespace prjDB_GamingForm_Show.Controllers
         }
         public IActionResult DeputeCount()
         {
-            var SkillClasses = _db.SkillClasses.Select(n => n.Name);
+            var SkillClasses = _db.SkillClasses;
             List<CDeputeViewModel> slist = new List<CDeputeViewModel>();
             CDeputeViewModel x = null;
             foreach (var item in SkillClasses)
             {
                 var datas = from n in List.AsEnumerable()
-                            where n.deputeContent.Contains(item)
+                            where n.deputeContent.Contains(item.Name)
                             select n;
 
                 x = new CDeputeViewModel()
                 {
-                    skillname = item,
+                    skillid = item.SkillClassId,
+                    skillname = item.Name,
                     count = datas.Count()
                 };
 
@@ -324,6 +374,7 @@ namespace prjDB_GamingForm_Show.Controllers
             var datas = _db.Skills.Where(_ => _.SkillClassId == skillclassid).Select(_ => _);
             return Json(datas);
         }
+
         public IActionResult Create()
         {
             return View();
@@ -345,7 +396,7 @@ namespace prjDB_GamingForm_Show.Controllers
             _db.Deputes.Add(n);
             _db.SaveChanges();
 
-            //以下存該委託所需的技能(多類別)
+            //存該委託所需的技能(多類別)
             List<CDeputeSkillViewModel> list = JsonSerializer.Deserialize<List<CDeputeSkillViewModel>>(vm.skilllist);
 
             DeputeSkill ndsk = new DeputeSkill();
@@ -361,13 +412,31 @@ namespace prjDB_GamingForm_Show.Controllers
             }
             return RedirectToAction("Personal");
         }
+
         public IActionResult deleteDepute(int id)
         {
             Depute o = _db.Deputes.Where(_ => _.DeputeId == id).Select(_ => _).FirstOrDefault();
+            var dro = _db.DeputeRecords.Where(_ => _.DeputeId == id).Select(_ => _);
+            var dso = _db.DeputeSkills.Where(_ => _.DeputeId == id).Select(_ => _);
+            if (dro != null)
+            {
+                foreach (var item in dro)
+                {
+                    _db.DeputeRecords.Remove(item);
+                }
+            }
+            if (dso != null)
+            {
+                foreach (var item in dso)
+                {
+                    _db.DeputeSkills.Remove(item);
+                }
+            }
             _db.Deputes.Remove(o);
             _db.SaveChanges();
             return RedirectToAction("Personal");
         }
+
         public IActionResult DeputeDetial(int? id)
         {
             _db.DeputeRecords.Load();
