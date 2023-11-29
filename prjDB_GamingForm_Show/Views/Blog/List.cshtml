@@ -97,8 +97,8 @@
                                 <a style="text-decoration:none" href="@Url.Action("ArticleList", "Blog", new { FId =item.BlogId})">
                                     <span style="color: #FFFFFF;font-size:32px">@item.Title</span>
                                 </a>
-
-                                <p style="font-size:24px">@Html.DisplayFor(modelItem => item.SubBlogs.FirstOrDefault().Articles.LastOrDefault().Title)</p>
+                                <br />
+                                <a style="font-size:24px;text-decoration:none" href="@Url.Action("ArticleContent", "Blog", new { FId =item.BlogId,AFId=item.SubBlogs.FirstOrDefault().Articles.LastOrDefault().ArticleId})">@item.SubBlogs.First().Articles.LastOrDefault().Title</a>
                             </div>
                         </div>
                     }
