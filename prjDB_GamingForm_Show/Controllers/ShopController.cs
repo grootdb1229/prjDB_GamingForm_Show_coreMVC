@@ -1,10 +1,15 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using DB_GamingForm_Show.Job.DeputeClass;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
+using NuGet.Packaging;
 using prjDB_GamingForm_Show.Models;
 using prjDB_GamingForm_Show.Models.Entities;
 using prjDB_GamingForm_Show.Models.Shop;
 using prjDB_GamingForm_Show.ViewModels;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Reflection.PortableExecutable;
 using System.Security.Cryptography.Xml;
 using System.Text.Json;
@@ -24,6 +29,78 @@ namespace prjDB_GamingForm_Show.Controllers
                 _host = host;
                 _db = db;
             }
+            public List<CShopPageViewModel> List { get; set; }
+            public IActionResult test()
+            {
+                _db.ProductTags.Load();
+                _db.Products.Load();
+                _db.SubTags.Load();
+                List = new List<CShopPageViewModel>();
+                CShopPageViewModel Pdb = null;
+                //if (string.IsNullOrEmpty())
+                //{
+                    var data = (from n in _db.ProductTags
+                               where n.Product.StatusId == 1
+                               select new
+                               {
+                                   n.Product.ProductId,
+                                   n.Product.ProductName,
+                                   n.Product.Price,
+                                   n.Product.FImagePath,
+                                   n.SubTag.Name
+                               }).ToList();
+                    foreach (var item in data)
+                    {
+                    //var tagname = _db.ProductTags.Where(x => x.ProductId == item.ProductId).Select(x => x.SubTag.Name ).ToList();
+                        //from x in _db.ProductTags
+                        //          where x.ProductId == item.ProductId
+                        //          select x.SubTag.Name;
+                        Pdb = new CShopPageViewModel
+                        {
+                            ProductId = item.ProductId,
+                            ProductName = item.ProductName,
+                            Price = item.Price,
+                            FImagePath = item.FImagePath,
+                            SubTagName = item.Name
+                        };
+                    List.Add(Pdb);
+                    };
+
+                //}
+                //else
+                //{
+                    //var data = from n in _db.ProductTags
+                    //           where n.Product.ProductName.Contains(CK) && n.Product.StatusId == 1
+                    //           select new
+                    //           {
+                    //               n.Product.ProductId,
+                    //               n.Product.ProductName,
+                    //               n.Product.Price,
+                    //               n.Product.FImagePath,
+                    //               SubTagName = n.SubTag.Name
+                    //           };
+                    //foreach (var item in data)
+                    //{
+                    //    Pdb = new CShopPageViewModel
+                    //    {
+                    //        ProductId = item.ProductId,
+                    //        ProductName = item.ProductName,
+                    //        Price = item.Price,
+                    //        FImagePath = item.FImagePath,
+                    //        SubTagName = item.SubTagName
+                    //    };
+                    //};
+                //}
+                string json = "";
+                ViewBag.Car = 0;
+                if (HttpContext.Session.Keys.Contains(CDictionary.SK_PURCHASED_PRODUCES_LIST))
+                {
+                    json = HttpContext.Session.GetString(CDictionary.SK_PURCHASED_PRODUCES_LIST);
+                    List<ShoppingCar> car = JsonSerializer.Deserialize<List<ShoppingCar>>(json);
+                    ViewBag.Car = car.Count();
+                }
+                return View(List);
+            }
             public IActionResult Index(CKeyWord ck)
             {
                 //UI相關
@@ -35,18 +112,62 @@ namespace prjDB_GamingForm_Show.Controllers
                 //Todo  你的交易邏輯這個版本根本還沒寫上去
                 //Todo  tag選擇後要有DIV去接客人選擇的Subtag，可視化讓客人選擇自己商品的標籤，再用迴圈塞入資料庫
                 //Todo  產品留言功能目前未實作
-
+                _db.ProductTags.Load();
+                _db.Products.Load();
+                _db.SubTags.Load();
+                List = new List<CShopPageViewModel>();
+                CShopPageViewModel Pdb = null;
                 String CK = ck.txtKeyword;
-                IEnumerable<Product> Pdb = null;
                 if (string.IsNullOrEmpty(CK))
                 {
-                    Pdb = (from aa in _db.Products
-                           where aa.StatusId == 1
-                          select aa)/*.Take(25)*/;
+                    var data = from n in _db.ProductTags
+                               where n.Product.StatusId == 1
+                               select new 
+                               {
+                                   n.Product.ProductId,
+                                   n.Product.ProductName,
+                                   n.Product.Price,
+                                   n.Product.FImagePath,
+                                   n.SubTag.Name
+                               };
+                    foreach (var item in data)
+                    {
+                        Pdb = new CShopPageViewModel
+                        {
+                            ProductId = item.ProductId,
+                            ProductName=item.ProductName,
+                            Price = item.Price,
+                            FImagePath = item.FImagePath,
+                            SubTagName = item.Name
+                        };
+                        List.Add(Pdb);
+                    };
+                   
                 }
                 else
                 {
-                    Pdb = _db.Products.Where(p => p.ProductName.Contains(CK)&&p.StatusId==1);
+                    var data = from n in _db.ProductTags
+                               where n.Product.ProductName.Contains(CK) && n.Product.StatusId == 1
+                               select new
+                               {
+                                   n.Product.ProductId,
+                                   n.Product.ProductName,
+                                   n.Product.Price,
+                                   n.Product.FImagePath,
+                                   n.SubTag.Name
+                               };
+                    foreach (var item in data)
+                    {
+                        Pdb = new CShopPageViewModel
+                        {
+                            ProductId = item.ProductId,
+                            ProductName = item.ProductName,
+                            Price = item.Price,
+                            FImagePath = item.FImagePath,
+                            SubTagName = item.Name
+                        };
+                        List.Add(Pdb);
+                    };
                 }
                 string json = "";
                 ViewBag.Car = 0;
@@ -56,7 +177,7 @@ namespace prjDB_GamingForm_Show.Controllers
                     List<ShoppingCar> car = JsonSerializer.Deserialize<List<ShoppingCar>>(json);
                     ViewBag.Car = car.Count();
                 }
-                return View(Pdb);
+                return View(List);
 
             }
 
@@ -182,7 +303,7 @@ namespace prjDB_GamingForm_Show.Controllers
                 { return RedirectToAction("Index"); }
                 CProductWarp cProductWarp = new CProductWarp();
 
-                cProductWarp.ProductID = pdb.ProductId;
+                cProductWarp.ProductId = pdb.ProductId;
                 cProductWarp.ProductName = pdb.ProductName;
                 cProductWarp.Price = pdb.Price;
                 cProductWarp.ProductContent = pdb.ProductContent;
@@ -201,7 +322,7 @@ namespace prjDB_GamingForm_Show.Controllers
                     return View((CProductWarp)product);
                 }
 
-                Product x = _db.Products.FirstOrDefault(p => p.ProductId == product.ProductID);
+                Product x = _db.Products.FirstOrDefault(p => p.ProductId == product.ProductId);
                 if (x != null)
                 {
                     if (product.photo != null)
