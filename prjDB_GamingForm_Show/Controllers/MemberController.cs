@@ -26,7 +26,6 @@ namespace prjDB_GamingForm_Show.Controllers
         {
             //if (id == null)
             //    return RedirectToAction("Create");
-            id = HttpContext.Session.GetInt32("user_id");
             if (id == null) 
             {
                 return RedirectToAction("Login", "Home");
@@ -37,6 +36,7 @@ namespace prjDB_GamingForm_Show.Controllers
                     select m;
             return View(datas);
         }
+
 
         public IActionResult Test(int? id) 
         {
@@ -98,6 +98,8 @@ namespace prjDB_GamingForm_Show.Controllers
             }
             return RedirectToAction("MemberPage", "Member");
         }
+
+
 
 
     }
