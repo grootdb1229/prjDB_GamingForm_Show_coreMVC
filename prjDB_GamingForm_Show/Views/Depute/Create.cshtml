@@ -148,20 +148,12 @@
             const divSkills = document.getElementsByClassName('me-1');
             Array.from(divSkills).forEach(divSkill => {
                 divSkill.addEventListener('change', function (event) {
-                    // console.log(chooseClass);
-                    // console.log(event.target.labels[0].textContent);
                     var selSK = event.target.labels[0].textContent;
-                    var convertSK = chooseClass +'-'+ event.target.labels[0].textContent;
-                    console.log(convertSK);
-                    
                     if(event.target.checked){
                         selSkills.push({ skillclass: chooseClass, skill: selSK });
-                        console.log(selSkills);
                     }else{
                         const index = selSkills.findIndex(i => i.skillclass == chooseClass && i.skill == selSK);
-                        console.log(index);
                         selSkills.splice(index,1);
-                        console.log(selSkills);
                     }
                 })
             })

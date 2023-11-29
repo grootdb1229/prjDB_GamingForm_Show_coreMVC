@@ -14,7 +14,7 @@
             height: 650px;
         }
 
-            .ck.ck-content {
+            .ck-content {
                 color: black
             }
 
@@ -60,7 +60,7 @@
                     <input type="hidden" name="MemberId" value="@ViewBag.KK" />
                 </div>
                 <div>
-                    <textarea name="ArticleContent" id="editor" style="resize:none; height:700px">                    
+                    <textarea name="ArticleContent" id="editor" style="resize:none; height:700px;color:black">                    
                 </textarea>
                 </div>
 
@@ -91,6 +91,10 @@
             ClassicEditor
                 .create(document.querySelector('#editor'), {
                     extraPlugins: [MyCustomUploadAdapterPlugin],
+                   
+                }).then(editor => {
+                    // 在控制台中輸出所有可用的工具列項目名稱
+                    console.log(Array.from(editor.ui.componentFactory.names()));
                 })
                 .catch(error => {
                     console.log(error);
