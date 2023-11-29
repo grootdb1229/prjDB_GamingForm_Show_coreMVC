@@ -256,6 +256,32 @@ namespace prjDB_GamingForm_Show.Controllers
         #endregion
 
         public int _memberIdtest = 38;
+        public IActionResult changeDeputeRecordStatus(int id)
+        {
+
+            return Ok();
+        }
+        public IActionResult individualDetials(int id)
+        {
+            var o = _db.DeputeRecords.Where(_ => _.DeputeId == id).Select(_ => _).Include(_ => _.Depute).ToList();
+            List<CDeputeViewModel> list = new List<CDeputeViewModel>();
+            foreach (var item in o)
+            {
+                CDeputeViewModel n = new CDeputeViewModel();
+                n.title = item.Depute.Title;
+                n.count = o.Count();
+                n.status = item.ApplyStatus.Name;
+                n.memberName = item.Member.Name;
+
+                n.applyerGender = item.Member.Gender == 1 ? "男性" : "女性";
+                n.applyerEmail =item.Member.Email;
+                n.applyerBirth =item.Member.Birth.ToString("yyyy/MM/dd");
+                n.applyerComment =item.Member.Mycomment;
+                n.applyerPhone =item.Member.Phone;
+                list.Add(n);
+            }
+            return Json(list);
+        }
         public IActionResult Apply(int id)
         {
             ViewBag.memberid = _memberIdtest;
@@ -362,8 +388,14 @@ namespace prjDB_GamingForm_Show.Controllers
             }
             return RedirectToAction("Personal");
         }
-
-        public IActionResult deleteDepute(int id)
+        public IActionResult DeleteDeputeRecord(int id)
+        {
+            DeputeRecord o = _db.DeputeRecords.FirstOrDefault(_ => _.Id == id);
+            _db.DeputeRecords.Remove(o);
+            _db.SaveChanges();
+            return RedirectToAction("Personal");
+        }
+        public IActionResult DeleteDepute(int id)
         {
             Depute o = _db.Deputes.Where(_ => _.DeputeId == id).Select(_ => _).FirstOrDefault();
             var dro = _db.DeputeRecords.Where(_ => _.DeputeId == id).Select(_ => _);
