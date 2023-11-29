@@ -52,8 +52,8 @@
 
             <label for="Tags" class="control-label col-md-2">選擇標籤：</label>
             <div class="col-md-10">
-                <select id="Tags" name="TagID" class="form-control"> </select>
-                <select id="dynamicDiv" name="SubTagID" class="form-control"> </select>
+                <select id="Tags" name="TagID" class="form-control"> <option value="0" selected>請選擇一個主要標籤</option> </select>
+                <select id="dynamicDiv" name="SubTagID" class="form-control">  </select>
             </div>
         </div>
 
@@ -151,7 +151,7 @@
         <script>
             const SelTag = document.querySelector('#Tags');
             const SubDiv = document.querySelector('#dynamicDiv');
-            const SelDiv = document.querySelector('#SelTagDiv');
+            const SelDiv = document.querySelector('#SelTagDiv');//選定的資料都在這個DIV
             const SelSubButton = document.querySelector('#DoNotSubmit');
 
 
@@ -168,7 +168,7 @@
                 const response = await fetch(`@Url.Content("~/Shop/CreateTag")`);
                 const data = await response.json();
                 const tags = data.map(x => `<option value="${x.tagId}">${x.name}</option>`);
-                SelTag.innerHTML = tags.join("");
+                SelTag.innerHTML += tags.join("");
                 Subtag();
             }
             BigTag();
@@ -177,8 +177,8 @@
             async function Subtag() {
                 const response = await fetch(`@Url.Content("~/Shop/SubTag")?id=${SelTag.value}`);
                 const data = await response.json();
-                const tags = data.map(x => `<option value="${x.subTagId}">${x.name} </option>`);
-                SubDiv.innerHTML = tags.join("");
+            const tags = `<option value="0" selected > 請選擇一個主要標籤 </option>`+data.map(x => `<option value="${x.subTagId}">${x.name} </option > `).join("");
+                SubDiv.innerHTML = tags;
             }
 
             async function SelSubTag()///這是被選中在div加入的程式碼
@@ -192,13 +192,13 @@
                 SelDiv.innerHTML += subtagOptions.join("");
             }
 
+
+
             function putinList() {
                 var values = [];
-                var goestolist = document.querySelectorAll('.SelSubtag p');
-                goestolist.forEach(x => {
-                    const checkboxvalue = x;
-                    console.log(checkboxvalue)
-                });
+            var goestolist = document.querySelector('.SelSubtag p')
+                console.log(goestolist.innerHTML);
+            
             }
 
 

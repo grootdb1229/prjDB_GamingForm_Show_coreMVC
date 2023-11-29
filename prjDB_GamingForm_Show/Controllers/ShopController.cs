@@ -28,13 +28,12 @@ namespace prjDB_GamingForm_Show.Controllers
             {
                 //UI相關
                 //Todo 商品切成XX個一頁，下面要有1~XX個頁，上面要有選項讓客人決定一頁呈現 20 OR 40個   //補充 蝦皮沒分 大約60件一頁
-                //Todo 篩選 價格排序 上架日期排序 銷售件數排序 寫成Json放到下面在作篩選?
-
-
                 //軟體功能相關
                 //Todo  你的交易邏輯這個版本根本還沒寫上去
                 //Todo  tag選擇後要有DIV去接客人選擇的Subtag，可視化讓客人選擇自己商品的標籤，再用迴圈塞入資料庫
                 //Todo  產品留言功能目前未實作
+                //Todo 熱門銷售排序還沒做
+                //Todo  Tag選擇排序還沒做
 
                 String CK = ck.txtKeyword;
                 IEnumerable<Product> Pdb = null;
@@ -63,7 +62,7 @@ namespace prjDB_GamingForm_Show.Controllers
           
             public IActionResult IndexbyDate(String CK)
 			{
-				Trace.WriteLine("AAAA" + CK);
+				//Trace.WriteLine("AAAA" + CK);
 				IEnumerable<Product> Pdb = null;
                 if (string.IsNullOrEmpty(CK))
                 {
@@ -78,7 +77,7 @@ namespace prjDB_GamingForm_Show.Controllers
             }
 			public IActionResult IndexbyPrice_H(String CK)
 			{
-				Trace.WriteLine("CCC" + CK);
+				//Trace.WriteLine("CCC" + CK);
 				IEnumerable<Product> Pdb = null;
 				if (string.IsNullOrEmpty(CK))
 				{
@@ -93,7 +92,7 @@ namespace prjDB_GamingForm_Show.Controllers
 			}
 			public IActionResult IndexbyPrice_L(String CK)
 			{
-                Trace.WriteLine("AAAA"+CK);
+                //Trace.WriteLine("AAAA"+CK);
 				IEnumerable<Product> Pdb = null;
 				if (string.IsNullOrEmpty(CK))
 				{
@@ -104,7 +103,7 @@ namespace prjDB_GamingForm_Show.Controllers
 					Pdb = _db.Products.Where(p => p.ProductName.Contains(CK) && p.StatusId == 1)
 						.OrderBy(x => x.Price);
 				}
-				Trace.WriteLine("BBBB" + Pdb);
+				//Trace.WriteLine("BBBB" + Pdb);
 				return Json(Pdb);
 			}
 			//    public IActionResult IndexPage(int? id) //拿來跳page用的 id用變數去計算，++--一個變數去控制讀取到的最後一個商品控制Page
@@ -144,7 +143,7 @@ namespace prjDB_GamingForm_Show.Controllers
                
                 if (!ModelState.IsValid)
                 {
-                    //var errors = ModelState.Values.SelectMany(v => v.Errors);測試錯誤用程式碼
+                    var errors = ModelState.Values.SelectMany(v => v.Errors); //測試錯誤用程式碼
                     return View(product);
                 }
 
