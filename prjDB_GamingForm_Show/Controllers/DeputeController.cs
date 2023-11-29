@@ -364,7 +364,7 @@ namespace prjDB_GamingForm_Show.Controllers
             _db.Deputes.Add(n);
             _db.SaveChanges();
 
-            //以下存該委託所需的技能(多類別)
+            //存該委託所需的技能(多類別)
             List<CDeputeSkillViewModel> list = JsonSerializer.Deserialize<List<CDeputeSkillViewModel>>(vm.skilllist);
 
             DeputeSkill ndsk = new DeputeSkill();
