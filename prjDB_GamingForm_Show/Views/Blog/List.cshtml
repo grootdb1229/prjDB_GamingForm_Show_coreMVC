@@ -65,11 +65,11 @@
     </div>
 </header>
 <section class="instagram-post-section spad" style="background-color:#272727">
-   @* <div>@ViewBag.KK</div>*@
+    @* <div>@ViewBag.KK</div>*@
     <div style="float:left;padding:10px">
         <div style="padding:10px;display:flex">
             <a href="@Url.Action("Details","Shop",new{id=20})">
-            <img src="~/images/D4AD.png" width="330" height="450" alt="">
+                <img src="~/images/D4AD.png" width="330" height="450" alt="">
             </a>
         </div>
         <br />
@@ -96,6 +96,10 @@
                             <div class="ip-text">
                                 <a style="text-decoration:none" href="@Url.Action("ArticleList", "Blog", new { FId =item.BlogId})">
                                     <span style="color: #FFFFFF;font-size:32px">@item.Title</span>
+                                    <p style="font-size:24px">
+                                        @Html.DisplayFor(modelItem => item.SubBlogs.FirstOrDefault().Articles.LastOrDefault().Title) 
+                                    </p>
+
                                 </a>
                                 <br />
                                 <a style="font-size:24px;text-decoration:none" href="@Url.Action("ArticleContent", "Blog", new { FId =item.BlogId,AFId=item.SubBlogs.FirstOrDefault().Articles.LastOrDefault().ArticleId})">@item.SubBlogs.First().Articles.LastOrDefault().Title</a>
