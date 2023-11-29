@@ -173,9 +173,9 @@ namespace prjDB_GamingForm_Show.Controllers
                 if (vm.txtSkillClass == "請選擇...")
                     vm.txtSkillClass = "";
                 if (vm.txtSkill == "請選擇...")
-                    
-                if (vm.txtRegion == "請選擇...")
-                    vm.txtRegion = "";
+
+                    if (vm.txtRegion == "請選擇...")
+                        vm.txtRegion = "";
                 if (vm.txtSalary == "請選擇...")
                     vm.txtSalary = "0";
                 datas = Temp.Where(n => ((n.deputeContent.Trim().ToLower().Contains(vm.txtKeyword.Trim().ToLower()) ||
@@ -374,6 +374,7 @@ namespace prjDB_GamingForm_Show.Controllers
             var datas = _db.Skills.Where(_ => _.SkillClassId == skillclassid).Select(_ => _);
             return Json(datas);
         }
+
         public IActionResult Create()
         {
             return View();
@@ -395,7 +396,7 @@ namespace prjDB_GamingForm_Show.Controllers
             _db.Deputes.Add(n);
             _db.SaveChanges();
 
-            //以下存該委託所需的技能(多類別)
+            //存該委託所需的技能(多類別)
             List<CDeputeSkillViewModel> list = JsonSerializer.Deserialize<List<CDeputeSkillViewModel>>(vm.skilllist);
 
             DeputeSkill ndsk = new DeputeSkill();
@@ -411,13 +412,31 @@ namespace prjDB_GamingForm_Show.Controllers
             }
             return RedirectToAction("Personal");
         }
+
         public IActionResult deleteDepute(int id)
         {
             Depute o = _db.Deputes.Where(_ => _.DeputeId == id).Select(_ => _).FirstOrDefault();
+            var dro = _db.DeputeRecords.Where(_ => _.DeputeId == id).Select(_ => _);
+            var dso = _db.DeputeSkills.Where(_ => _.DeputeId == id).Select(_ => _);
+            if (dro != null)
+            {
+                foreach (var item in dro)
+                {
+                    _db.DeputeRecords.Remove(item);
+                }
+            }
+            if (dso != null)
+            {
+                foreach (var item in dso)
+                {
+                    _db.DeputeSkills.Remove(item);
+                }
+            }
             _db.Deputes.Remove(o);
             _db.SaveChanges();
             return RedirectToAction("Personal");
         }
+
         public IActionResult DeputeDetial(int? id)
         {
             _db.DeputeRecords.Load();

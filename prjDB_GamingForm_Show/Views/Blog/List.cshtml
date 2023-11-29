@@ -101,6 +101,8 @@
                                     </p>
 
                                 </a>
+                                <br />
+                                <a style="font-size:24px;text-decoration:none" href="@Url.Action("ArticleContent", "Blog", new { FId =item.BlogId,AFId=item.SubBlogs.FirstOrDefault().Articles.LastOrDefault().ArticleId})">@item.SubBlogs.First().Articles.LastOrDefault().Title</a>
                             </div>
                         </div>
                     }

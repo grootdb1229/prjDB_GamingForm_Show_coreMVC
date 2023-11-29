@@ -38,7 +38,7 @@ namespace prjDB_GamingForm_Show.Controllers
                 {
                     tags = _db.Tags.Select(p => p),
                     subTags = _db.SubTags.Where(s => s.TagId == 4 && s.SubTagId != 14).Select(p => p),
-                    blogs = _db.Blogs.Where(b => b.SubTagId != 14 && b.Title.Contains(kw.txtKeyWord)).Include(b => b.SubBlogs).ThenInclude(c => c.Articles).Select(p => p),
+                    blogs = _db.Blogs.Where(b => b.SubTagId != 14 && b.Title.Contains(kw.txtKeyWord)).Include(b => b.SubBlogs).ThenInclude(s => s.Articles).Select(p => p),
                     subBlogs = _db.SubBlogs.Include(a => a.Articles).Select(p => p),
                     articles = _db.Articles.Where(a => a.SubBlog.Blog.SubTagId != 14).OrderByDescending(a => a.ModifiedDate).Select(p => p),
                 };
@@ -51,9 +51,9 @@ namespace prjDB_GamingForm_Show.Controllers
                     {
                         tags = _db.Tags.Select(p => p),
                         subTags = _db.SubTags.Where(s => s.TagId == 4 && s.SubTagId != 14).Select(p => p),
-                        blogs = _db.Blogs.Where(b => b.SubTagId != 14).Include(b => b.SubBlogs).ThenInclude(c => c.Articles).Select(p => p),
+                        blogs = _db.Blogs.Where(b => b.SubTagId != 14).Include(b => b.SubBlogs).ThenInclude(s=>s.Articles).Select(p => p),
                         subBlogs = _db.SubBlogs.Include(a => a.Articles).Select(p => p),
-                        articles = _db.Articles.Where(a => a.SubBlog.Blog.SubTagId != 14).OrderByDescending(a => a.ModifiedDate).Select(p => p),
+                        articles = _db.Articles.Where(a => a.SubBlog.Blog.SubTagId != 14).OrderByDescending(a => a.ModifiedDate).Include(a => a.SubBlog).Select(p => p),
                     };
                 }
                 else
@@ -62,9 +62,9 @@ namespace prjDB_GamingForm_Show.Controllers
                     {
                         tags = _db.Tags.Select(p => p),
                         subTags = _db.SubTags.Where(s => s.TagId == 4 && s.SubTagId != 14).Select(p => p),
-                        blogs = _db.Blogs.Include(a => a.SubBlogs).ThenInclude(c=>c.Articles).Where(b => b.SubTagId == FId).Select(p => p),
+                        blogs = _db.Blogs.Where(b => b.SubTagId == FId).Include(b => b.SubBlogs).ThenInclude(s => s.Articles).Select(p => p),
                         subBlogs = _db.SubBlogs.Include(a => a.Articles).Where(s => s.Blog.SubTagId == FId).Select(p => p),
-                        articles = _db.Articles.Where(a => a.SubBlog.Blog.SubTagId == FId).OrderByDescending(a => a.ModifiedDate).Select(p => p),
+                        articles = _db.Articles.Where(a => a.SubBlog.Blog.SubTagId == FId).OrderByDescending(a => a.ModifiedDate).Include(a => a.SubBlog).Select(p => p),
                     };
                 }
             }

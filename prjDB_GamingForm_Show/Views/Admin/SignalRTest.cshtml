@@ -83,8 +83,8 @@
         });
 
         // 更新用戶個人連線 ID 事件
-        connection.on("UpdSelfID", function (id) {
-            $('#SelfID').html(id);
+        connection.on("UpdSelfID", function (userName) {
+            $('#SelfID').html(userName);
         });
 
         // 更新聊天內容事件
@@ -94,12 +94,27 @@
 
         //傳送訊息
         $('#sendButton').on('click', function () {
-            let selfID = $('#SelfID').html();
+            let selfUserName = $('#SelfID').html(); // 使用者名稱
             let message = $('#message').val();
-            let sendToID = $('#sendToID').val();
-            connection.invoke("SendMessage", selfID, message, sendToID).catch(function (err) {
-                alert('傳送錯誤: ' + err.toString());
+            let sendToUserName = $('#sendToID').val(); // 接收者的使用者名稱
+
+            // 新增：呼叫 SignalR Hub 方法獲取接收者的 SignalR ID
+            getSignalRIdByUserName(sendToUserName).then(function (connectionId) {
+                // 修改：傳送訊息時使用接收者的 SignalR ID
+                connection.invoke("SendMessage", selfUserName, message, connectionId).catch(function (err) {
+                    alert('傳送錯誤: ' + err.toString());
+                });
             });
         });
+        function getSignalRIdByUserName(userName) {
+            return new Promise((resolve, reject) => {
+                connection.invoke("GetConnectionIdByUserName", userName).then(function (connectionId) {
+                    // 在這裡可以使用 connectionId 進行相應的處理
+                    resolve(connectionId);
+                }).catch(function (err) {
+                    reject(err);
+                });
+            });
+        }
     </script>
 }
