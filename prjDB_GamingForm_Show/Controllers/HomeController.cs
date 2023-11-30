@@ -59,6 +59,7 @@ namespace prjDB_GamingForm_Show.Controllers
         public IActionResult Login(CLoginViewModel vm)
         {
             Member user = _db.Members.FirstOrDefault(m => m.Email.Equals(vm.txtAccount));
+        
             if (user != null)
             {
                 if (user.Password.Equals(vm.txtPassword))
@@ -74,14 +75,15 @@ namespace prjDB_GamingForm_Show.Controllers
                     //ViewBag.LoggedUser = user_Serialized;
 
                     //1123test
-                    string returnUrl = HttpContext.Session.GetString("returnUrl");
+                    string returnUrl = Request.Cookies["returnUrl"];
                     if (string.IsNullOrEmpty(returnUrl))
                     {
                         return RedirectToAction("HomePage", "Home");
                     }
                     else
                     {
-                        HttpContext.Session.Remove("returnUrl");
+                        
+                        Response.Cookies.Delete("returnUrl");
                         return Redirect(returnUrl);
                     }
                 }
