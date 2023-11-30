@@ -31,7 +31,7 @@
                 <span asp-validation-for="ProviderId" class="text-danger"></span>
             </div>
             <div class="form-floating mb-3">
-                <input name="標題" class="form-control" id="Title" placeholder="" required/>
+                <input name="title" class="form-control" id="Title" placeholder="" required/>
                 <label asp-for="Title" for="Title"></label>
                 <span asp-validation-for="Title" class="text-danger"></span>
             </div>
@@ -46,7 +46,7 @@
                 <span asp-validation-for="Modifiedate" class="text-danger"></span>
             </div>
             <div class="form-floating mb-3">
-                <input name="報酬" class="form-control" id="Salary" placeholder="" required />
+                <input name="salary" class="form-control" id="Salary" placeholder="" required />
                 <label asp-for="Salary" class="control-label" for="Salary"></label>
                 <span asp-validation-for="Salary" class="text-danger"></span>
             </div>
@@ -148,20 +148,12 @@
             const divSkills = document.getElementsByClassName('me-1');
             Array.from(divSkills).forEach(divSkill => {
                 divSkill.addEventListener('change', function (event) {
-                    // console.log(chooseClass);
-                    // console.log(event.target.labels[0].textContent);
                     var selSK = event.target.labels[0].textContent;
-                    var convertSK = chooseClass +'-'+ event.target.labels[0].textContent;
-                    console.log(convertSK);
-                    
                     if(event.target.checked){
                         selSkills.push({ skillclass: chooseClass, skill: selSK });
-                        console.log(selSkills);
                     }else{
                         const index = selSkills.findIndex(i => i.skillclass == chooseClass && i.skill == selSK);
-                        console.log(index);
                         selSkills.splice(index,1);
-                        console.log(selSkills);
                     }
                 })
             })

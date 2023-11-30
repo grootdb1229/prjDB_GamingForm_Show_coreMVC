@@ -23,7 +23,6 @@ namespace prjDB_GamingForm_Show.Controllers
 
         public IActionResult HomePage()
         {
-            ViewBag.LoggedUser = CDictionary.SK_Logged_User;
             return View();
         }
         public IActionResult DeputeMain()
@@ -88,6 +87,7 @@ namespace prjDB_GamingForm_Show.Controllers
                         return Redirect(returnUrl);
                     }
                 }
+                return RedirectToAction("Home", "HomePage");
 
             }
             return RedirectToAction("Create", "Member");

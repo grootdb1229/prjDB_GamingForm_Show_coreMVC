@@ -1,6 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using prjDB_GamingForm_Show.Models;
 using prjDB_GamingForm_Show.Models.Entities;
 using prjDB_GamingForm_Show.Models.Member;
+using prjDB_GamingForm_Show.ViewModels;
+using MailKit;
+using MailKit.Net.Smtp;
+using MimeKit;
 
 namespace prjDB_GamingForm_Show.Controllers
 {
@@ -26,7 +31,6 @@ namespace prjDB_GamingForm_Show.Controllers
         {
             //if (id == null)
             //    return RedirectToAction("Create");
-            id = HttpContext.Session.GetInt32("user_id");
             if (id == null) 
             {
                 return RedirectToAction("Login", "Home");
@@ -37,6 +41,7 @@ namespace prjDB_GamingForm_Show.Controllers
                     select m;
             return View(datas);
         }
+
 
         public IActionResult Test(int? id) 
         {
@@ -98,6 +103,54 @@ namespace prjDB_GamingForm_Show.Controllers
             }
             return RedirectToAction("MemberPage", "Member");
         }
+
+        public IActionResult ForgetPassword() 
+        {
+            return View();
+        }
+        [HttpPost]
+        public IActionResult ForgetPassword(CForgetPasswordViewModel CF) 
+        {
+            var Emails = from e in _db.Members
+                         select e.Email;
+            //IQueryable<IEnumerable<char>> memberEmails = Emails;
+            if (Emails.Contains(CF.txtConfirm_Email))
+            {
+                int Confirmed_MemberID = (from m in _db.Members
+                                          where m.Email == CF.txtConfirm_Email
+                                          select m.MemberId).FirstOrDefault();
+                HttpContext.Session.SetInt32(CDictionary.SK_Confirmed_MemberID, Confirmed_MemberID);
+                return RedirectToAction("SendEmail", "Member");
+            }
+            else
+            {
+                return RedirectToAction("Login", "Home");
+            }
+        }
+        public IActionResult SendEmail() 
+        {
+            var message = new MimeMessage();
+            message.From.Add(new MailboxAddress("grootdb1229" , "grootdb1229@gmail.com"));
+            message.To.Add(new MailboxAddress("alan90306", "alan90306@gmail.com"));
+            message.Subject = "Test mail of asp.net Core";
+            message.Body = new TextPart("plain")
+            {
+                Text = "Hello Mailkit"
+            };
+
+            using (var client = new SmtpClient()) 
+            {
+                client.Connect("smtp.gmail.com", 587, false);
+                client.Authenticate("grootdb1229@gmail.com", "fmgx uucs lgkv vqxm");
+                client.Send(message);
+                client.Disconnect(true);
+            }
+                return View();
+        }
+
+
+
+
 
 
     }
