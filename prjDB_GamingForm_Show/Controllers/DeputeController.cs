@@ -25,6 +25,8 @@ namespace prjDB_GamingForm_Show.Controllers
             ListLoad();
         }
         #region 老朱
+
+        //TODO #1 讀資料
         public void ListLoad()
         {
             //test
@@ -126,6 +128,8 @@ namespace prjDB_GamingForm_Show.Controllers
             
 
         }
+
+        //TODO #2 搜尋
         public IActionResult Search(CKeyWord vm)
         {
             IEnumerable<CDeputeViewModel> datas = null;
@@ -197,6 +201,7 @@ namespace prjDB_GamingForm_Show.Controllers
             return Json(datas);
         }
 
+        //TODO #3 委託詳細
         public IActionResult DeputeDetails(int? id)
         {
             CDeputeViewModel pln = null;
@@ -222,6 +227,8 @@ namespace prjDB_GamingForm_Show.Controllers
 
 
         }
+
+        //TODO #4 熱門關鍵字
         public IActionResult HotKey(int id)
         {
             var value = (from n in _db.SerachRecords.AsEnumerable()

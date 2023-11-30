@@ -6,8 +6,7 @@
 }
 <script src="~/ckeditor5-build-classic/ckeditor.js"></script>
 
-<script src="~/ckeditor5-build-classic/ckeditor.js"></script>
-<link rel="stylesheet" href="~/css/blogstyle.css" type="text/css">
+@* <link rel="stylesheet" href="~/css/blogstyle.css" type="text/css"> *@
 @section Styles {
     <style>
         .ck {
@@ -57,7 +56,7 @@
                 </div> *@
                 <div class="form-group">
                     <input type="hidden" name="ModifiedDate" value="@DateTime.Now" />
-                    <input type="hidden" name="MemberId" value="@ViewBag.KK" />
+                    <input type="hidden" name="MemberId" value="@Context.Session.GetInt32(CDictionary.SK_UserID)" />
                 </div>
                 <div>
                     <textarea name="ArticleContent" id="editor" style="resize:none; height:700px;color:black">                    

@@ -39,48 +39,26 @@
             <form asp-action="ReplyCreate" method="post">
                 <input type="hidden" name="AFId" value=" @Model.articles.First().ArticleId" />
                 <input type="hidden" name="ArticleId" value=" @Model.articles.First().ArticleId" />
-                <input type="hidden" name="FId" value=" @Model.blogs.FirstOrDefault().BlogId" />
-
-
-                <div class="form-group">
-                    @*                    <label asp-for="subBlogs." class="control-label"></label>
-                    <input asp-for="SubBlogId" class="form-control" />
-                    <span asp-validation-for="SubBlogId" class="text-danger"></span>*@
-                </div>
-
-@*                <div class="form-group">
-                    <label asp-for="replies.First().ReplyContents" class="control-label"></label>
-                    <textarea name="ReplyContents" class="form-control" style="height:400px"></textarea>
-                    <span asp-validation-for="replies.First().ReplyContents" class="text-danger"></span>
-                </div>*@
+                <input type="hidden" name="FId" value=" @Model.blogs.FirstOrDefault().BlogId" />                
                 <div>
                     <textarea name="ReplyContents" id="editor" style="resize:none; height:700px;margin:3px">                    
                 </textarea>
                 </div>
-
-                <div class="form-group">
-                    @*<label asp-for="ModifiedDate" class="control-label"></label>
-                    <input asp-for="ModifiedDate" class="form-control" />
-                    <span asp-validation-for="ModifiedDate" class="text-danger"></span>*@
+                <div class="form-group">                 
                     <input type="hidden" name="ModifiedDate" value="@DateTime.Now" />
-                    <input type="hidden" name="MemberId" value="@ViewBag.KK" />
+                    <input type="hidden" name="MemberId" value="@Context.Session.GetInt32(CDictionary.SK_UserID)" />
                 </div>
                 <div class="form-group">
                     <input type="submit" value="回覆" class="btn btn-default" />
-
                     <p style="margin:3px; float:right;text-align:right">
                         @Html.ActionLink("回到文章","ArticleContent","Blog",new{AFId= Model.articles.FirstOrDefault().ArticleId,FId=Model.blogs.FirstOrDefault().BlogId},new{
                         @class="btn btn-warning"
                         })
                     </p>
-
                 </div>
-
             </form>
         </div>
     </div>
-
-
 </div>
 @section Scripts {
 

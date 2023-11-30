@@ -13,6 +13,9 @@
                 <div class="row g-2">
                     <div class="col-md-15">
                         <input type="text" id="text" name="txtKeyword" class="form-control border-0" placeholder="Keyword" />
+                        <div id="hotkey">
+                            
+                        </div>
                     </div>
                 </div>
             </div>
@@ -21,6 +24,7 @@
             </div>
             <div class="col-md-2">
                 @Html.ActionLink("重設","DeputeList","Depute",null,new{@class ="btn btn-dark border-0 w-100",@id="search",name="txtKeyword"})
+                
             </div>
         </div>
     </div>
@@ -77,7 +81,7 @@
                                         <span class="text-truncate me-3"><i class="fa fa-map-marker-alt text-primary me-2"></i>@Html.DisplayFor(modelItem => item.region)</span>
                                         <span class="text-truncate me-3"><i class="fa fa-map-marker-alt text-primary me-2"></i>@Html.DisplayFor(modelItem => item.providername)</span>
                                         <span class="text-truncate me-3"><i class="far fa-clock text-primary me-2"></i>@Html.DisplayFor(modelItem => item.startdate)</span>
-                                        <span class="text-truncate me-0"><i class="far fa-money-bill-alt text-primary me-2"></i>@Html.DisplayFor(modelItem => item.salary)</span>
+                                        <span class="text-truncate me-0"><i class="far fa-money-bill-alt text-primary me-2"></i>@item.salary.ToString("$###,###,##0.##")</span>
                                 </div>
                             </div>
                             <div class="col-sm-12 col-md-4 d-flex flex-column align-items-start align-items-md-end justify-content-center">
@@ -121,6 +125,7 @@
         const selSalary = document.querySelector('#money');
 
         //基本搜尋&&進階搜尋///
+        loadHotkey();
         loadRegion();
         async function loadList() {
             const lstFrag = $(document.createDocumentFragment());
@@ -183,32 +188,62 @@
         async function loadSkill() {
             const SkillFrag = $(document.createDocumentFragment());
             const response = await fetch(`@Url.Content("~/Depute/Skills")?id=${selSkillClasses.value}`);
-             console.log(response);
+             // console.log(response);
             const snd = '<option name="txtSkill" value="null">請選擇...</option>'
             SkillFrag.append(snd);
             const data = await response.json();
-             console.log(data);
+             // console.log(data);
             const Skills = data.map(Skills => `<option name="txtSkill" value='${Skills.skillId}'>${Skills.name}</option>`)
             SkillFrag.append(Skills);
             $('#skill').html(SkillFrag)
-            // selectSkills.innerHTML = Skills.join("");
+            
             // loadList();
         }
 
         async function loadRegion() {
             const RegionFrag = $(document.createDocumentFragment());
             const response = await fetch(`@Url.Content("~/Depute/Region")`);
-            console.log(response);
+            // console.log(response);
             const snd = '<option name="txtRegion" value="null">請選擇...</option>'
             RegionFrag.append(snd);
             const data = await response.json();
-            console.log(data);
+            // console.log(data);
             const Regions = data.map(Regions => `<option name="txtRegion" value='${Regions.regionId}'>${Regions.city}</option>`)
             RegionFrag.append(Regions);
             $('#regions').html(RegionFrag)
             loadSkillClassess();
         }
         
+        //熱門關鍵字:
+        async function loadHotkey() {
+            const HkFrag = $(document.createDocumentFragment());
+            const response = await fetch(`@Url.Content("~/Depute/Hotkey/3")`);
+            // console.log(response);
+            const snd = '<span class="text-truncate me-3">熱門關鍵字 :</span>'
+            HkFrag.append(snd);
+            const data = await response.json();
+            console.log(data);
+            // <a href="/Depute/DeputeDetails/${list.id}" class="btn btn-primary" id = " btndp" name="txtKeyword" > 詳細...</a>
+            const Hotkeys = data.map(Hotkeys => `<a href="/Depute/Search" id="${Hotkeys}">${Hotkeys} </a>`)
+            console.log(Hotkeys);
+            $('#html').click(function () {
+                $.getJSON('@Url.Content("~/Depute/Search")', (datas) => {
+                    const docFrag = $(document.createDocumentFragment());
+                    $.each(datas, (index, data) => { 
+                        console.log(data);
+                        // <li class="list-group-item" > An item < /li>
+                        // const li = $('<li></li>').text(data).addClass('list-group-item');
+                        docFrag.append(li);
+                    })
+                    $('.list-group').html(docFrag);
+                })
+                $('#divAlert').text("JSON")
+            })
+            // const Hotkeys = data.map(Hotkeys => `<span style="flex:content;width:auto;text-align:center" name="txtKeyword">${Hotkeys} </span>`)
+            HkFrag.append(Hotkeys);
+            $('#hotkey').html(HkFrag)
+            
+        }
         
 
 
