@@ -31,39 +31,54 @@
     ViewData["Title"] = "SignalRTest";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
-<h1>即時聊天範例</h1>
+<button onclick="show()">123123</button>
+<div id="test" style="display:none">
 
-<div class="row">
-    <div class="col-8">
-        <h4>個人 ID: <span id="SelfID"></span></h4>
-        <div class="mb-3">
-            <label for="message" class="form-label">發送訊息</label>
-            <input type="text" class="form-control" id="message">
+
+    <h1>即時聊天範例</h1>
+
+    <div class="row">
+        <div class="col-8">
+            <h4>個人 ID: <span id="SelfID"></span></h4>
+            <div class="mb-3">
+                <label for="message" class="form-label">發送訊息</label>
+                <input type="text" class="form-control" id="message">
+            </div>
+            <div class="mb-3">
+                <label for="sendToID" class="form-label">指定 ID</label>
+                <input type="text" class="form-control" id="sendToID">
+            </div>
+            <button type="button" class="btn btn-primary" id="sendButton">傳送訊息</button>
         </div>
-        <div class="mb-3">
-            <label for="sendToID" class="form-label">指定 ID</label>
-            <input type="text" class="form-control" id="sendToID">
+        <div class="col-4">
+            <h4>連線 ID 列表</h4>
+            <ul class="list-group" id="IDList">
+            </ul>
         </div>
-        <button type="button" class="btn btn-primary" id="sendButton">傳送訊息</button>
     </div>
-    <div class="col-4">
-        <h4>連線 ID 列表</h4>
-        <ul class="list-group" id="IDList">
-        </ul>
+    <div class="row mt-3">
+        <div class="col-12">
+            <h3>聊天內容</h3>
+            <ul class="list-group" id="Content">
+            </ul>
+        </div>
     </div>
 </div>
 
-<div class="row mt-3">
-    <div class="col-12">
-        <h3>聊天內容</h3>
-        <ul class="list-group" id="Content">
-        </ul>
-    </div>
-</div>
-
-@section scripts{
+@section scripts {
     <script src="~/js/signalr/dist/browser/signalr.js"></script>
     <script>
+        function show() {
+            var div = document.querySelector('#test');
+            if (div.style.display === "none") 
+            {
+                div.style.display = "block"; // 顯示
+            } 
+            else 
+            {
+                div.style.display = "none"; // 隱藏
+            }
+        }
         var connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
 
         //與Server建立連線
