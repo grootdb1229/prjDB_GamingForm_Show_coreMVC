@@ -239,25 +239,7 @@ namespace prjDB_GamingForm_Show.Controllers
                 _db.Products.Load();
                 return View();
             }
-            //public ActionResult CreateTag()
-            //{
-            //    var Tag = _db.Tags.Where(p => p.TagId <= 3).Select(t => new { t.TagId, t.Name }).ToList();
-
-            //    return Json(Tag);
-            //}
-            //public ActionResult SubTag(int? id)
-            //{
-            //    _db.SubTags.Load();
-            //    var Tag = _db.SubTags.Where(p => p.TagId == id).Select(s => new { s.SubTagId, s.Name }).ToList();
-            //    return Json(Tag);
-            //}
-
-            //public ActionResult SelSubTag(int? id)
-            //{
-            //    _db.SubBlogs.Load();
-            //    var SelSub = _db.SubTags.Where(p => p.SubTagId == id).Select(s => new { s.SubTagId, s.Name }).ToList();
-            //    return Json(SelSub);
-            //}
+         
             public ActionResult language()
             {
                 _db.SubTags.Load();
@@ -372,6 +354,7 @@ namespace prjDB_GamingForm_Show.Controllers
                     //MemberID跟StatusID是寫死在CProduct物件中的
                     _db.SaveChanges();
                 }
+
 				//Thread.Sleep(3000);
 				return RedirectToAction("Index");
             }
