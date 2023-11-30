@@ -36,48 +36,30 @@
 
             <form asp-action="ReplyEdit">
                 <input type="hidden" name="ModifiedDate" value="@DateTime.Now" />
-                <input type="hidden" name="MemberId" value="15" />
-
+                <input type="hidden" name="MemberId" value="@Context.Session.GetInt32(CDictionary.SK_UserID)" />
                 <input type="hidden" name="FId" value="@Model.blogs.FirstOrDefault().BlogId" />
                 <input type="hidden" name="AFId" value=" @Model.articles.First().ArticleId" />
                 <input type="hidden" name="ArticleId" value=" @Model.articles.First().ArticleId" />
-
-
                 <input type="hidden" name="RFId" value=" @Model.replies.FirstOrDefault().ReplyId" />
-                @*    <input type="hidden" name="ReplyId" value=" @Model.replies.FirstOrDefault().ReplyId" />*@
-
-                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-@*                <div class="form-group">
-                    <label asp-for="replies.First().ReplyContents" class="control-label" style="font-size:24px"></label>
-                    <textarea name="ReplyContents" class="form-control" style="height:400px"></textarea>
-                    <span asp-validation-for="replies.First().ReplyContents" class="text-danger"></span>
-                </div>*@
-
                 <div>
                     <textarea name="ReplyContents" id="editor" style="resize:none; height:700px;margin:3px">                    
                 </textarea>
                 </div>
                 <div class="form-group">
                     <input type="submit" value="確認修改" class="btn btn-default" />
-
                     <p style="margin:3px; float:right;text-align:right">
                         @Html.ActionLink("回到文章","ArticleContent","Blog",new{AFId= Model.articles.FirstOrDefault().ArticleId,FId=Model.blogs.FirstOrDefault().BlogId},new{
                         @class="btn btn-warning"
                         })
                     </p>
                 </div>
-
             </form>
-
         </div>
     </div>
-
 </div>
 
 @section Scripts {
-
     <script>
-
         document.addEventListener('DOMContentLoaded', (event) => {
             ClassicEditor
                 .create(document.querySelector('#editor'), {

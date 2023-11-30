@@ -25,12 +25,12 @@
     <link rel="stylesheet" href="~/css/barfiller.css" type="text/css">
     <link rel="stylesheet" href="~/css/magnific-popup.css" type="text/css">
     <link rel="stylesheet" href="~/css/slicknav.min.css" type="text/css">
-     @*<link rel="stylesheet" href="~/css/blogstyle.css" type="text/css"> *@
+    @*<link rel="stylesheet" href="~/css/blogstyle.css" type="text/css"> *@
 
 
 
     <!--阿嘎測試-->
-    @RenderSection("Styles",required: false )
+    @RenderSection("Styles", required: false)
 </head>
 <body>
     <!-- Navigation-->
@@ -62,12 +62,12 @@
                     </li>
                 </ul>
                 <div>
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
 
                         @{
                             if (Context.Session.GetInt32(CDictionary.SK_UserID) == null)
                             {
-                                <li class="nav-item"> @Html.ActionLink("登入", "Login", "Home", null,  new { @class = "nav-link" })</li>
+                                <li class="nav-item "> @Html.ActionLink("登入", "Login", "Home", null, new { @class = "nav-link" ,id="lilogin"})</li>
                                 <li class="nav-item"> @Html.ActionLink("註冊", "Create", "Member", null, new { @class = "nav-link" })</li>
                             }
                             else
@@ -76,8 +76,8 @@
                                 <li>歡迎回來 @Context.Session.GetString(CDictionary.SK_UserName)</li>
                             }
                         }
-                    
-                </ul>
+
+                    </ul>
                 </div>
 
                 @{
@@ -107,7 +107,8 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">關閉</button>
-                    @Html.ActionLink("登入", "Login","Home",null, new { @class="btn btn-primary"})                 
+                    <button type="button" class="btn btn-primary" , id="btnlogin">登入</button>
+                   @*  @Html.ActionLink("登入", "Login", "Home", null, new { @class = "btn btn-primary", id = "btnlogin" }) *@
                 </div>
             </div>
         </div>
@@ -124,7 +125,7 @@
 
 
     <!--有問題找我，阿嘎-->
-     <script src="~/js/jquery-3.3.1.min.js"></script> 
+    <script src="~/js/jquery-3.3.1.min.js"></script>
     <script src="~/js/bootstrap.min.js"></script>
     @*<script src="~/js/jquery.magnific-popup.min.js"></script>
     <script src="~/js/circle-progress.min.js"></script>
@@ -135,7 +136,6 @@
 
     <script>
         const button = document.querySelector('#car');
-
         button.addEventListener('mouseover', () => {
             button.style.backgroundColor = '#a81d1d';
         });
@@ -143,6 +143,20 @@
         button.addEventListener('mouseout', () => {
             button.style.backgroundColor = '';
         });
+        const btnlogin = document.querySelector("#btnlogin")
+        const lilogin = document.querySelector("#lilogin")
+        btnlogin.addEventListener('click', () => {
+            // event.preventDefault();
+            document.cookie = "returnUrl=" + window.location.href + ";  path=/";
+            const loginUrl = '@Url.Action("Login", "Home")'
+            window.location.href = loginUrl
+        })
+        lilogin.addEventListener('click', () => {
+            // event.preventDefault();
+            document.cookie = "returnUrl=" + window.location.href + ";  path=/";
+            const loginUrl = '@Url.Action("Login", "Home")'
+            window.location.href = loginUrl
+        })
     </script>
 
     <!--圈圈加進來測試用-->

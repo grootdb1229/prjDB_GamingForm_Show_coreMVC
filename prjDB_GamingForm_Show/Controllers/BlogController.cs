@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using NuGet.Protocol;
+using prjDB_GamingForm_Show.Models;
 using prjDB_GamingForm_Show.Models.Entities;
 using prjDB_GamingForm_Show.ViewModels;
 using System.Security.Cryptography;
@@ -18,8 +19,6 @@ namespace prjDB_GamingForm_Show.Controllers
         {
             _host = host;
             _db = db;
-
-
         }
 
         public IActionResult Index()
@@ -51,7 +50,7 @@ namespace prjDB_GamingForm_Show.Controllers
                     {
                         tags = _db.Tags.Select(p => p),
                         subTags = _db.SubTags.Where(s => s.TagId == 4 && s.SubTagId != 14).Select(p => p),
-                        blogs = _db.Blogs.Where(b => b.SubTagId != 14).Include(b => b.SubBlogs).ThenInclude(s=>s.Articles).Select(p => p),
+                        blogs = _db.Blogs.Where(b => b.SubTagId != 14).Include(b => b.SubBlogs).ThenInclude(s => s.Articles).Select(p => p),
                         subBlogs = _db.SubBlogs.Include(a => a.Articles).Select(p => p),
                         articles = _db.Articles.Where(a => a.SubBlog.Blog.SubTagId != 14).OrderByDescending(a => a.ModifiedDate).Include(a => a.SubBlog).Select(p => p),
                     };
@@ -83,8 +82,6 @@ namespace prjDB_GamingForm_Show.Controllers
                     articles = _db.Articles.Include(a => a.Replies).Include(a => a.Member).Where(a => a.SubBlog.BlogId == FId && a.Title.Contains(kw.txtKeyWord)).OrderByDescending(a => a.ModifiedDate).Select(p => p),
                     tags = _db.Tags.Select(p => p),
                     subTags = _db.SubTags.Where(s => s.TagId == 4 && s.SubTagId != 14).Select(p => p),
-
-                    
                 };
             }
             else
@@ -100,8 +97,6 @@ namespace prjDB_GamingForm_Show.Controllers
                         articles = _db.Articles.Include(a => a.Replies).Include(a => a.Member).Where(a => a.SubBlog.BlogId == FId).OrderByDescending(a => a.ModifiedDate).Select(p => p),
                         tags = _db.Tags.Select(p => p),
                         subTags = _db.SubTags.Where(s => s.TagId == 4 && s.SubTagId != 14).Select(p => p),
-
-                        
                     };
                 }
                 else
@@ -113,8 +108,6 @@ namespace prjDB_GamingForm_Show.Controllers
                         blogs = _db.Blogs.Where(b => b.BlogId == FId).Select(p => p),
                         subBlogs = _db.SubBlogs.Where(s => s.BlogId == FId).Select(p => p),
                         articles = _db.Articles.Include(a => a.Replies).Include(a => a.Member).Include(a => a.Replies).Where(a => a.SubBlogId == SFId).OrderByDescending(a => a.ModifiedDate).Select(p => p),
-
-                        
                     };
                 }
             }
@@ -129,13 +122,6 @@ namespace prjDB_GamingForm_Show.Controllers
                 art.ViewCount++;
                 _db.SaveChanges();
             }
-
-
-            if (HttpContext.Session.GetInt32("user_id") == null)
-            {
-            }
-            else
-                ViewBag.KK = HttpContext.Session.GetInt32("user_id");
             CBlogViewModel vm = new CBlogViewModel();
             vm = new CBlogViewModel
             {
@@ -163,11 +149,8 @@ namespace prjDB_GamingForm_Show.Controllers
             {
                 // 修改 Article 的 SubBlogID
                 art.SubBlogId = 42;  // 新的 SubBlogID
-
-
                 _db.SaveChanges();
             }
-
             return RedirectToAction("ArticleList", new { FId });
         }
 
@@ -178,7 +161,6 @@ namespace prjDB_GamingForm_Show.Controllers
         public ActionResult ReplyDelete(int? RFId, int? AFId, int? FId)
         {
             Reply re = _db.Replies.FirstOrDefault(a => a.ReplyId == RFId);
-
             if (re != null)
             {
                 _db.Replies.Remove(re);
@@ -188,18 +170,8 @@ namespace prjDB_GamingForm_Show.Controllers
         }
 
 
-
         public IActionResult ArticleCreate(int? FId)
         {
-
-            if (HttpContext.Session.GetInt32("user_id") == null)
-            {
-                // 如果未登入，將原始頁面的 URL 存儲在 Session 中
-                HttpContext.Session.SetString("returnUrl", Url.Action("ArticleCreate", "Blog", new { FId }));
-                return RedirectToAction("Login", "Home");
-            }
-
-            ViewBag.KK = HttpContext.Session.GetInt32("user_id");
 
             CBlogViewModel vm = null;
             if (FId == null)
@@ -249,7 +221,7 @@ namespace prjDB_GamingForm_Show.Controllers
             return RedirectToAction("ArticleContent", new { AFId, FId });
         }
 
-        //--
+ 
         public IActionResult ReplyEdit(int? AFId, int? RFId, int? FId)
         {
             CBlogViewModel vm = new CBlogViewModel()
@@ -277,29 +249,9 @@ namespace prjDB_GamingForm_Show.Controllers
             return RedirectToAction("ArticleContent", new { AFId, FId });
         }
 
-
-
-        //--
-        //判斷登入
-        public IActionResult LogOrNot()
-        {
-            if (HttpContext.Session.GetInt32("user_id") == null)
-            {                
-                return Json(null);
-            }
-            else
-            {
-                return Json(HttpContext.Session.GetInt32("user_id"));
-            }
-        }
-
-
         public IActionResult Like(int? AFId)
         {
-            //if (HttpContext.Session.GetInt32("user_id") == null)
-            //    return Json(null);
-
-            int memberId = (int)HttpContext.Session.GetInt32("user_id");
+            int memberId = (int)HttpContext.Session.GetInt32(CDictionary.SK_UserID);
             var art = _db.ArticleActions.Where(a => a.ArticleId == AFId && a.MemberId == memberId && a.ActionId == 1).Select(a => a).FirstOrDefault();
             if (art != null)
             {
@@ -325,14 +277,14 @@ namespace prjDB_GamingForm_Show.Controllers
             //    return RedirectToAction("Login", "Home");
             //int memberId = (int)HttpContext.Session.GetInt32("user_id");
 
-            if (HttpContext.Session.GetInt32("user_id") == null)
-            {
-                // 如果未登入，將原始頁面的 URL 存儲在 Session 中
-                HttpContext.Session.SetString("returnUrl", Url.Action("ReplyCreate", "Blog", new { AFId, FId }));
-                return RedirectToAction("Login", "Home");
-            }
+            //if (HttpContext.Session.GetInt32("user_id") == null)
+            //{
+            //    // 如果未登入，將原始頁面的 URL 存儲在 Session 中
+            //    HttpContext.Session.SetString("returnUrl", Url.Action("ReplyCreate", "Blog", new { AFId, FId }));
+            //    return RedirectToAction("Login", "Home");
+            //}
 
-            ViewBag.KK = HttpContext.Session.GetInt32("user_id");
+            //ViewBag.KK = HttpContext.Session.GetInt32("user_id");
             CBlogViewModel vm = null;
             if (AFId == null)
                 return RedirectToAction("ArticleList");
@@ -348,21 +300,10 @@ namespace prjDB_GamingForm_Show.Controllers
         [HttpPost]
         public IActionResult ReplyCreate(Reply Inart, int? AFId, int? FId)
         {
-
             _db.Replies.Add(Inart);
             _db.SaveChanges();
             return RedirectToAction("ArticleContent", new { AFId, FId });
         }
-
-
-        // Todo:API插入圖片
-        // Todo:CKeditor 補完整
-        //
-
-
-
-
-
 
     }
 }
