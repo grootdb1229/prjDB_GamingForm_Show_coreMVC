@@ -114,13 +114,40 @@
                                 @like
                             </span>
                         }
+
+
+
+
+
+
                         <p style="float:right">
+
+
+
+
                             <!-- HTML 中的按鈕 -->
                             <button id="copyButton" class="btn btn-info" data-clipboard-target="#urlToCopy">分享</button>
                             <!-- 顯示的網址 -->
                             <input type="hidden" id="urlToCopy" value="" readonly>
 
-                            @if (Model.articles.First().MemberId == Context.Session.GetInt32(CDictionary.SK_UserID))
+                            @*------Line按鈕------*@
+                            @{
+                                <div class="line-it-button"
+                                     data-lang="zh_Hant"
+                                     data-type="share-c"
+                                     data-env="REAL"
+                                     data-url="https://localhost:7056/Blog/ArticleContent?FId=@(Model.blogs?.FirstOrDefault()?.BlogId)&AFId=@(Model.articles?.FirstOrDefault()?.ArticleId)"
+                                     data-color="default"
+                                     data-size="large"
+                                     data-count="false"
+                                     data-ver="3"
+                                     style="height:500"></div>
+
+                                <script src="https://www.line-website.com/social-plugins/js/thirdparty/loader.min.js" async="async" defer="defer"></script>
+                            }
+                            @*------Line按鈕------*@
+
+                             @if (Model.articles.First().MemberId == Context.Session.GetInt32(CDictionary.SK_UserID))
                             {
 
                                 <button type="button" class="btn btn-warning" onclick="location.href='@Url.Action( "ArticleEdit","Blog", new { AFId = Model.articles.FirstOrDefault().ArticleId ,FId = Model.blogs.FirstOrDefault().BlogId})'">修改</button>
@@ -134,9 +161,9 @@
                                     }
                                 }
                             </script>
-                            @*@Html.ActionLink("修改", "ArticleEdit", new { AFId = Model.articles.FirstOrDefault().ArticleId ,FId = Model.blogs.FirstOrDefault().BlogId})
-                            @Html.ActionLink("刪除", "ArticleDelete", new { AFId = Model.articles.FirstOrDefault().ArticleId, FId = Model.blogs.FirstOrDefault().BlogId }, new { onclick = "return confirm ('確定刪除嗎?')" })*@
+   
                         </p>
+
                     </div>
                 </div>
             </div>
@@ -237,7 +264,7 @@
 
         if (!btnlike.hasAttribute('data-bs-toggle')) {
             btnlike.addEventListener('click', () => {
-                fetch('@Url.Content("~/Blog/Like")?FId=@Model.articles.FirstOrDefault().ArticleId')
+                fetch('@Url.Content("~/Blog/Like")?AFId=@Model.articles.FirstOrDefault().ArticleId')
                     .then(response => response.text())
                     .then(data => {
                         console.log(data)
