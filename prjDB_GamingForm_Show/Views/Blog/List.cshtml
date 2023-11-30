@@ -65,17 +65,17 @@
     </div>
 </header>
 <section class="instagram-post-section spad" style="background-color:#272727">
-    @* <div>@ViewBag.KK</div>*@
     <div style="float:left;padding:10px">
-        <div style="padding:10px;display:flex">
-            <a href="@Url.Action("Details","Shop",new{id=20})">
-                <img src="~/images/D4AD.png" width="330" height="450" alt="">
+        <p style="text-align:center;font-size:24px">熱門商品</p>
+        <div id="imageContainer" style="padding:10px; display:flex;">
+            <a id="imageLink" href="@Url.Action("Details","Shop",new{id=20})" target="_blank">
+                <img id="changingImage" src="~/images/D4AD.png" width="330" height="450" alt="" style="border-radius:5px">
             </a>
         </div>
         <br />
         <div style="padding:10px;display:flex">
-            <a href="@Url.Action("DeputeList","Depute")">
-                <img src="~/images/D4AD.png" width="330" height="450" alt="">
+            <a href="@Url.Action("DeputeList","Depute")" target="_blank">
+                <img src="~/images/AD/forjob.jpg" width="330" height="450" alt="" style="border-radius:5px">
             </a>
         </div>
     </div>
@@ -119,3 +119,42 @@
 @* </body>
 </html>
  *@
+<script>
+    // N组圖片，包含要循環展示的圖片路徑
+    var imageArray = [
+        '../images/AD/adD4.png',
+        '../images/AD/adAOE4.png',
+        '../images/AD/adBDG3.jpg',
+
+    ];
+
+    var linkArray = [
+        '@Url.Action("Details","Shop",new{id=20})',
+        '@Url.Action("Details","Shop",new{id=19})',
+        '@Url.Action("Details","Shop",new{id=5})',
+
+    ]
+
+    // 當前圖像索引為0
+    var currentIndex = 0;
+
+    // 讀取需要更换的元素
+    var imageLink = document.getElementById('imageLink');
+    var changingImage = document.getElementById('changingImage');
+
+    // 以下設置時間，N秒換一次圖
+    setInterval(function () {
+        // 切换到下一張圖
+        currentIndex = (currentIndex + 1) % imageArray.length;
+
+        // 更新圖像路徑
+        changingImage.src = imageArray[currentIndex];
+        // 更新連結地址，如果需要
+        imageLink.href = linkArray[currentIndex]
+
+
+    }, 3000); //3秒
+
+
+
+</script>

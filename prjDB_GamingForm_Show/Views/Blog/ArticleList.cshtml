@@ -111,19 +111,19 @@
 
                     <td>
                         <a style="text-decoration:none" href="@Url.Action("ArticleContent", "Blog", new {FId=item.SubBlog.BlogId, AFId =item.ArticleId}) ">
-                            <span style="color:	#FF8000">
+                            <span style="color:	#FF8000;font-size:25px">
                                 【@item.SubBlog.Title】
                             </span>
-                            <span>
+                            <span style="font-size:25px">
                                 @item.Title
                             </span>
                         </a>
                     </td>
                     <td style="color:wheat;font-size:10px ;">
-                        <p style="text-align:center"> @Html.DisplayFor(modelItem => item.ModifiedDate)</p>  @* 發文時間 *@
-                        <p style="text-align:center"> @Html.DisplayFor(modelItem => item.Member.Name) </p>  @* 預計顯示作者名稱在發文時間下面 *@
+                        <p style="text-align:center ;font-size:15px"> @Html.DisplayFor(modelItem => item.ModifiedDate)</p>  @* 發文時間 *@
+                        <p style="text-align:center;font-size:15px"> @Html.DisplayFor(modelItem => item.Member.Name) </p>  @* 預計顯示作者名稱在發文時間下面 *@
                     </td>
-                    <td style="color:wheat;font-size:20px;text-align:center">
+                    <td style="color:wheat;font-size:15px;text-align:center">
                         @((item.Replies != null) ? item.Replies.Count() : 0) /      @* 回文次數 *@
                         @Html.DisplayFor(modelItem => item.ViewCount)               @* 瀏覽次數 *@
                     </td>
