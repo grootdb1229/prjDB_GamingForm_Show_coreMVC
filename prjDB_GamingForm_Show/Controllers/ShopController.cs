@@ -4,6 +4,7 @@ using prjDB_GamingForm_Show.Models;
 using prjDB_GamingForm_Show.Models.Entities;
 using prjDB_GamingForm_Show.Models.Shop;
 using prjDB_GamingForm_Show.ViewModels;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Reflection.PortableExecutable;
 using System.Security.Cryptography.Xml;
@@ -92,7 +93,7 @@ namespace prjDB_GamingForm_Show.Controllers
 			}
 			public IActionResult IndexbyPrice_L(String CK)
 			{
-                //Trace.WriteLine("AAAA"+CK);
+               
 				IEnumerable<Product> Pdb = null;
 				if (string.IsNullOrEmpty(CK))
 				{
@@ -117,30 +118,42 @@ namespace prjDB_GamingForm_Show.Controllers
                 _db.Products.Load();
                 return View();
             }
-            public ActionResult CreateTag()
-            {
-                var Tag = _db.Tags.Where(p => p.TagId <= 3).Select(t => new { t.TagId, t.Name }).ToList();
+            //public ActionResult CreateTag()
+            //{
+            //    var Tag = _db.Tags.Where(p => p.TagId <= 3).Select(t => new { t.TagId, t.Name }).ToList();
 
-                return Json(Tag);
-            }
-            public ActionResult SubTag(int? id)
+            //    return Json(Tag);
+            //}
+            //public ActionResult SubTag(int? id)
+            //{
+            //    _db.SubTags.Load();
+            //    var Tag = _db.SubTags.Where(p => p.TagId == id).Select(s => new { s.SubTagId, s.Name }).ToList();
+            //    return Json(Tag);
+            //}
+
+            //public ActionResult SelSubTag(int? id)
+            //{
+            //    _db.SubBlogs.Load();
+            //    var SelSub = _db.SubTags.Where(p => p.SubTagId == id).Select(s => new { s.SubTagId, s.Name }).ToList();
+            //    return Json(SelSub);
+            //}
+            public ActionResult language()
             {
                 _db.SubTags.Load();
-                var Tag = _db.SubTags.Where(p => p.TagId == id).Select(s => new { s.SubTagId, s.Name }).ToList();
-                return Json(Tag);
+                var Lang = _db.SubTags.Where(p => p.TagId == 3).Select(s => new { s.SubTagId, s.Name }).ToList();
+                return Json(Lang);
             }
-
-            public ActionResult SelSubTag(int? id)
+            public ActionResult GameTag()
             {
-                _db.SubBlogs.Load();
-                var SelSub = _db.SubTags.Where(p => p.SubTagId == id).Select(s => new { s.SubTagId, s.Name }).ToList();
+                _db.SubTags.Load();
+                var SelSub = _db.SubTags.Where(p => p.TagId == 1).Select(s => new { s.SubTagId, s.Name }).ToList();
                 return Json(SelSub);
             }
 
             [HttpPost]
             public ActionResult Create(CProductWarp product) 
             {
-               
+                //Trace.WriteLine("AAAA" + product.GameTagOptions);
                 if (!ModelState.IsValid)
                 {
                     var errors = ModelState.Values.SelectMany(v => v.Errors); //測試錯誤用程式碼
@@ -167,7 +180,25 @@ namespace prjDB_GamingForm_Show.Controllers
                     _db.Products.Add(x);
                     _db.SaveChanges();
                 }
-                //Thread.Sleep(3000);
+                if (product.GameTagOptions != null)//確保有選標籤
+				{
+					List<int> tagsList = product.GameTagOptions.Split(',').Select(int.Parse).ToList();
+                    Trace.WriteLine("AAAA" + tagsList);				       
+                    foreach (var tags in tagsList)
+                    {
+						int tagsID = _db.SubTags.FirstOrDefault(x => x.SubTagId == tags).SubTagId;
+						ProductTag productTag = new ProductTag
+						{
+							SubTagId = tagsID,
+							ProductId = x.ProductId
+						};
+
+						_db.ProductTags.Add(productTag);
+					}
+
+					_db.SaveChanges();
+				
+				}//Thread.Sleep(3000);
                 return RedirectToAction("Index");
             }
 

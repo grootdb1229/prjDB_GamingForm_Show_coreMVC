@@ -2,236 +2,233 @@
 
 
 @{
-    ViewBag.Title = "Create";
+	ViewBag.Title = "Create";
 }
 
 
 @using (Html.BeginForm("Create", "Shop", FormMethod.Post, new { enctype = "multipart/form-data", id = "productform" }))
 {
-    @Html.AntiForgeryToken()
+	@Html.AntiForgeryToken()
 
-    <div class="container px-4 px-lg-5 mt-2">
+	<div class="container px-4 px-lg-5 mt-2">
 
-        <h2>新增商品</h2>
+		<h2>新增商品</h2>
 
 
-        <hr />
-        <div class="form-group">
-            @Html.LabelFor(model => model.ImageID, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
+		<hr />
+		<div class="form-group">
+			@Html.LabelFor(model => model.ImageID, htmlAttributes: new { @class = "control-label col-md-2" })
+			<div class="col-md-10">
 				<label class="btn btn-info">
 					<input id="upload_img" name="photo" style="display:none;" onchange="previewImage(this)" type="file">
-                    <i class="fa-solid fa-file"></i>上傳圖片
+					<i class="fa-solid fa-file"></i>上傳圖片
 				</label>
-                <img id="imagePreview" style="max-width: 300px; max-height: 300px; margin-top: 10px;" />
-            </div>
-        </div>
-
-       
-
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.ProductName, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.ProductName, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.ProductName, "", new { @class = "text-danger" })
-            </div>
-        </div>
- 
-
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Price, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Price, new { htmlAttributes = new { @class = "form-control", id="Price" } })
-                @Html.ValidationMessageFor(model => model.Price, "", new { @class = "text-danger" })
-            </div>
-        </div>
-      
-        <div class="form-group">
-
-            <label for="Tags" class="control-label col-md-2">選擇標籤：</label>
-            <div class="col-md-10">
-                <select id="Tags" name="TagID" class="form-control"> <option value="0" selected>請選擇一個主要標籤</option> </select>
-                <select id="dynamicDiv" name="SubTagID" class="form-control">  </select>
-            </div>
-        </div>
-
-
-        <div class="form-group" id="SelTagDiv" style="display:none;border: 1px solid #ccc; padding: 10px; overflow-y: auto; width:50vw;">
-            <!-- 內容會自動調整高度 -->
-        </div>
-
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.ProductContent, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @*@Html.EditorFor(model => model.ProductContent, new { htmlAttributes = new { @class = "form-control" } })*@
-                <textarea style="width: 50vw; height: 45vh; resize: none;" name="ProductContent" cols="120"></textarea>
-                @Html.ValidationMessageFor(model => model.ProductContent, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.UnitStock, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.UnitStock, new { htmlAttributes = new { @class = "form-control" ,id="Unitstock"} })
-                @Html.ValidationMessageFor(model => model.UnitStock, "", new { @class = "text-danger" })
-            </div>
-        </div>
-        <hr />
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="送出並新增" class="btn btn-outline-dark mt-auto" id="btnsubmit" />
-            </div>
-        </div>
-
-    </div>
-    @section Scripts
-    {
-    <!--子標籤視窗大小-->
-    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-    <script>
-
-        document.getElementById('Price').value = 0;
-        document.getElementById('Unitstock').value = 0;
-    </script>
-    <script>
-        $(document).ready(function () {
-            // 監聽textarea內容變化
-            $('#ProductContent').on('input', function () {
-                // 根據內容設置div高度
-                var contentHeight = $(this).prop('scrollHeight');
-                $('#dynamicDiv').height(contentHeight);
-            });
-        });
-    </script>
-    <!--圖片呈現-->
-    <script>
-        function previewImage (input) {
-            var preview = document.getElementById('imagePreview');
-            var file = input.files[0];
-            var reader = new FileReader();
-
-            reader.onloadend = function () {
-                preview.src = reader.result;
-            }
-
-            if (file) {
-                reader.readAsDataURL(file);
-            } else {
-                preview.src = "";
-            }
-        };
-        //以下程式碼SomeHow會影響到圖片的顯示 
-        // const btn = document.querySelector('#btnsubmit');
-
-        // btn.addEventListener('click', event => {
-        //     event.preventDefault();
-        //     const formData = new FormData(document.querySelector('#productform'));
-        //     fetch('@Url.Content("~/Shop/Create")',
-        //     {
-        //             method: 'POST',
-        //             body: formData
-        //         }).then(response => response.json())
-        //             .then(Swal.fire({
-        //                 title: "新增成功!",
-        //                 //text: "訂單已送至電子信箱!",
-        //                 icon: "success",
-        //                 showConfirmButton=false
-        //             }))
-        //     })
-
-
-   
-        </script>
-
-        <!--放Tag-->
-        <script>
-            const SelTag = document.querySelector('#Tags');
-            const SubDiv = document.querySelector('#dynamicDiv');
-            const SelDiv = document.querySelector('#SelTagDiv');//選定的資料都在這個DIV
-            const SelSubButton = document.querySelector('#DoNotSubmit');
-
-
-            //監聽事件--選擇大標籤
-            SelTag.addEventListener('change', () => {
-                Subtag();
-            })
-            SubDiv.addEventListener('change', () => {
-                SelDiv.style.display = 'block';
-                SelSubTag();
-                putinList();
-            })
-            async function BigTag() {
-                const response = await fetch(`@Url.Content("~/Shop/CreateTag")`);
-                const data = await response.json();
-                const tags = data.map(x => `<option value="${x.tagId}">${x.name}</option>`);
-                SelTag.innerHTML += tags.join("");
-                Subtag();
-            }
-            BigTag();
-
-
-            async function Subtag() {
-                const response = await fetch(`@Url.Content("~/Shop/SubTag")?id=${SelTag.value}`);
-                const data = await response.json();
-            const tags = `<option value="0" selected > 請選擇一個主要標籤 </option>`+data.map(x => `<option value="${x.subTagId}">${x.name} </option > `).join("");
-                SubDiv.innerHTML = tags;
-            }
-
-            async function SelSubTag()///這是被選中在div加入的程式碼
-            {
-                const response = await fetch(`@Url.Content("~/Shop/SelSubTag")?id=${SubDiv.value}`);
-                const data = await response.json();
-                const subtagOptions = data.map(x =>
-                    `<label>
-                                      <p type="checkbox" class="SelSubtag"  name="SelSubTags" value="${x.subTagId}">${x.name}</p>
-                                        </label>    `);
-                SelDiv.innerHTML += subtagOptions.join("");
-            }
+				<img id="imagePreview" style="max-width: 300px; max-height: 300px; margin-top: 10px;" />
+			</div>
+		</div>
 
 
 
-            function putinList() {
-                var values = [];
-            var goestolist = document.querySelector('.SelSubtag p')
-                console.log(goestolist.innerHTML);
-            
-            }
+
+		<div class="form-group">
+			@Html.LabelFor(model => model.ProductName, htmlAttributes: new { @class = "control-label col-md-2" })
+			<div class="col-md-10">
+				@Html.EditorFor(model => model.ProductName, new { htmlAttributes = new { @class = "form-control" } })
+				@Html.ValidationMessageFor(model => model.ProductName, "", new { @class = "text-danger" })
+			</div>
+		</div>
 
 
 
-            //function (p) {
-            //    var match = p.innerHTML.match(/value="(\d+)"/);
-            //    if (match && match.length > 1) {
-            //        var intValue = parseInt(match[1]);
-            //        if (!isNaN(intValue)) {
-            //            values.push(intValue);
-            //        }
-            //    } console.log(values);
-            //});
-
-            //// 使用 AJAX 发送数据到后端
-            //var xhr = new XMLHttpRequest();
-            //xhr.open('POST', '/YourController/YourAction', true);
-            //xhr.setRequestHeader('Content-Type', 'application/json');
-
-            //// 将 values 数组转换为 JSON 字符串
-            //var jsonValues = JSON.stringify({ values: values });
-
-            //xhr.onreadystatechange = function () {
-            //    if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
-            //        console.log('Data sent successfully.');
-            //    }
-            //};
-
-            //xhr.send(jsonValues);
-            //}
+		<div class="form-group">
+			@Html.LabelFor(model => model.Price, htmlAttributes: new { @class = "control-label col-md-2" })
+			<div class="col-md-10">
+				@Html.EditorFor(model => model.Price, new { htmlAttributes = new { @class = "form-control", id="Price" } })
+				@Html.ValidationMessageFor(model => model.Price, "", new { @class = "text-danger" })
+			</div>
+		</div>
 
 
-        </script>
+		<label class="control-label col-md-2">支援語言：</label>
+		<div class="form-group" id="language" style="border: 1px solid #ccc; padding: 10px; overflow-y: auto; width:50vw;">
+			<div class="d-flex flex-wrap">
+				<!-- 內容會自動調整高度 -->
+			</div>
+		</div>
+		<label class="control-label col-md-2">遊戲類別：</label>
+		<div class="form-group" id="GameTag" style="border: 1px solid #ccc; padding: 10px; overflow-y: auto; width:50vw;">
+			<div class="d-flex flex-wrap">
+				<!-- 內容會自動調整高度 -->
+			</div>
+		</div>
+		<input type="hidden" id="LanguageOptions" name="LanguageOptions" /> <!--藏選擇好的標籤傳遞給後端-->
+		<input type="hidden" id="GameTagOptions" name="GameTagOptions" />
+
+		<div class="form-group">
+			@Html.LabelFor(model => model.ProductContent, htmlAttributes: new { @class = "control-label col-md-2" })
+			<div class="col-md-10">
+				@*@Html.EditorFor(model => model.ProductContent, new { htmlAttributes = new { @class = "form-control" } })*@
+				<textarea style="width: 50vw; height: 45vh; resize: none;" name="ProductContent" cols="120"></textarea>
+				@Html.ValidationMessageFor(model => model.ProductContent, "", new { @class = "text-danger" })
+			</div>
+		</div>
+
+
+		<div class="form-group">
+			@Html.LabelFor(model => model.UnitStock, htmlAttributes: new { @class = "control-label col-md-2" })
+			<div class="col-md-10">
+				@Html.EditorFor(model => model.UnitStock, new { htmlAttributes = new { @class = "form-control" ,id="Unitstock"} })
+				@Html.ValidationMessageFor(model => model.UnitStock, "", new { @class = "text-danger" })
+			</div>
+		</div>
+		<hr />
+		<div class="form-group">
+			<div class="col-md-offset-2 col-md-10">
+				<input type="submit" value="送出並新增" class="btn btn-outline-dark mt-auto" id="btnsubmit" />
+			</div>
+		</div>
+
+	</div>
+	@section Scripts
+	{
+	<!--子標籤視窗大小-->
+	<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+	<script>
+
+		document.getElementById('Price').value = 0;
+		document.getElementById('Unitstock').value = 0;
+	</script>
+	<script>
+		$(document).ready(function () {
+			// 監聽textarea內容變化
+			$('#ProductContent').on('input', function () {
+				// 根據內容設置div高度
+				var contentHeight = $(this).prop('scrollHeight');
+				$('#dynamicDiv').height(contentHeight);
+			});
+		});
+	</script>
+	<!--圖片呈現-->
+	<script>
+		function previewImage(input) {
+			var preview = document.getElementById('imagePreview');
+			var file = input.files[0];
+			var reader = new FileReader();
+
+			reader.onloadend = function () {
+				preview.src = reader.result;
+			}
+
+			if (file) {
+				reader.readAsDataURL(file);
+			} else {
+				preview.src = "";
+			}
+		};
+		//以下程式碼SomeHow會影響到圖片的顯示
+		// const btn = document.querySelector('#btnsubmit');
+
+		// btn.addEventListener('click', event => {
+		//     event.preventDefault();
+		//     const formData = new FormData(document.querySelector('#productform'));
+		//     fetch('@Url.Content("~/Shop/Create")',
+		//     {
+		//             method: 'POST',
+		//             body: formData
+		//         }).then(response => response.json())
+		//             .then(Swal.fire({
+		//                 title: "新增成功!",
+		//                 //text: "訂單已送至電子信箱!",
+		//                 icon: "success",
+		//                 showConfirmButton=false
+		//             }))
+		//     })
+
+
+
+	</script>
+
+	<!--放Tag-->
+	<script>
+
+		const LangDiv = document.querySelector('#language .d-flex');
+		const TagDiv = document.querySelector('#GameTag .d-flex');
+
+
+		async function LoadLang() { //讀取語言列表
+			const response = await fetch('@Url.Content("~/Shop/language")');
+			const data = await response.json();
+
+			const Language = data.map(x => `
+							<div class="col-3">
+								<label style="margin-bottom: 10px; display: block;">
+											<input type="checkbox" name="GameTag" value="${x.subTagId}">${x.name}
+								</label>
+							</div>
+						`).join('');
+
+			LangDiv.innerHTML = Language;
+			 submitTags();
+		}
+
+
+
+		async function LoadTag() { //讀取遊戲標籤列表
+			const response = await fetch('@Url.Content("~/Shop/GameTag")');
+			const data = await response.json();
+
+			const Tag = data.map(x => `
+							<div class="col-3">
+								<label style="margin-bottom: 10px; display: block;">
+									<input type="checkbox" name="GameTag" value="${x.subTagId}">${x.name}
+								</label>
+							</div>
+						`).join('');
+
+			TagDiv.innerHTML = Tag;
+			 submitTags();
+		}
+		LoadLang();
+		LoadTag();
+
+		///如何從checkbox取值
+		function collectSelectedOptions(checkboxName) {
+			const checkboxes = document.getElementsByName(checkboxName);
+			const selectedOptions = Array.from(checkboxes)
+				.filter(checkbox => checkbox.checked)
+				.map(checkbox => checkbox.value);
+
+			return selectedOptions.join(',');
+		}
+
+		function submitTags() {
+
+
+			const gameTagOptions = collectSelectedOptions("GameTag");
+
+			//將被勾起來的選項藏到hidden元素
+			document.getElementById("GameTagOptions").value = gameTagOptions;
+
+			return true;
+		}
+
+		async function submitForm(event) {
+			event.preventDefault(); // 阻止表單的默認提交行為
+			await submitTags(); // 等待 submitTags 完成
+			document.getElementById('productform').submit(); // 手動提交表單
+		}
+
+		document.addEventListener('DOMContentLoaded', function () {
+			const form = document.getElementById('productform');
+			form.addEventListener('submit', submitForm);
+		});
+
+
+
+
+	</script>
+
+
 
     }
 

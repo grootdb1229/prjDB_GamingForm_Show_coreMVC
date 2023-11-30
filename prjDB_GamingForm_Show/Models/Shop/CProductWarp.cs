@@ -95,7 +95,9 @@ namespace prjDB_GamingForm_Show.Models.Shop
             get { return _product.FImagePath; }
             set { _product.FImagePath = value; }
         }
+        //public string? LanguageOptions { get; set; 
 
+        public string? GameTagOptions { get; set; }
         [BindNever]
         public virtual Status? Status
         
