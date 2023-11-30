@@ -4,5 +4,8 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>電子信件已寄送 請進行確認</h2>
+<h2>電子信件已寄送 請至電子信箱進行確認</h2>
 
+<h3>您的驗證碼 及 會員編號</h3>
+<p>您的會員編號為: @Context.Session.GetInt32(CDictionary.SK_Confirmed_MemberID)</p>
+<p>您的驗證碼為: @Guid.NewGuid()</p>
