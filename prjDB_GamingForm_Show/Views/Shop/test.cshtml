@@ -82,8 +82,17 @@
             <td>
                 @Html.DisplayFor(modelItem => item.FImagePath)
             </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.SubTagName)
+                <td>
+                    <div>
+                    @{
+                        string[] tags = item.SubTagName.Split('/');
+                        foreach (var t in tags)
+                        {
+                            <li>@t</li>
+                        }
+                    }
+                        @*@Html.DisplayFor(modelItem => item.SubTagName)*@
+                    </div>
             </td>
             <td>
                 @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
