@@ -223,24 +223,28 @@
             HkFrag.append(snd);
             const data = await response.json();
             console.log(data);
-            const Hotkeys = data.map(Hotkeys => `<span style="flex:content;width:auto;text-align:center" name="txtKeyword">${Hotkeys} </span>`)
+            // <a href="/Depute/DeputeDetails/${list.id}" class="btn btn-primary" id = " btndp" name="txtKeyword" > 詳細...</a>
+            const Hotkeys = data.map(Hotkeys => `<a href="/Depute/Search" id="${Hotkeys}">${Hotkeys} </a>`)
+            console.log(Hotkeys);
+            $('#html').click(function () {
+                $.getJSON('@Url.Content("~/Depute/Search")', (datas) => {
+                    const docFrag = $(document.createDocumentFragment());
+                    $.each(datas, (index, data) => { 
+                        console.log(data);
+                        // <li class="list-group-item" > An item < /li>
+                        // const li = $('<li></li>').text(data).addClass('list-group-item');
+                        docFrag.append(li);
+                    })
+                    $('.list-group').html(docFrag);
+                })
+                $('#divAlert').text("JSON")
+            })
+            // const Hotkeys = data.map(Hotkeys => `<span style="flex:content;width:auto;text-align:center" name="txtKeyword">${Hotkeys} </span>`)
             HkFrag.append(Hotkeys);
             $('#hotkey').html(HkFrag)
             
         }
-        $('#hotkey').click(function () {
-            $.getJSON('@Url.Content("~/depute/HotKey")', (datas) => {
-                const hkFrag = $(document.createDocumentFragment());
-                $.each(datas, (index, hotkey) => {
-                    console.log(hotkey);
-                    // <li class="list-group-item" > An item < /li>
-                    const li = $('<span></span>').text(hotkey).addClass('text-truncate me-3');
-                    hkFrag.append(li);
-                })
-                $('#hotkey').html(hkFrag);
-            })
-            $('#divAlert').text("JSON")
-        })
+        
 
 
     </script>
