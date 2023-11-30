@@ -5,7 +5,7 @@
 }
 <script src="~/ckeditor5-build-classic/ckeditor.js"></script>
 <link rel="stylesheet" href="~/css/blogstyle.css" type="text/css">
-@section Styles{
+@section Styles {
     <style>
         input {
             margin: 3px 0px;
@@ -20,8 +20,8 @@
         }
 
         .ck-editor__editable {
-                color: black
-            }
+            color: black
+        }
 
         input {
             margin: 3px
@@ -53,22 +53,17 @@
                 <input asp-for="articles.FirstOrDefault().Title" class="form-control" />
                 <span asp-validation-for="articles.FirstOrDefault().Title" class="text-danger"></span>
             </div>
-            @*<label asp-for="articles.FirstOrDefault().ArticleContent" class="control-label"></label>*@
-            @*<input asp-for="articles.FirstOrDefault().ArticleContent" class="form-control" />*@
-            @*<textarea asp-for="articles.FirstOrDefault().ArticleContent" class="form-control" rows="10"></textarea>*@
-            @*<span asp-validation-for="articles.FirstOrDefault().ArticleContent" class="text-danger"></span>*@
-            <textarea name="ArticleContent" id="editor" style="resize:none; height:700px; width: 100%;color:black">                    
-</textarea>
-
+            <textarea name="ArticleContent" id="editor" style="resize:none; height:700px; width: 100%;color:black"></textarea>
             <input type="hidden" name="ModifiedDate" value="@DateTime.Now" />
-            <input type="hidden" name="MemberId" value="15" />
+            <input type="hidden" name="MemberId" value="@Context.Session.GetInt32(CDictionary.SK_UserID)" />
 
             <div class="form-group">
                 <input type="submit" value="修改" class="btn btn-default" />
                 <p style="margin:3px; float:right;text-align:right">
-                    @Html.ActionLink("回到文章","ArticleContent","Blog",new{AFId= Model.articles.FirstOrDefault().ArticleId,FId=Model.blogs.FirstOrDefault().BlogId},new{
-                    @class="btn btn-warning"
-                    })
+                    @Html.ActionLink("回到文章", "ArticleContent", "Blog", new { AFId = Model.articles.FirstOrDefault().ArticleId, FId = Model.blogs.FirstOrDefault().BlogId }, new
+                        {
+                            @class = "btn btn-warning"
+                        })
                 </p>
             </div>
         </form>

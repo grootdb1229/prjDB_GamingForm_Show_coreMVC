@@ -4,8 +4,22 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<link rel="stylesheet" href="~/css/blogstyle.css" type="text/css">
+<head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.8/clipboard.min.js"></script>
+    <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-pzjw8BO+DqSnC6xBg8yIcWHPXzxJsKn3XA2Tlkg8r7U5MDzY1ra2Qx54Vl8iIYiC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-eZt+q1LQ4lO/dZ7JkqUy5m4qGu2zTpuKQFq6wC2FKeWBqy0i+xn2dOQ6BQFuMI6B" crossorigin="anonymous"></script>
 
+</head>
+<link rel="stylesheet" href="~/css/blogstyle.css" type="text/css">
+@section Styles {
+    <style>
+
+        p {
+            font-size: 12px;
+        }
+    </style>
+}
 
 <header class="header-section">
     <div class="nav-options">
@@ -14,9 +28,7 @@
             <div class="humberger-menu ">
                 @Html.ActionLink("前往首頁", "List", "Blog")
             </div>
-            <div class="nav-search search-switch">
-                @Html.ActionLink("發表文章", "ArticleCreate", "Blog", new { FId = Model.blogs.FirstOrDefault().BlogId }, null)
-            </div>
+            
             <div class="nav-menu">
                 <ul>
                     <li class="active">
@@ -29,15 +41,34 @@
                                 <a href="@Url.Action("ArticleList", "Blog", new {FId=item.First().BlogId ,SFId = item.FirstOrDefault().SubBlogId})">@item.Key</a>
                             </li>
                         }
-                    }
+                    }                    
+                    <li style="float:right;">
+                        @{
+                            if (Context.Session.GetInt32(CDictionary.SK_UserID) == null)
+                            {
+                                <button style="background:#a81d1d ;border:none;height:52.5px" type="button" class="btn btn-danger" id="btnCreate" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                                    發表文章
+                                </button>                                
+                            }
+                            else
+                            {
+                                @Html.ActionLink("發表文章", "ArticleCreate", "Blog", new { FId = Model.blogs.FirstOrDefault().BlogId }, new { id = "btnCreate",@class="btn" })
+                            }
+                        }
+                    </li>
                 </ul>
+            <div class="nav-menu">
+
             </div>
+            </div>
+
             @using (Html.BeginForm())
             {
                 @:關鍵字 @Html.TextBox("txtKeyword")
                 <input type="submit" value="查詢" />
             }
         </div>
+
     </div>
 </header>
 
@@ -46,61 +77,66 @@
 <div style="margin:0px auto;margin-top:30px;width:940px;background-color:#4F4F4F;box-shadow:0px 0px 8px 8px #cccccc;border-radius:8px">
     <div>
     </div>
-        
-        <table class="table">
-            <tr>
 
-                <th>
-                    <h4 style="color:antiquewhite;text-align:center">
+    <table class="table">
+        <tr>
 
-                        @Html.DisplayNameFor(model => model.articles.FirstOrDefault().Title)
-                    </h4>
-                </th>
+            <th>
+                <h4 style="color:antiquewhite;text-align:center">
 
-
-                <th>
-                    <h4 style="color:antiquewhite;text-align:center">
-                        @Html.DisplayNameFor(model => model.articles.FirstOrDefault().ModifiedDate)
-                    </h4>
-                </th>
-                <th>
-                    <h4 style="color:antiquewhite;text-align:center">
-                        互動 / 人氣
-                        @* @Html.DisplayNameFor(model => model.articles.FirstOrDefault().ViewCount) *@
-                    </h4>
-                </th>
+                    @Html.DisplayNameFor(model => model.articles.FirstOrDefault().Title)
+                </h4>
+            </th>
 
 
-            </tr>
+            <th>
+                <h4 style="color:antiquewhite;text-align:center">
+                    @Html.DisplayNameFor(model => model.articles.FirstOrDefault().ModifiedDate)
+                </h4>
+            </th>
+            <th>
+                <h4 style="color:antiquewhite;text-align:center">
+                    互動 / 人氣
+                    @* @Html.DisplayNameFor(model => model.articles.FirstOrDefault().ViewCount) *@
+                </h4>
+            </th>
 
-            @{
-                foreach (var item in Model.articles)
-                {
-                    <tr>
 
-                        <td>
-                            <a style="text-decoration:none" href="@Url.Action("ArticleContent", "Blog", new {FId=item.SubBlog.BlogId, AFId =item.ArticleId}) ">
-                                <span style="color:	#FF8000">
-                                    【@item.SubBlog.Title】
-                                </span>
-                                <span>
-                                    @item.Title
-                                </span>
-                            </a>
-                        </td>
-                        <td style="color:wheat;font-size:10px ;">
-                            <p style="text-align:center"> @Html.DisplayFor(modelItem => item.ModifiedDate)</p>  @* 發文時間 *@
-                            <p style="text-align:center"> @Html.DisplayFor(modelItem => item.Member.Name) </p>  @* 預計顯示作者名稱在發文時間下面 *@
-                        </td>
-                        <td style="color:wheat;font-size:20px;text-align:center">
-                            @((item.Replies != null) ? item.Replies.Count() : 0) /      @* 回文次數 *@
-                            @Html.DisplayFor(modelItem => item.ViewCount)               @* 瀏覽次數 *@
-                        </td>
+        </tr>
 
-                    </tr>
-                }
+        @{
+            foreach (var item in Model.articles)
+            {
+                <tr>
+
+                    <td>
+                        <a style="text-decoration:none" href="@Url.Action("ArticleContent", "Blog", new {FId=item.SubBlog.BlogId, AFId =item.ArticleId}) ">
+                            <span style="color:	#FF8000;font-size:25px">
+                                【@item.SubBlog.Title】
+                            </span>
+                            <span style="font-size:25px">
+                                @item.Title
+                            </span>
+                        </a>
+                    </td>
+                    <td style="color:wheat;font-size:10px ;">
+                        <p style="text-align:center ;font-size:15px"> @Html.DisplayFor(modelItem => item.ModifiedDate)</p>  @* 發文時間 *@
+                        <p style="text-align:center;font-size:15px"> @Html.DisplayFor(modelItem => item.Member.Name) </p>  @* 預計顯示作者名稱在發文時間下面 *@
+                    </td>
+                    <td style="color:wheat;font-size:15px;text-align:center">
+                        @((item.Replies != null) ? item.Replies.Count() : 0) /      @* 回文次數 *@
+                        @Html.DisplayFor(modelItem => item.ViewCount)               @* 瀏覽次數 *@
+                    </td>
+
+                </tr>
             }
+        }
 
-        </table>
-    
+    </table>
+
 </div>
+@section Scripts {
+    <script>
+       
+    </script>
+}

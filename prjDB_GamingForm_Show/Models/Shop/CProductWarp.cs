@@ -14,7 +14,7 @@ namespace prjDB_GamingForm_Show.Models.Shop
         {
             _product = new Product();
         }
-
+        public virtual IEnumerable<Product> Product { get; set; } = new List<Product>();
         private Product _product;
         public Product product
         {
@@ -25,18 +25,18 @@ namespace prjDB_GamingForm_Show.Models.Shop
 
 
         [DisplayName("產品編號")]
-        public int ProductID
+        public int ProductId
         {
-            get { return _product.ProductId; }
-            set { _product.ProductId = value; }
+            get;
+            set;
         }
 
         [Required( ErrorMessage= "您尚未輸入資訊")]
         [DisplayName("產品名稱")]
         public string ProductName
         {
-            get { return _product.ProductName; }
-            set { _product.ProductName = value; }
+            get;
+            set;
         }
 
 
@@ -45,8 +45,8 @@ namespace prjDB_GamingForm_Show.Models.Shop
         [DisplayName("價格")]
        public decimal Price
         {
-            get { return _product.Price; }
-            set { _product.Price = value; }
+            get;
+            set;
         }
  
         [DisplayName("上市日期")]//是否轉換成string呢    如上課所教   //同時先暫時移除DateTime?
@@ -59,8 +59,8 @@ namespace prjDB_GamingForm_Show.Models.Shop
         [DisplayName("商品描述")]
         public string ProductContent
         {
-            get { return _product.ProductContent; }
-            set { _product.ProductContent = value; }
+            get;
+            set;
         }
 
 
@@ -69,21 +69,21 @@ namespace prjDB_GamingForm_Show.Models.Shop
         [DisplayName("庫存")]
         public int UnitStock
         {
-            get { return _product.UnitStock; }
-            set { _product.UnitStock = value; }
+            get;
+            set;
         }
 
         
         [DisplayName("狀態ID")]  //預設商品為"上架中"狀態
         public int? StatusID {
-            get { return _product.StatusId=1; }
-            set { _product.StatusId = 1; }
+            get;
+            set;
         }
   
         [DisplayName("上架會員ID")] //在系統完成前先使用 id34號作業
         public int? MemberID {
-            get { return _product.MemberId=34; }
-            set { _product.MemberId = 34; }
+            get;
+            set;
         }
     
      
@@ -91,9 +91,9 @@ namespace prjDB_GamingForm_Show.Models.Shop
         public int ImageID { get; set; }
 
    
-        public string? FImagePath { 
-            get { return _product.FImagePath; }
-            set { _product.FImagePath = value; }
+        public string? FImagePath {
+            get;
+            set;
         }
         //public string? LanguageOptions { get; set; 
 
@@ -104,10 +104,10 @@ namespace prjDB_GamingForm_Show.Models.Shop
             //get { return _product.Status; }
             //set { _product.Status = null!; }
           { get; set; } = null;
-    
 
+        public virtual IEnumerable<SubTag> SubTag { get; set; } = new List<SubTag>();
 
-
+        public virtual IEnumerable<ProductTag> ProductTags { get; set; } = new List<ProductTag>();
         public IFormFile? photo { get; set; }
 
 

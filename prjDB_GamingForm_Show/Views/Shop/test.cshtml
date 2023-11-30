@@ -1,0 +1,96 @@
+﻿@model IEnumerable<prjDB_GamingForm_Show.ViewModels.CShopPageViewModel>
+
+@{
+    ViewData["Title"] = "test";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>test</h2>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.ProductId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ProductName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Price)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AvailableDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ProductContent)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UnitStock)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.StatusId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MemberId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FirmId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FImagePath)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SubTagName)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.ProductId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ProductName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Price)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AvailableDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ProductContent)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UnitStock)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.StatusId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MemberId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FirmId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FImagePath)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SubTagName)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

@@ -1,4 +1,5 @@
-﻿@{
+﻿@model IEnumerable<DB_GamingForm_Show.Job.DeputeClass.CDeputeViewModel>
+@{
     ViewData["Title"] = "DeputeList";
     Layout = "~/Views/Shared/DeputeLayout2.cshtml";
 }
@@ -7,34 +8,23 @@
 
 <div class="container-fluid bg-primary mb-5 wow fadeIn" data-wow-delay="0.1s" style="padding: 35px;">
     <div class="container">
-        <div class="row g-2">
-            <div class="col-md-10">
+        <div class="row g-3">
+            <div class="col-md-8">
                 <div class="row g-2">
-                    <div class="col-md-4">
+                    <div class="col-md-15">
                         <input type="text" id="text" name="txtKeyword" class="form-control border-0" placeholder="Keyword" />
+                        <div id="hotkey">
+                            
+                        </div>
                     </div>
-                    <div class="col-md-4">
-                        <select id="regions" class="form-select border-0">
-                        </select>
-                    </div>
-                    <div class="col-md-4">
-                        <select id="money" class="form-select border-0">
-                            <option name="txtSalary" selected>請選擇...</option>
-                            <option name="txtSalary" value="1">10000</option>
-                            <option name="txtSalary" value="2">20000</option>
-                            <option name="txtSalary" value="3">30000</option>
-                            <option name="txtSalary" value="4">50000</option>
-                        </select>
-
-                    </div>
-
                 </div>
             </div>
             <div class="col-md-2">
                 <button id="search" name="txtKeyword" class="btn btn-dark border-0 w-100">搜尋</button>
+            </div>
+            <div class="col-md-2">
                 @Html.ActionLink("重設","DeputeList","Depute",null,new{@class ="btn btn-dark border-0 w-100",@id="search",name="txtKeyword"})
-                @* <a href="~/../Views/Depute/DeputeList.cshtml" class="button">Go to page</a> *@
-                @* <button id="search" name="txtKeyword" class="btn btn-dark border-0 w-100" href="~/..Depute/DeputeList" />搜尋</button> *@
+                
             </div>
         </div>
     </div>
@@ -43,18 +33,39 @@
 <!-- Search End -->
 <!-- Jobs Start -->
 <div class="container">
-    <span style="float:left">test</span>
-    <span style="float:left">test</span>
-    <span style="float:left">test</span>
-    <ul>
-        <li style="float:right;list-style:none"><select id="skill" class="form-select border-0"></select></li>
-        <li style="float:right;list-style:none"><select id="skillclass" class="form-select border-0"></select></li>
-    </ul>
+    <div class="row g-4" style="float:right;">
+        <div class="col-md-6">
+            <p>大類別</p>
+            <select id="skillclass" class="form-select border-0"></select>
+        </div>
+        <div class="col-md-6">
+            <p>小類別</p>
+            <select id="skill" class="form-select border-0"></select>
+        </div>
+    </div>
+    <div class="row g-4" style="float:left">
+        <div class="col-md-6">
+            <p>地區</p>
+            <select id="regions" class="form-select border-0"></select>
+        </div>
+        <div class="col-md-6">
+            <p>金額</p>
+            <div class="row g-2">
+                <select id="money" class="form-select border-0">
+                    <option name="txtSalary" selected>請選擇...</option>
+                    <option name="txtSalary" value="1">10000</option>
+                    <option name="txtSalary" value="2">20000</option>
+                    <option name="txtSalary" value="3">30000</option>
+                    <option name="txtSalary" value="4">50000</option>
+                </select>
+            </div>
+        </div>
+    </div>
 </div>
 <div class="container-xxl py-5">
     
     <div class="container">
-        <h1 class="text-center mb-5 wow fadeInUp" data-wow-delay="0.1s">Job Listing</h1>
+        <h1 class="text-center mb-5 wow fadeInUp" data-wow-delay="0.1s">懸賞清單</h1>
 
         <div class="tab-class text-center wow fadeInUp" data-wow-delay="0.3s">
 
@@ -62,8 +73,28 @@
                 <div id="tab-1" class="tab-pane fade show p-0 active">
                     <div class="job-item p-4 mb-4">
                         <div id="list" class="row g-4">
+                            @foreach (var item in Model) {
+                            <div class="col-sm-12 col-md-8 d-flex align-items-center">
+                                    <img class="flex-shrink-0 img-fluid border rounded" src="~/images/@Html.DisplayFor(modelItem => item.imgfilepath)" alt="" style="width: 80px; height: 80px;">
+                                <div class="text-start ps-4">
+                                        <h5 class="mb-3">@Html.DisplayFor(modelItem => item.title)</h5>
+                                        <span class="text-truncate me-3"><i class="fa fa-map-marker-alt text-primary me-2"></i>@Html.DisplayFor(modelItem => item.region)</span>
+                                        <span class="text-truncate me-3"><i class="fa fa-map-marker-alt text-primary me-2"></i>@Html.DisplayFor(modelItem => item.providername)</span>
+                                        <span class="text-truncate me-3"><i class="far fa-clock text-primary me-2"></i>@Html.DisplayFor(modelItem => item.startdate)</span>
+                                        <span class="text-truncate me-0"><i class="far fa-money-bill-alt text-primary me-2"></i>@Html.DisplayFor(modelItem => item.salary)</span>
+                                </div>
+                            </div>
+                            <div class="col-sm-12 col-md-4 d-flex flex-column align-items-start align-items-md-end justify-content-center">
+                                <div class="d-flex mb-3">
+                                    <a class="btn btn-light btn-square me-3" href=""><i class="far fa-heart text-primary"></i></a>
+                                        @Html.ActionLink("詳細", "DeputeDetails", "Depute", new { id = item.id },new{@class ="btn btn-primary"})
+                                        @Html.ActionLink("我要應徵", "Apply", "Depute", new { id = item.id },new{@class ="btn btn-primary"})
+                                </div>
+                                    <small class="text-truncate"><i class="far fa-calendar-alt text-primary me-2"></i>Last Update : @Html.DisplayFor(modelItem => item.modifieddate)</small>
+                            </div>
+                            }
                         </div>
-
+                        
                     </div>
                     @Html.ActionLink("回懸賞首頁", "DeputeMain", "Depute", null, new { @class = "btn btn-primary py-3 px-5", @id = "btndp" })
                 </div>
@@ -94,6 +125,7 @@
         const selSalary = document.querySelector('#money');
 
         //基本搜尋&&進階搜尋///
+        loadHotkey();
         loadRegion();
         async function loadList() {
             const lstFrag = $(document.createDocumentFragment());
@@ -109,16 +141,16 @@
                                                      <div class="text-start ps-4">
                                                      <h5 class="mb-3">${list.title}</h5>
                                                              <span class="text-truncate me-3"><i class="fa fa-map-marker-alt text-primary me-2"></i>${list.region}</span>
-                                                                             <span class="text-truncate me-3"><i class="fa fa-map-marker-alt text-primary me-2"></i>${list.providername}</span>
-                                                                     <span class="text-truncate me-3"><i class="far fa-clock text-primary me-2"></i>${list.startdate}</span>
+                                                             <span class="text-truncate me-3"><i class="fa fa-map-marker-alt text-primary me-2"></i>${list.providername}</span>
+                                                             <span class="text-truncate me-3"><i class="far fa-clock text-primary me-2"></i>${list.startdate}</span>
                                                              <span class="text-truncate me-0"><i class="far fa-money-bill-alt text-primary me-2"></i>${list.salary}</span>
                                                     </div>
                                                     </div>
                                                     <div class="col-sm-12 col-md-4 d-flex flex-column align-items-start align-items-md-end justify-content-center">
                                                     <div class="d-flex mb-3">
                                                     <a class="btn btn-light btn-square me-3" href=""><i class="far fa-heart text-primary"></i></a>
-                                                    <a href="/Depute/DeputeDetails/${list.id}" class="btn btn-primary id=" btndp"">詳細...</a>
-                                                                    <a href="/Depute/Apply/${list.id}" class="btn btn-primary id=" btndp"">我要應徵...</a>
+                                                            <a href="/Depute/DeputeDetails/${list.id}" class="btn btn-primary" id=" btndp">詳細...</a>
+                                                                            <a href="/Depute/Apply/${list.id}" class="btn btn-primary"  id=btndp"">我要應徵...</a>
 
                                                     </div>
                                                             <small class="text-truncate"><i class="far fa-calendar-alt text-primary me-2"></i>Last Update : ${list.modifieddate}</small>
@@ -156,33 +188,59 @@
         async function loadSkill() {
             const SkillFrag = $(document.createDocumentFragment());
             const response = await fetch(`@Url.Content("~/Depute/Skills")?id=${selSkillClasses.value}`);
-             console.log(response);
+             // console.log(response);
             const snd = '<option name="txtSkill" value="null">請選擇...</option>'
             SkillFrag.append(snd);
             const data = await response.json();
-             console.log(data);
+             // console.log(data);
             const Skills = data.map(Skills => `<option name="txtSkill" value='${Skills.skillId}'>${Skills.name}</option>`)
             SkillFrag.append(Skills);
             $('#skill').html(SkillFrag)
-            // selectSkills.innerHTML = Skills.join("");
-            loadList();
+            
+            // loadList();
         }
 
         async function loadRegion() {
             const RegionFrag = $(document.createDocumentFragment());
             const response = await fetch(`@Url.Content("~/Depute/Region")`);
-            console.log(response);
+            // console.log(response);
             const snd = '<option name="txtRegion" value="null">請選擇...</option>'
             RegionFrag.append(snd);
             const data = await response.json();
-            console.log(data);
+            // console.log(data);
             const Regions = data.map(Regions => `<option name="txtRegion" value='${Regions.regionId}'>${Regions.city}</option>`)
             RegionFrag.append(Regions);
             $('#regions').html(RegionFrag)
             loadSkillClassess();
         }
         
-        
+        //熱門關鍵字:
+        async function loadHotkey() {
+            const HkFrag = $(document.createDocumentFragment());
+            const response = await fetch(`@Url.Content("~/Depute/Hotkey/3")`);
+            // console.log(response);
+            const snd = '<span class="text-truncate me-3">熱門關鍵字 :</span>'
+            HkFrag.append(snd);
+            const data = await response.json();
+            console.log(data);
+            const Hotkeys = data.map(Hotkeys => `<span style="flex:content;width:auto;text-align:center" name="txtKeyword">${Hotkeys} </span>`)
+            HkFrag.append(Hotkeys);
+            $('#hotkey').html(HkFrag)
+            
+        }
+        $('#hotkey').click(function () {
+            $.getJSON('@Url.Content("~/depute/HotKey")', (datas) => {
+                const hkFrag = $(document.createDocumentFragment());
+                $.each(datas, (index, hotkey) => {
+                    console.log(hotkey);
+                    // <li class="list-group-item" > An item < /li>
+                    const li = $('<span></span>').text(hotkey).addClass('text-truncate me-3');
+                    hkFrag.append(li);
+                })
+                $('#hotkey').html(hkFrag);
+            })
+            $('#divAlert').text("JSON")
+        })
 
 
     </script>

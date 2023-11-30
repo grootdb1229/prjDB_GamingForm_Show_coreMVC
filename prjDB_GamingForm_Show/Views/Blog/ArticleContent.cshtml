@@ -9,14 +9,8 @@
     <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-pzjw8BO+DqSnC6xBg8yIcWHPXzxJsKn3XA2Tlkg8r7U5MDzY1ra2Qx54Vl8iIYiC" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-eZt+q1LQ4lO/dZ7JkqUy5m4qGu2zTpuKQFq6wC2FKeWBqy0i+xn2dOQ6BQFuMI6B" crossorigin="anonymous"></script>
-
-
 </head>
 <link rel="stylesheet" href="~/css/blogstyle.css" type="text/css">
-
-
-
-
 <header class="header-section">
     <div class="nav-options">
 
@@ -24,9 +18,7 @@
             <div class="humberger-menu ">
                 @Html.ActionLink("前往首頁", "List", "Blog")
             </div>
-            <div class="nav-search search-switch">
-                @Html.ActionLink("發表回覆", "ReplyCreate", "Blog", new { AFId = Model.articles.FirstOrDefault().ArticleId, FId = Model.blogs.FirstOrDefault().BlogId }, null)
-            </div>
+           
             <div class="nav-menu">
                 <ul>
                     <li class="active">
@@ -40,6 +32,23 @@
                             </li>
                         }
                     }
+                    <li style="float:right;">
+                        @{
+                            if (Context.Session.GetInt32(CDictionary.SK_UserID) == null)
+                            {
+                                <button style="background:#a81d1d ;border:none;height:52.5px" type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                                    發表回覆
+                                </button>
+                            }
+                            else
+                            {
+                                @Html.ActionLink("發表回覆", "ReplyCreate", "Blog", new { AFId = Model.articles.FirstOrDefault().ArticleId, FId = Model.blogs.FirstOrDefault().BlogId }, new { @class = "btn" })
+                            }
+                        }
+                      @*   <div class="nav-search search-switch">
+                            @Html.ActionLink("發表回覆", "ReplyCreate", "Blog", new { AFId = Model.articles.FirstOrDefault().ArticleId, FId = Model.blogs.FirstOrDefault().BlogId }, null)
+                        </div> *@
+                    </li>
                 </ul>
             </div>
         </div>
@@ -88,31 +97,35 @@
                         @*//Todo:讚用ajax*@
                         @{
                             int like = 0;
-
-                            <button type="button" class="btn btn-danger" id="btnLike">
-                                <img src="~/images/like.png" alt="Like" width="20px" height="20px" />
-                            </button>
-
+                            if (Context.Session.GetInt32(CDictionary.SK_UserID) == null)
+                            {
+                                <button type="button" class="btn btn-danger" id="btnLike" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                                    <img src="~/images/like.png" alt="Like" width="20px" height="20px" />
+                                </button>
+                            }
+                            else
+                            {
+                                <button type="button" class="btn btn-danger" id="btnLike">
+                                    <img src="~/images/like.png" alt="Like" width="20px" height="20px" />
+                                </button>
+                            }
                             like = Model.articleActions.Count(a => a.ActionId == 1);
                             <span id="spLike">
                                 @like
                             </span>
                         }
                         <p style="float:right">
-
                             <!-- HTML 中的按鈕 -->
                             <button id="copyButton" class="btn btn-info" data-clipboard-target="#urlToCopy">分享</button>
                             <!-- 顯示的網址 -->
                             <input type="hidden" id="urlToCopy" value="" readonly>
 
-                            @if (Model.articles.First().MemberId == ViewBag.KK)
+                            @if (Model.articles.First().MemberId == Context.Session.GetInt32(CDictionary.SK_UserID))
                             {
 
                                 <button type="button" class="btn btn-warning" onclick="location.href='@Url.Action( "ArticleEdit","Blog", new { AFId = Model.articles.FirstOrDefault().ArticleId ,FId = Model.blogs.FirstOrDefault().BlogId})'">修改</button>
                                 <button type="button" class="btn btn-secondary" onclick="ArticleDelete()">刪除文章</button>
-
                             }
-
                             <script>
                                 function ArticleDelete() {
                                     var result = confirm('確定刪除嗎?');
@@ -123,9 +136,7 @@
                             </script>
                             @*@Html.ActionLink("修改", "ArticleEdit", new { AFId = Model.articles.FirstOrDefault().ArticleId ,FId = Model.blogs.FirstOrDefault().BlogId})
                             @Html.ActionLink("刪除", "ArticleDelete", new { AFId = Model.articles.FirstOrDefault().ArticleId, FId = Model.blogs.FirstOrDefault().BlogId }, new { onclick = "return confirm ('確定刪除嗎?')" })*@
-
                         </p>
-
                     </div>
                 </div>
             </div>
@@ -161,9 +172,9 @@
                             </p>
                             @*<div style="overflow: hidden; word-wrap: break-word; white-space: pre-line;">
 
-                                    @Html.Raw(item.ReplyContents)
-                            
-                            </div>*@
+                    @Html.Raw(item.ReplyContents)
+
+                    </div>*@
 
                             <div style="max-width:800px; overflow: hidden; word-wrap: break-word; white-space: pre-line;">
                                 <p style="margin: 0; max-width:650px;font-size:30px ">
@@ -177,7 +188,7 @@
                             <br />
                             <div style="width:800px">
                                 <p style="float:right">
-                                    @if (Model.replies.First().MemberId == ViewBag.KK)
+                                    @if (Model.replies.First().MemberId == Context.Session.GetInt32(CDictionary.SK_UserID))
                                     {
                                         @* @Html.ActionLink("修改", "ReplyEdit", new { AFId = Model.articles.FirstOrDefault().ArticleId ,FId = Model.blogs.FirstOrDefault().BlogId, RFId =item.ReplyId})*@
                                         <button type="button" class="btn btn-warning" onclick="location.href='@Url.Action( "ReplyEdit","Blog", new { AFId = Model.articles.FirstOrDefault().ArticleId ,FId = Model.blogs.FirstOrDefault().BlogId, RFId =item.ReplyId})'">修改</button>
@@ -224,27 +235,18 @@
         const btnlike = document.getElementById("btnLike");
         var splike = document.getElementById("spLike")
 
-        //判斷是否登入   暫時是這樣寫
-        fetch('@Url.Content("~/Blog/LogOrNot")')
-            .then(respones => respones.json())
-            .then(datas => {
-                // 綁定自  data - bs - toggle="modal" data - bs - target="#staticBackdrop
-                if (datas == null) {
-                    btnlike.setAttribute('data-bs-toggle', 'modal');
-                    btnlike.setAttribute('data-bs-target', '#staticBackdrop');
-                }
-                else {
-                    //綁定LIKE事件
-                    btnlike.addEventListener('click', () => {
-                        fetch('@Url.Content("~/Blog/Like")?AFId=@Model.articles.FirstOrDefault().ArticleId')
-                            .then(response => response.text())
-                            .then(data => {
-                                console.log(data)
-                                splike.innerHTML = data
-                            })
+        if (!btnlike.hasAttribute('data-bs-toggle')) {
+            btnlike.addEventListener('click', () => {
+                fetch('@Url.Content("~/Blog/Like")?FId=@Model.articles.FirstOrDefault().ArticleId')
+                    .then(response => response.text())
+                    .then(data => {
+                        console.log(data)
+                        splike.innerHTML = data
                     })
-                }
             })
+        }
+
+
 
     </script>
 }

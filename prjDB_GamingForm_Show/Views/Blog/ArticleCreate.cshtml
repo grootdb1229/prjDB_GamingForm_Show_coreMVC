@@ -6,15 +6,14 @@
 }
 <script src="~/ckeditor5-build-classic/ckeditor.js"></script>
 
-<script src="~/ckeditor5-build-classic/ckeditor.js"></script>
-<link rel="stylesheet" href="~/css/blogstyle.css" type="text/css">
+@* <link rel="stylesheet" href="~/css/blogstyle.css" type="text/css"> *@
 @section Styles {
     <style>
         .ck {
             height: 650px;
         }
 
-            .ck.ck-content {
+            .ck-content {
                 color: black
             }
 
@@ -57,10 +56,10 @@
                 </div> *@
                 <div class="form-group">
                     <input type="hidden" name="ModifiedDate" value="@DateTime.Now" />
-                    <input type="hidden" name="MemberId" value="@ViewBag.KK" />
+                    <input type="hidden" name="MemberId" value="@Context.Session.GetInt32(CDictionary.SK_UserID)" />
                 </div>
                 <div>
-                    <textarea name="ArticleContent" id="editor" style="resize:none; height:700px">                    
+                    <textarea name="ArticleContent" id="editor" style="resize:none; height:700px;color:black">                    
                 </textarea>
                 </div>
 
@@ -91,6 +90,10 @@
             ClassicEditor
                 .create(document.querySelector('#editor'), {
                     extraPlugins: [MyCustomUploadAdapterPlugin],
+                   
+                }).then(editor => {
+                    // 在控制台中輸出所有可用的工具列項目名稱
+                    console.log(Array.from(editor.ui.componentFactory.names()));
                 })
                 .catch(error => {
                     console.log(error);

@@ -11,7 +11,7 @@
         <th class="col-1">
             #
         </th>
-        <th class="col-3">
+        <th class="col-4">
             內容
         </th>
         <th class="col-1">
@@ -20,10 +20,10 @@
         <th class="col-1">
             報酬
         </th>
-        <th class="col-1">
+        <th class="col-2">
             更新時間
         </th>
-        <th class="col-2"></th>
+        <th class="col-3"></th>
     </tr>
 
 
@@ -33,6 +33,7 @@
         {
             count++;
             <tr>
+            <td hidden>@i.Id</td>
                 <td hidden>@i.DeputeId</td>
                 <td class="col-1">
                     @count
@@ -50,9 +51,8 @@
                     @i.Depute.Modifiedate.ToString("yyyy/MM/dd HH:mm")
                 </td>
                 <td class="col-3">
-                    @Html.ActionLink("修改", "Edit", "Depute", new { id = i.DeputeId }, new { @class = "btn btn-success" }) |
-                    @Html.ActionLink("詳細資料", "Details", new { id = i.DeputeId }, new { @class = "btn btn-info" }) |
-                    @Html.ActionLink("刪除", "Delete", "Depute", new { id = i.DeputeId }, new { @class = "btn btn-danger" })
+                    @Html.ActionLink("詳細資料", "Details", new { id = i.Id }, new { @class = "btn btn-secondary" }) |
+                    @Html.ActionLink("撤回", "DeleteDeputeRecord", "Depute", new { id = i.Id }, new { @class = "btn btn-danger" })
                 </td>
             </tr>
         }
