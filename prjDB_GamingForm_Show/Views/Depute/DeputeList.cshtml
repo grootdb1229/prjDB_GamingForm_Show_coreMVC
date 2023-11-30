@@ -13,6 +13,9 @@
                 <div class="row g-2">
                     <div class="col-md-15">
                         <input type="text" id="text" name="txtKeyword" class="form-control border-0" placeholder="Keyword" />
+                        <div id="hotkey">
+                            
+                        </div>
                     </div>
                 </div>
             </div>
@@ -21,6 +24,7 @@
             </div>
             <div class="col-md-2">
                 @Html.ActionLink("重設","DeputeList","Depute",null,new{@class ="btn btn-dark border-0 w-100",@id="search",name="txtKeyword"})
+                
             </div>
         </div>
     </div>
@@ -121,6 +125,7 @@
         const selSalary = document.querySelector('#money');
 
         //基本搜尋&&進階搜尋///
+        loadHotkey();
         loadRegion();
         async function loadList() {
             const lstFrag = $(document.createDocumentFragment());
@@ -183,33 +188,59 @@
         async function loadSkill() {
             const SkillFrag = $(document.createDocumentFragment());
             const response = await fetch(`@Url.Content("~/Depute/Skills")?id=${selSkillClasses.value}`);
-             console.log(response);
+             // console.log(response);
             const snd = '<option name="txtSkill" value="null">請選擇...</option>'
             SkillFrag.append(snd);
             const data = await response.json();
-             console.log(data);
+             // console.log(data);
             const Skills = data.map(Skills => `<option name="txtSkill" value='${Skills.skillId}'>${Skills.name}</option>`)
             SkillFrag.append(Skills);
             $('#skill').html(SkillFrag)
-            // selectSkills.innerHTML = Skills.join("");
+            
             // loadList();
         }
 
         async function loadRegion() {
             const RegionFrag = $(document.createDocumentFragment());
             const response = await fetch(`@Url.Content("~/Depute/Region")`);
-            console.log(response);
+            // console.log(response);
             const snd = '<option name="txtRegion" value="null">請選擇...</option>'
             RegionFrag.append(snd);
             const data = await response.json();
-            console.log(data);
+            // console.log(data);
             const Regions = data.map(Regions => `<option name="txtRegion" value='${Regions.regionId}'>${Regions.city}</option>`)
             RegionFrag.append(Regions);
             $('#regions').html(RegionFrag)
             loadSkillClassess();
         }
         
-        
+        //熱門關鍵字:
+        async function loadHotkey() {
+            const HkFrag = $(document.createDocumentFragment());
+            const response = await fetch(`@Url.Content("~/Depute/Hotkey/3")`);
+            // console.log(response);
+            const snd = '<span class="text-truncate me-3">熱門關鍵字 :</span>'
+            HkFrag.append(snd);
+            const data = await response.json();
+            console.log(data);
+            const Hotkeys = data.map(Hotkeys => `<span style="flex:content;width:auto;text-align:center" name="txtKeyword">${Hotkeys} </span>`)
+            HkFrag.append(Hotkeys);
+            $('#hotkey').html(HkFrag)
+            
+        }
+        $('#hotkey').click(function () {
+            $.getJSON('@Url.Content("~/depute/HotKey")', (datas) => {
+                const hkFrag = $(document.createDocumentFragment());
+                $.each(datas, (index, hotkey) => {
+                    console.log(hotkey);
+                    // <li class="list-group-item" > An item < /li>
+                    const li = $('<span></span>').text(hotkey).addClass('text-truncate me-3');
+                    hkFrag.append(li);
+                })
+                $('#hotkey').html(hkFrag);
+            })
+            $('#divAlert').text("JSON")
+        })
 
 
     </script>
