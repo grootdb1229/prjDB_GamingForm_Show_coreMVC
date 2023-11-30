@@ -29,68 +29,97 @@ namespace prjDB_GamingForm_Show.Controllers
                 _host = host;
                 _db = db;
             }
-            public List<CShopPageViewModel> List { get; set; }
-            public IActionResult test()
+            //public List<CShopPageViewModel> List { get; set; }
+            public IActionResult test(CKeyWord ck)
             {
+                String CK = ck.txtKeyword;
                 _db.ProductTags.Load();
                 _db.Products.Load();
                 _db.SubTags.Load();
-                List = new List<CShopPageViewModel>();
+                List<CShopPageViewModel> List = new List<CShopPageViewModel>();
                 CShopPageViewModel Pdb = null;
-                //if (string.IsNullOrEmpty())
-                //{
+                if (string.IsNullOrEmpty(CK))
+                {
                     var data = (from n in _db.ProductTags
-                               where n.Product.StatusId == 1
-                               select new
-                               {
-                                   n.Product.ProductId,
-                                   n.Product.ProductName,
-                                   n.Product.Price,
-                                   n.Product.FImagePath,
-                                   n.SubTag.Name
-                               }).ToList();
+                                where n.Product.StatusId == 1
+                                select new
+                                {
+                                    n.Product.ProductId,
+                                    n.Product.ProductName,
+                                    n.Product.Price,
+                                    n.Product.FImagePath,
+                                    n.SubTag.Name
+                                }).ToList();
                     foreach (var item in data)
                     {
-                    //var tagname = _db.ProductTags.Where(x => x.ProductId == item.ProductId).Select(x => x.SubTag.Name ).ToList();
-                        //from x in _db.ProductTags
-                        //          where x.ProductId == item.ProductId
-                        //          select x.SubTag.Name;
+                        string s = "";
+                        var tagname = _db.ProductTags.Where(x => x.ProductId == item.ProductId).Select(x => x.SubTag.Name).ToList();
+                        foreach (var t in tagname)
+                        {
+                            s += t.ToString() + "/";
+                        }
                         Pdb = new CShopPageViewModel
                         {
                             ProductId = item.ProductId,
                             ProductName = item.ProductName,
                             Price = item.Price,
                             FImagePath = item.FImagePath,
-                            SubTagName = item.Name
+                            SubTagName = s
                         };
-                    List.Add(Pdb);
+                        List.Add(Pdb);
                     };
+                }
+                else
+                {
+                    var data = from n in _db.ProductTags
+                               where n.Product.ProductName.Contains(CK) && n.Product.StatusId == 1
+                               select new
+                               {
+                                   n.Product.ProductId,
+                                   n.Product.ProductName,
+                                   n.Product.Price,
+                                   n.Product.FImagePath,
+                                   SubTagName = n.SubTag.Name
+                               };
+                    foreach (var item in data)
+                    {
+                        string s = "";
+                        var tagname = _db.ProductTags.Where(x => x.ProductId == item.ProductId).Select(x => x.SubTag.Name).ToList();
+                        foreach (var t in tagname)
+                        {
+                            s += t.ToString() + "/";
+                        }
+                        Pdb = new CShopPageViewModel
+                        {
+                            ProductId = item.ProductId,
+                            ProductName = item.ProductName,
+                            Price = item.Price,
+                            FImagePath = item.FImagePath,
+                            SubTagName = s
+                        };
+                        List.Add(Pdb);
+                    };
+                }
+                bool flag = false;
+                List<CShopPageViewModel> List2 = new List<CShopPageViewModel>();
+                List2.Add(List[0]);
+                for (int i = 1; i < List.Count; i++)
+                {
+                    for (int j = 0; j < List2.Count; j++)
+                    {
+                        if (List[i].ProductId == List2[j].ProductId)
+                        {
+                            flag=true; 
+                            break;
+                        }
+                    }
+                    if (flag == false)
+                    { 
+                        List2.Add(List[i]);
+                    }
+                    flag = false;
+                }
 
-                //}
-                //else
-                //{
-                    //var data = from n in _db.ProductTags
-                    //           where n.Product.ProductName.Contains(CK) && n.Product.StatusId == 1
-                    //           select new
-                    //           {
-                    //               n.Product.ProductId,
-                    //               n.Product.ProductName,
-                    //               n.Product.Price,
-                    //               n.Product.FImagePath,
-                    //               SubTagName = n.SubTag.Name
-                    //           };
-                    //foreach (var item in data)
-                    //{
-                    //    Pdb = new CShopPageViewModel
-                    //    {
-                    //        ProductId = item.ProductId,
-                    //        ProductName = item.ProductName,
-                    //        Price = item.Price,
-                    //        FImagePath = item.FImagePath,
-                    //        SubTagName = item.SubTagName
-                    //    };
-                    //};
-                //}
                 string json = "";
                 ViewBag.Car = 0;
                 if (HttpContext.Session.Keys.Contains(CDictionary.SK_PURCHASED_PRODUCES_LIST))
@@ -99,7 +128,8 @@ namespace prjDB_GamingForm_Show.Controllers
                     List<ShoppingCar> car = JsonSerializer.Deserialize<List<ShoppingCar>>(json);
                     ViewBag.Car = car.Count();
                 }
-                return View(List);
+                List = List.Distinct().ToList();
+                return View(List2);
             }
             public IActionResult Index(CKeyWord ck)
             {
@@ -115,7 +145,7 @@ namespace prjDB_GamingForm_Show.Controllers
                 _db.ProductTags.Load();
                 _db.Products.Load();
                 _db.SubTags.Load();
-                List = new List<CShopPageViewModel>();
+                List<CShopPageViewModel> List = new List<CShopPageViewModel>();
                 CShopPageViewModel Pdb = null;
                 String CK = ck.txtKeyword;
                 if (string.IsNullOrEmpty(CK))

@@ -54,7 +54,7 @@
                             {
                                 @Html.ActionLink("發表文章", "ArticleCreate", "Blog", new { FId = Model.blogs.FirstOrDefault().BlogId }, new { id = "btnCreate",@class="btn" })
                             }
-                        }
+                                                    }
                     </li>
                 </ul>
             <div class="nav-menu">
@@ -83,15 +83,16 @@
 
             <th>
                 <h4 style="color:antiquewhite;text-align:center">
-
-                    @Html.DisplayNameFor(model => model.articles.FirstOrDefault().Title)
+                    文章標題
+                    @* @Html.DisplayNameFor(model => model.articles.FirstOrDefault().Title) *@
                 </h4>
             </th>
 
 
             <th>
                 <h4 style="color:antiquewhite;text-align:center">
-                    @Html.DisplayNameFor(model => model.articles.FirstOrDefault().ModifiedDate)
+                    最後更新時間
+                    @* @Html.DisplayNameFor(model => model.articles.FirstOrDefault().ModifiedDate) *@
                 </h4>
             </th>
             <th>

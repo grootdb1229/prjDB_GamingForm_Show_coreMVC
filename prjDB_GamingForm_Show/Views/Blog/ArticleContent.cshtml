@@ -237,7 +237,7 @@
 
         if (!btnlike.hasAttribute('data-bs-toggle')) {
             btnlike.addEventListener('click', () => {
-                fetch('@Url.Content("~/Blog/Like")?FId=@Model.articles.FirstOrDefault().ArticleId')
+                fetch('@Url.Content("~/Blog/Like")?AFId=@Model.articles.FirstOrDefault().ArticleId')
                     .then(response => response.text())
                     .then(data => {
                         console.log(data)
