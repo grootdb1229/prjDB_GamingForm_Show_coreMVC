@@ -415,6 +415,20 @@
 
             // 將新元素加入訊息區塊
             messageBlock.appendChild(newMessage);
+
+            // 取得當前時間
+            var currentTime = new Date();
+            var timeString = currentTime.toLocaleTimeString();
+
+            // 創建一個 <span> 用於顯示時間
+            var timeSpan = document.createElement("span");
+            timeSpan.innerText = " (" + timeString + ")";
+
+            // 將 <span> 加入訊息內容
+            newMessage.appendChild(timeSpan);
+
+            // 將新元素加入訊息區塊
+            messageBlock.appendChild(newMessage);
         });
 
         //傳送訊息
