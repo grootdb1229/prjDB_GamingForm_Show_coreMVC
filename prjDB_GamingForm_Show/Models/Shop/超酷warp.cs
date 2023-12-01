@@ -117,6 +117,8 @@ namespace prjDB_GamingForm_Show.Models.Shop
 		//public string? LanguageOptions { get; set; 
 
 		public string? GameTagOptions { get; set; }
+		public string? 你曾經選過的標籤 { get; set; }
+
 		[BindNever]
 		public virtual Status? Status
 

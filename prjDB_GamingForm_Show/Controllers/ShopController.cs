@@ -321,8 +321,16 @@ namespace prjDB_GamingForm_Show.Controllers
                 var SelSub = _db.SubTags.Where(p => p.TagId == 1).Select(s => new { s.SubTagId, s.Name }).ToList();
                 return Json(SelSub);
             }
+			public ActionResult WhenYouEditTags(int? id )
+			{
+				_db.ProductTags.Load();
+				//Trace.WriteLine("BBBBB" + id);
+				var SelSub = _db.ProductTags.Where(p => p.ProductId == id).Select(s =>  s.SubTagId ).ToList();
+                //Trace.WriteLine("AAAAA"+SelSub);
+				return Json(SelSub);
+			}
 
-            [HttpPost]
+			[HttpPost]
             public ActionResult Create(超酷warp product) 
             {
                 //Trace.WriteLine("AAAA" + product.GameTagOptions);
@@ -423,8 +431,28 @@ namespace prjDB_GamingForm_Show.Controllers
                      
                     _db.SaveChanges();
                 }
+				if (product.GameTagOptions != null)//確保有選標籤
+				{
+					_db.ProductTags.RemoveRange(_db.ProductTags.Where(x => x.ProductId == product.ProductId));
 
-				//Thread.Sleep(3000);
+
+					List<int> tagsList = product.GameTagOptions.Split(',').Select(int.Parse).ToList();
+					//Trace.WriteLine("AAAA" + tagsList);
+					foreach (var tags in tagsList)
+					{
+						int tagsID = _db.SubTags.FirstOrDefault(x => x.SubTagId == tags).SubTagId;
+						ProductTag productTag = new ProductTag
+						{
+							SubTagId = tagsID,
+							ProductId = x.ProductId
+						};
+
+						_db.ProductTags.Add(productTag);
+					}
+
+					_db.SaveChanges();
+
+				}//Thread.Sleep(3000);
 				return RedirectToAction("Index");
             }
 

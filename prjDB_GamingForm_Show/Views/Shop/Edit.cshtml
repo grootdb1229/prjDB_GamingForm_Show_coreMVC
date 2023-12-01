@@ -16,8 +16,7 @@
 			<h4>請輸入商品資料</h4>
 			<hr />
 			@Html.ValidationSummary(true, "", new { @class = "text-danger" })
-			@Html.HiddenFor(model => model.ProductId)
-
+			@Html.HiddenFor(model => model.ProductId)		
 			<div class="form-group">
 				@Html.LabelFor(model => model.ImageID, htmlAttributes: new { @class = "control-label col-md-2" })
 				<div class="col-md-10">
@@ -166,39 +165,60 @@
 			const TagDiv = document.querySelector('#GameTag .d-flex');
 
 
-			async function LoadLang() { //讀取語言列表
+			async function LoadLang() {
 				const response = await fetch('@Url.Content("~/Shop/language")');
 				const data = await response.json();
 
 				const Language = data.map(x => `
-													<div class="col-3">
-														<label style="margin-bottom: 10px; display: block;">
-																	<input type="checkbox" name="GameTag" value="${x.subTagId}">${x.name}
-														</label>
-													</div>
-												`).join('');
+					<div class="col-3">
+						<label style="margin-bottom: 10px; display: block;">
+							<input type="checkbox" name="GameTag" value="${x.subTagId}">${x.name}
+						</label>
+					</div>
+				`).join('');
 
 				LangDiv.innerHTML = Language;
+
+				
+				await preCheckSelectedTags('LanguageOptions');
 				submitTags();
 			}
 
-
-
-			async function LoadTag() { //讀取遊戲標籤列表
+			async function LoadTag() {
 				const response = await fetch('@Url.Content("~/Shop/GameTag")');
 				const data = await response.json();
 
 				const Tag = data.map(x => `
-													<div class="col-3">
-														<label style="margin-bottom: 10px; display: block;">
-															<input type="checkbox" name="GameTag" value="${x.subTagId}">${x.name}
-														</label>
-													</div>
-												`).join('');
+					<div class="col-3">
+						<label style="margin-bottom: 10px; display: block;">
+							<input type="checkbox" name="GameTag" value="${x.subTagId}">${x.name}
+						</label>
+					</div>
+				`).join('');
 
 				TagDiv.innerHTML = Tag;
+
+			
+				await preCheckSelectedTags('GameTagOptions');
 				submitTags();
 			}
+
+			// 檢查有沒有選過的標籤
+			const productId = document.getElementById('ProductId').value;
+			// console.log(productId);
+			async function preCheckSelectedTags(hiddenInputId) {
+				const selectedTags = await fetch(`@Url.Content("~/Shop/WhenYouEditTags")?id=${productId}`);
+				const selectedTagsData = await selectedTags.json();
+				// console.log(selectedTagsData);
+				selectedTagsData.forEach(tagId => {
+					const checkbox = document.querySelector(`input[name="GameTag"][value="${tagId}"]`);
+					if (checkbox) {
+						checkbox.checked = true;
+					}
+				});
+			}
+
+		
 			LoadLang();
 			LoadTag();
 
