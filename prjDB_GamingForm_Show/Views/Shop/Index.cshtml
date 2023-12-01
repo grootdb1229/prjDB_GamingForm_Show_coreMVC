@@ -94,6 +94,16 @@
                     <!-- Product details-->
                     <div class="card-body p-4">
                         <div class="text-center">
+                            <div>
+                                @{
+                                    string[] tags = item.SubTagName.Split('/');
+                                    foreach (var t in tags)
+                                    {
+                                        <span class="badge text-bg-light">@t</span>
+
+                                    }
+                                }
+                            </div>
                             <!-- Product name-->
                             <h5 class="fw-bolder">@Html.DisplayFor(modelItem => item.ProductName)</h5>
                             <!-- Product reviews-->
@@ -110,12 +120,6 @@
                         </div>
                     </div>
                     
-                       
-                            <div>
-                        <span class="badge text-bg-light">@Html.DisplayFor(modelItem => item.SubTagName)</span>
-                            </div>
-                        
-
                     
 
                     <!-- Product actions-->
