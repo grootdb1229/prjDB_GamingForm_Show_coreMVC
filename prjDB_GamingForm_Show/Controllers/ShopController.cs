@@ -137,9 +137,7 @@ namespace prjDB_GamingForm_Show.Controllers
                 //Todo 商品切成XX個一頁，下面要有1~XX個頁，上面要有選項讓客人決定一頁呈現 20 OR 40個   //補充 蝦皮沒分 大約60件一頁
                 //軟體功能相關
                 //Todo  你的交易邏輯這個版本根本還沒寫上去
-                //Todo  tag選擇後要有DIV去接客人選擇的Subtag，可視化讓客人選擇自己商品的標籤，再用迴圈塞入資料庫
-                //Todo  產品留言功能目前未實作
-                //Todo 熱門銷售排序還沒做
+                //Todo  產品留言功能目前未實作          
                 //Todo  Tag選擇排序還沒做
 
                 _db.ProductTags.Load();
@@ -284,7 +282,7 @@ namespace prjDB_GamingForm_Show.Controllers
             }
 
             [HttpPost]
-            public ActionResult Create(CProductWarp product) 
+            public ActionResult Create(超酷warp product) 
             {
                 //Trace.WriteLine("AAAA" + product.GameTagOptions);
                 if (!ModelState.IsValid)
@@ -343,8 +341,9 @@ namespace prjDB_GamingForm_Show.Controllers
                 Product pdb = _db.Products.FirstOrDefault(p => p.ProductId == id);
                 if (pdb == null)
                 { return RedirectToAction("Index"); }
-                CProductWarp cProductWarp = new CProductWarp();
+				超酷warp cProductWarp = new 超酷warp();
 
+                cProductWarp.FImagePath = pdb.FImagePath;
                 cProductWarp.ProductId = pdb.ProductId;
                 cProductWarp.ProductName = pdb.ProductName;
                 cProductWarp.Price = pdb.Price;
@@ -356,12 +355,12 @@ namespace prjDB_GamingForm_Show.Controllers
             }
 
             [HttpPost]
-            public ActionResult Edit(CProductWarp product) //原Product物件   
+            public ActionResult Edit(超酷warp product) //原Product物件   
             {
                 if (!ModelState.IsValid)
                 {
                     var errors = ModelState.Values.SelectMany(v => v.Errors);
-                    return View((CProductWarp)product);
+                    return View((超酷warp)product);
                 }
 
                 Product x = _db.Products.FirstOrDefault(p => p.ProductId == product.ProductId);
@@ -380,8 +379,7 @@ namespace prjDB_GamingForm_Show.Controllers
                     x.UnitStock = product.UnitStock;
                     x.StatusId = (int)product.StatusID;
                     x.MemberId = product.MemberID;
-                    //目前沒有FirmID跟圖片功能
-                    //MemberID跟StatusID是寫死在CProduct物件中的
+                     
                     _db.SaveChanges();
                 }
 
