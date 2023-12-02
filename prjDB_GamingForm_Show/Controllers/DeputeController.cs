@@ -392,11 +392,11 @@ namespace prjDB_GamingForm_Show.Controllers
             };
             return Json(datas);
         }
-        //public IActionResult deputeStatuses()
-        //{
-            
-        //    return Json();
-        //}
+        public IActionResult deputeStatuses()
+        {
+            var datas = _db.Statuses.Where(_ => _.StatusId == 16 || _.StatusId == 18 || _.StatusId == 19).Select(_ => _);
+            return Json(datas);
+        }
         public IActionResult Regions()
         {
             var datas = _db.Regions.Select(_ => _);

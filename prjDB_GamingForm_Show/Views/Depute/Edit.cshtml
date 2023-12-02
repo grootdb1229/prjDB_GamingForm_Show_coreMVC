@@ -5,7 +5,7 @@
     Layout = "~/Views/Shared/_Layout_DBM.cshtml";
 }
 
-<h2 class="tm-text-primary">委託資訊總覽</h2>
+<h2 class="tm-text-primary">委託資訊修改</h2>
 <hr class="mb-5">
 
 <div class="row">
@@ -51,9 +51,11 @@
                 <label asp-for="StatusId" class="control-label"></label>
                 <input asp-for="StatusId" class="form-control" />
                 <span asp-validation-for="StatusId" class="text-danger"></span>
+                <select name="region" class="form-select" id="selStatus" aria-label="Default select example">
+                </select>
             </div>
             <div class="form-group">
-                <select name="region" class="form-select" id="selRegions" aria-label="Default select example">
+                <select name="region" class="form-select" id="selRegion" aria-label="Default select example">
                 </select>
             </div>
             <div class="form-group">
@@ -72,10 +74,20 @@
         async function loadRegions() {
             const response = await fetch(`@Url.Content("~/depute/regions")`);
             const datas = await response.json();
-            const regions = datas.map(region => `<option value="${region.city}">${region.city}</option>`)
-            document.querySelector("#selRegions").innerHTML = regions.join("");
-            document.querySelector("#selRegions").selectedIndex = @Model.RegionId-1;
+            const regions = datas.map(region => `<option value="${region.city}">${region.city}</option>`);
+            document.querySelector("#selRegion").innerHTML = regions.join("");
+            document.querySelector("#selRegion").selectedIndex = @Model.RegionId-1;
         }
         loadRegions();
+
+        async function loadStatuses() {
+            const response = await fetch(`@Url.Content("~/depute/deputeStatuses")`);
+            const datas = await response.json();
+            console.log(datas);
+            const statuses = datas.map(status => `<option value="${status.name}">${status.name}</option>`);
+            document.querySelector("#selStatus").innerHTML = statuses.join("");
+
+        }
+        loadStatuses();
     </script>
 }

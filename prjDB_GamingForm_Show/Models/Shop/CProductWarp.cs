@@ -33,7 +33,7 @@ namespace prjDB_GamingForm_Show.Models.Shop
 
         [Required( ErrorMessage= "您尚未輸入資訊")]
         [DisplayName("產品名稱")]
-        public string ProductName
+		public string ProductName
         {
             get;
             set;
