@@ -440,8 +440,8 @@
             // 新增：呼叫 SignalR Hub 方法獲取接收者的 SignalR ID
             getSignalRIdByUserName(sendToUserName).then(function (connectionId) {
                 // 修改：傳送訊息時使用接收者的 SignalR ID
-                connection.invoke("SendMessage", selfUserName, message, connectionId).catch(function (err) {
-                    alert('傳送錯誤: ' + err.toString());
+                connection.invoke("SendMessage", selfUserName, message, connectionId, sendToUserName).catch(function (err) {
+                    console.error('傳送錯誤: ' + err.toString());
                 });
             });
         });

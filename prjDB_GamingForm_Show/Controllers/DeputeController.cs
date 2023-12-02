@@ -371,7 +371,6 @@ namespace prjDB_GamingForm_Show.Controllers
             Depute o = _db.Deputes.Where(_ => _.DeputeId == vm.id).FirstOrDefault();
             if (o != null)
             {
-                o.DeputeId = vm.id;
                 o.ProviderId = _memberIdtest;
                 o.StartDate = Convert.ToDateTime(vm.startdate);
                 o.Modifiedate = DateTime.Now;
@@ -391,9 +390,13 @@ namespace prjDB_GamingForm_Show.Controllers
                 skillclasses = _db.SkillClasses.Select(_ => _),
                 skills = _db.Skills.Select(_ => _)
             };
-            //var datas = _db.SkillClasses.Select(_ => _);
             return Json(datas);
         }
+        //public IActionResult deputeStatuses()
+        //{
+            
+        //    return Json();
+        //}
         public IActionResult Regions()
         {
             var datas = _db.Regions.Select(_ => _);
@@ -425,8 +428,8 @@ namespace prjDB_GamingForm_Show.Controllers
                 Modifiedate = DateTime.Now,
                 DeputeContent = vm.deputeContent,
                 Salary = vm.salary,
-                StatusId = 18,
-                //RegionId = _db.Regions.FirstOrDefault(_ => _.City == vm.region).RegionId,
+                StatusId = 18,//懸賞中
+                RegionId = _db.Regions.FirstOrDefault(_ => _.City == vm.region).RegionId,
                 Title = vm.title,
             };
             _db.Deputes.Add(n);
@@ -487,7 +490,6 @@ namespace prjDB_GamingForm_Show.Controllers
                 return RedirectToAction("Personal");
             CDeputeViewModel n = new CDeputeViewModel()
             {
-                id = o.DeputeId,
                 title = o.Title,
                 status = o.Status.Name,
                 count = o.DeputeRecords.Count(),

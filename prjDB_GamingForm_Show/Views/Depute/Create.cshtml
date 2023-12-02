@@ -32,22 +32,22 @@
             </div>
             <div class="form-floating mb-3">
                 <input name="title" class="form-control" id="Title" placeholder="" required/>
-                <label asp-for="Title" for="Title"></label>
+                <label asp-for="Title" for="Title">委託主題</label>
                 <span asp-validation-for="Title" class="text-danger"></span>
             </div>
             <div class="form-floating mb-3">
-                <input name="開始日期" value="@DateTime.Now" class="form-control" disabled />
-                <label asp-for="StartDate" class="control-label"></label>
+                <input name="開始日期" value="@DateTime.Now" class="form-control" hidden />
+                <label asp-for="StartDate" class="control-label">開始時間</label>
                 <span asp-validation-for="StartDate" class="text-danger"></span>
             </div>
             <div class="form-floating mb-3">
-                <input name="更新日期" value="@DateTime.Now" class="form-control" disabled />
-                <label asp-for="Modifiedate" class="control-label"></label>
+                <input name="更新日期" value="@DateTime.Now" class="form-control" hidden />
+                <label asp-for="Modifiedate" class="control-label">更新時間</label>
                 <span asp-validation-for="Modifiedate" class="text-danger"></span>
             </div>
             <div class="form-floating mb-3">
                 <input name="salary" class="form-control" id="Salary" placeholder="" required />
-                <label asp-for="Salary" class="control-label" for="Salary"></label>
+                <label asp-for="Salary" class="control-label" for="Salary">提供報酬</label>
                 <span asp-validation-for="Salary" class="text-danger"></span>
             </div>
             <div>
@@ -56,19 +56,16 @@
                 <input name="StatusId" class="form-control" id="StatusId" placeholder="statusid" value="18" />
             </div>
             <div class="form-floating  mb-3">
-                <select class="form-select" id="selRegions" aria-label="Default select example">
-                    <option selected>請選擇地區</option>
-                    <option value="1">One</option>
-                    <option value="2">Two</option>
-                    <option value="3">Three</option>
+                <select name="region" class="form-select" id="selRegions" aria-label="Default select example">
+                   
                 </select>
-                <label asp-for="RegionId" class="control-label" id="RegionId" placeholder=""></label>
+                <label asp-for="RegionId" class="control-label" id="RegionId" placeholder="">地區</label>
                 @* <input asp-for="RegionId" class="form-control" />
                 <span asp-validation-for="RegionId" class="text-danger"></span> *@
             </div>
             <div class="form-floating mb-3">
                 <textarea asp-for="DeputeContent" class="form-control" style="height:200px" placeholder="在這裡輸入您的委託資訊..." id="DeputeContent" placeholder="" required></textarea>
-                <label asp-for="DeputeContent" class="control-label" for="DeputeContent"></label>
+                <label asp-for="DeputeContent" class="control-label" for="DeputeContent">委託資訊</label>
                 <span asp-validation-for="DeputeContent" class="text-danger"></span>
             </div>
             <div class="row">

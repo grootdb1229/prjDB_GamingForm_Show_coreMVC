@@ -37,6 +37,7 @@
                     <br>
                     <p style="margin:5px"></p>
                     <button type="button" class="btn btn-black" id="btndemo" style="opacity:0 ; transition: opacity 3s ease-in-out">Demo</button>
+                    <button type="button" class="btn btn-black" id="btndemo2" style="opacity:0 ; transition: opacity 3s ease-in-out">Demo2</button>
                 </form>
             </div>
         </div>
@@ -52,6 +53,10 @@
             document.querySelector('#acc').value = "papa@gmail.com";
             document.querySelector('#pwd').value = "papa0625";
         })
+        document.querySelector('#btndemo2').addEventListener('click', () => {
+            document.querySelector('#acc').value = "nana@gmail.com";
+            document.querySelector('#pwd').value = "nana1225";
+        })
         document.addEventListener('DOMContentLoaded',()=>{
             var img = document.getElementById('imglogo');
             var h = document.getElementById('txth');
@@ -61,6 +66,7 @@
             var b1 = document.getElementById('btn1');
             var b2 = document.getElementById('btnre');
             var b3 = document.getElementById('btndemo');
+            var b4 = document.getElementById('btndemo2')
             img.style.opacity = 1;
             h.style.opacity = 1;
             p.style.opacity = 1;
@@ -69,6 +75,7 @@
             b1.style.opacity = 1;
             b2.style.opacity = 1;
             b3.style.opacity = 1;
+            b4.style.opacity = 1;
             
         })
     </script>

@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace prjDB_GamingForm_Show.Models.Entities;
 
 public partial class Admin
 {
+    [Key]
     public int AdminId { get; set; }
 
     public string AdminAccount { get; set; } = null!;
