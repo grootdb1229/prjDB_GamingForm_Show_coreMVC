@@ -35,7 +35,7 @@
 
 <div>
     <div class="row" style="margin:10px auto;width:650px;background-color:#4F4F4F;border-radius:8px;box-shadow:0px 0px 8px 8px #cccccc">
-        <div class="col-md-12">
+        <div class="col-md-12" style="margin:10px 0">
             <form asp-action="ReplyCreate" method="post">
                 <input type="hidden" name="AFId" value=" @Model.articles.First().ArticleId" />
                 <input type="hidden" name="ArticleId" value=" @Model.articles.First().ArticleId" />
