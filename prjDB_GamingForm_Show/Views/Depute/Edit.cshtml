@@ -5,29 +5,29 @@
     Layout = "~/Views/Shared/_Layout_DBM.cshtml";
 }
 
-<h2 class="tm-text-primary">委託資訊總覽</h2>
+<h2 class="tm-text-primary">委託資訊修改</h2>
 <hr class="mb-5">
 
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-10">
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
+            <div class="form-group" hidden>
                 <label asp-for="DeputeId" class="control-label"></label>
                 <input asp-for="DeputeId" class="form-control" />
                 <span asp-validation-for="DeputeId" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group" hidden>
                 <label asp-for="ProviderId" class="control-label"></label>
                 <input asp-for="ProviderId" class="form-control" />
                 <span asp-validation-for="ProviderId" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group" hidden>
                 <label asp-for="StartDate" class="control-label"></label>
                 <input asp-for="StartDate" class="form-control" />
                 <span asp-validation-for="StartDate" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group" hidden>
                 <label asp-for="Modifiedate" class="control-label"></label>
                 <input asp-for="Modifiedate" class="form-control" />
                 <span asp-validation-for="Modifiedate" class="text-danger"></span>
@@ -38,8 +38,8 @@
                 <span asp-validation-for="Title" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="DeputeContent" class="control-label"></label>
-                <input asp-for="DeputeContent" class="form-control" />
+                <label asp-for="DeputeContent" class="form-label"></label>
+                <textarea asp-for="DeputeContent" class="form-control" style="height:200px"></textarea>
                 <span asp-validation-for="DeputeContent" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -51,23 +51,43 @@
                 <label asp-for="StatusId" class="control-label"></label>
                 <input asp-for="StatusId" class="form-control" />
                 <span asp-validation-for="StatusId" class="text-danger"></span>
+                <select name="region" class="form-select" id="selStatus" aria-label="Default select example">
+                </select>
             </div>
             <div class="form-group">
-                <label asp-for="RegionId" class="control-label"></label>
-                <input asp-for="RegionId" class="form-control" />
-                <span asp-validation-for="RegionId" class="text-danger"></span>
+                <select name="region" class="form-select" id="selRegion" aria-label="Default select example">
+                </select>
             </div>
             <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-success" />
+                <a asp-action="personal" class="btn btn-secondary">取消</a>
+                <input type="submit" value="送出並修改" class="btn btn-success" />
             </div>
         </form>
     </div>
 </div>
 
-<div>
-    <a asp-action="personal">Back to List</a>
-</div>
-
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        async function loadRegions() {
+            const response = await fetch(`@Url.Content("~/depute/regions")`);
+            const datas = await response.json();
+            const regions = datas.map(region => `<option value="${region.city}">${region.city}</option>`);
+            document.querySelector("#selRegion").innerHTML = regions.join("");
+            document.querySelector("#selRegion").selectedIndex = @Model.RegionId-1;
+        }
+        loadRegions();
+
+        async function loadStatuses() {
+            const response = await fetch(`@Url.Content("~/depute/deputeStatuses")`);
+            const datas = await response.json();
+            console.log(datas);
+            const statuses = datas.map(status => `<option value="${status.name}">${status.name}</option>`);
+            document.querySelector("#selStatus").innerHTML = statuses.join("");
+
+        }
+        loadStatuses();
+    </script>
 }

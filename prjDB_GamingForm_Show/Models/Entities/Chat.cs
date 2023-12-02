@@ -15,6 +15,8 @@ public partial class Chat
 
     public string ModefiedDate { get; set; } = null!;
 
+    public bool IsCheck { get; set; }
+
     public virtual Admin ReceiveAdminNavigation { get; set; } = null!;
 
     public virtual Admin SenderAdminNavigation { get; set; } = null!;
