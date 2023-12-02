@@ -40,31 +40,31 @@
         foreach (var i in Model)
         {
             count++;
-                <tr>
-                    <td>
-                        @count
-                    </td>
-                    <td>
-                        @i.Title
-                    </td>
-                    <td>
-                        @i.DeputeContent
-                    </td>
-                    <td>
-                        @i.Status.Name
-                    </td>
-                    <td>
-                        @i.Salary.ToString("$###,###,###.00")
-                    </td>
-                    <td>
-                        <button id=`detial${@i.DeputeId}` class="btn btn-light" onclick="individualDetials(@i.DeputeId)">@i.DeputeRecords.Count()</button>
-                    </td>
-                    <td>
-                        @Html.ActionLink("修改", "Edit", "Depute", new { id = i.DeputeId }, new { @class = "btn btn-success" })
-                        <button class="btn btn-secondary btn-ReleaseDeputeDetails" onclick="detailsDepute(@i.DeputeId)">詳細資料</button>
-                        <button class="btn btn-danger btn-ReleaseDeputeDelete" onclick="deleteDeputeAlert(@i.DeputeId)" data_deputeid=@i.DeputeId>刪除</button>
-                    </td>
-                </tr>
+            <tr>
+                <td>
+                    @count
+                </td>
+                <td>
+                    @i.Title
+                </td>
+                <td>
+                    @i.DeputeContent
+                </td>
+                <td>
+                    @i.Status.Name
+                </td>
+                <td>
+                    @i.Salary.ToString("$###,###,###.00")
+                </td>
+                <td>
+                    <button id=`detial${@i.DeputeId}` class="btn btn-light" onclick="individualDetials(@i.DeputeId)">@i.DeputeRecords.Count()</button>
+                </td>
+                <td>
+                    @Html.ActionLink("修改", "Edit", "Depute", new { id = i.DeputeId }, new { @class = "btn btn-success" })
+                    <button class="btn btn-secondary btn-ReleaseDeputeDetails" onclick="detailsDepute(@i.DeputeId)">詳細資料</button>
+                    <button class="btn btn-danger btn-ReleaseDeputeDelete" onclick="deleteDeputeAlert(@i.DeputeId)" data_deputeid=@i.DeputeId>刪除</button>
+                </td>
+            </tr>
         }
     }
 </table>
@@ -101,52 +101,52 @@
 
         const applyers = await datas.map((applyer, index) =>
             `<div class="accordion-item">
-            <h2 class="accordion-header">
-                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse${applyer.memberName}" aria-expanded="false" aria-controls="collapse${applyer.memberName}">
-                ${index + 1}-${applyer.memberName}
-            </button>
-            </h2>
-                <div id="collapse${applyer.memberName}" class="accordion-collapse collapse" data-bs-parent="#accordionExample" style="">
-            <div class="accordion-body">
-                <table class="table">
-          <thead>
-            <tr>
-                  <th style="color:black" scope="col-1">性別</th>
-                  <th style="color:black" scope="col-1">Email</th>
-                  <th style="color:black" scope="col-1">手機</th>
-                  <th style="color:black" scope="col-1">生日</th>
-                  <th style="color:black" scope="col-1">會員自我介紹</th>
-                  <th style="color:black" scope="col-1">狀態</th>
-                  <th style="color:black" scope="col-1">狀態管理</th>
-                  <th style="color:black" scope="col-1"></th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-                  <td class="align-middle" style="color:black">${applyer.applyerGender}</td>
-                  <td class="align-middle" style="color:black">${applyer.applyerEmail}</td>
-                  <td class="align-middle" style="color:black">${applyer.applyerPhone}</td>
-                  <td class="align-middle" style="color:black">${applyer.applyerBirth}</td>
-                  <td class="align-middle" style="color:black">${applyer.applyerComment}</td>
-                  <td class="align-middle" style="color:black">${applyer.status}</td>
-                  <td class="align-middle" style="color:black">
-                   <select class="form-select" aria-label="Default select example">
-                    <option selected>請選擇欲修改的狀態</option>
-                    <option value="7">審核中</option>
-                    <option value="8">拒絕</option>
-                    <option value="10">合作中</option>
-                    <option value="11">備取</option>
-                   </select>
-                  </td>
-                  <td>
-                   <button class="btn btn-info" onclick="">更改</button>
-                  </td>
-            </tr>
-          </tbody>
-        </table>
-            </div>
-            </div>
-            </div>`);
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse${applyer.memberName}" aria-expanded="false" aria-controls="collapse${applyer.memberName}">
+                    ${index + 1}-${applyer.memberName}
+                </button>
+                </h2>
+                    <div id="collapse${applyer.memberName}" class="accordion-collapse collapse" data-bs-parent="#accordionExample" style="">
+                <div class="accordion-body">
+                    <table class="table">
+              <thead>
+                <tr>
+                      <th style="color:black" scope="col-1">性別</th>
+                      <th style="color:black" scope="col-1">Email</th>
+                      <th style="color:black" scope="col-1">手機</th>
+                      <th style="color:black" scope="col-1">生日</th>
+                      <th style="color:black" scope="col-1">會員自我介紹</th>
+                      <th style="color:black" scope="col-1">狀態</th>
+                      <th style="color:black" scope="col-1">狀態管理</th>
+                      <th style="color:black" scope="col-1"></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                      <td class="align-middle" style="color:black">${applyer.applyerGender}</td>
+                      <td class="align-middle" style="color:black">${applyer.applyerEmail}</td>
+                      <td class="align-middle" style="color:black">${applyer.applyerPhone}</td>
+                      <td class="align-middle" style="color:black">${applyer.applyerBirth}</td>
+                      <td class="align-middle" style="color:black">${applyer.applyerComment}</td>
+                      <td class="align-middle" style="color:black">${applyer.status}</td>
+                      <td class="align-middle" style="color:black">
+                       <select class="form-select" aria-label="Default select example">
+                        <option selected>請選擇欲修改的狀態</option>
+                        <option value="7">審核中</option>
+                        <option value="8">拒絕</option>
+                        <option value="10">合作中</option>
+                        <option value="11">備取</option>
+                       </select>
+                      </td>
+                      <td>
+                       <button class="btn btn-info" onclick="">更改</button>
+                      </td>
+                </tr>
+              </tbody>
+            </table>
+                </div>
+                </div>
+                </div>`);
         const titleapplyer = await document.querySelector('#accordionExample');
         titleapplyer.innerHTML = applyers.join("");
     }
@@ -209,61 +209,61 @@
 
         Swal.fire({
             title: `<div class=" bg-dark">詳細資料</div>`,
-            html:  `<div class="text-reset"> <ul class="list-group ">
-                    <li class="list-group-item bg-dark d-flex justify-content-between align-items-start">
-                    <div class="ms-2 me-auto"  >
-                    <div class="fw-bold" style="text-align:left;">標題</div>
-                    <div style="text-align:left;">${data.title}</div>
-                    </div>
-                    </li>
-                    <li class="list-group-item bg-dark d-flex justify-content-between align-items-start">
-                    <div class="ms-2 me-auto" style=":black">
-                    <div class="fw-bold" style="text-align:left;">內容</div>
-                    <div style="text-align:left;">${data.deputeContent}</div>
-                    </div>
-                    </li>
-                    <li class="list-group-item bg-dark d-flex justify-content-between align-items-start">
-                    <div class="ms-2 me-auto" style=":black">
-                    <div class="fw-bold" style="text-align:left;">地區</div>
-                    <div style="text-align:left;">${data.region}</div>
-                    </div>
-                    </li>
-                    <li class="list-group-item bg-dark d-flex justify-content-between align-items-start">
-                    <div class="ms-2 me-auto" style=":black">
-                    <div class="fw-bold" style="text-align:left;">狀態</div>
-                    <div style="text-align:left;">${data.status}</div>
-                    </div>
-                    </li>
-                    <li class="list-group-item bg-dark d-flex justify-content-between align-items-start">
-                    <div class="ms-2 me-auto" style=":black">
-                    <div class="fw-bold" style="text-align:left;">應徵人數</div>
-                    <div style="text-align:left;">${data.count}</div>
-                    </div>
-                    </li>
-                    <li class="list-group-item bg-dark d-flex justify-content-between align-items-start">
-                    <div class="ms-2 me-auto" style=":black">
-                    <div class="fw-bold" style="text-align:left;">報酬</div>
-                    <div style="text-align:left;">${data.salary}</div>
-                    </div>
-                    </li>
-                    <li class="list-group-item bg-dark d-flex justify-content-between align-items-start">
-                    <div class="ms-2 me-auto" style=":black">
-                    <div class="fw-bold" style="text-align:left;">雇主姓名</div>
-                    <div style="text-align:left;">${data.providername}</div>
-                    </div>
-                    </li>
-                    <li class="list-group-item bg-dark d-flex justify-content-between align-items-start">
-                    <div class="ms-2 me-auto" style=":black">
-                    <div class="fw-bold" style="text-align:left;">發佈日期</div>
-                    <div style="text-align:left;">${data.startdate}</div>
-                    </div>
-                    </li>
-                    <li class="list-group-item bg-dark d-flex justify-content-between align-items-start">
-                    <div class="ms-2 me-auto" style=":black">
-                    <div class="fw-bold" style="text-align:left;">更新日期</div>
-                    <div style="text-align:left;">${data.modifieddate}</div>
-                    </div>
-                    </ul></div>`,
+            html: `<div class="text-reset"> <ul class="list-group ">
+                        <li class="list-group-item bg-dark d-flex justify-content-between align-items-start">
+                        <div class="ms-2 me-auto"  >
+                        <div class="fw-bold" style="text-align:left;">標題</div>
+                        <div style="text-align:left;">${data.title}</div>
+                        </div>
+                        </li>
+                        <li class="list-group-item bg-dark d-flex justify-content-between align-items-start">
+                        <div class="ms-2 me-auto" style=":black">
+                        <div class="fw-bold" style="text-align:left;">內容</div>
+                        <div style="text-align:left;">${data.deputeContent}</div>
+                        </div>
+                        </li>
+                        <li class="list-group-item bg-dark d-flex justify-content-between align-items-start">
+                        <div class="ms-2 me-auto" style=":black">
+                        <div class="fw-bold" style="text-align:left;">地區</div>
+                        <div style="text-align:left;">${data.region}</div>
+                        </div>
+                        </li>
+                        <li class="list-group-item bg-dark d-flex justify-content-between align-items-start">
+                        <div class="ms-2 me-auto" style=":black">
+                        <div class="fw-bold" style="text-align:left;">狀態</div>
+                        <div style="text-align:left;">${data.status}</div>
+                        </div>
+                        </li>
+                        <li class="list-group-item bg-dark d-flex justify-content-between align-items-start">
+                        <div class="ms-2 me-auto" style=":black">
+                        <div class="fw-bold" style="text-align:left;">應徵人數</div>
+                        <div style="text-align:left;">${data.count}</div>
+                        </div>
+                        </li>
+                        <li class="list-group-item bg-dark d-flex justify-content-between align-items-start">
+                        <div class="ms-2 me-auto" style=":black">
+                        <div class="fw-bold" style="text-align:left;">報酬</div>
+                        <div style="text-align:left;">${data.salary}</div>
+                        </div>
+                        </li>
+                        <li class="list-group-item bg-dark d-flex justify-content-between align-items-start">
+                        <div class="ms-2 me-auto" style=":black">
+                        <div class="fw-bold" style="text-align:left;">雇主姓名</div>
+                        <div style="text-align:left;">${data.providername}</div>
+                        </div>
+                        </li>
+                        <li class="list-group-item bg-dark d-flex justify-content-between align-items-start">
+                        <div class="ms-2 me-auto" style=":black">
+                        <div class="fw-bold" style="text-align:left;">發佈日期</div>
+                        <div style="text-align:left;">${data.startdate}</div>
+                        </div>
+                        </li>
+                        <li class="list-group-item bg-dark d-flex justify-content-between align-items-start">
+                        <div class="ms-2 me-auto" style=":black">
+                        <div class="fw-bold" style="text-align:left;">更新日期</div>
+                        <div style="text-align:left;">${data.modifieddate}</div>
+                        </div>
+                        </ul></div>`,
             background: "#343a40"
         });
     }

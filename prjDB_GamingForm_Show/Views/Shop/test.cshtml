@@ -88,7 +88,8 @@
                         string[] tags = item.SubTagName.Split('/');
                         foreach (var t in tags)
                         {
-                            <li>@t</li>
+                                <span class="badge text-bg-light">@t</span>
+                            // <li>@t</li>
                         }
                     }
                         @*@Html.DisplayFor(modelItem => item.SubTagName)*@

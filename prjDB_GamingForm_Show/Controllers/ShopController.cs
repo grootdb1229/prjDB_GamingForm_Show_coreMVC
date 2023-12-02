@@ -1,4 +1,5 @@
 ﻿using DB_GamingForm_Show.Job.DeputeClass;
+using MailKit.Search;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
@@ -7,8 +8,10 @@ using prjDB_GamingForm_Show.Models;
 using prjDB_GamingForm_Show.Models.Entities;
 using prjDB_GamingForm_Show.Models.Shop;
 using prjDB_GamingForm_Show.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Dynamic;
 using System.Linq;
 using System.Reflection.PortableExecutable;
 using System.Security.Cryptography.Xml;
@@ -30,8 +33,118 @@ namespace prjDB_GamingForm_Show.Controllers
                 _db = db;
             }
             //public List<CShopPageViewModel> List { get; set; }
-            public IActionResult test(CKeyWord ck)
+            //public IActionResult test(CKeyWord ck)
+            //{
+            //    String CK = ck.txtKeyword;
+            //    _db.ProductTags.Load();
+            //    _db.Products.Load();
+            //    _db.SubTags.Load();
+            //    List<CShopPageViewModel> List = new List<CShopPageViewModel>();
+            //    CShopPageViewModel Pdb = null;
+            //    if (string.IsNullOrEmpty(CK))
+            //    {
+            //        var data = (from n in _db.ProductTags
+            //                    where n.Product.StatusId == 1
+            //                    select new
+            //                    {
+            //                        n.Product.ProductId,
+            //                        n.Product.ProductName,
+            //                        n.Product.Price,
+            //                        n.Product.FImagePath,
+            //                        n.SubTag.Name
+            //                    }).ToList();
+            //        foreach (var item in data)
+            //        {
+            //            string s = "";
+            //            var tagname = _db.ProductTags.Where(x => x.ProductId == item.ProductId).Select(x => x.SubTag.Name).ToList();
+            //            foreach (var t in tagname)
+            //            {
+            //                s += t.ToString() + "/";
+            //            }
+            //            Pdb = new CShopPageViewModel
+            //            {
+            //                ProductId = item.ProductId,
+            //                ProductName = item.ProductName,
+            //                Price = item.Price,
+            //                FImagePath = item.FImagePath,
+            //                SubTagName = s
+            //            };
+            //            List.Add(Pdb);
+            //        };
+            //    }
+            //    else
+            //    {
+            //        var data = from n in _db.ProductTags
+            //                   where n.Product.ProductName.Contains(CK) && n.Product.StatusId == 1
+            //                   select new
+            //                   {
+            //                       n.Product.ProductId,
+            //                       n.Product.ProductName,
+            //                       n.Product.Price,
+            //                       n.Product.FImagePath,
+            //                       SubTagName = n.SubTag.Name
+            //                   };
+            //        foreach (var item in data)
+            //        {
+            //            string s = "";
+            //            var tagname = _db.ProductTags.Where(x => x.ProductId == item.ProductId).Select(x => x.SubTag.Name).ToList();
+            //            foreach (var t in tagname)
+            //            {
+            //                s += t.ToString() + "/";
+            //            }
+            //            Pdb = new CShopPageViewModel
+            //            {
+            //                ProductId = item.ProductId,
+            //                ProductName = item.ProductName,
+            //                Price = item.Price,
+            //                FImagePath = item.FImagePath,
+            //                SubTagName = s
+            //            };
+            //            List.Add(Pdb);
+            //        };
+            //    }
+            //    bool flag = false;
+            //    List<CShopPageViewModel> List2 = new List<CShopPageViewModel>();
+            //    List2.Add(List[0]);
+            //    for (int i = 1; i < List.Count; i++)
+            //    {
+            //        for (int j = 0; j < List2.Count; j++)
+            //        {
+            //            if (List[i].ProductId == List2[j].ProductId)
+            //            {
+            //                flag=true; 
+            //                break;
+            //            }
+            //        }
+            //        if (flag == false)
+            //        { 
+            //            List2.Add(List[i]);
+            //        }
+            //        flag = false;
+            //    }
+
+            //    string json = "";
+            //    ViewBag.Car = 0;
+            //    if (HttpContext.Session.Keys.Contains(CDictionary.SK_PURCHASED_PRODUCES_LIST))
+            //    {
+            //        json = HttpContext.Session.GetString(CDictionary.SK_PURCHASED_PRODUCES_LIST);
+            //        List<ShoppingCar> car = JsonSerializer.Deserialize<List<ShoppingCar>>(json);
+            //        ViewBag.Car = car.Count();
+            //    }
+            //    List = List.Distinct().ToList();
+            //    return View(List2);
+            //}
+            public IActionResult Index(CKeyWord ck)
             {
+                //UI相關
+                //Todo 商品切成XX個一頁，下面要有1~XX個頁，上面要有選項讓客人決定一頁呈現 20 OR 40個   //補充 蝦皮沒分 大約60件一頁
+                //軟體功能相關
+                //Todo  你的交易邏輯這個版本根本還沒寫上去
+                //Todo  tag選擇後要有DIV去接客人選擇的Subtag，可視化讓客人選擇自己商品的標籤，再用迴圈塞入資料庫
+                //Todo  產品留言功能目前未實作
+                //Todo 熱門銷售排序還沒做
+                //Todo  Tag選擇排序還沒做
+
                 String CK = ck.txtKeyword;
                 _db.ProductTags.Load();
                 _db.Products.Load();
@@ -109,12 +222,12 @@ namespace prjDB_GamingForm_Show.Controllers
                     {
                         if (List[i].ProductId == List2[j].ProductId)
                         {
-                            flag=true; 
+                            flag = true;
                             break;
                         }
                     }
                     if (flag == false)
-                    { 
+                    {
                         List2.Add(List[i]);
                     }
                     flag = false;
@@ -128,86 +241,12 @@ namespace prjDB_GamingForm_Show.Controllers
                     List<ShoppingCar> car = JsonSerializer.Deserialize<List<ShoppingCar>>(json);
                     ViewBag.Car = car.Count();
                 }
-                List = List.Distinct().ToList();
-                return View(List2);
-            }
-            public IActionResult Index(CKeyWord ck)
-            {
-                //UI相關
-                //Todo 商品切成XX個一頁，下面要有1~XX個頁，上面要有選項讓客人決定一頁呈現 20 OR 40個   //補充 蝦皮沒分 大約60件一頁
-                //軟體功能相關
-                //Todo  你的交易邏輯這個版本根本還沒寫上去
-                //Todo  tag選擇後要有DIV去接客人選擇的Subtag，可視化讓客人選擇自己商品的標籤，再用迴圈塞入資料庫
-                //Todo  產品留言功能目前未實作
-                //Todo 熱門銷售排序還沒做
-                //Todo  Tag選擇排序還沒做
 
-                _db.ProductTags.Load();
-                _db.Products.Load();
-                _db.SubTags.Load();
-                List<CShopPageViewModel> List = new List<CShopPageViewModel>();
-                CShopPageViewModel Pdb = null;
-                String CK = ck.txtKeyword;
-                if (string.IsNullOrEmpty(CK))
-                {
-                    var data = from n in _db.ProductTags
-                               where n.Product.StatusId == 1
-                               select new 
-                               {
-                                   n.Product.ProductId,
-                                   n.Product.ProductName,
-                                   n.Product.Price,
-                                   n.Product.FImagePath,
-                                   n.SubTag.Name
-                               };
-                    foreach (var item in data)
-                    {
-                        Pdb = new CShopPageViewModel
-                        {
-                            ProductId = item.ProductId,
-                            ProductName=item.ProductName,
-                            Price = item.Price,
-                            FImagePath = item.FImagePath,
-                            SubTagName = item.Name
-                        };
-                        List.Add(Pdb);
-                    };
-                   
-                }
-                else
-                {
-                    var data = from n in _db.ProductTags
-                               where n.Product.ProductName.Contains(CK) && n.Product.StatusId == 1
-                               select new
-                               {
-                                   n.Product.ProductId,
-                                   n.Product.ProductName,
-                                   n.Product.Price,
-                                   n.Product.FImagePath,
-                                   n.SubTag.Name
-                               };
-                    foreach (var item in data)
-                    {
-                        Pdb = new CShopPageViewModel
-                        {
-                            ProductId = item.ProductId,
-                            ProductName = item.ProductName,
-                            Price = item.Price,
-                            FImagePath = item.FImagePath,
-                            SubTagName = item.Name
-                        };
-                        List.Add(Pdb);
-                    };
-                }
-                string json = "";
-                ViewBag.Car = 0;
-                if (HttpContext.Session.Keys.Contains(CDictionary.SK_PURCHASED_PRODUCES_LIST))
-                {
-                    json = HttpContext.Session.GetString(CDictionary.SK_PURCHASED_PRODUCES_LIST);
-                    List<ShoppingCar> car = JsonSerializer.Deserialize<List<ShoppingCar>>(json);
-                    ViewBag.Car = car.Count();
-                }
-                return View(List);
+                var tags=_db.Tags.Where(x=>x.TagId>0&&x.TagId<4).Select(x=>x.Name);
+                //dynamic myModels = new ExpandoObject();      
+                //myModels.product = List2; 
+                //myModels.customerdetail = tags;
+                return View(List2);
 
             }
 
@@ -269,25 +308,7 @@ namespace prjDB_GamingForm_Show.Controllers
                 _db.Products.Load();
                 return View();
             }
-            //public ActionResult CreateTag()
-            //{
-            //    var Tag = _db.Tags.Where(p => p.TagId <= 3).Select(t => new { t.TagId, t.Name }).ToList();
-
-            //    return Json(Tag);
-            //}
-            //public ActionResult SubTag(int? id)
-            //{
-            //    _db.SubTags.Load();
-            //    var Tag = _db.SubTags.Where(p => p.TagId == id).Select(s => new { s.SubTagId, s.Name }).ToList();
-            //    return Json(Tag);
-            //}
-
-            //public ActionResult SelSubTag(int? id)
-            //{
-            //    _db.SubBlogs.Load();
-            //    var SelSub = _db.SubTags.Where(p => p.SubTagId == id).Select(s => new { s.SubTagId, s.Name }).ToList();
-            //    return Json(SelSub);
-            //}
+         
             public ActionResult language()
             {
                 _db.SubTags.Load();
@@ -300,9 +321,17 @@ namespace prjDB_GamingForm_Show.Controllers
                 var SelSub = _db.SubTags.Where(p => p.TagId == 1).Select(s => new { s.SubTagId, s.Name }).ToList();
                 return Json(SelSub);
             }
+			public ActionResult WhenYouEditTags(int? id )
+			{
+				_db.ProductTags.Load();
+				//Trace.WriteLine("BBBBB" + id);
+				var SelSub = _db.ProductTags.Where(p => p.ProductId == id).Select(s =>  s.SubTagId ).ToList();
+                //Trace.WriteLine("AAAAA"+SelSub);
+				return Json(SelSub);
+			}
 
-            [HttpPost]
-            public ActionResult Create(CProductWarp product) 
+			[HttpPost]
+            public ActionResult Create(超酷warp product) 
             {
                 //Trace.WriteLine("AAAA" + product.GameTagOptions);
                 if (!ModelState.IsValid)
@@ -361,8 +390,9 @@ namespace prjDB_GamingForm_Show.Controllers
                 Product pdb = _db.Products.FirstOrDefault(p => p.ProductId == id);
                 if (pdb == null)
                 { return RedirectToAction("Index"); }
-                CProductWarp cProductWarp = new CProductWarp();
+				超酷warp cProductWarp = new 超酷warp();
 
+                cProductWarp.FImagePath = pdb.FImagePath;
                 cProductWarp.ProductId = pdb.ProductId;
                 cProductWarp.ProductName = pdb.ProductName;
                 cProductWarp.Price = pdb.Price;
@@ -374,12 +404,12 @@ namespace prjDB_GamingForm_Show.Controllers
             }
 
             [HttpPost]
-            public ActionResult Edit(CProductWarp product) //原Product物件   
+            public ActionResult Edit(超酷warp product) //原Product物件   
             {
                 if (!ModelState.IsValid)
                 {
                     var errors = ModelState.Values.SelectMany(v => v.Errors);
-                    return View((CProductWarp)product);
+                    return View((超酷warp)product);
                 }
 
                 Product x = _db.Products.FirstOrDefault(p => p.ProductId == product.ProductId);
@@ -398,11 +428,31 @@ namespace prjDB_GamingForm_Show.Controllers
                     x.UnitStock = product.UnitStock;
                     x.StatusId = (int)product.StatusID;
                     x.MemberId = product.MemberID;
-                    //目前沒有FirmID跟圖片功能
-                    //MemberID跟StatusID是寫死在CProduct物件中的
+                     
                     _db.SaveChanges();
                 }
-				//Thread.Sleep(3000);
+				if (product.GameTagOptions != null)//確保有選標籤
+				{
+					_db.ProductTags.RemoveRange(_db.ProductTags.Where(x => x.ProductId == product.ProductId));
+
+
+					List<int> tagsList = product.GameTagOptions.Split(',').Select(int.Parse).ToList();
+					//Trace.WriteLine("AAAA" + tagsList);
+					foreach (var tags in tagsList)
+					{
+						int tagsID = _db.SubTags.FirstOrDefault(x => x.SubTagId == tags).SubTagId;
+						ProductTag productTag = new ProductTag
+						{
+							SubTagId = tagsID,
+							ProductId = x.ProductId
+						};
+
+						_db.ProductTags.Add(productTag);
+					}
+
+					_db.SaveChanges();
+
+				}//Thread.Sleep(3000);
 				return RedirectToAction("Index");
             }
 
@@ -435,29 +485,38 @@ namespace prjDB_GamingForm_Show.Controllers
                 return View();
             }
 
+            public IActionResult payment()
+            { 
+              _db.Payments.Load();
+                var payment = _db.Payments.Select(x => x);
+                return Json(payment);
+            }
             [HttpPost]
             public IActionResult AddToCar(CShoppingCarViewModel vm)
             {
+               
                 Product product = _db.Products.FirstOrDefault(x => x.ProductId == vm.ProductID);
                 if (product != null)
                 {
                     string json = "";
-                    List<ShoppingCar> car = null;
+                    List<CShoppingCarViewModel> car = null;
                     if (HttpContext.Session.Keys.Contains(CDictionary.SK_PURCHASED_PRODUCES_LIST))
                     {
                         json = HttpContext.Session.GetString(CDictionary.SK_PURCHASED_PRODUCES_LIST);
-                        car = JsonSerializer.Deserialize<List<ShoppingCar>>(json);
+                        car = JsonSerializer.Deserialize<List<CShoppingCarViewModel>>(json);
                     }
                     else
                     {
-                        car = new List<ShoppingCar>();
+                        car = new List<CShoppingCarViewModel>();
                     }
-                    ShoppingCar x = new ShoppingCar();
+                    CShoppingCarViewModel x = new CShoppingCarViewModel();
                     x.Price = (decimal)product.Price;
                     x.ProductName = product.ProductName;
+                    x.FImagePath = product.FImagePath;
                     x.Count = vm.txtCount;
                     x.ProductID = product.ProductId;
-                    x.product = product;
+                    
+
                     car.Add(x);
                     json = JsonSerializer.Serialize(car);
                     HttpContext.Session.SetString(CDictionary.SK_PURCHASED_PRODUCES_LIST, json);
@@ -474,11 +533,12 @@ namespace prjDB_GamingForm_Show.Controllers
                     return RedirectToAction("Index");
                 }
                 string json = HttpContext.Session.GetString(CDictionary.SK_PURCHASED_PRODUCES_LIST);
-                List<ShoppingCar> car = JsonSerializer.Deserialize<List<ShoppingCar>>(json);
+                List<CShoppingCarViewModel> car = JsonSerializer.Deserialize<List<CShoppingCarViewModel>>(json);
                 if (car == null)
                 {
                     return RedirectToAction("Index");
                 }
+                
                 ViewBag.Car = car.Count();
                 return View(car);
             }
@@ -486,8 +546,8 @@ namespace prjDB_GamingForm_Show.Controllers
             public IActionResult DeleteFromCar(int id)////應該能正常移除購物車了/////
             {
                 string json = HttpContext.Session.GetString(CDictionary.SK_PURCHASED_PRODUCES_LIST);
-                List<ShoppingCar> car = JsonSerializer.Deserialize<List<ShoppingCar>>(json);
-                ShoppingCar x = car.FirstOrDefault(p => p.ProductID == id);
+                List<CShoppingCarViewModel> car = JsonSerializer.Deserialize<List<CShoppingCarViewModel>>(json);
+                CShoppingCarViewModel x = car.FirstOrDefault(p => p.ProductID == id);
                 if (x != null)
                 {
                     car.Remove(x);
@@ -502,21 +562,23 @@ namespace prjDB_GamingForm_Show.Controllers
             public IActionResult EditCar(CShoppingCarViewModel vm)
             {
                 Product product = _db.Products.FirstOrDefault(p => p.ProductId == vm.ProductID);
+
                 if (product == null)
                 {
                     return RedirectToAction("Index");
                 }
                 string json = HttpContext.Session.GetString(CDictionary.SK_PURCHASED_PRODUCES_LIST);
-                List<ShoppingCar> car = JsonSerializer.Deserialize<List<ShoppingCar>>(json);
-                ShoppingCar x = car.FirstOrDefault(p => p.ProductID == vm.ProductID);
+                List<CShoppingCarViewModel> car = JsonSerializer.Deserialize<List<CShoppingCarViewModel>>(json);
+                CShoppingCarViewModel x = car.FirstOrDefault(p => p.ProductID == vm.ProductID);
                 if (x != null)
                 {
                     car.Remove(x);
                 }
-                ShoppingCar n = new ShoppingCar()
+                CShoppingCarViewModel n = new CShoppingCarViewModel()
                 {
                     ProductID = vm.ProductID,
                     ProductName = product.ProductName,
+                    FImagePath = product.FImagePath,
                     Price = (decimal)product.Price,
                     Count = vm.txtCount
                 };
@@ -528,10 +590,31 @@ namespace prjDB_GamingForm_Show.Controllers
             }
 
 
-            public IActionResult Purchase()
+            public IActionResult Purchase(CShoppingCarViewModel vm)
             {
                 string json = HttpContext.Session.GetString(CDictionary.SK_PURCHASED_PRODUCES_LIST);
-                List<ShoppingCar> car = JsonSerializer.Deserialize<List<ShoppingCar>>(json);
+                List<CShoppingCarViewModel> car = JsonSerializer.Deserialize<List<CShoppingCarViewModel>>(json);
+                //Order order = new Order()
+                //{
+                //    MemberId = 34,
+                //    ShipName = _db.Members.Where(x => x.MemberId == 34).Select(x=>x.Name).ToString(),
+                //    OrderDate = DateTime.Now,
+                //    PaymentId = 1,//vm.payment
+                //    StatusId = 13,
+                //    ShipId =1
+                //};
+                //_db.Orders.Add(order);
+
+                //foreach (var p in vm.product)
+                //{
+
+                //}
+                
+                //OrderProduct orderproduct = new OrderProduct()
+                //{
+                //    OrderId = _db.Orders.Where(x=>x.MemberId==34).OrderByDescending(x=>x.OrderDate).First().OrderId,
+                //    ProductId = vm.ProductID,
+                //};
                 car.Clear();
                 json = JsonSerializer.Serialize(car);
                 HttpContext.Session.SetString(CDictionary.SK_PURCHASED_PRODUCES_LIST, json);

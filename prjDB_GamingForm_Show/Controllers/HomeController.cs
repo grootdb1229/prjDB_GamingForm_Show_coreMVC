@@ -87,7 +87,7 @@ namespace prjDB_GamingForm_Show.Controllers
                         return Redirect(returnUrl);
                     }
                 }
-                return RedirectToAction("Home", "HomePage");
+                return RedirectToAction("HomePage", "Home");
 
             }
             return RedirectToAction("Create", "Member");
