@@ -1,5 +1,4 @@
-﻿using prjDB_GamingForm_Show.ViewModels;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace prjDB_GamingForm_Show.Models.Entities;

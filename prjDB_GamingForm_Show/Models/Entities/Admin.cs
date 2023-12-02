@@ -19,5 +19,9 @@ public partial class Admin
 
     public string? ImgPath { get; set; }
 
+    public virtual ICollection<Chat> ChatReceiveAdminNavigations { get; set; } = new List<Chat>();
+
+    public virtual ICollection<Chat> ChatSenderAdminNavigations { get; set; } = new List<Chat>();
+
     public virtual AdminRank Rank { get; set; } = null!;
 }

@@ -18,6 +18,9 @@
         p {
             font-size: 12px;
         }
+        a{
+           text-decoration:none
+        }
     </style>
 }
 
@@ -31,8 +34,8 @@
             
             <div class="nav-menu">
                 <ul>
-                    <li class="active">
-                        <a href="@Url.Action("ArticleList", "Blog", new { FId = Model.blogs.FirstOrDefault().BlogId})">全部</a>
+                    <li>
+                        <a href="@Url.Action("ArticleList", "Blog", new { FId = Model.blogs.FirstOrDefault().BlogId})">@Model.blogs.FirstOrDefault().Title</a>
                     </li>
                     @{
                         foreach (var item in Model.subBlogs.GroupBy(p => p.Title))
@@ -57,16 +60,19 @@
                                                     }
                     </li>
                 </ul>
-            <div class="nav-menu">
-
+          
             </div>
-            </div>
+            <div>
 
+            <div style="margin:3px 30%">
+                
             @using (Html.BeginForm())
             {
                 @:關鍵字 @Html.TextBox("txtKeyword")
                 <input type="submit" value="查詢" />
             }
+            </div>
+            </div>
         </div>
 
     </div>

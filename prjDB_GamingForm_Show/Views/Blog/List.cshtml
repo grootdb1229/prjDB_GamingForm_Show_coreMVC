@@ -56,11 +56,22 @@
                     }
                 </ul>
             </div>
-            @using (Html.BeginForm())
+            <div>
+
+                <div style="margin:3px 30%">
+
+                    @using (Html.BeginForm())
+                    {
+                        @:關鍵字 @Html.TextBox("txtKeyword")
+                        <input type="submit" value="查詢" />
+                    }
+                </div>
+            </div>
+@*             @using (Html.BeginForm())
             {
                 @:關鍵字 @Html.TextBox("txtKeyword")
                 <input type="submit" value="查詢" />
-            }
+            } *@
         </div>
     </div>
 </header>
