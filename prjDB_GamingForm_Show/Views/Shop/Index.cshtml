@@ -56,11 +56,9 @@
                         <ul class="nav-item dropdown" style="list-style-type: none" id="tags">
 
                             <li style="list-style-type: none; float:left;padding-left:10px;padding-top:7px">
-                                <option class="nav-link dropdown-toggle tagclick" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="width:100px">遊戲商城</option>
+                                <option class="nav-link dropdown-toggle tagclick" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="width:100px">選擇標籤 </option>
                                 <ul class="dropdown-menu" aria-labelledby="navbarDropdown" id="Subtags">
-                                    <li><a class="dropdown-item" href="#!">Popular Items</a></li>
-                                    <li><a class="dropdown-item" href="#!">Popular Items</a></li>
-                                    <li><a class="dropdown-item" href="#!">New Arrivals</a></li>
+                                  
                                 </ul>
                             </li>
 
@@ -99,8 +97,7 @@
                                     string[] tags = item.SubTagName.Split('/');
                                     foreach (var t in tags)
                                     {
-                                        <span class="badge text-bg-light">@t</span>
-
+                                            <span class="badge text-bg-light">@t</span>
                                     }
                                 }
                             </div>
@@ -190,7 +187,7 @@
             ProductContent.innerHTML = '';
             const response = await fetch(`@Url.Content("~/Shop/IndexbyPrice_H")?CK=${queryKeyword}`);
             const data = await response.json();
-            console.log(data);
+            // console.log(data);
             const sortbydate = data.map(x =>
                 `
                                          <div class="col mb-5">
@@ -239,7 +236,7 @@
             ProductContent.innerHTML = '';
             const response = await fetch(`@Url.Content("~/Shop/IndexbyDate")?CK=${queryKeyword}`);
             const data = await response.json();
-            console.log(data);
+            // console.log(data);
             const sortbydate = data.map(x =>
                 `
                                                  <div class="col mb-5">
@@ -288,7 +285,7 @@
             ProductContent.innerHTML = '';
             const response = await fetch(`@Url.Content("~/Shop/IndexbyPrice_L")?CK=${queryKeyword}`);
             const data = await response.json();
-            console.log(data);
+            // console.log(data);
             const sortbydate = data.map(x =>
                 `
                                                          <div class="col mb-5">
@@ -335,39 +332,20 @@
         var tagclick = document.querySelector('.tagclick');
         tagclick.addEventListener('click', () => {
             console.log("click")
-            //SubTag();
+          ;
         })
+       
         async function CreateTag() {
 
-            const response = await fetch(`@Url.Content("~/Shop/CreateTag")`);
+            const response = await fetch(`@Url.Content("~/Shop/GameTag")`);
             const data = await response.json();
             console.log(data);
-            const createtag = data.map(x =>
-                `
-                         <li style="list-style-type: none; float:left;padding-left:10px;padding-top:7px" class="tagclick"/>
-                            <option class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="width:80px" value="${x.tagId}">${x.name}</option>
-                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown" id="Subtags">
-                            </ul>
-                        </li>
-                         `);
-            tags.innerHTML = createtag.join("");
-
-            SubTag();
+            const subtagsDropdown = document.getElementById('Subtags');
+            subtagsDropdown.innerHTML = '';
+            const dropdownItems = data.map(tag => `<li><a class="dropdown-item" href="#!" value=${tag.subTagId}>${tag.name}</a></li>`);
+            subtagsDropdown.innerHTML = dropdownItems.join('');
         }
-
-        async function SubTag() {
-            var subtags = document.querySelector('#Subtags');
-            console.log(subtags.count);
-            const response = await fetch(`@Url.Content("~/Shop/SubTag")?id=${tags.value}`);
-            const data = await response.json();
-            console.log(data);
-            const createsubtag = data.map(x =>
-                `
-                         <li><a class="dropdown-item" href="#!" value="${x.subTagId}">${x.name}</a></li>
-                         `);
-            subtags.innerHTML = createsubtag.join("");
-
-        }
+      
         CreateTag();
 
     </script>
