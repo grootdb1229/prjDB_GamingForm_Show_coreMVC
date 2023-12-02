@@ -32,7 +32,7 @@
     <div class="row" style="margin:10px auto;width:650px;background-color:#4F4F4F">
         <div style="background-color:#4F4F4F;border-radius:8px;box-shadow:0px 0px 8px 8px #cccccc">
             <form asp-action="ArticleCreate" method="post">
-                <label style="margin-top:5px" asp-for="blogs.First().Title" class="control-label"></label>
+                <label style="margin-top:8px" asp-for="blogs.First().Title" class="control-label">選取分類</label>
                 <input type="hidden" name="FId" value="@Model.blogs.First().BlogId" />
                 <input type="hidden" name="ViewCount" value="0" />
 
@@ -45,7 +45,7 @@
                     }
                 </select>
                 <div class="form-group">
-                    <label asp-for="articles.First().Title" class="control-label"></label>
+                    <label asp-for="articles.First().Title" class="control-label" style="margin-top:8px">文章標題</label>
                     <input name="Title" class="form-control" />
                     <span asp-validation-for="articles.First().Title" class="text-danger"></span>
                 </div>
@@ -58,7 +58,8 @@
                     <input type="hidden" name="ModifiedDate" value="@DateTime.Now" />
                     <input type="hidden" name="MemberId" value="@Context.Session.GetInt32(CDictionary.SK_UserID)" />
                 </div>
-                <div>
+                <div style="margin-top:8px">
+                    <label>文章內容</label>
                     <textarea name="ArticleContent" id="editor" style="resize:none; height:700px;color:black">                    
                 </textarea>
                 </div>
