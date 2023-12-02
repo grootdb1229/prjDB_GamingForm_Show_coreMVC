@@ -303,7 +303,7 @@
     <footer>
         <button onclick="show()">123123</button>
         <div id="test" style="display:none; position: absolute; bottom: 10px; right: 10px; z-index: 999;background-color:white; border: 1px solid #000;">
-            <h1>即時聊天範例</h1>
+            @*<h1>即時聊天範例</h1>
 
             <div class="row">
                 <div class="col-8">
@@ -330,7 +330,7 @@
                     <div id="Content" style="height:150px ;max-height: 150px; overflow-y: auto;">
                     </div>
                 </div>
-            </div>
+            </div>*@
         </div>
         <div class="pull-right">
             Gentelella - Bootstrap Admin Template by <a href="https://colorlib.com">Colorlib</a>
@@ -380,6 +380,9 @@
             else {
                 div.style.display = "none"; // 隱藏
             }
+            
+            $('#test').load('@Url.Content("~/Admin/SignalRPV")');
+            
         }
         var connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
 
@@ -407,6 +410,12 @@
                 // 將 <li> 元素添加到列表
                 $("#IDList").append(newListItem);
             }
+        });
+
+        connection.on("UpdAdminOnlineStatus", function (adminName, isOnline) {
+            // 根據管理者名稱和在線狀態更新前端顯示
+            var statusId = `#onlineStatus_${adminName}`;
+            $(statusId).text(isOnline ? "在線" : "離線");
         });
 
         // 更新用戶個人連線 ID 事件

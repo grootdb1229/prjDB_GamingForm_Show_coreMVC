@@ -5,36 +5,9 @@
     ViewData["Title"] = "List";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-@* <!DOCTYPE html>
-<html lang="zxx">
- *@
-@* <head> *@
-@*     <meta charset="UTF-8">
-    <meta name="description" content="Amin Template">
-    <meta name="keywords" content="Amin, unica, creative, html">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Amin | Template</title> *@
 
-@*     <!-- Google Font -->
-    <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,500,600,700,800,900&display=swap"
-          rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Cinzel:400,700,900&display=swap" rel="stylesheet">
-
-    <!-- Css Styles -->
-    <link rel="stylesheet" href="~/css/bootstrap.min.css" type="text/css">
-    <link rel="stylesheet" href="~/css/font-awesome.min.css" type="text/css">
-    <link rel="stylesheet" href="~/css/elegant-icons.css" type="text/css">
-    <link rel="stylesheet" href="~/css/owl.carousel.min.css" type="text/css">
-    <link rel="stylesheet" href="~/css/barfiller.css" type="text/css">
-    <link rel="stylesheet" href="~/css/magnific-popup.css" type="text/css">
-    <link rel="stylesheet" href="~/css/slicknav.min.css" type="text/css">
-    <link rel="stylesheet" href="~/css/blogstyle.css" type="text/css"> *@
 <link rel="stylesheet" href="~/css/blogstyle.css" type="text/css">
-@* </head>
 
-<body>
- *@
 <header class="header-section">
 
     <div class="nav-options">
@@ -67,10 +40,10 @@
                     }
                 </div>
             </div>
-@*             @using (Html.BeginForm())
+            @*             @using (Html.BeginForm())
             {
-                @:關鍵字 @Html.TextBox("txtKeyword")
-                <input type="submit" value="查詢" />
+            @:關鍵字 @Html.TextBox("txtKeyword")
+            <input type="submit" value="查詢" />
             } *@
         </div>
     </div>
@@ -78,18 +51,26 @@
 <section class="instagram-post-section spad" style="background-color:#272727">
     <div style="float:left;padding:10px">
         <p style="text-align:center;font-size:24px">熱門商品</p>
-        <div id="imageContainer" style="padding:10px; display:flex;">
+        <div id="div1"></div>
+@*        <div id="imageContainer" style="padding:10px; display:flex;">
             <a id="imageLink" href="@Url.Action("Details","Shop",new{id=20})" target="_blank">
                 <img id="changingImage" src="~/images/D4AD.png" width="330" height="450" alt="" style="border-radius:5px">
             </a>
-        </div>
+        </div>*@
         <br />
         <div style="padding:10px;display:flex">
             <a href="@Url.Action("DeputeList","Depute")" target="_blank">
                 <img src="~/images/AD/forjob.jpg" width="330" height="450" alt="" style="border-radius:5px">
             </a>
         </div>
+
+
     </div>
+
+
+
+
+
 
     <div class="container">
         <div class="row" style="border-radius:8px;box-shadow:0px 0px 8px 8px #cccccc">
@@ -107,12 +88,12 @@
                             <div class="ip-text" style="margin-bottom:24px">
                                 <i class="bi bi-caret-up-fill" style="color:red"></i>
                                 <a style="text-decoration:none" href="@Url.Action("ArticleList", "Blog", new { FId =item.BlogId})">
-                                    <span style="color: #FFFFFF;font-size:32px">@item.Title</span>                                
+                                    <span style="color: #FFFFFF;font-size:32px">@item.Title</span>
                                 </a>
                                 <br />
                                 <a style="font-size:16px;text-decoration:none" href="@Url.Action("ArticleContent", "Blog", new { FId =item.BlogId,AFId=item.SubBlogs.FirstOrDefault().Articles.LastOrDefault().ArticleId})">@item.SubBlogs.First().Articles.LastOrDefault().Title</a>
                             </div>
-                                <i class="bi bi-file-earmark-text" title="昨日發文數" style="">@item.SubBlogs.FirstOrDefault().Articles.Count(a => a.ModifiedDate.Date == DateTime.Today.AddDays(-1))</i>
+                            <i class="bi bi-file-earmark-text" title="昨日發文數" style="">@item.SubBlogs.FirstOrDefault().Articles.Count(a => a.ModifiedDate.Date == DateTime.Today.AddDays(-1))</i>
                         </div>
                     }
                 }
@@ -132,7 +113,45 @@
 @* </body>
 </html>
  *@
+<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+
 <script>
+
+    $(document).ready(function () {
+        function fetchAndDisplayImage() {
+            fetch('@Url.Content("~/Blog/shoppartialview")')
+                .then(response => response.json())
+                .then(data => {
+                    const encodedProductId = encodeURIComponent(data.productId);
+                    const encodedFImagePath = encodeURIComponent(data.fImagePath);
+                    $('#div1').html(
+                        `
+                            <a href="@Url.Content("~/Shop/Details")?id=${encodedProductId}">
+                                <img src="/images/shop/${encodedFImagePath}" width="330" height="450"/>
+                            </a>
+                            `
+                    );
+                });
+        }
+
+        fetchAndDisplayImage();
+        setInterval(fetchAndDisplayImage, 3000);
+    });
+
+
+
+  
+
+    //$(document).ready(function () {
+    //    fetch('@Url.Content("~/Blog/shoppartialview")')
+    //        .then(response => response.json())
+    //        .then(data => $('#div1').html(`<img src="~/images/shop/${data[2].fImagePath}" alt="Shop Image" />`))
+    //        .catch(error => console.error('Error fetching data:', error));
+    //});
+
+
+
+
     // N组圖片，包含要循環展示的圖片路徑
     var imageArray = [
         '../images/AD/adD4.png',
@@ -167,6 +186,7 @@
 
 
     }, 3000); //3秒
+
 
 
 

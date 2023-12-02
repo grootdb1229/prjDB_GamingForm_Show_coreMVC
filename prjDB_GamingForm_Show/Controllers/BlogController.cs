@@ -305,5 +305,21 @@ namespace prjDB_GamingForm_Show.Controllers
             return RedirectToAction("ArticleContent", new { AFId, FId });
         }
 
+
+        //----------partialview---------------
+        public IActionResult shoppartialview()
+        {
+            Random rm = new Random();
+
+            _db.Products.Load();
+            int ram = rm.Next(0, _db.Products.Count());
+            var mo = _db.Products.Select(p => p);
+
+
+            return Json(mo.ToList()[ram]);
+        }
+
+
+
     }
 }
