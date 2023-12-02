@@ -224,7 +224,7 @@
             const data = await response.json();
             console.log(data);
             // <a href="/Depute/DeputeDetails/${list.id}" class="btn btn-primary" id = " btndp" name="txtKeyword" > 詳細...</a>
-            const Hotkeys = data.map(Hotkeys => `<a href="/Depute/Search" id="${Hotkeys}">${Hotkeys} </a>`)
+            const Hotkeys = data.map(Hotkeys => `<a href="/Depute/Search?" id="${Hotkeys}">${Hotkeys} </a>`)
             console.log(Hotkeys);
             $('#html').click(function () {
                 $.getJSON('@Url.Content("~/Depute/Search")', (datas) => {
