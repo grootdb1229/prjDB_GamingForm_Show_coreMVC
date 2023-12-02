@@ -18,7 +18,7 @@
             <div class="humberger-menu ">
                 @Html.ActionLink("前往首頁", "List", "Blog")
             </div>
-           
+
             <div class="nav-menu">
                 <ul>
                     <li class="active">
@@ -45,8 +45,8 @@
                                 @Html.ActionLink("發表回覆", "ReplyCreate", "Blog", new { AFId = Model.articles.FirstOrDefault().ArticleId, FId = Model.blogs.FirstOrDefault().BlogId }, new { @class = "btn" })
                             }
                         }
-                      @*   <div class="nav-search search-switch">
-                            @Html.ActionLink("發表回覆", "ReplyCreate", "Blog", new { AFId = Model.articles.FirstOrDefault().ArticleId, FId = Model.blogs.FirstOrDefault().BlogId }, null)
+                        @*   <div class="nav-search search-switch">
+                        @Html.ActionLink("發表回覆", "ReplyCreate", "Blog", new { AFId = Model.articles.FirstOrDefault().ArticleId, FId = Model.blogs.FirstOrDefault().BlogId }, null)
                         </div> *@
                     </li>
                 </ul>
@@ -68,13 +68,17 @@
                         }
                     }
                 </div>
+
+
+
                 <div style="flex-grow: 1;">
                     <!-- 使用 flex-grow: 1; 讓這個區塊填滿剩餘的寬度 -->
-                    <div>
-                        <h1 style="color:white">
-                            @Html.DisplayFor(modelItem => Model.articles.FirstOrDefault().Title)
-                        </h1>
-                    </div>
+
+
+                    <h1 style="color:white">
+                        @Html.DisplayFor(modelItem => Model.articles.FirstOrDefault().Title)
+                    </h1>
+
                     <div>
                         @* 超連結個人頁面 *@
                         樓主
@@ -99,36 +103,57 @@
                             int like = 0;
                             if (Context.Session.GetInt32(CDictionary.SK_UserID) == null)
                             {
-                                <button type="button" class="btn btn-danger" id="btnLike" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                                <button type="button" class="btn btn-danger" id="btnLike" data-bs-toggle="modal" data-bs-target="#staticBackdrop" >
                                     <img src="~/images/like.png" alt="Like" width="20px" height="20px" />
                                 </button>
                             }
                             else
                             {
-                                <button type="button" class="btn btn-danger" id="btnLike">
+                                <button type="button" class="btn btn-danger" id="btnLike" style="float:left">
                                     <img src="~/images/like.png" alt="Like" width="20px" height="20px" />
                                 </button>
                             }
                             like = Model.articleActions.Count(a => a.ActionId == 1);
-                            <span id="spLike">
+                            <span id="spLike" style="font-size:25px;clear:both">
                                 @like
                             </span>
                         }
 
 
 
+                        @if (Model.articles.First().MemberId == Context.Session.GetInt32(CDictionary.SK_UserID))
+                        {
+
+                            <button type="button" class="btn btn-warning" style="float:right;margin: 0 5px" onclick="location.href='@Url.Action( "ArticleEdit","Blog", new { AFId = Model.articles.FirstOrDefault().ArticleId ,FId = Model.blogs.FirstOrDefault().BlogId})'">修改</button>
+                            <button type="button" class="btn btn-secondary" style="float:right;margin:0 5px" onclick="ArticleDelete()">刪除文章</button>
+                        }
+                        <script>
+                            function ArticleDelete() {
+                                var result = confirm('確定刪除嗎?');
+                                if (result) {
+                                    location.href = '@Html.Raw(Url.Action("ArticleDelete", "Blog", new { FId = Model.blogs.FirstOrDefault().BlogId, AFId = Model.articles.FirstOrDefault().ArticleId }))';
+                                }
+                            }
+                        </script>
+                        <!-- HTML 中的按鈕 -->
+                        <button id="copyButton" class="btn btn-info" data-clipboard-target="#urlToCopy" style="float:right;margin:0 5px">分享</button>
+                        <!-- 顯示的網址 -->
+                        <input type="hidden" id="urlToCopy" value="" readonly>
+
+                        @*------FB按鈕------*@
+                        <img src="~/images/fbicon.png" onclick="shareOnFacebook()" alt="Like" width="45px" height="45px" style="float:right;margin:0 5px" />
+
+                        <script>
+                            function shareOnFacebook() {
+                                // 使用 window.open 在新視窗中打開 Facebook 分享連結
+                                window.open('https://www.facebook.com/sharer.php?u=https://localhost:7056/Blog/ArticleContent?FId=@(Model.blogs?.FirstOrDefault()?.BlogId)&AFId=@(Model.articles?.FirstOrDefault()?.ArticleId)', '_blank');
+                            }
+                        </script>
+
+                        @*------FB按鈕------*@
 
 
-
-                        <p style="float:right">
-
-
-
-
-                            <!-- HTML 中的按鈕 -->
-                            <button id="copyButton" class="btn btn-info" data-clipboard-target="#urlToCopy">分享</button>
-                            <!-- 顯示的網址 -->
-                            <input type="hidden" id="urlToCopy" value="" readonly>
+                        <div style="float:right">
 
                             @*------Line按鈕------*@
                             @{
@@ -141,28 +166,40 @@
                                      data-size="large"
                                      data-count="false"
                                      data-ver="3"
-                                     style="height:500"></div>
-
+                                     style="float:right ;margin:5px">
+                                </div>
                                 <script src="https://www.line-website.com/social-plugins/js/thirdparty/loader.min.js" async="async" defer="defer"></script>
                             }
                             @*------Line按鈕------*@
 
-                             @if (Model.articles.First().MemberId == Context.Session.GetInt32(CDictionary.SK_UserID))
-                            {
 
-                                <button type="button" class="btn btn-warning" onclick="location.href='@Url.Action( "ArticleEdit","Blog", new { AFId = Model.articles.FirstOrDefault().ArticleId ,FId = Model.blogs.FirstOrDefault().BlogId})'">修改</button>
-                                <button type="button" class="btn btn-secondary" onclick="ArticleDelete()">刪除文章</button>
-                            }
-                            <script>
-                                function ArticleDelete() {
-                                    var result = confirm('確定刪除嗎?');
-                                    if (result) {
-                                        location.href = '@Html.Raw(Url.Action("ArticleDelete", "Blog", new { FId = Model.blogs.FirstOrDefault().BlogId, AFId = Model.articles.FirstOrDefault().ArticleId }))';
-                                    }
-                                }
-                            </script>
-   
-                        </p>
+
+
+                        </div>
+
+
+
+
+
+                        @*<div>
+                        @if (Model.articles.First().MemberId == Context.Session.GetInt32(CDictionary.SK_UserID))
+                        {
+
+                        <button type="button" class="btn btn-warning" onclick="location.href='@Url.Action( "ArticleEdit","Blog", new { AFId = Model.articles.FirstOrDefault().ArticleId ,FId = Model.blogs.FirstOrDefault().BlogId})'">修改</button>
+                        <button type="button" class="btn btn-secondary" onclick="ArticleDelete()">刪除文章</button>
+                        }
+                        <script>
+                        function ArticleDelete() {
+                        var result = confirm('確定刪除嗎?');
+                        if (result) {
+                        location.href = '@Html.Raw(Url.Action("ArticleDelete", "Blog", new { FId = Model.blogs.FirstOrDefault().BlogId, AFId = Model.articles.FirstOrDefault().ArticleId }))';
+                        }
+                        }
+                        </script>
+                        </div>*@
+
+
+
 
                     </div>
                 </div>
