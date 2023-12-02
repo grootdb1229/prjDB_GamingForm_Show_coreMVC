@@ -139,5 +139,14 @@ namespace prjDB_GamingForm_Show.Hubs
             // 更新管理者在線狀態
             await Clients.All.SendAsync("UpdAdminOnlineStatus", adminName, isOnline);
         }
+        public bool GetAdminOnlineStatus(string adminName)
+        {
+            // 在此實現檢查管理者在線狀態的邏輯
+            // 返回 true 表示在線，返回 false 表示離線
+
+            // 例如，您可以使用 ConnectedUsers 列表，查找具有指定名稱的管理者，然後檢查其在線狀態。
+            var admin = ConnectedUsers.FirstOrDefault(u => u.UserName == adminName);
+            return admin != null && admin.IsOnline;
+        }
     }
 }
