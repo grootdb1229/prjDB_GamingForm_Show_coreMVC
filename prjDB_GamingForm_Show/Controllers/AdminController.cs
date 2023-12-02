@@ -313,6 +313,25 @@ namespace prjDB_GamingForm_Show.Controllers
             };            
             return View(vm);
         }
+        public IActionResult SignalRPV()
+        {
+            List<CSignalRUseAdminList> Admins = new List<CSignalRUseAdminList>();
+            var datas = from a in _db.Admins
+                        select new
+                        {
+                            a.AdminId,
+                            a.Name
+                        };
+            foreach (var data in datas)
+            {
+                CSignalRUseAdminList Admin = new CSignalRUseAdminList();
+                Admin.AdminId = data.AdminId;
+                Admin.AdminName = data.Name;
+                Admins.Add(Admin);
+            }
+                
+            return PartialView(Admins);
+        }
         //public IActionResult MemberListNexttest()
         //{
         //    if (HttpContext.Session.Keys.Contains(CDictionary.SK_管理者觀看會員清單頁數使用關鍵字))
