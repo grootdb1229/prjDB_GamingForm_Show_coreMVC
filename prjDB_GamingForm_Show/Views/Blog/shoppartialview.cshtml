@@ -1,0 +1,22 @@
+﻿@*@model IEnumerable<prjDB_GamingForm_Show.Models.Entities.Product>
+
+*@
+
+<div id="div1"></div>
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+
+
+<script>
+
+    $(document).ready(function () {
+        fetch('@Url.Content("~/Blog/shoppartialview")')
+        .then(response=>
+        response.json();
+        )
+        .then(data=>
+            
+                $('#div1').text(data)
+        )
+    })
+</script>
