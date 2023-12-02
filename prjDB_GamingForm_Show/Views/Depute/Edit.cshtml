@@ -5,8 +5,9 @@
     Layout = "~/Views/Shared/_Layout_DBM.cshtml";
 }
 
-<h2 class="tm-text-primary">委託資訊修改</h2>
-<hr class="mb-5">
+<h2>委託資訊修改</h2>
+<h4>請輸入修改資訊</h4>
+<hr>
 
 <div class="row">
     <div class="col-md-10">
@@ -33,28 +34,27 @@
                 <span asp-validation-for="Modifiedate" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Title" class="control-label"></label>
+                <label class="control-label">標題</label>
                 <input asp-for="Title" class="form-control" />
                 <span asp-validation-for="Title" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="DeputeContent" class="form-label"></label>
+                <label class="form-label">委託內容</label>
                 <textarea asp-for="DeputeContent" class="form-control" style="height:200px"></textarea>
                 <span asp-validation-for="DeputeContent" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Salary" class="control-label"></label>
+                <label class="control-label">提供報酬</label>
                 <input asp-for="Salary" class="form-control" />
                 <span asp-validation-for="Salary" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="StatusId" class="control-label"></label>
-                <input asp-for="StatusId" class="form-control" />
-                <span asp-validation-for="StatusId" class="text-danger"></span>
-                <select name="region" class="form-select" id="selStatus" aria-label="Default select example">
+                <label class="control-label">狀態</label>
+                <select name="status" class="form-select" id="selStatus" aria-label="Default select example">
                 </select>
             </div>
             <div class="form-group">
+                <label class="control-label">地區</label>
                 <select name="region" class="form-select" id="selRegion" aria-label="Default select example">
                 </select>
             </div>
@@ -80,14 +80,14 @@
         }
         loadRegions();
 
-        async function loadStatuses() {
-            const response = await fetch(`@Url.Content("~/depute/deputeStatuses")`);
+        const deputeid = @Model.DeputeId;
+        async function loadStatuses(deputeID) {
+            const response = await fetch(`@Url.Content("~/depute/editDeputeStatuses")?id=${deputeID}`);
             const datas = await response.json();
             console.log(datas);
-            const statuses = datas.map(status => `<option value="${status.name}">${status.name}</option>`);
+            const statuses = datas.map(status => `<option value="${status.status}">${status.status}</option>`);
             document.querySelector("#selStatus").innerHTML = statuses.join("");
-
         }
-        loadStatuses();
+        loadStatuses(deputeid);
     </script>
 }

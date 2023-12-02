@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using prjDB_GamingForm_Show.Models.Entities;
 using prjDB_GamingForm_Show.Models.Shop;
 using prjDB_GamingForm_Show.ViewModels;
@@ -316,9 +317,14 @@ namespace prjDB_GamingForm_Show.Controllers
         #endregion
 
         public int _memberIdtest = 38;
-        public IActionResult changeDeputeRecordStatus(int id)
+        public IActionResult changeDeputeRecordStatus(string deputerecordstatus)
         {
-
+            CDeputeViewModel n = JsonSerializer.Deserialize<CDeputeViewModel>(deputerecordstatus);
+            var o = _db.DeputeRecords.FirstOrDefault(_ => _.Id == n.id);
+            int statusID = Convert.ToInt32(n.statusid);
+            if (_db.Statuses.Any(_ => _.StatusId == statusID))
+                o.ApplyStatusId = Convert.ToInt32(statusID);
+            _db.SaveChanges();
             return Ok();
         }
         public IActionResult individualDetials(int id)
@@ -328,16 +334,16 @@ namespace prjDB_GamingForm_Show.Controllers
             foreach (var item in o)
             {
                 CDeputeViewModel n = new CDeputeViewModel();
+                n.id = item.Id;
                 n.title = item.Depute.Title;
                 n.count = o.Count();
                 n.status = item.ApplyStatus.Name;
                 n.memberName = item.Member.Name;
-
                 n.applyerGender = item.Member.Gender == 1 ? "男性" : "女性";
-                n.applyerEmail =item.Member.Email;
-                n.applyerBirth =item.Member.Birth.ToString("yyyy/MM/dd");
-                n.applyerComment =item.Member.Mycomment;
-                n.applyerPhone =item.Member.Phone;
+                n.applyerEmail = item.Member.Email;
+                n.applyerBirth = item.Member.Birth.ToString("yyyy/MM/dd");
+                n.applyerContent = item.RecordContent == null ? "該會員無提供補充資訊" : item.RecordContent;
+                n.applyerPhone = item.Member.Phone;
                 list.Add(n);
             }
             return Json(list);
@@ -376,8 +382,8 @@ namespace prjDB_GamingForm_Show.Controllers
                 o.Modifiedate = DateTime.Now;
                 o.DeputeContent = vm.deputeContent;
                 o.Salary = vm.salary;
-                //o.StatusId = _db.Statuses.FirstOrDefault(_ => _.Name == vm.status).StatusId;
-                //o.RegionId = _db.Regions.FirstOrDefault(_ => _.City == vm.region).RegionId;
+                o.StatusId = _db.Statuses.FirstOrDefault(_ => _.Name == vm.status).StatusId;
+                o.RegionId = _db.Regions.FirstOrDefault(_ => _.City == vm.region).RegionId;
                 o.Title = vm.title;
                 _db.SaveChanges();
             }
@@ -392,21 +398,40 @@ namespace prjDB_GamingForm_Show.Controllers
             };
             return Json(datas);
         }
-        public IActionResult deputeStatuses()
+        public IActionResult editDeputeStatuses(int id)
         {
-            var datas = _db.Statuses.Where(_ => _.StatusId == 16 || _.StatusId == 18 || _.StatusId == 19).Select(_ => _);
-            return Json(datas);
+            List<CDeputeViewModel> statusList = new List<CDeputeViewModel>();
+            int oriStatusID = _db.Deputes.FirstOrDefault(_ => _.DeputeId == id).StatusId;
+
+            CDeputeViewModel oriStatus = new CDeputeViewModel()
+            {
+                id = oriStatusID,
+                status =_db.Statuses.FirstOrDefault(_=>_.StatusId== oriStatusID).Name,
+            };
+            statusList.Add(oriStatus);
+            
+            var datas = _db.Statuses.Where(_ => (_.StatusId == 16 ||
+            _.StatusId == 18 ||
+            _.StatusId == 19 )&&
+            _.StatusId != oriStatusID).Select(_ => _);
+
+            foreach(var item in datas)
+            {
+                CDeputeViewModel lastStatuses = new CDeputeViewModel()
+                {
+                    id = item.StatusId,
+                    status= item.Name,
+                };
+                statusList.Add(lastStatuses);
+            };
+            return Json(statusList);
         }
         public IActionResult Regions()
         {
             var datas = _db.Regions.Select(_ => _);
             return Json(datas);
         }
-        public IActionResult Status()
-        {
-            var datas = _db.Statuses.Select(_ => _);
-            return Json(datas);
-        }
+        
         public IActionResult Skillss(string skillClass)
         {
             int skillclassid = Convert.ToInt32(_db.SkillClasses.Where(_ => _.Name == skillClass).FirstOrDefault().SkillClassId);
@@ -481,7 +506,6 @@ namespace prjDB_GamingForm_Show.Controllers
             _db.SaveChanges();
             return RedirectToAction("Personal");
         }
-
         public IActionResult DeputeDetial(int? id)
         {
             _db.DeputeRecords.Load();
@@ -498,8 +522,8 @@ namespace prjDB_GamingForm_Show.Controllers
                 providername = o.Provider.Name,
                 region = o.Region.City,
                 salary = o.Salary,
-                startdate = o.StartDate.ToString("yyyyMMdd"),
-                modifieddate = o.Modifiedate.ToString("yyyyMMdd"),
+                startdate = o.StartDate.ToString("yyyy/MM/dd"),
+                modifieddate = o.Modifiedate.ToString("yyyy/MM/dd"),
             };
             return Json(n);
         }
@@ -513,6 +537,10 @@ namespace prjDB_GamingForm_Show.Controllers
         #endregion
 
         #region PartialView
+        public IActionResult PartialOverview()
+        {
+            return PartialView();
+        }
         public IActionResult PartialReleaseList()
         {
             _db.Deputes.Load();
