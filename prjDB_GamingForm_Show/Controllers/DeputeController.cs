@@ -7,6 +7,7 @@ using prjDB_GamingForm_Show.Models.Entities;
 using prjDB_GamingForm_Show.Models.Shop;
 using prjDB_GamingForm_Show.ViewModels;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json;
 using static prjDB_GamingForm_Show.Controllers.DeputeController;
 
@@ -69,7 +70,7 @@ namespace prjDB_GamingForm_Show.Controllers
                 };
 
                 List.Add(x);
-
+                Temp = List;
             }
         }
 
@@ -78,54 +79,28 @@ namespace prjDB_GamingForm_Show.Controllers
             IEnumerable<CDeputeViewModel> datas = null;
             if (id ==null)
             {
-                ListLoad();
+                //ListLoad();
                 datas = from n in List
                         select n;
-                return View(datas);
+                
             }
             else
             {
-
-                var data = (from n in _db.DeputeSkills
-                           where n.Skill.SkillClassId == id
-                           select new
-                           {
-                               n.DeputeId,
-                               n.Depute.Title,
-                               Name = n.Depute.Provider.Name,
-                               SrartDate = n.Depute.StartDate.ToString("d"),
-                               Modifiedate = n.Depute.Modifiedate.ToString("d"),
-                               n.Depute.DeputeContent,
-                               n.Depute.Salary,
-                               Status = n.Depute.Status.Name,
-                               n.Depute.Region.City,
-                               n.Depute.Provider.FImagePath
-
-
-                           }).Distinct();
-                CDeputeViewModel x = null;
-                foreach (var item in data)
+                _db.SkillClasses.Load();
+                IEnumerable<string> skillname = from n in _db.SkillClasses
+                                where n.SkillClassId == id
+                                select n.Name;
+                foreach (string item in skillname)
                 {
-                    x = new CDeputeViewModel()
-                    {
-                        id = item.DeputeId,
-                        title = item.Title,
-                        providername = item.Name,
-                        startdate = item.SrartDate,
-                        modifieddate = item.Modifiedate,
-                        deputeContent = item.DeputeContent,
-                        salary = item.Salary,
-                        status = item.Status,
-                        region = item.City,
-                        imgfilepath = item.FImagePath
-                    };
-                    Temp.Add(x);
-
+                    datas = from n in List
+                            where n.deputeContent.Contains(item)
+                            select n;
                 }
-                return View(Temp);
+                
+               
             }
-            
-            
+
+            return View(datas);
 
         }
 
@@ -157,6 +132,34 @@ namespace prjDB_GamingForm_Show.Controllers
                 return Content("No result");
             }
             return Json(datas);
+        }
+
+        public IActionResult SearchById(int? id)
+        {
+            IEnumerable<CDeputeViewModel> datas = null;
+            IEnumerable<string> keyword = from n in _db.SerachRecords
+                          where n.Id == id
+                          select n.Name;
+
+            foreach (string item in keyword)
+            {
+                if(string.IsNullOrEmpty(item)) 
+                    continue;
+                datas = List.Where(n => (n.deputeContent.Trim().ToLower().Contains(item.Trim().ToLower()) ||
+                                          n.providername.Trim().ToLower().Contains(item.Trim().ToLower()) ||
+                                          n.title.Trim().ToLower().Contains(item.Trim().ToLower()) ||
+                                          n.region.Trim().ToLower().Contains(item.Trim().ToLower()))
+                                          ).OrderByDescending(n => n.modifieddate);
+
+            }
+            if (datas == null || datas.Count() == 0)
+            {
+                return Content("No result");
+            }
+
+            return Json(datas);
+
+            
         }
         public IActionResult DetailsSearch(CKeyWord vm)
         {
@@ -234,7 +237,7 @@ namespace prjDB_GamingForm_Show.Controllers
             var value = (from n in _db.SerachRecords.AsEnumerable()
                          group n by n.Name into q
                          orderby q.Count() descending
-                         select q.Key).Take(id);
+                         select new { MyKey = q.Key,MyGroup = q }).Take(id);
 
             if (value == null)
                 return RedirectToAction("DeputeList");
@@ -368,7 +371,6 @@ namespace prjDB_GamingForm_Show.Controllers
             Depute o = _db.Deputes.Where(_ => _.DeputeId == vm.id).FirstOrDefault();
             if (o != null)
             {
-                o.DeputeId = vm.id;
                 o.ProviderId = _memberIdtest;
                 o.StartDate = Convert.ToDateTime(vm.startdate);
                 o.Modifiedate = DateTime.Now;
@@ -388,9 +390,13 @@ namespace prjDB_GamingForm_Show.Controllers
                 skillclasses = _db.SkillClasses.Select(_ => _),
                 skills = _db.Skills.Select(_ => _)
             };
-            //var datas = _db.SkillClasses.Select(_ => _);
             return Json(datas);
         }
+        //public IActionResult deputeStatuses()
+        //{
+            
+        //    return Json();
+        //}
         public IActionResult Regions()
         {
             var datas = _db.Regions.Select(_ => _);
@@ -422,8 +428,8 @@ namespace prjDB_GamingForm_Show.Controllers
                 Modifiedate = DateTime.Now,
                 DeputeContent = vm.deputeContent,
                 Salary = vm.salary,
-                StatusId = 18,
-                //RegionId = _db.Regions.FirstOrDefault(_ => _.City == vm.region).RegionId,
+                StatusId = 18,//懸賞中
+                RegionId = _db.Regions.FirstOrDefault(_ => _.City == vm.region).RegionId,
                 Title = vm.title,
             };
             _db.Deputes.Add(n);
@@ -484,7 +490,6 @@ namespace prjDB_GamingForm_Show.Controllers
                 return RedirectToAction("Personal");
             CDeputeViewModel n = new CDeputeViewModel()
             {
-                id = o.DeputeId,
                 title = o.Title,
                 status = o.Status.Name,
                 count = o.DeputeRecords.Count(),
