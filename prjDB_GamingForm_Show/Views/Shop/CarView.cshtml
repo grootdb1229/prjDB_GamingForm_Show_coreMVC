@@ -37,37 +37,37 @@
         decimal sum = 0;
     foreach (var item in Model) {
         count++;
-            <tr class="textcolor">
-            <td>
-               <img class="card-img-top" src="~/images/shop/@item.FImagePath" alt="..." style="height:120px; width=80px;" />
-            </td>
+                <tr class="textcolor">
                 <td>
-                    @Html.DisplayFor(modelItem => item.ProductName)
+                   <img class="card-img-top" src="~/images/shop/@item.FImagePath" alt="..." style="height:120px; width=80px;" />
                 </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Price)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Count)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.total)
-                </td>
-                        @using (Html.BeginForm("EditCar", "Shop", FormMethod.Post))
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ProductName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Price)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Count)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.total)
+                    </td>
+                            @using (Html.BeginForm("EditCar", "Shop", FormMethod.Post))
                     {
-                            <input type="hidden" name="ProductID" value="@item.ProductID" />
-                            <td>
-                                @Html.TextBox("txtCount", "1", new { @class = "form-control text-center me-3", @style = "max-width: 3rem" })
-                            </td>
-                            <td>
-                                <input type="submit" value="修改數量" class="btn btn-outline-dark mt-auto" />
-                            </td>
+                                <input type="hidden" name="ProductID" value="@item.ProductID" />
+                                <td>
+                                    @Html.TextBox("txtCount", "1", new { @class = "form-control text-center me-3", @style = "max-width: 3rem" })
+                                </td>
+                                <td>
+                                    <input type="submit" value="修改數量" class="btn btn-outline-dark mt-auto" />
+                                </td>
                     }
-                        <td>
-                            @Html.ActionLink("查看商品", "Details", "Shop", new { id = item.ProductID }, new { @class = "btn btn-outline-dark mt-auto" })
-                            @Html.ActionLink("刪除購物車", "DeleteFromCar", "Shop", new { id = item.ProductID }, new { @class = "btn btn-outline-dark mt-auto", onclick = "return confirm('確定要刪除嗎?')" })
-                        </td>
-            </tr>
+                            <td>
+                                @Html.ActionLink("查看商品", "Details", "Shop", new { id = item.ProductID }, new { @class = "btn btn-outline-dark mt-auto" })
+                                @Html.ActionLink("刪除購物車", "DeleteFromCar", "Shop", new { id = item.ProductID }, new { @class = "btn btn-outline-dark mt-auto", onclick = "return confirm('確定要刪除嗎?')" })
+                            </td>
+                </tr>
          sum += item.total;
 }
 
@@ -81,7 +81,7 @@
 <li>應付金額:@pay.ToString("###,###,##0")</li>
 
 <div class="container" style="margin-left:-10px">
-
+    
     <label for="payment">請選擇付款方式</label>
     <select id="payment" name="payment">
         <option value="apple">Apple</option>
@@ -89,8 +89,10 @@
         <option value="orange">Orange</option>
         <option value="grape">Grape</option>
     </select>
-
-@Html.ActionLink("結帳", "Purchase", "Shop",null, new { @class = "btn btn-outline-dark mt-auto", @id="btnpurchase",@type="button",@style="margin-left:30px" })
+        <input type="button" value="結帳" class="btn btn-outline-dark mt-auto" id="btnpurchase" style="margin-left:30px" /> 
+     @* @Html.ActionLink("結帳", "Purchase", "Shop",new{payment= payment.value }, new { @class = "btn btn-outline-dark mt-auto", @id="btnpurchase",@type="button",@style="margin-left:30px" }) *@
+    
+    @* @Html.DropDownListFor(m => m.payment, new SelectList(ViewBag.Items, "Value", "Text")) *@
 </div>
 <style>
     .textcolor {
@@ -100,10 +102,11 @@
 <script src="~/js/sweetalert2.all.js"></script>
 <script>
     const btn = document.querySelector('#btnpurchase');
+    const payment = document.querySelector('#payment');
     btn.addEventListener('click', () => {
+        const payid = payment.value
 
-
-        fetch('@Url.Content("~/Shop/Purchase")')
+        fetch(`@Url.Content("~/Shop/Purchase")?payment=${payid}`)
             .then(Swal.fire({
                 title: "結帳成功!",
                 text: "訂單已送至電子信箱!",
@@ -111,7 +114,7 @@
             })
             )
     })
-    const payment = document.querySelector('#payment');
+    
     async function LoadPayment() { 
         const response = await fetch('@Url.Content("~/Shop/payment")');
         const data = await response.json();
@@ -123,4 +126,8 @@
         payment.innerHTML = Payment; 
     }
     LoadPayment();
+
+    payment.addEventListener('change', () => { 
+        console.log(payment.value)
+    })
 </script>
