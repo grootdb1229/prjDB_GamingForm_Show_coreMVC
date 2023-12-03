@@ -39,7 +39,7 @@
                         </div>
                     </div>
                     
-                    <!-- 類別標籤 -->
+                    
                     <div class="container" style="margin-left:-41px">
                         <ul style="margin-top:10px">
                             <li style="list-style-type: none; float:left">
@@ -52,11 +52,11 @@
                                 </select>
                             </li>
                         </ul>
-
+                        <!-- 類別標籤 -->
                         <ul class="nav-item dropdown" style="list-style-type: none" id="tags">
-
-                            <li style="list-style-type: none; float:left;padding-left:10px;padding-top:7px">
-                                <option class="nav-link dropdown-toggle tagclick" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="width:100px">選擇標籤 </option>
+                            
+                            <li style="list-style-type: none; float:left;padding-left:10px;padding-top:7px" id="tags">
+                                <option class="nav-link dropdown-toggle tagclick" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="width:100px">遊戲商城</option>
                                 <ul class="dropdown-menu" aria-labelledby="navbarDropdown" id="Subtags">
                                   
                                 </ul>
@@ -328,6 +328,7 @@
 
         }
 
+        //標籤搜尋
         var tags = document.querySelector('#tags');
         var tagclick = document.querySelector('.tagclick');
         tagclick.addEventListener('click', () => {
@@ -347,6 +348,8 @@
         }
       
         CreateTag();
+        //標籤搜尋END
+
 
     </script>
 }
