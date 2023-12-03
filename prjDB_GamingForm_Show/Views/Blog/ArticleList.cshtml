@@ -83,90 +83,110 @@
 
 
 
-<div style="margin:0px auto;margin-top:30px;width:940px;background-color:#4F4F4F;box-shadow:0px 0px 8px 8px #cccccc;border-radius:8px">
-    <div>
-    </div>
-
-    <table class="table">
-        <tr>
-            <th>
-                <h4 style="color:antiquewhite;text-align:center">
-                    文章標題                  
-                </h4>
-            </th>
-            <th>
-                <h4 style="color:antiquewhite;text-align:center">
-                    互動 / 人氣                  
-                </h4>
-            </th>
-            <th>
-                <h4 style="color:antiquewhite;text-align:center">
-                    最新回復                  
-                </h4>
-            </th>
+<div style="float:right; margin-right:30px;margin-top:30px;width:350px;background-color:#4F4F4F;box-shadow:0px 0px 8px 8px #cccccc;border-radius:8px">
+    <table class="table" style="color:antiquewhite; ">
+        <tr style="text-align:center;font-size:24px">
+            <th>熱門文章</th>
         </tr>
-
         @{
-            foreach (var item in Model.articles)
+            int num = 0;
+            foreach (var t in Model.articles.OrderByDescending(a => a.ViewCount).Take(5))
             {
+                num++;
                 <tr>
                     <td>
-                        <a style="text-decoration:none" href="@Url.Action("ArticleContent", "Blog", new {FId=item.SubBlog.BlogId, AFId =item.ArticleId}) ">
-                            <span style="color:	#FF8000;font-size:25px;font-weight:bold">
-                                【@item.SubBlog.Title】
-                            </span>
-                            <span style="font-size:25px;font-weight:bold">
-                                @item.Title<br />
-                            </span>
-                            <span style="color:#E0E0E0">
-                            @*--------------------------顯示內文--------------------------------*@
-                                @{
-                                    string content = item.ArticleContent;
-                                    HtmlAgilityPack.HtmlDocument htmlDoc = new HtmlAgilityPack.HtmlDocument();
-                                    htmlDoc.LoadHtml(content);
-                                    var textNodes = htmlDoc.DocumentNode.SelectNodes("//text()[not(parent::img)]");
-                                    string textContent = textNodes != null
-                                    ? string.Join(" ", textNodes.Select(node => System.Web.HttpUtility.HtmlDecode(node.InnerHtml.Trim())))
-                                    : "";
-
-                                    // 截取前30个字符
-                                    string truncatedContent = textContent.Length > 30 ? textContent.Substring(0, 30) : textContent;
-                                    @Html.Raw(truncatedContent)
-                                }
-                            </span>
+                        <a style="text-decoration:none" href="@Url.Action("ArticleContent", "Blog", new {FId=t.SubBlog.BlogId, AFId =t.ArticleId}) ">
+                            <p>【@t.SubBlog.Title】 @t.Title</p>
                         </a>
                     </td>
-                    <td style="color:wheat;font-size:15px;text-align:center">
-                        @((item.Replies != null) ? item.Replies.Count() : 0) /      @* 回文次數 *@
-                        @Html.DisplayFor(modelItem => item.ViewCount)               @* 瀏覽次數 *@
-                        <br />
-                        <p style="text-align:center;font-size:12px"> @Html.DisplayFor(modelItem => item.Member.Name) </p>  @* 預計顯示作者名稱在發文時間下面 *@
-                        
-                    </td>
-                    <td style="color:wheat;font-size:10px ;">
-                        @{
-                            if (item.Replies.Any(r=>r.ArticleId==item.ArticleId))
-                            {
-                                <p style ="text-align:center ;font-size:15px">@item.Replies.LastOrDefault().ModifiedDate</p>
-                                <br />
-                                  // <p style="text-align:center ;font-size:15px">@item.Replies.LastOrDefault().Member.Name</p>
-                            }
-                            else
-                            {
-                                <p style="text-align:center ;font-size:15px">@item.ModifiedDate</p>                                
-                                <p style="text-align:center ;font-size:15px">@item.Member.Name</p>
-
-                            }
-                        }
-                        @* <p style="text-align:center ;font-size:15px"> @Html.DisplayFor(modelItem => item.ModifiedDate)</p>  發文時間 *@
-                    </td>
-
                 </tr>
             }
         }
-
     </table>
+</div>
+<div style ="margin:0px auto;margin-top:30px;width:940px;">
+    <div style="background-color:#4F4F4F;box-shadow:0px 0px 8px 8px #cccccc;border-radius:8px">
+        <table class="table">
+            <tr>
+                <th>
+                    <h4 style="color:antiquewhite;text-align:center">
+                        文章標題
+                    </h4>
+                </th>
+                <th>
+                    <h4 style="color:antiquewhite;text-align:center">
+                        互動 / 人氣
+                    </h4>
+                </th>
+                <th>
+                    <h4 style="color:antiquewhite;text-align:center">
+                        最新回復
+                    </h4>
+                </th>
+            </tr>
 
+            @{
+                foreach (var item in Model.articles)
+                {
+                    <tr>
+                        <td>
+                            <a style="text-decoration:none" href="@Url.Action("ArticleContent", "Blog", new {FId=item.SubBlog.BlogId, AFId =item.ArticleId}) ">
+                                <span style="color:	#FF8000;font-size:25px;font-weight:bold">
+                                    【@item.SubBlog.Title】
+                                </span>
+                                <span style="font-size:25px;font-weight:bold">
+                                    @item.Title<br />
+                                </span>
+                                <span style="color:#E0E0E0">
+                                    @*--------------------------顯示內文--------------------------------*@
+                                    @{
+                                        string content = item.ArticleContent;
+                                        HtmlAgilityPack.HtmlDocument htmlDoc = new HtmlAgilityPack.HtmlDocument();
+                                        htmlDoc.LoadHtml(content);
+                                        var textNodes = htmlDoc.DocumentNode.SelectNodes("//text()[not(parent::img)]");
+                                        string textContent = textNodes != null
+                                        ? string.Join(" ", textNodes.Select(node => System.Web.HttpUtility.HtmlDecode(node.InnerHtml.Trim())))
+                                        : "";
+
+                                        // 截取前30个字符
+                                        string truncatedContent = textContent.Length > 30 ? textContent.Substring(0, 30) : textContent;
+                                        @Html.Raw(truncatedContent)
+                                    }
+                                </span>
+                            </a>
+                        </td>
+                        <td style="color:wheat;font-size:15px;text-align:center">
+                            @((item.Replies != null) ? item.Replies.Count() : 0) /      @* 回文次數 *@
+                            @Html.DisplayFor(modelItem => item.ViewCount)               @* 瀏覽次數 *@
+                            <br />
+                            <p style="text-align:center;font-size:12px"> @Html.DisplayFor(modelItem => item.Member.Name) </p>  @* 預計顯示作者名稱在發文時間下面 *@
+
+                        </td>
+                        <td style="color:wheat;font-size:10px ;">
+                            @{
+
+
+                                if (item.Replies.Any(r => r.ArticleId == item.ArticleId))
+                                {
+                                    <p style="text-align:center ;font-size:15px">@item.Replies.LastOrDefault().ModifiedDate</p>
+                                    <br />
+                                    <p style="text-align:center ;font-size:15px">@Model.members.Where(m => m.MemberId == item.Replies.LastOrDefault().MemberId).Select(m => m.Name).FirstOrDefault()</p>
+                                }
+                                else
+                                {
+                                    <p style="text-align:center ;font-size:15px">@item.ModifiedDate</p>
+                                    <p style="text-align:center ;font-size:15px">@item.Member.Name</p>
+
+                                }
+                            }
+                        </td>
+                    </tr>
+                }
+            }
+
+        </table>
+
+    </div>
 </div>
 @section Scripts {
     <script>
