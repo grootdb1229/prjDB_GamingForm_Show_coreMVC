@@ -4,6 +4,8 @@ namespace prjDB_GamingForm_Show.ViewModels
 {
     public class CBlogViewModel
     {
+       
+
         public IEnumerable<Blog>? blogs { get; set; }
         public IEnumerable<Article>? articles { get; set; }
         public IEnumerable<SubBlog>? subBlogs { get; set; }

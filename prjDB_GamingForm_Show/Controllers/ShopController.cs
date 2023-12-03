@@ -242,7 +242,7 @@ namespace prjDB_GamingForm_Show.Controllers
                     ViewBag.Car = car.Count();
                 }
 
-                var tags=_db.Tags.Where(x=>x.TagId>0&&x.TagId<4).Select(x=>x.Name);
+                var tags = _db.Tags.Where(x => x.TagId > 0 && x.TagId < 4).Select(x => x.Name);
                 //dynamic myModels = new ExpandoObject();      
                 //myModels.product = List2; 
                 //myModels.customerdetail = tags;
@@ -250,15 +250,15 @@ namespace prjDB_GamingForm_Show.Controllers
 
             }
 
-          
+
             public IActionResult IndexbyDate(String CK)
-			{
-				//Trace.WriteLine("AAAA" + CK);
-				IEnumerable<Product> Pdb = null;
+            {
+                //Trace.WriteLine("AAAA" + CK);
+                IEnumerable<Product> Pdb = null;
                 if (string.IsNullOrEmpty(CK))
                 {
                     Pdb = _db.Products.Where(x => x.StatusId == 1).OrderByDescending(x => x.AvailableDate.Date);
-				}
+                }
                 else
                 {
                     Pdb = _db.Products.Where(p => p.ProductName.Contains(CK) && p.StatusId == 1)
@@ -266,49 +266,49 @@ namespace prjDB_GamingForm_Show.Controllers
                 }
                 return Json(Pdb);
             }
-			public IActionResult IndexbyPrice_H(String CK)
-			{
-				//Trace.WriteLine("CCC" + CK);
-				IEnumerable<Product> Pdb = null;
-				if (string.IsNullOrEmpty(CK))
-				{
-					Pdb = _db.Products.Where(x => x.StatusId == 1).OrderByDescending(x => x.Price);
-				}
-				else
-				{
-					Pdb = _db.Products.Where(p => p.ProductName.Contains(CK) && p.StatusId == 1)
-						.OrderByDescending(x => x.Price);
-				}
-				return Json(Pdb);
-			}
-			public IActionResult IndexbyPrice_L(String CK)
-			{
-               
-				IEnumerable<Product> Pdb = null;
-				if (string.IsNullOrEmpty(CK))
-				{
-					Pdb = _db.Products.Where(x => x.StatusId == 1).OrderBy(x => x.Price);
-				}
-				else
-				{
-					Pdb = _db.Products.Where(p => p.ProductName.Contains(CK) && p.StatusId == 1)
-						.OrderBy(x => x.Price);
-				}
-				//Trace.WriteLine("BBBB" + Pdb);
-				return Json(Pdb);
-			}
-			//    public IActionResult IndexPage(int? id) //拿來跳page用的 id用變數去計算，++--一個變數去控制讀取到的最後一個商品控制Page
-			//{
-			//    IEnumerable<Product> Pdb = null;
-			//    Pdb = (from aa in _db.Products select aa).Skip((int)id).Take(25);//到最後一頁之後不能按 邏輯再補充
-			//    return Json(Pdb);
-			//}
-			public ActionResult Create()
+            public IActionResult IndexbyPrice_H(String CK)
+            {
+                //Trace.WriteLine("CCC" + CK);
+                IEnumerable<Product> Pdb = null;
+                if (string.IsNullOrEmpty(CK))
+                {
+                    Pdb = _db.Products.Where(x => x.StatusId == 1).OrderByDescending(x => x.Price);
+                }
+                else
+                {
+                    Pdb = _db.Products.Where(p => p.ProductName.Contains(CK) && p.StatusId == 1)
+                        .OrderByDescending(x => x.Price);
+                }
+                return Json(Pdb);
+            }
+            public IActionResult IndexbyPrice_L(String CK)
+            {
+
+                IEnumerable<Product> Pdb = null;
+                if (string.IsNullOrEmpty(CK))
+                {
+                    Pdb = _db.Products.Where(x => x.StatusId == 1).OrderBy(x => x.Price);
+                }
+                else
+                {
+                    Pdb = _db.Products.Where(p => p.ProductName.Contains(CK) && p.StatusId == 1)
+                        .OrderBy(x => x.Price);
+                }
+                //Trace.WriteLine("BBBB" + Pdb);
+                return Json(Pdb);
+            }
+            //    public IActionResult IndexPage(int? id) //拿來跳page用的 id用變數去計算，++--一個變數去控制讀取到的最後一個商品控制Page
+            //{
+            //    IEnumerable<Product> Pdb = null;
+            //    Pdb = (from aa in _db.Products select aa).Skip((int)id).Take(25);//到最後一頁之後不能按 邏輯再補充
+            //    return Json(Pdb);
+            //}
+            public ActionResult Create()
             {
                 _db.Products.Load();
                 return View();
             }
-         
+
             public ActionResult language()
             {
                 _db.SubTags.Load();
@@ -321,16 +321,16 @@ namespace prjDB_GamingForm_Show.Controllers
                 var SelSub = _db.SubTags.Where(p => p.TagId == 1).Select(s => new { s.SubTagId, s.Name }).ToList();
                 return Json(SelSub);
             }
-			public ActionResult WhenYouEditTags(int? id )
-			{
-				_db.ProductTags.Load();
-				//Trace.WriteLine("BBBBB" + id);
-				var SelSub = _db.ProductTags.Where(p => p.ProductId == id).Select(s =>  s.SubTagId ).ToList();
+            public ActionResult WhenYouEditTags(int? id)
+            {
+                _db.ProductTags.Load();
+                //Trace.WriteLine("BBBBB" + id);
+                var SelSub = _db.ProductTags.Where(p => p.ProductId == id).Select(s => s.SubTagId).ToList();
                 //Trace.WriteLine("AAAAA"+SelSub);
-				return Json(SelSub);
-			}
+                return Json(SelSub);
+            }
 
-			[HttpPost]
+            [HttpPost]
             public ActionResult Create(超酷warp product) //先這樣Warp應該是用於資料驗證，有待看影片確認但目前不這樣寫驗證會一直錯誤
             {//但我其實也想把驗證改寫到前端，這些資料本質並不是重要到要寫後端驗證
                 //Trace.WriteLine("AAAA" + product.GameTagOptions);
@@ -361,43 +361,43 @@ namespace prjDB_GamingForm_Show.Controllers
                     _db.SaveChanges();
                 }
                 if (product.GameTagOptions != null)//確保有選標籤
-				{
-					List<int> tagsList = product.GameTagOptions.Split(',').Select(int.Parse).ToList();
-                    Trace.WriteLine("AAAA" + tagsList);				       
+                {
+                    List<int> tagsList = product.GameTagOptions.Split(',').Select(int.Parse).ToList();
+                    Trace.WriteLine("AAAA" + tagsList);
                     foreach (var tags in tagsList)
                     {
-						int tagsID = _db.SubTags.FirstOrDefault(x => x.SubTagId == tags).SubTagId;
-						ProductTag productTag = new ProductTag
-						{
-							SubTagId = tagsID,
-							ProductId = x.ProductId
-						};
+                        int tagsID = _db.SubTags.FirstOrDefault(x => x.SubTagId == tags).SubTagId;
+                        ProductTag productTag = new ProductTag
+                        {
+                            SubTagId = tagsID,
+                            ProductId = x.ProductId
+                        };
 
-						_db.ProductTags.Add(productTag);
-					}
+                        _db.ProductTags.Add(productTag);
+                    }
 
-					_db.SaveChanges();
-				
-				}//Thread.Sleep(3000);
+                    _db.SaveChanges();
+
+                }//Thread.Sleep(3000);
                 return RedirectToAction("Index");
             }
 
 
-       
+
             public ActionResult Edit(int? id)
-            {   
+            {
 
                 Product pdb = _db.Products.FirstOrDefault(p => p.ProductId == id);
                 if (pdb == null)
                 { return RedirectToAction("Index"); }
-				超酷warp cProductWarp = new 超酷warp();
+                超酷warp cProductWarp = new 超酷warp();
 
                 cProductWarp.FImagePath = pdb.FImagePath;
                 cProductWarp.ProductId = pdb.ProductId;
                 cProductWarp.ProductName = pdb.ProductName;
                 cProductWarp.Price = pdb.Price;
                 cProductWarp.ProductContent = pdb.ProductContent;
-                cProductWarp.UnitStock= pdb.UnitStock;
+                cProductWarp.UnitStock = pdb.UnitStock;
                 cProductWarp.StatusID = (int)pdb.StatusId;
                 cProductWarp.MemberID = pdb.MemberId;
                 return View(cProductWarp);
@@ -428,32 +428,32 @@ namespace prjDB_GamingForm_Show.Controllers
                     x.UnitStock = product.UnitStock;
                     x.StatusId = (int)product.StatusID;
                     x.MemberId = product.MemberID;
-                     
+
                     _db.SaveChanges();
                 }
-				if (product.GameTagOptions != null)//確保有選標籤
-				{
-					_db.ProductTags.RemoveRange(_db.ProductTags.Where(x => x.ProductId == product.ProductId));
+                if (product.GameTagOptions != null)//確保有選標籤
+                {
+                    _db.ProductTags.RemoveRange(_db.ProductTags.Where(x => x.ProductId == product.ProductId));
 
 
-					List<int> tagsList = product.GameTagOptions.Split(',').Select(int.Parse).ToList();
-					//Trace.WriteLine("AAAA" + tagsList);
-					foreach (var tags in tagsList)
-					{
-						int tagsID = _db.SubTags.FirstOrDefault(x => x.SubTagId == tags).SubTagId;
-						ProductTag productTag = new ProductTag
-						{
-							SubTagId = tagsID,
-							ProductId = x.ProductId
-						};
+                    List<int> tagsList = product.GameTagOptions.Split(',').Select(int.Parse).ToList();
+                    //Trace.WriteLine("AAAA" + tagsList);
+                    foreach (var tags in tagsList)
+                    {
+                        int tagsID = _db.SubTags.FirstOrDefault(x => x.SubTagId == tags).SubTagId;
+                        ProductTag productTag = new ProductTag
+                        {
+                            SubTagId = tagsID,
+                            ProductId = x.ProductId
+                        };
 
-						_db.ProductTags.Add(productTag);
-					}
+                        _db.ProductTags.Add(productTag);
+                    }
 
-					_db.SaveChanges();
+                    _db.SaveChanges();
 
-				}//Thread.Sleep(3000);
-				return RedirectToAction("Index");
+                }//Thread.Sleep(3000);
+                return RedirectToAction("Index");
             }
 
             public ActionResult Delete(int id)    ////不確定是否要用刪除的方式來表達商品下架，刪除資料也會讓關聯表紀錄消失。
@@ -470,10 +470,28 @@ namespace prjDB_GamingForm_Show.Controllers
 
             public ActionResult Details(int id)
             {
-
                 _db.Products.Load();
                 Product x = _db.Products.FirstOrDefault(p => p.ProductId == id);
-                return View(x);
+               
+                var tagNames = _db.ProductTags
+                 .Where(x => x.ProductId == id)
+                 .Select(x => x.SubTag.Name)
+                 .ToList();
+
+                string s = string.Join("/", tagNames);
+                //Trace.WriteLine("僅作查看"+s);
+                List<CShopPageViewModel> aa = new List<CShopPageViewModel>();
+                CShopPageViewModel ProductInfo = new CShopPageViewModel()
+                {
+                    ProductId = x.ProductId,
+                    ProductName = x.ProductName,
+                    FImagePath = x.FImagePath,
+                    Price = x.Price,
+                    ProductContent = x.ProductContent,
+                    SubTagName=s
+                    
+                };
+                return View(ProductInfo);
             }
             public IActionResult AddToCar(int? id)
             {
@@ -486,15 +504,15 @@ namespace prjDB_GamingForm_Show.Controllers
             }
 
             public IActionResult payment()
-            { 
-              _db.Payments.Load();
+            {
+                _db.Payments.Load();
                 var payment = _db.Payments.Select(x => x);
                 return Json(payment);
             }
             [HttpPost]
             public IActionResult AddToCar(CShoppingCarViewModel vm)
             {
-               
+
                 Product product = _db.Products.FirstOrDefault(x => x.ProductId == vm.ProductID);
                 if (product != null)
                 {
@@ -515,14 +533,14 @@ namespace prjDB_GamingForm_Show.Controllers
                     x.FImagePath = product.FImagePath;
                     x.Count = vm.txtCount;
                     x.ProductID = product.ProductId;
-                    
+
 
                     car.Add(x);
                     json = JsonSerializer.Serialize(car);
                     HttpContext.Session.SetString(CDictionary.SK_PURCHASED_PRODUCES_LIST, json);
                     ViewBag.Car = car.Count();
                 }
-                
+
                 return RedirectToAction("Index");
             }
 
@@ -538,7 +556,7 @@ namespace prjDB_GamingForm_Show.Controllers
                 {
                     return RedirectToAction("Index");
                 }
-                
+
                 ViewBag.Car = car.Count();
                 return View(car);
             }
@@ -602,7 +620,7 @@ namespace prjDB_GamingForm_Show.Controllers
                     PaymentId = payment,
                     StatusId = 13,
                     ShipId = 1
-                    
+
                 };
                 _db.Orders.Add(order);
                 _db.SaveChanges();
@@ -612,8 +630,8 @@ namespace prjDB_GamingForm_Show.Controllers
                     {
                         OrderId = _db.Orders.Where(x => x.MemberId == 34).OrderByDescending(x => x.OrderId).First().OrderId,
                         ProductId = p.ProductID,
-                        UnitPrice=p.Price,
-                        Quantinty=p.Count,
+                        UnitPrice = p.Price,
+                        Quantinty = p.Count,
                         Disconut = 0
                     };
                     _db.OrderProducts.Add(orderproduct);
