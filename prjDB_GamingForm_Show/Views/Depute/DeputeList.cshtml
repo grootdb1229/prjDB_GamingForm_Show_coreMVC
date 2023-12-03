@@ -222,29 +222,56 @@
             const snd = '<span class="text-truncate me-3">熱門關鍵字 :</span>'
             HkFrag.append(snd);
             const data = await response.json();
-            console.log(data);
+            // console.log(data);
             // <a href="/Depute/DeputeDetails/${list.id}" class="btn btn-primary" id = " btndp" name="txtKeyword" > 詳細...</a>
-            const Hotkeys = data.map(Hotkeys => `<a href="/Depute/Search?" id="${Hotkeys}">${Hotkeys} </a>`)
-            console.log(Hotkeys);
-            $('#html').click(function () {
-                $.getJSON('@Url.Content("~/Depute/Search")', (datas) => {
-                    const docFrag = $(document.createDocumentFragment());
-                    $.each(datas, (index, data) => { 
-                        console.log(data);
-                        // <li class="list-group-item" > An item < /li>
-                        // const li = $('<li></li>').text(data).addClass('list-group-item');
-                        docFrag.append(li);
-                    })
-                    $('.list-group').html(docFrag);
-                })
-                $('#divAlert').text("JSON")
-            })
-            // const Hotkeys = data.map(Hotkeys => `<span style="flex:content;width:auto;text-align:center" name="txtKeyword">${Hotkeys} </span>`)
+            // const Hotkeys = data.map(Hotkeys => `<a href="/Depute/Search?${Hotkeys}" id="${Hotkeys}">${Hotkeys} </a>`)
+            const Hotkeys = data.map(Hotkeys => `<span" id="${Hotkeys}">${Hotkeys} </span>`)
+            // console.log(Hotkeys);
             HkFrag.append(Hotkeys);
             $('#hotkey').html(HkFrag)
+
+
+            data.map(
+                Hotkeys => $(`#${Hotkeys}`).click(function () {
+                    $.getJSON(`@Url.Content("~/Depute/Search")?txtKeyword=${Hotkeys}`, (datas) => {
+                        const docFrag = $(document.createDocumentFragment());
+                        $.each(datas => {
+                            console.log(datas);
+                            // <li class="list-group-item" > An item < /li>
+                            // const li = $('<li></li>').text(data).addClass('list-group-item');
+
+                            const content = `<input type="hidden" name="${list.id}" value=${list.id}/>
+                                                                        <div  class="col-sm-12 col-md-8 d-flex align-items-center">
+                                                                         <img class="flex-shrink-0 img-fluid border rounded" src="/images/${list.imgfilepath}" alt="" style="width: 80px; height: 80px;">
+                                                                         <div class="text-start ps-4">
+                                                                         <h5 class="mb-3">${list.title}</h5>
+                                                                                 <span class="text-truncate me-3"><i class="fa fa-map-marker-alt text-primary me-2"></i>${list.region}</span>
+                                                                                 <span class="text-truncate me-3"><i class="fa fa-map-marker-alt text-primary me-2"></i>${list.providername}</span>
+                                                                                 <span class="text-truncate me-3"><i class="far fa-clock text-primary me-2"></i>${list.startdate}</span>
+                                                                                 <span class="text-truncate me-0"><i class="far fa-money-bill-alt text-primary me-2"></i>${list.salary}</span>
+                                                                        </div>
+                                                                        </div>
+                                                                        <div class="col-sm-12 col-md-4 d-flex flex-column align-items-start align-items-md-end justify-content-center">
+                                                                        <div class="d-flex mb-3">
+                                                                        <a class="btn btn-light btn-square me-3" href=""><i class="far fa-heart text-primary"></i></a>
+                                                                                <a href="/Depute/DeputeDetails/${list.id}" class="btn btn-primary" id=" btndp">詳細...</a>
+                                                                                                <a href="/Depute/Apply/${list.id}" class="btn btn-primary"  id=btndp"">我要應徵...</a>
+
+                                                                        </div>
+                                                                                <small class="text-truncate"><i class="far fa-calendar-alt text-primary me-2"></i>Last Update : ${list.modifieddate}</small>
+                                                                        </div>`
+
+
+                            docFrag.append(content);
+                        })
+                        $('#list').html(docFrag);
+                    })
+                })
+
+            )
             
         }
-        
+       
 
 
     </script>
