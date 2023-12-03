@@ -30,6 +30,7 @@ namespace prjDB_GamingForm_Show.Hubs
         {
             public string ConnectionId { get; set; }
             public string UserName { get; set; }
+            public bool IsOnline { get; set; }
         }
         // 用戶連線 ID 列表        
         private static List<UserConnection> ConnectedUsers = new List<UserConnection>();
@@ -46,7 +47,7 @@ namespace prjDB_GamingForm_Show.Hubs
             var userName = Context.GetHttpContext().Session.GetString(CDictionary.SK_管理者名稱);
             var connectionId = Context.ConnectionId;
 
-            var userConnection = new UserConnection { ConnectionId = connectionId, UserName = userName };
+            var userConnection = new UserConnection { ConnectionId = connectionId, UserName = userName, IsOnline = true };
             ConnectedUsers.Add(userConnection);
 
             // 更新連線 ID 列表
@@ -55,6 +56,9 @@ namespace prjDB_GamingForm_Show.Hubs
 
             // 更新個人 ID
             await Clients.Client(Context.ConnectionId).SendAsync("UpdSelfID", userName);
+
+            // 更新管理者線上狀態
+            await UpdateAdminOnlineStatus(userName, true);
 
             // 更新聊天內容
             await Clients.All.SendAsync("UpdContent", "新連線 ID: " + userName);
@@ -77,6 +81,9 @@ namespace prjDB_GamingForm_Show.Hubs
             // 更新連線 ID 列表
             string jsonString = JsonConvert.SerializeObject(GetUserNames());
             await Clients.All.SendAsync("UpdList", jsonString);
+
+            // 更新管理者線上狀態
+            await UpdateAdminOnlineStatus(disconnectedUser?.UserName, false);
 
             // 更新聊天內容
             await Clients.All.SendAsync("UpdContent", "已離線 ID: " + disconnectedUser?.UserName);
@@ -126,6 +133,16 @@ namespace prjDB_GamingForm_Show.Hubs
         {
             var user = ConnectedUsers.FirstOrDefault(u => u.UserName == userName);
             return user?.ConnectionId;
+        }
+        public async Task UpdateAdminOnlineStatus(string adminName, bool isOnline)
+        {
+            // 更新管理者在線狀態
+            await Clients.All.SendAsync("UpdAdminOnlineStatus", adminName, isOnline);
+        }
+        public bool GetAdminOnlineStatus(string adminName)
+        {            
+            var admin = ConnectedUsers.FirstOrDefault(u => u.UserName == adminName);
+            return admin != null && admin.IsOnline;
         }
     }
 }

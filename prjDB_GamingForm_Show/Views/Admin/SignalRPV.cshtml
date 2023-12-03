@@ -1,0 +1,80 @@
+﻿@model IEnumerable<prjDB_GamingForm_Show.ViewModels.CSignalRUseAdminList>
+
+<p>
+    <h2>管理者列表</h2>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                管理者編號
+            </th>
+            <th>
+                管理者名稱
+            </th>
+            <th>
+                狀態
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.AdminId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.AdminName)
+                </td>
+                <td id="@($"onlineStatus_{item.AdminName}")"> 
+                    <!-- 在線狀態將在此處更新 -->
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+@section Scripts{
+    <script>
+        var connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
+
+        // 與Server建立連線
+        connection.start().then(function () {
+            console.log("Hub 連線完成");
+        }).catch(function (err) {
+            alert('連線錯誤: ' + err.toString());
+        });
+
+        //更新連線 ID 列表事件
+        connection.on("UpdList", function (jsonList) {
+            var list = JSON.parse(jsonList);
+            $("#IDList li").remove();
+            for (i = 0; i < list.length; i++) {
+                
+                updateUsersList(list);
+            }
+        });
+        async function updateUsersList(users) {
+            // 更新用戶列表的顯示
+            $("#test").load('@Url.Content("~/Admin/SignalRPV")');
+
+            // 更新管理者在線狀態
+            for (var i = 0; i < users.length; i++) {
+                await getAdminOnlineStatus(users[i]);
+            }
+        }
+
+        async function getAdminOnlineStatus(adminName) {
+            // 呼叫 SignalR Hub 方法獲取管理者的在線狀態
+            connection.invoke("GetAdminOnlineStatus", adminName).then(function (isOnline) {
+                // 觸發更新在線狀態的事件
+                connection.invoke("UpdateAdminOnlineStatus", adminName, isOnline);
+            });
+        }
+        connection.on("UpdAdminOnlineStatus", function (adminName, isOnline) {
+            // 根據管理者名稱和在線狀態更新前端顯示
+            var statusId = `#onlineStatus_${adminName}`;
+            $(statusId).text(isOnline ? "在線" : "離線");
+        });
+    </script>
+}

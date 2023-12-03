@@ -37,8 +37,7 @@ namespace prjDB_GamingForm_Show.Models.Shop
 		[DisplayName("產品名稱")]
 		public string ProductName
 		{
-			//get;
-			//set;
+			
 			get { return _product.ProductName; }
 			set { _product.ProductName = value; }
 		}
