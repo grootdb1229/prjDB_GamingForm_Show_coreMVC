@@ -1,4 +1,6 @@
 ﻿@model prjDB_GamingForm_Show.ViewModels.CBlogViewModel
+@using HtmlAgilityPack
+@using System.Web
 @{
     ViewBag.Title = "ArticleList";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -18,8 +20,9 @@
         p {
             font-size: 12px;
         }
-        a{
-           text-decoration:none
+
+        a {
+            text-decoration: none
         }
     </style>
 }
@@ -31,7 +34,7 @@
             <div class="humberger-menu ">
                 @Html.ActionLink("前往首頁", "List", "Blog")
             </div>
-            
+
             <div class="nav-menu">
                 <ul>
                     <li>
@@ -44,34 +47,34 @@
                                 <a href="@Url.Action("ArticleList", "Blog", new {FId=item.First().BlogId ,SFId = item.FirstOrDefault().SubBlogId})">@item.Key</a>
                             </li>
                         }
-                    }                    
+                    }
                     <li style="float:right;">
                         @{
                             if (Context.Session.GetInt32(CDictionary.SK_UserID) == null)
                             {
                                 <button style="background:#a81d1d ;border:none;height:52.5px" type="button" class="btn btn-danger" id="btnCreate" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
                                     發表文章
-                                </button>                                
+                                </button>
                             }
                             else
                             {
-                                @Html.ActionLink("發表文章", "ArticleCreate", "Blog", new { FId = Model.blogs.FirstOrDefault().BlogId }, new { id = "btnCreate",@class="btn" })
+                                @Html.ActionLink("發表文章", "ArticleCreate", "Blog", new { FId = Model.blogs.FirstOrDefault().BlogId }, new { id = "btnCreate", @class = "btn" })
                             }
-                                                    }
+                        }
                     </li>
                 </ul>
-          
+
             </div>
             <div>
 
-            <div style="margin:3px 30%">
-                
-            @using (Html.BeginForm())
-            {
-                @:關鍵字 @Html.TextBox("txtKeyword")
-                <input type="submit" value="查詢" />
-            }
-            </div>
+                <div style="margin:3px 30%">
+
+                    @using (Html.BeginForm())
+                    {
+                        @:關鍵字 @Html.TextBox("txtKeyword")
+                        <input type="submit" value="查詢" />
+                    }
+                </div>
             </div>
         </div>
 
@@ -86,53 +89,76 @@
 
     <table class="table">
         <tr>
-
             <th>
                 <h4 style="color:antiquewhite;text-align:center">
-                    文章標題
-                    @* @Html.DisplayNameFor(model => model.articles.FirstOrDefault().Title) *@
-                </h4>
-            </th>
-
-
-            <th>
-                <h4 style="color:antiquewhite;text-align:center">
-                    最後更新時間
-                    @* @Html.DisplayNameFor(model => model.articles.FirstOrDefault().ModifiedDate) *@
+                    文章標題                  
                 </h4>
             </th>
             <th>
                 <h4 style="color:antiquewhite;text-align:center">
-                    互動 / 人氣
-                    @* @Html.DisplayNameFor(model => model.articles.FirstOrDefault().ViewCount) *@
+                    互動 / 人氣                  
                 </h4>
             </th>
-
-
+            <th>
+                <h4 style="color:antiquewhite;text-align:center">
+                    最新回復                  
+                </h4>
+            </th>
         </tr>
 
         @{
             foreach (var item in Model.articles)
             {
                 <tr>
-
                     <td>
                         <a style="text-decoration:none" href="@Url.Action("ArticleContent", "Blog", new {FId=item.SubBlog.BlogId, AFId =item.ArticleId}) ">
-                            <span style="color:	#FF8000;font-size:25px">
+                            <span style="color:	#FF8000;font-size:25px;font-weight:bold">
                                 【@item.SubBlog.Title】
                             </span>
-                            <span style="font-size:25px">
-                                @item.Title
+                            <span style="font-size:25px;font-weight:bold">
+                                @item.Title<br />
+                            </span>
+                            <span style="color:#E0E0E0">
+                            @*--------------------------顯示內文--------------------------------*@
+                                @{
+                                    string content = item.ArticleContent;
+                                    HtmlAgilityPack.HtmlDocument htmlDoc = new HtmlAgilityPack.HtmlDocument();
+                                    htmlDoc.LoadHtml(content);
+                                    var textNodes = htmlDoc.DocumentNode.SelectNodes("//text()[not(parent::img)]");
+                                    string textContent = textNodes != null
+                                    ? string.Join(" ", textNodes.Select(node => System.Web.HttpUtility.HtmlDecode(node.InnerHtml.Trim())))
+                                    : "";
+
+                                    // 截取前30个字符
+                                    string truncatedContent = textContent.Length > 30 ? textContent.Substring(0, 30) : textContent;
+                                    @Html.Raw(truncatedContent)
+                                }
                             </span>
                         </a>
-                    </td>
-                    <td style="color:wheat;font-size:10px ;">
-                        <p style="text-align:center ;font-size:15px"> @Html.DisplayFor(modelItem => item.ModifiedDate)</p>  @* 發文時間 *@
-                        <p style="text-align:center;font-size:15px"> @Html.DisplayFor(modelItem => item.Member.Name) </p>  @* 預計顯示作者名稱在發文時間下面 *@
                     </td>
                     <td style="color:wheat;font-size:15px;text-align:center">
                         @((item.Replies != null) ? item.Replies.Count() : 0) /      @* 回文次數 *@
                         @Html.DisplayFor(modelItem => item.ViewCount)               @* 瀏覽次數 *@
+                        <br />
+                        <p style="text-align:center;font-size:12px"> @Html.DisplayFor(modelItem => item.Member.Name) </p>  @* 預計顯示作者名稱在發文時間下面 *@
+                        
+                    </td>
+                    <td style="color:wheat;font-size:10px ;">
+                        @{
+                            if (item.Replies.Any(r=>r.ArticleId==item.ArticleId))
+                            {
+                                <p style ="text-align:center ;font-size:15px">@item.Replies.LastOrDefault().ModifiedDate</p>
+                                <br />
+                                  // <p style="text-align:center ;font-size:15px">@item.Replies.LastOrDefault().Member.Name</p>
+                            }
+                            else
+                            {
+                                <p style="text-align:center ;font-size:15px">@item.ModifiedDate</p>                                
+                                <p style="text-align:center ;font-size:15px">@item.Member.Name</p>
+
+                            }
+                        }
+                        @* <p style="text-align:center ;font-size:15px"> @Html.DisplayFor(modelItem => item.ModifiedDate)</p>  發文時間 *@
                     </td>
 
                 </tr>
@@ -144,6 +170,6 @@
 </div>
 @section Scripts {
     <script>
-       
+
     </script>
 }
