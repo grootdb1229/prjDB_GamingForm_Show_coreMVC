@@ -13,7 +13,7 @@ public partial class DeputeAction
 
     public int ActionId { get; set; }
 
-    public virtual ArticleAction Action { get; set; } = null!;
+    public virtual Action Action { get; set; } = null!;
 
     public virtual Depute Depute { get; set; } = null!;
 

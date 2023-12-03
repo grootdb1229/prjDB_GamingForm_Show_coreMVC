@@ -10,4 +10,6 @@ public partial class Action
     public string? ActionType { get; set; }
 
     public virtual ICollection<ArticleAction> ArticleActions { get; set; } = new List<ArticleAction>();
+
+    public virtual ICollection<DeputeAction> DeputeActions { get; set; } = new List<DeputeAction>();
 }
