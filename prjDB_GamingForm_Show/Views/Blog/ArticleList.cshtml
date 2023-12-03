@@ -91,17 +91,17 @@
         <tr>
             <th>
                 <h4 style="color:antiquewhite;text-align:center">
-                    文章標題                  
+                    文章標題
                 </h4>
             </th>
             <th>
                 <h4 style="color:antiquewhite;text-align:center">
-                    互動 / 人氣                  
+                    互動 / 人氣
                 </h4>
             </th>
             <th>
                 <h4 style="color:antiquewhite;text-align:center">
-                    最新回復                  
+                    最新回復
                 </h4>
             </th>
         </tr>
@@ -119,7 +119,7 @@
                                 @item.Title<br />
                             </span>
                             <span style="color:#E0E0E0">
-                            @*--------------------------顯示內文--------------------------------*@
+                                @*--------------------------顯示內文--------------------------------*@
                                 @{
                                     string content = item.ArticleContent;
                                     HtmlAgilityPack.HtmlDocument htmlDoc = new HtmlAgilityPack.HtmlDocument();
@@ -141,19 +141,29 @@
                         @Html.DisplayFor(modelItem => item.ViewCount)               @* 瀏覽次數 *@
                         <br />
                         <p style="text-align:center;font-size:12px"> @Html.DisplayFor(modelItem => item.Member.Name) </p>  @* 預計顯示作者名稱在發文時間下面 *@
-                        
+
                     </td>
                     <td style="color:wheat;font-size:10px ;">
                         @{
-                            if (item.Replies.Any(r=>r.ArticleId==item.ArticleId))
+
+
+                            if (item.Replies.Any(r => r.ArticleId == item.ArticleId))
                             {
-                                <p style ="text-align:center ;font-size:15px">@item.Replies.LastOrDefault().ModifiedDate</p>
+                                <p style="text-align:center ;font-size:15px">@item.Replies.LastOrDefault().ModifiedDate</p>
+
+                                //var q = from n in Model.replies
+                                //        where n.MemberId == Model.members.FirstOrDefault().MemberId
+                                //        select n.MemberId;
+
                                 <br />
-                                  // <p style="text-align:center ;font-size:15px">@item.Replies.LastOrDefault().Member.Name</p>
+                                <p style="text-align:center ;font-size:15px"> @Model.members.Where(p=>p.MemberId==item.Replies.LastOrDefault().MemberId).Select(p=>p.Name).FirstOrDefault() </p>
+
+
+                                //<p style="text-align:center ;font-size:15px">@item.Replies.LastOrDefault().Member.Name</p>
                             }
                             else
                             {
-                                <p style="text-align:center ;font-size:15px">@item.ModifiedDate</p>                                
+                                <p style="text-align:center ;font-size:15px">@item.ModifiedDate</p>
                                 <p style="text-align:center ;font-size:15px">@item.Member.Name</p>
 
                             }
