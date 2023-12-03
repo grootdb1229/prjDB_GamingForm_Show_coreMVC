@@ -27,6 +27,8 @@ namespace prjDB_GamingForm_Show.ViewModels
 
         public string SubTagName { get; set; }
 
+        public IEnumerable<int> payment { get; set; }
+
         public virtual Member? Member { get; set; }
         public IEnumerable<CProductWarp> CProductWarp { get; set; } = new List<CProductWarp>();
         public virtual IEnumerable<Product> Product { get; set; } = new List<Product>();

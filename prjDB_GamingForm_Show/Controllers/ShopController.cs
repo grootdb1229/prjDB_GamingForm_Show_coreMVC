@@ -14,6 +14,7 @@ using System.Diagnostics;
 using System.Dynamic;
 using System.Linq;
 using System.Reflection.PortableExecutable;
+using System.Runtime.CompilerServices;
 using System.Security.Cryptography.Xml;
 using System.Text.Json;
 using System.Transactions;
@@ -589,31 +590,36 @@ namespace prjDB_GamingForm_Show.Controllers
             }
 
 
-            public IActionResult Purchase(CShoppingCarViewModel vm)
+            public IActionResult Purchase(int payment)
             {
                 string json = HttpContext.Session.GetString(CDictionary.SK_PURCHASED_PRODUCES_LIST);
                 List<CShoppingCarViewModel> car = JsonSerializer.Deserialize<List<CShoppingCarViewModel>>(json);
-                //Order order = new Order()
-                //{
-                //    MemberId = 34,
-                //    ShipName = _db.Members.Where(x => x.MemberId == 34).Select(x=>x.Name).ToString(),
-                //    OrderDate = DateTime.Now,
-                //    PaymentId = 1,//vm.payment
-                //    StatusId = 13,
-                //    ShipId =1
-                //};
-                //_db.Orders.Add(order);
+                Order order = new Order()
+                {
+                    MemberId = 34,
+                    ShipName = _db.Members.FirstOrDefault(x => x.MemberId == 34).Name,
+                    OrderDate = DateTime.Now,
+                    PaymentId = payment,
+                    StatusId = 13,
+                    ShipId = 1
+                    
+                };
+                _db.Orders.Add(order);
+                _db.SaveChanges();
+                foreach (var p in car)
+                {
+                    OrderProduct orderproduct = new OrderProduct()
+                    {
+                        OrderId = _db.Orders.Where(x => x.MemberId == 34).OrderByDescending(x => x.OrderId).First().OrderId,
+                        ProductId = p.ProductID,
+                        UnitPrice=p.Price,
+                        Quantinty=p.Count,
+                        Disconut = 0
+                    };
+                    _db.OrderProducts.Add(orderproduct);
+                    _db.SaveChanges();
+                }
 
-                //foreach (var p in vm.product)
-                //{
-
-                //}
-                
-                //OrderProduct orderproduct = new OrderProduct()
-                //{
-                //    OrderId = _db.Orders.Where(x=>x.MemberId==34).OrderByDescending(x=>x.OrderDate).First().OrderId,
-                //    ProductId = vm.ProductID,
-                //};
                 car.Clear();
                 json = JsonSerializer.Serialize(car);
                 HttpContext.Session.SetString(CDictionary.SK_PURCHASED_PRODUCES_LIST, json);
