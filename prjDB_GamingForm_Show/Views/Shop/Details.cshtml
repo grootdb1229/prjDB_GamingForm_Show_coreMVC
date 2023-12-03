@@ -1,4 +1,4 @@
-﻿@model prjDB_GamingForm_Show.Models.Entities.Product
+﻿@model prjDB_GamingForm_Show.ViewModels.CShopPageViewModel
 
 @{
     ViewBag.Title = "Details";
@@ -11,6 +11,15 @@
             <div class="col-md-6">
                 <div class="small mb-1">SKU: BST-498</div>
                 <h1 class="display-5 fw-bolder">@Html.DisplayFor(model => model.ProductName)</h1>
+                <div>
+                    @{
+                        string[] tags = Model.SubTagName.Split('/');
+                        foreach (var t in tags)
+                        {
+                            <span class="badge text-bg-light">@t</span>
+                        }
+                    }
+                </div>
                 <div class="fs-5 mb-5">
                     <span class="text-decoration-line-through">@Html.DisplayFor(model => model.Price)</span>
                     <span>@Html.DisplayFor(model => model.Price)</span>
