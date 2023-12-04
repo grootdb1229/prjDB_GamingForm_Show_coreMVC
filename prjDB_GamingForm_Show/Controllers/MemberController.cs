@@ -7,6 +7,8 @@ using MailKit;
 using MailKit.Net.Smtp;
 using MimeKit;
 using Microsoft.AspNetCore.Http.Extensions;
+using Microsoft.Identity.Client;
+using Microsoft.CodeAnalysis;
 
 namespace prjDB_GamingForm_Show.Controllers
 {
@@ -128,8 +130,12 @@ namespace prjDB_GamingForm_Show.Controllers
                 return RedirectToAction("Login", "Home");
             }
         }
+
         public IActionResult SendEmail()
         {
+
+            string ValGuid = new Guid().ToString("D");
+            HttpContext.Session.SetString(CDictionary.SK_Validation_Guid, ValGuid);
             var message = new MimeMessage();
             message.From.Add(new MailboxAddress("grootdb1229", "grootdb1229@gmail.com"));
             message.To.Add(new MailboxAddress("alan90306", "alan90306@gmail.com"));
@@ -141,7 +147,7 @@ namespace prjDB_GamingForm_Show.Controllers
                         "<h2> 電子信件已寄送 請至電子信箱進行確認 </h2>" +
                         "<h3> 您的驗證碼 及 會員編號 </h3>" +
                         "<p> 您的會員編號為:" + HttpContext.Session.GetInt32(CDictionary.SK_Confirmed_MemberID)+ "</p>" +
-                        "<p> 您的驗證碼為:"   + @Guid.NewGuid() + "</p>" +
+                        "<p> 您的驗證碼為:"   + HttpContext.Session.GetString(CDictionary.SK_Validation_Guid) + "</p>" +
                         "</html>"
             };
 
@@ -158,11 +164,24 @@ namespace prjDB_GamingForm_Show.Controllers
         {
             return View();
         }
-        //[HttpPost]
-        //public IActionResult ValidationPage(CValidationViewModel CV)
-        //{
-
-        //}
+        [HttpPost]
+        public IActionResult ValidationPage(CValidationViewModel CV)
+        {
+            Member dbMember = (from m in _db.Members
+                             where m.MemberId == HttpContext.Session.GetInt32(CDictionary.SK_Confirmed_MemberID)
+                             select m).FirstOrDefault();
+            if (dbMember == null) 
+            {
+                return RedirectToAction("ForgetPassword" , "Member");
+            }
+            if (dbMember != null) 
+            {
+                dbMember.Password = CV.txtVal_Password;
+                _db.SaveChanges();
+                return RedirectToAction("Login", "Home");
+            }
+            return View();
+        }
 
 
 
