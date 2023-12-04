@@ -40,6 +40,7 @@ namespace DB_GamingForm_Show.Job.DeputeClass
         public string skillname { get; set; }
         public int skillid { get; set; }
         [DisplayName("懸賞金主")]
+        public int viewcount { get; set; }
         public string memeberContent { get; set; }
         public string memberName {  get; set; }
         public string imgfilepath { get; set; }

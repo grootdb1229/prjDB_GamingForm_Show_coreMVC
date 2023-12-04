@@ -1,9 +1,11 @@
 ﻿using DB_GamingForm_Show.Job.DeputeClass;
+using Elfie.Serialization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using prjDB_GamingForm_Show.Models;
 using prjDB_GamingForm_Show.Models.Entities;
 using prjDB_GamingForm_Show.Models.Shop;
 using prjDB_GamingForm_Show.ViewModels;
@@ -48,6 +50,7 @@ namespace prjDB_GamingForm_Show.Controllers
                            Modifiedate = n.Modifiedate.ToString("d"),
                            n.DeputeContent,
                            n.Salary,
+                           n.ViewCount,
                            Status = n.Status.Name,
                            n.Region.City,
                            n.Provider.FImagePath
@@ -65,6 +68,7 @@ namespace prjDB_GamingForm_Show.Controllers
                     modifieddate = item.Modifiedate,
                     deputeContent = item.DeputeContent,
                     salary = item.Salary,
+                    viewcount = item.ViewCount,
                     status = item.Status,
                     region = item.City,
                     imgfilepath = item.FImagePath
@@ -106,9 +110,17 @@ namespace prjDB_GamingForm_Show.Controllers
         }
 
         //TODO #2 搜尋
+        //~/Depute/search?keyword=abc
+        //public IActionResult Search(string keyword)
+        //{
+
+        //}
         public IActionResult Search(CKeyWord vm)
         {
             IEnumerable<CDeputeViewModel> datas = null;
+            if (string.IsNullOrEmpty(vm.txtKeyword) && (!string.IsNullOrEmpty(vm.txtHotkey)))
+                vm.txtKeyword = vm.txtHotkey;
+            
             if (string.IsNullOrEmpty(vm.txtKeyword))
             {
                 ListLoad();
@@ -205,6 +217,21 @@ namespace prjDB_GamingForm_Show.Controllers
             return Json(datas);
         }
 
+        //public ActionResult demoCountByCookies()
+        //{
+        //    int count = 0;
+        //    HttpCookie cookie = Request.Cookies["COUNT"];
+        //    if (cookie != null)
+        //        count = Convert.ToInt32(cookie.Value);
+        //    count++;
+        //    cookie = new HttpCookie("COUNT");
+        //    cookie.Value = count.ToString();
+        //    cookie.Expires = DateTime.Now.AddSeconds(20);
+        //    Response.Cookies.Add(cookie);
+        //    ViewBag.count = count;
+        //    return View();
+        //}
+
         //TODO #3 委託詳細
         public IActionResult DeputeDetails(int? id)
         {
@@ -213,6 +240,14 @@ namespace prjDB_GamingForm_Show.Controllers
 
             if (pDb != null)
             {
+
+                Depute data = (from n in _db.Deputes
+                               where n.DeputeId == id
+                               select n).First();
+                data.ViewCount += 1;
+                _db.SaveChanges();
+
+
                 pln = new CDeputeViewModel();
                 pln.providername = pDb.Provider.Name;
                 pln.title = pDb.Title;
@@ -297,17 +332,20 @@ namespace prjDB_GamingForm_Show.Controllers
         }
 
         //首頁
-        public IActionResult NewFive()
+        public IActionResult GetFive(int? id)
         {
+            if (id == 1)
+            { 
             var datas = List.OrderByDescending(n => n.modifieddate).Take(5);
             return Json(datas);
+            }
+            else
+            {
+                var datas = List.OrderByDescending(n => n.viewcount).Take(5);
+                return Json(datas);
+            }
         }
 
-        public IActionResult TopFive(int? id)
-        {
-            var datas = _db.Skills.Where(a => a.SkillClassId == id);
-            return Json(datas);
-        }
         public IActionResult DeputeMain()
         {
 
@@ -315,6 +353,8 @@ namespace prjDB_GamingForm_Show.Controllers
         }
 
         #endregion
+
+        #region 老邊
 
         public int _memberIdtest = 38;
         public IActionResult changeDeputeRecordStatus(string deputerecordstatus)
@@ -325,7 +365,9 @@ namespace prjDB_GamingForm_Show.Controllers
             if (_db.Statuses.Any(_ => _.StatusId == statusID))
                 o.ApplyStatusId = Convert.ToInt32(statusID);
             _db.SaveChanges();
-            return Ok();
+
+            var statusName = _db.Statuses.FirstOrDefault(_ => _.StatusId == statusID).Name;
+            return Content(statusName);
         }
         public IActionResult individualDetials(int id)
         {
@@ -565,6 +607,8 @@ namespace prjDB_GamingForm_Show.Controllers
         {
             return PartialView();
         }
+        #endregion
+
         #endregion
     }
 }
