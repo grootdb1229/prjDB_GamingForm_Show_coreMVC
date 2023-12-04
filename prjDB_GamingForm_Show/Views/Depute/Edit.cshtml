@@ -58,9 +58,12 @@
                 <select name="region" class="form-select" id="selRegion" aria-label="Default select example">
                 </select>
             </div>
+            <button type="button" class="btn btn-info mb-3" onclick="openSkillBrowser()">編輯所需技能</button>
+            
+            <input name="skilllist" id="select-skills" hidden>
             <div class="form-group">
                 <a asp-action="personal" class="btn btn-secondary">取消</a>
-                <input type="submit" value="送出並修改" class="btn btn-success" />
+                <input type="submit" onclick="prepareAndSubmit()" value="送出並修改" class="btn btn-success" />
             </div>
         </form>
     </div>
@@ -71,6 +74,16 @@
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
     <script>
+        const selSkills = [];
+        async function readOriSkill() {
+            const response = await fetch(`@Url.Content("~/depute/oriSkills")?deputeID=${@Model.DeputeId}`);
+            const datas = await response.json();
+            
+            selSkills.push(...datas);
+            console.log(selSkills);
+        }
+        readOriSkill();
+
         async function loadRegions() {
             const response = await fetch(`@Url.Content("~/depute/regions")`);
             const datas = await response.json();
@@ -89,5 +102,82 @@
             document.querySelector("#selStatus").innerHTML = statuses.join("");
         }
         loadStatuses(deputeid);
+
+        $('*').click(function (event) {
+            if (event.target.classList.contains('active')) {
+                chooseClass = document.querySelector('.list-group-item.active').textContent;
+                chooseClassID = `list-${chooseClass}`;
+
+                loadSkills();
+            }
+        })
+
+        async function openSkillBrowser() {
+            Swal.fire({
+                title: "請選擇所需技能",
+                width: '50rem',
+                html: `<div class="row">
+                        <div class="col-6">
+                            <div class="list-group" id="list-tab" role="tablist">
+                            </div>
+                        </div>
+
+                        <div class="col-6">
+                            <ul style="overflow-y:auto;height:300px" class="list-group tab-content" id="nav-tabContent">
+                            </ul>
+                            <ul class="list-group col-6">
+                            </ul>
+                        </div>
+                    </div>`
+            });
+            loadSkillClasses();
+        }
+
+        async function loadSkillClasses() {
+            const divSkillClasses = document.querySelector('#list-tab'),
+                divSkillsGroup = document.querySelector('#nav-tabContent');
+            const response = await fetch('@Url.Content("~/depute/skillclasses")');
+            const datas = await response.json();
+            const skillclasses = datas.skillclasses.map(skillclass => `<a class="list-${skillclass.name}-item-action list-group-item" id="list-${skillclass.name}-list" data-bs-toggle="list" href="#list-${skillclass.name}" role="tab" aria-controls="list-${skillclass.name}">${skillclass.name}<ul id=sel${skillclass.name} class="list-group col-6"></ul></a>`);
+            const skillsgroup = datas.skillclasses.map(skillclass => `<div class="tab-pane fade" id="list-${skillclass.name}" role="tabpanel" aria-labelledby="list-${skillclass.name}-list">${skillclass.name}</div>`)
+            divSkillClasses.innerHTML = skillclasses.join("");
+            divSkillsGroup.innerHTML = skillsgroup.join("");
+            if (chooseClassID) {
+                loadSkills();
+            }
+        }
+
+        
+        async function loadSkills() {
+            console.log(selSkills);
+            const response = await fetch(`@Url.Content("~/depute/skillss")?skillClass=${chooseClass}`);
+            const datas = await response.json();
+            const skills = datas.map(skill => {
+                if (selSkills.find(_ => _.skillclass == `${chooseClass}` && _.skill == `${skill.name}`))
+                    var checked = "checked";
+                return `<li class="list-group-item"><input class="form-check-input me-1" type="checkbox" value="" id="${skill.name}" ${checked}><label class="form-check-label stretched-link" for="${skill.name}">${skill.name}</label></li>`
+            })
+            document.querySelector(`#${chooseClassID}`).innerHTML = skills.join("");
+
+            const divSkills = document.getElementsByClassName('me-1');
+            Array.from(divSkills).forEach(divSkill => {
+                divSkill.addEventListener('change', function (event) {
+                    var selSK = event.target.labels[0].textContent;
+                    if (event.target.checked) {
+                        selSkills.push({ skillclass: chooseClass, skill: selSK });
+                    } else {
+                        const index = selSkills.findIndex(i => i.skillclass == chooseClass && i.skill == selSK);
+                        selSkills.splice(index, 1);
+                    }
+                })
+            })
+        }
+
+        const inputSkill = document.getElementById('select-skills');
+        function prepareAndSubmit() {
+            inputSkill.value = JSON.stringify(selSkills);
+            document.forms.submit();
+        }
+        
     </script>
 }
