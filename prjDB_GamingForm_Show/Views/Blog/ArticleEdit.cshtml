@@ -53,7 +53,9 @@
                 <input asp-for="articles.FirstOrDefault().Title" class="form-control" />
                 <span asp-validation-for="articles.FirstOrDefault().Title" class="text-danger"></span>
             </div>
-            <textarea name="ArticleContent" id="editor" style="resize:none; height:700px; width: 100%;color:black"></textarea>
+            <textarea name="ArticleContent" id="editor" style="resize:none; height:700px; width: 100%;color:black">
+                @Model.articles.FirstOrDefault().ArticleContent
+            </textarea>
             <input type="hidden" name="ModifiedDate" value="@DateTime.Now" />
             <input type="hidden" name="MemberId" value="@Context.Session.GetInt32(CDictionary.SK_UserID)" />
 

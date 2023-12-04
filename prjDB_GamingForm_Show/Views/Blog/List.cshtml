@@ -117,7 +117,7 @@
                                 </a>
                                 <br />
                                 @{
-                                    if (item.SubBlogs.Any(a=>a.Articles.Count()==0))
+                                    if (!item.SubBlogs.Any(s=>s.Articles.Any()))
                                     {
                                         <p>目前還沒有文章</p>
                                     }
