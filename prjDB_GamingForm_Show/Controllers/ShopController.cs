@@ -340,7 +340,7 @@ namespace prjDB_GamingForm_Show.Controllers
                 if (List.Count == 0)
                 {
                     ViewBag.Message = "查無資料，請確認輸入內容";
-                    return View();
+                    return Content("{'message': '查無資料，請確認輸入內容'}", "application/json");
                 }
                 else
                 {
