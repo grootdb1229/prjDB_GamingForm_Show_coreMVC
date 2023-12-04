@@ -139,7 +139,15 @@
         async function loadSkills() {
             const response = await fetch(`@Url.Content("~/depute/skillss")?skillClass=${chooseClass}`);
             const datas = await response.json();
-            const skills = datas.map(skill => `<li class="list-group-item"><input class="form-check-input me-1" type="checkbox" value="" id="${skill.name}"><label class="form-check-label stretched-link" for="${skill.name}">${skill.name}</label></li>`)
+            const skills = datas.map(skill => {
+                // console.log(selSkills);
+                // console.log(chooseClass);
+                // console.log(skill.name);
+                console.log(selSkills.find(_ => _.skillclass == `${chooseClass}` && _.skill == `${skill.name}`));
+                if (selSkills.find(_ => _.skillclass == `${chooseClass}` && _.skill == `${skill.name}`))
+                    var checked = "checked";
+                return `<li class="list-group-item"><input class="form-check-input me-1" type="checkbox" value="" id="${skill.name}" ${checked}><label class="form-check-label stretched-link" for="${skill.name}">${skill.name}</label></li>`
+            })
             document.querySelector(`#${chooseClassID}`).innerHTML = skills.join("");
 
             const divSkills = document.getElementsByClassName('me-1');

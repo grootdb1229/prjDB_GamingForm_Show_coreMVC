@@ -45,13 +45,13 @@
                     @i.ApplyStatus.Name
                 </td>
                 <td class="col-1">
-                    @i.Depute.Salary.ToString("$###,###,##0.##")
+                    @i.Depute.Salary.ToString("$###,###,##0")
                 </td>
                 <td class="col-1">
                     @i.Depute.Modifiedate.ToString("yyyy/MM/dd HH:mm")
                 </td>
                 <td class="col-3">
-                    @Html.ActionLink("詳細資料", "Details", new { id = i.Id }, new { @class = "btn btn-secondary" }) |
+                    @Html.ActionLink("詳細資料", "Details", new { id = i.Id }, new { @class = "btn btn-secondary" }) 
                     @Html.ActionLink("撤回", "DeleteDeputeRecord", "Depute", new { id = i.Id }, new { @class = "btn btn-danger" })
                 </td>
             </tr>
