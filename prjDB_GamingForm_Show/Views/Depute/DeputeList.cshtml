@@ -33,12 +33,20 @@
 
 <!-- Search End -->
 <!-- Jobs Start -->
+
 <div id="popmenu" class="container" >
-    <dl>
-        <dt style="width:100%;height:20px;border:dashed black 2px">
-            <span>進階搜尋</span>
-            
-        </dt>
+    <div class="accordion accordion-flush" id="accordionFlushExample">
+        <div class="accordion-item">
+            <h2 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+                    Accordion Item #1
+                </button>
+            </h2>
+            <div id="flush-collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
+                <div class="accordion-body">Placeholder content for this accordion, which is intended to demonstrate the <code>.accordion-flush</code> class. This is the first item's accordion body.</div>
+            </div>
+        </div>
+    </div>
     <div class="row g-4" style="float:right;">
         <div class="col-md-6">
             <label style="float:left;text-align:right;">大類別</label>
@@ -67,7 +75,7 @@
             
         </div>
     </div>
-    </dl>
+    
 </div>
 <img src="~/images/down-arrow.png" />
 <h1 id="totalcount" class="text-center mb-5 wow fadeInUp" data-wow-delay="0.1s">懸賞清單</h1>
