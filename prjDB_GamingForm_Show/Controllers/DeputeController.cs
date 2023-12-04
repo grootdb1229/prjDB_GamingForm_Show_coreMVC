@@ -238,7 +238,7 @@ namespace prjDB_GamingForm_Show.Controllers
             var value = (from n in _db.SerachRecords.AsEnumerable()
                          group n by n.Name into q
                          orderby q.Count() descending
-                         select new { MyKey = q.Key,MyGroup = q }).Take(id);
+                         select q.Key).Take(id);
 
             if (value == null)
                 return RedirectToAction("DeputeList");

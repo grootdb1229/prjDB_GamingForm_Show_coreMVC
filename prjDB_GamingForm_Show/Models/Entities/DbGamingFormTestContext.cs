@@ -333,7 +333,7 @@ public partial class DbGamingFormTestContext : DbContext
             entity.HasOne(d => d.Action).WithMany(p => p.DeputeActions)
                 .HasForeignKey(d => d.ActionId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_DeputeAction_ArticleAction");
+                .HasConstraintName("FK_DeputeAction_Action");
 
             entity.HasOne(d => d.Depute).WithMany(p => p.DeputeActions)
                 .HasForeignKey(d => d.DeputeId)
