@@ -9,42 +9,65 @@
 
 <h3>請輸入您的會員編號及驗證碼</h3>
 
-div class="row">
+<div class="row">
 <div class="col-md-4">
-    <form id="ValidationForm" onsubmit="EditPasswordForm()" asp-action="ValidationPage" enctype="multipart/form-data">
+    <form id="ValidationForm" asp-action="ValidationPage" enctype="multipart/form-data">
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
         <div class="form-group">
             <label asp-for="txtVal_MemberID" class="control-label"></label>
-            <input asp-for="txtVal_MemberID" class="form-control" />
+            <input asp-for="txtVal_MemberID" class="form-control" name="MmeberID" id="MmeberID" />
             <span asp-validation-for="txtVal_MemberID" class="text-danger"></span>
         </div>
         <div class="form-group">
-            <label asp-for="txtVal_Code" class="control-label"></label>
-            <input asp-for="txtVal_Code" class="form-control" />
-            <span asp-validation-for="txtVal_Code" class="text-danger"></span>
+            <label asp-for="txtVal_Guid" class="control-label"></label>
+            <input asp-for="txtVal_Guid" class="form-control" name="ValGuid" id="ValGuid"/>
+            <span asp-validation-for="txtVal_Guid" class="text-danger"></span>
         </div>
         <div class="form-group">
-            <input type="submit" value="驗證會員身分" class="btn btn-primary" />
+            <input type="submit" value="驗證會員身分" class="btn btn-primary" id="Submit"/>
         </div>
     </form>
 </div>  
-    <form>
+<div id="div1">
+
+</div>
+    @* <form>
         <div class="form-group">
             <label asp-for="txtVal_Password" class="control-label"></label>
             <input asp-for="txtVal_Password" class="form-control" />
             <span asp-validation-for="txtVal_Password" class="text-danger"></span>
         </div>
-    </form>
+    </form> *@
+
 <div>
     <a asp-controller="Home" asp-action="Login">返回登入頁面</a>
 </div>
-
+@{
+    var confirmedMemberID = Context.Session.GetInt32(CDictionary.SK_Confirmed_MemberID);
+    var validationGuid = Context.Session.GetString(CDictionary.SK_Validation_Guid);
+}
 <script>
-    window.onload = function () {
-        let ValidationForm = document.querySelector('#ValidationForm');
-        ValidationForm.onsubmit
+    let ValidationForm = document.querySelector('#ValidationForm')
+    ValidationForm.addEventListener("submit", (event) => {
+        event.preventDefault();
+    let txtVal_MemberID = document.querySelector('#MmeberID').value
+    let txtVal_Guid = document.querySelector('#ValGuid').value
+        let confirmedMemberID = @Html.Raw(Json.Serialize(confirmedMemberID));
+        let validationGuid  = "@validationGuid";
+        let PasswordDiv = document.querySelector('#div1');
+        if (txtVal_MemberID == confirmedMemberID &&txtVal_Guid == validationGuid) {
+        let PasswordForm = document.createElement("form");
+        PasswordForm.action ="/Member/ValidationPage"
+        PasswordForm.method="post";
+        let input = document.createElement("input");
+            input.type = "submit";
+            input.name = "PasswordForm";
+        let txtinput = document.createElement("input");
+            txtinput.type = "text";
+            txtinput.name = "txtVal_Password";
+        PasswordForm.appendChild(txtinput);
+        PasswordForm.appendChild(input);
+        PasswordDiv.appendChild(PasswordForm);
     }
-
-
-
+    })
 </script>
