@@ -122,8 +122,7 @@
                                         <p style="font-size:16px">目前還沒有文章</p>
                                     }
                                     else
-                                    {
-                                        
+                                    {                                        
                                     <a style="font-size:16px;text-decoration:none" href="@Url.Action("ArticleContent", "Blog", new { FId =item.BlogId,AFId=item.SubBlogs.FirstOrDefault().Articles.LastOrDefault().ArticleId})">@item.SubBlogs.First().Articles.LastOrDefault().Title</a>
                                     }
                                 }
