@@ -29,12 +29,12 @@
             <ul class="nav nav-pills d-inline-flex justify-content-center border-bottom mb-5">
                 <li class="nav-item">
                     <a class="d-flex align-items-center text-start mx-3 ms-0 pb-3 active" data-bs-toggle="pill" href="#tab-1">
-                        <h6 class="mt-n1 mb-0">最新懸賞</h6>
+                        <h6 id="title" class="mt-n1 mb-0">最新懸賞</h6>
                     </a>
                 </li>
                 <li class="nav-item">
                     <a class="d-flex align-items-center text-start mx-3 pb-3" data-bs-toggle="pill" href="#tab-2">
-                        <h6 class="mt-n1 mb-0">熱門懸賞</h6>
+                        <h6 id="title2" class="mt-n1 mb-0">熱門懸賞</h6>
                     </a>
                 </li>
                 <li class="nav-item">
@@ -235,9 +235,8 @@
             $('#category').html(ctgFrag)
 
         }
-
-        const title = document.querySelector('#newfive');
-        const title2 = document.querySelector('#topfive');
+        const title = document.querySelector('#title');
+        const title2 = document.querySelector('#title2');
         const title3 = document.querySelector('#history');
         getFive(1, "newfive");
         getFive(2, "topfive");
@@ -267,6 +266,7 @@
                             <a href="/Depute/DeputeDetails/${list.id}" class="btn btn-primary id=" btndp"">詳細...</a>
                             <a href="/Depute/Apply/${list.id}" class="btn btn-primary id=" btndp"">我要應徵...</a>
                             </div>
+                                    <small class="text-truncate"><i class="far fa-calendar-alt text-primary me-2"></i>狀態 : ${list.status}</small>
                                     <small class="text-truncate"><i class="far fa-calendar-alt text-primary me-2"></i>Last Update : ${list.modifieddate}</small>
                             </div>
 
