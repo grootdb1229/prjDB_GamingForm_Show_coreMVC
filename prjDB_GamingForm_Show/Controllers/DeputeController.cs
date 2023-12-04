@@ -431,11 +431,8 @@ namespace prjDB_GamingForm_Show.Controllers
                 _db.SaveChanges();
             }
             //刪除所有原技能
-            var oriSkills = _db.DeputeSkills.Where(_ => _.DeputeId == vm.id).Select(_ => _);
-            foreach (var item in oriSkills)
-            {
-                _db.DeputeSkills.Remove(item);
-            }
+            _db.DeputeSkills.RemoveRange(_db.DeputeSkills.Where(_ => _.DeputeId == vm.id).Select(_ => _));
+            
             //存技能
             List<CDeputeSkillViewModel> list = JsonSerializer.Deserialize<List<CDeputeSkillViewModel>>(vm.skilllist);
 
