@@ -32,6 +32,7 @@
   <ItemGroup>
     <Folder Include="Models\Entities\" />
     <Folder Include="Models\Depute\" />
+    <Folder Include="wwwroot\images\Blogimages\" />
     <Folder Include="wwwroot\images\shop\" />
     <Folder Include="wwwroot\MemberPhoto\" />
   </ItemGroup>
