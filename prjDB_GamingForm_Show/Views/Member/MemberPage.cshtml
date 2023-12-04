@@ -2,6 +2,7 @@
 @{
     ViewData["Title"] = "Test";
     Layout = "~/Views/Shared/MemberPageLayout.cshtml";
+    // Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <!-- ======= Hero Section ======= -->
@@ -26,6 +27,7 @@
 
         <div class="row">
           <div class="col-lg-4" data-aos="fade-right">
+                    @*大頭貼*@
             <img src="assets/img/profile-img.jpg" class="img-fluid" alt="">
           </div>
           <div class="col-lg-8 pt-4 pt-lg-0 content" data-aos="fade-left">
@@ -63,13 +65,43 @@
     </section><!-- End About Section -->
 
     <!-- ======= Facts Section ======= -->
-    <section id="facts" class="facts">
+    <section id="MyArticles" class="facts">
       <div class="container">
 
-        <div class="section-title">
-          <h2>Facts</h2>
-          <p>Magnam dolores commodi suscipit. Necessitatibus eius consequatur ex aliquid fuga eum quidem. Sit sint consectetur velit. Quisquam quos quisquam cupiditate. Et nemo qui impedit suscipit alias ea. Quia fugiat sit in iste officiis commodi quidem hic quas.</p>
+        <div class="section-title" id="div1">
+          <h2>我發表的文章</h2>
+                <div class="card border-success mb-3" style="max-width: 18rem;">
+                    <div class="card-header bg-transparent border-success">Header</div>
+                    <div class="card-body text-success">
+                        <h5 class="card-title">Success card title</h5>
+                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                    </div>
+                    <div class="card-footer bg-transparent border-success">Footer</div>
+                </div>
         </div>
+        <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+           <script>
+        $(document).ready(function () 
+            { 
+                fetch('@Url.Content("~/Member/MyArticles")')
+                    .then(response => response.json())
+                    .then(data => 
+                    {
+                        $('#div1').html
+                        (
+                                    `<h2>我發表的文章</h2>
+                                    <div class= "card border-success mb-3" style = "max-width: 18rem;" >
+                                                    <div class="card-header bg-transparent border-success" >${data[0].subBlog.blog.title} </div>
+                             <div class= "card-body text-success" >
+                                                             <h5 class="card-title" >${data[0].title}</h5>
+                              <p class= "card-text"></p>
+                              </div>
+                             <div class= "card-footer bg-transparent border-success">發表日期:${data[0].modifiedDate}</div>
+                             </div>`
+                        )
+                    })
+            })
+        </script>
 
         <div class="row no-gutters">
 
@@ -557,5 +589,6 @@
 
       </div>
     </section><!-- End Contact Section -->
+    
 
   </main><!-- End #main -->

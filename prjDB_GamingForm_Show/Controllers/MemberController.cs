@@ -9,6 +9,7 @@ using MimeKit;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.Identity.Client;
 using Microsoft.CodeAnalysis;
+using Microsoft.EntityFrameworkCore;
 
 namespace prjDB_GamingForm_Show.Controllers
 {
@@ -183,8 +184,51 @@ namespace prjDB_GamingForm_Show.Controllers
             return View();
         }
 
+        public IActionResult MyOrders() 
+        {
+            return View();
+        }
+
+        public IActionResult MyCollections() 
+        {
+            return View();
+        }
+
+        public IActionResult MyWorks() 
+        {
+            return View();
+        }
+
+        public IActionResult MyBlog() 
+        {
+            return View();
+        }
+
+        public IActionResult MyArticles() 
+        {
+            var data = _db.Articles.Include(a => a.SubBlog).ThenInclude(s => s.Blog)
+                .Where(a => a.MemberId == HttpContext.Session.GetInt32(CDictionary.SK_UserID))
+                .Select(a => a);
 
 
 
+            var datas = from A in _db.Articles
+                        where A.MemberId == HttpContext.Session.GetInt32(CDictionary.SK_UserID)
+                        select A;
+            return Json(data);
+        }
+        public IActionResult MyWishList() 
+        {
+            return View();
+        }
+        public IActionResult MakeAWish() 
+        {
+            return View();
+        }
+        //[HttpPost]
+        //public IActionResult MakeAWish() 
+        //{
+        //    return RedirectToAction("MyWishList", "Member");
+        //}
     }
 }
