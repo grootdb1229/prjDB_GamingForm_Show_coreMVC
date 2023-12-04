@@ -164,8 +164,8 @@
                     const encodedFImagePath = encodeURIComponent(data.fImagePath);
                     $('#div1').html(
                         `
-                                        <a href="@Url.Content("~/Shop/Details")?id=${encodedProductId}">
-                                            <img src="/images/shop/${encodedFImagePath}" width="330" height="450"/>
+                                            <a href="@Url.Content("~/Shop/Details")?id=${data.productId}">
+                                                <img src="/images/shop/${data.fImagePath}" width="330" height="450"/>
                                         </a>
                                         `
                     );
