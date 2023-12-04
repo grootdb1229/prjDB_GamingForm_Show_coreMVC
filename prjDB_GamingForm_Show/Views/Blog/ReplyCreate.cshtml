@@ -68,6 +68,9 @@
             ClassicEditor
                 .create(document.querySelector('#editor'), {
                     extraPlugins: [MyCustomUploadAdapterPlugin],
+                    mediaEmbed: {
+                        previewsInData: true
+                    }
                 })
                 .catch(error => {
                     console.log(error);
