@@ -34,8 +34,9 @@
         }
     </tbody>
 </table>
-@section Scripts{
+
     <script>
+       
         var connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
 
         // 與Server建立連線
@@ -56,7 +57,7 @@
         });
         async function updateUsersList(users) {
             // 更新用戶列表的顯示
-            $("#test").load('@Url.Content("~/Admin/SignalRPV")');
+            // $("#test").load('@Url.Content("~/Admin/SignalRPV")');
 
             // 更新管理者在線狀態
             for (var i = 0; i < users.length; i++) {
@@ -74,7 +75,8 @@
         connection.on("UpdAdminOnlineStatus", function (adminName, isOnline) {
             // 根據管理者名稱和在線狀態更新前端顯示
             var statusId = `#onlineStatus_${adminName}`;
-            $(statusId).text(isOnline ? "在線" : "離線");
+            $(statusId).html(isOnline ? "在線" : "離線");
         });
+        
     </script>
-}
+
