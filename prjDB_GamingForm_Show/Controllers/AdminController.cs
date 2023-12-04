@@ -332,6 +332,13 @@ namespace prjDB_GamingForm_Show.Controllers
                 
             return PartialView(Admins);
         }
+        public IActionResult ChatPV(int id)
+        {
+            var name = _db.Admins.FirstOrDefault(a => a.AdminId == id).Name;
+            ViewBag.name = name;
+            ViewBag.id = id;
+            return PartialView();
+        }
         //public IActionResult MemberListNexttest()
         //{
         //    if (HttpContext.Session.Keys.Contains(CDictionary.SK_管理者觀看會員清單頁數使用關鍵字))

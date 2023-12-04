@@ -68,7 +68,7 @@
                     <input type="submit" value="發文" class="btn btn-primary" />
 
                     <p style="margin:3px; float:right">
-                        @Html.ActionLink("回列表", "ArticleList", "Blog", new { AFId = Model.articles.FirstOrDefault().ArticleId, FId = Model.blogs.FirstOrDefault().BlogId }, new
+                        @Html.ActionLink("回列表", "ArticleList", "Blog", new { FId = Model.blogs.FirstOrDefault().BlogId }, new
                             {
                                 @class = "btn btn-warning"
                             })
@@ -91,6 +91,9 @@
             ClassicEditor
                 .create(document.querySelector('#editor'), {
                     extraPlugins: [MyCustomUploadAdapterPlugin],
+                    mediaEmbed: {
+                        previewsInData: true
+                    }
                    
                 }).then(editor => {
                     // 在控制台中輸出所有可用的工具列項目名稱

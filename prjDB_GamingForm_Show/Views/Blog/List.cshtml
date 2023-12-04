@@ -117,14 +117,17 @@
                                 </a>
                                 <br />
                                 @{
-                                    if (item.SubBlogs.Any(a=>a.Articles.Count()==0))
+                                    if (!item.SubBlogs.Any(s=>s.Articles.Any()))
                                     {
-                                        <p>目前還沒有文章</p>
+                                        <p style="font-size:16px">目前還沒有文章</p>
                                     }
                                     else
                                     {
-                                        
-                                    <a style="font-size:16px;text-decoration:none" href="@Url.Action("ArticleContent", "Blog", new { FId =item.BlogId,AFId=item.SubBlogs.FirstOrDefault().Articles.LastOrDefault().ArticleId})">@item.SubBlogs.First().Articles.LastOrDefault().Title</a>
+                                        var latestArticle = item.SubBlogs.SelectMany(s => s.Articles)
+                                        .OrderByDescending(a => a.ModifiedDate)
+                                        .FirstOrDefault();
+
+                                        <a style="font-size:16px;text-decoration:none" href="@Url.Action("ArticleContent", "Blog", new { FId =item.BlogId,AFId=latestArticle.ArticleId})">@latestArticle.Title</a>
                                     }
                                 }
                             </div>
