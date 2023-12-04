@@ -135,6 +135,10 @@ namespace prjDB_GamingForm_Show.Controllers
             //    List = List.Distinct().ToList();
             //    return View(List2);
             //}
+            public IActionResult Carousel()
+            {
+                return PartialView();
+            }
             public IActionResult Index(CKeyWord ck)
             {
 
