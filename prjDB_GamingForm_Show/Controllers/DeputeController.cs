@@ -129,9 +129,10 @@ namespace prjDB_GamingForm_Show.Controllers
             }
             else
             {
-
-                if (string.IsNullOrEmpty(vm.txtKeyword))
-                    vm.txtKeyword = "";
+                _db.SerachRecords.Add
+                                (new SerachRecord { Name = vm.txtKeyword, CreateDays = (DateTime.Now.Date)});
+                _db.SaveChanges();
+                
                 datas = List.Where(n => (n.deputeContent.Trim().ToLower().Contains(vm.txtKeyword.Trim().ToLower()) ||
                                           n.providername.Trim().ToLower().Contains(vm.txtKeyword.Trim().ToLower()) ||
                                           n.title.Trim().ToLower().Contains(vm.txtKeyword.Trim().ToLower()) ||
@@ -429,6 +430,23 @@ namespace prjDB_GamingForm_Show.Controllers
                 o.Title = vm.title;
                 _db.SaveChanges();
             }
+            //刪除所有原技能
+            _db.DeputeSkills.RemoveRange(_db.DeputeSkills.Where(_ => _.DeputeId == vm.id).Select(_ => _));
+            
+            //存技能
+            List<CDeputeSkillViewModel> list = JsonSerializer.Deserialize<List<CDeputeSkillViewModel>>(vm.skilllist);
+
+            DeputeSkill ndsk = new DeputeSkill();
+            foreach (var item in list)
+            {
+                int skillclassID = _db.SkillClasses.FirstOrDefault(_ => _.Name == item.skillclass).SkillClassId;
+                int skillID = _db.Skills.FirstOrDefault(_ => _.SkillClassId == skillclassID && _.Name == item.skill).SkillId;
+                ndsk.Id = 0;
+                ndsk.DeputeId = vm.id;
+                ndsk.SkillId = skillID;
+                _db.DeputeSkills.Add(ndsk);
+                _db.SaveChanges();
+            }
             return RedirectToAction("Personal");
         }
         public IActionResult SkillClasses()
@@ -478,6 +496,20 @@ namespace prjDB_GamingForm_Show.Controllers
         {
             int skillclassid = Convert.ToInt32(_db.SkillClasses.Where(_ => _.Name == skillClass).FirstOrDefault().SkillClassId);
             var datas = _db.Skills.Where(_ => _.SkillClassId == skillclassid).Select(_ => _);
+            return Json(datas);
+        }
+        public IActionResult oriSkills(int deputeID)
+        {
+            var datas = _db.DeputeSkills
+                .Where(_ => _.DeputeId == deputeID)
+                .Select(_ => _)
+                .Include(_ => _.Skill)
+                .ThenInclude(_ => _.SkillClass)
+                .Select(item => new CDeputeSkillViewModel
+                {
+                    skill = item.Skill.Name,
+                    skillclass = item.Skill.SkillClass.Name
+                });
             return Json(datas);
         }
 

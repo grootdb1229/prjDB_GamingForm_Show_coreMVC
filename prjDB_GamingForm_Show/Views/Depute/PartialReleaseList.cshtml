@@ -39,31 +39,31 @@
         foreach (var i in Model)
         {
             count++;
-                            <tr>
-                                <td>
-                                    @count
-                                </td>
-                                <td>
-                                    @i.Title
-                                </td>
-                                <td>
-                                    @i.DeputeContent
-                                </td>
-                                <td>
-                                    @i.Status.Name
-                                </td>
-                                <td>
-                                    @i.Salary.ToString("$###,###,##0")
-                                </td>
-                                <td>
-                                    <button id=`detial${@i.DeputeId}` class="btn btn-light" onclick="individualDetials(@i.DeputeId)">@i.DeputeRecords.Count()</button>
-                                </td>
-                                <td>
-                                    @Html.ActionLink("修改", "Edit", "Depute", new { id = i.DeputeId }, new { @class = "btn btn-success" })
-                                    <button class="btn btn-secondary btn-ReleaseDeputeDetails" onclick="detailsDepute(@i.DeputeId)">詳細資料</button>
-                                    <button class="btn btn-danger btn-ReleaseDeputeDelete" onclick="deleteDeputeAlert(@i.DeputeId)" data_deputeid=@i.DeputeId>刪除</button>
-                                </td>
-                            </tr>
+                                                <tr>
+                                                    <td>
+                                                        @count
+                                                    </td>
+                                                    <td>
+                                                        @i.Title
+                                                    </td>
+                                                    <td>
+                                                        @i.DeputeContent
+                                                    </td>
+                                                    <td>
+                                                        @i.Status.Name
+                                                    </td>
+                                                    <td>
+                                                        @i.Salary.ToString("$###,###,##0")
+                                                    </td>
+                                                    <td>
+                                                        <button id=`detial${@i.DeputeId}` class="btn btn-light" onclick="individualDetials(@i.DeputeId)">@i.DeputeRecords.Count()</button>
+                                                    </td>
+                                                    <td>
+                                                        @Html.ActionLink("修改", "Edit", "Depute", new { id = i.DeputeId }, new { @class = "btn btn-success" })
+                                                        <button class="btn btn-secondary btn-ReleaseDeputeDetails" onclick="detailsDepute(@i.DeputeId)">詳細資料</button>
+                                                        <button class="btn btn-danger btn-ReleaseDeputeDelete" onclick="deleteDeputeAlert(@i.DeputeId)" data_deputeid=@i.DeputeId>刪除</button>
+                                                    </td>
+                                                </tr>
         }
     }
 </table>
@@ -157,12 +157,12 @@
     async function changeStatus(deputeRecordID,event) {
         const applystatusid = event.target.parentNode.previousSibling.previousSibling.childNodes[1].value;
         const viewstatus = event.target.parentNode.previousSibling.previousSibling.previousSibling.previousSibling;
-        console.log(viewstatus.innerHTML);
+        const badgestatus = event.target.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode.previousSibling.previousSibling.childNodes[1].childNodes[1];
         var deputerecordstatus = JSON.stringify({ id: deputeRecordID, statusid: applystatusid });
         const response = await fetch(`@Url.Content("~/depute/changeDeputeRecordStatus")?deputerecordstatus=${deputerecordstatus}`);
         const statusname = await response.text();
-        console.log(statusname);
         viewstatus.innerHTML = statusname;
+        badgestatus.innerHTML = statusname;
     }
 
     function deleteDeputeAlert(deputeID) {

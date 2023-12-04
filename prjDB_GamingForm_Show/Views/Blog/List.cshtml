@@ -123,8 +123,11 @@
                                     }
                                     else
                                     {
-                                        
-                                    <a style="font-size:16px;text-decoration:none" href="@Url.Action("ArticleContent", "Blog", new { FId =item.BlogId,AFId=item.SubBlogs.FirstOrDefault().Articles.LastOrDefault().ArticleId})">@item.SubBlogs.First().Articles.LastOrDefault().Title</a>
+                                        var latestArticle = item.SubBlogs.SelectMany(s => s.Articles)
+                                        .OrderByDescending(a => a.ModifiedDate)
+                                        .FirstOrDefault();
+
+                                        <a style="font-size:16px;text-decoration:none" href="@Url.Action("ArticleContent", "Blog", new { FId =item.BlogId,AFId=latestArticle.ArticleId})">@latestArticle.Title</a>
                                     }
                                 }
                             </div>
@@ -161,8 +164,8 @@
                     const encodedFImagePath = encodeURIComponent(data.fImagePath);
                     $('#div1').html(
                         `
-                                        <a href="@Url.Content("~/Shop/Details")?id=${encodedProductId}">
-                                            <img src="/images/shop/${encodedFImagePath}" width="330" height="450"/>
+                                            <a href="@Url.Content("~/Shop/Details")?id=${data.productId}">
+                                                <img src="/images/shop/${data.fImagePath}" width="330" height="450"/>
                                         </a>
                                         `
                     );

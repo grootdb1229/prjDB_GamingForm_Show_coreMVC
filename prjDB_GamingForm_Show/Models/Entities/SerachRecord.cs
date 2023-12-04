@@ -10,6 +10,4 @@ public partial class SerachRecord
     public string Name { get; set; } = null!;
 
     public DateTime CreateDays { get; set; }
-
-    public bool? IsMember { get; set; }
 }
