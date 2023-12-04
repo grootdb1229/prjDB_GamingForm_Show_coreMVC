@@ -301,8 +301,8 @@
    
     <!-- footer content -->
     <footer>
-        <button onclick="showPV()">123123</button>
-        <div id="test" style="display:none; position: absolute; bottom: 10px; right: 10px; z-index: 999;background-color:white; border: 1px solid #000;">
+        <button onclick="showPV()">SignalR</button>        
+        <div id="test" style="display:none;position: absolute; bottom: 10px; right: 10px; z-index: 999;background-color:white; border: 1px solid #000;">
             @*<h1>即時聊天範例</h1>
 
             <div class="row">
@@ -332,6 +332,7 @@
                 </div>
             </div>*@
         </div>
+        <div id="AdminsChat" style="display:none;position: absolute;width:100px;height:100px; bottom: 10px; right: 250px; z-index: 999;background-color:white; border: 1px solid #000;"></div>
         <div class="pull-right">
             Gentelella - Bootstrap Admin Template by <a href="https://colorlib.com">Colorlib</a>
         </div>
@@ -371,7 +372,7 @@
     @await RenderSectionAsync("Scripts", required:false)
     <script src="~/js/signalr/dist/browser/signalr.js"></script>
     <script>
-        
+        $('#test').load('@Url.Content("~/Admin/SignalRPV")');
         function showPV() {
             var div = document.querySelector('#test');
             if (div.style.display === "none") {
@@ -379,61 +380,58 @@
             }
             else {
                 div.style.display = "none"; // 隱藏
-            }
-            
-            $('#test').load('@Url.Content("~/Admin/SignalRPV")');
-            
+            }    
         }
-        var connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
+        // var connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
 
-        //與Server建立連線
-        connection.start().then(function () {
-            console.log("Hub 連線完成");
-        }).catch(function (err) {
-            alert('連線錯誤: ' + err.toString());
-        });
+        // //與Server建立連線
+        // connection.start().then(function () {
+        //     console.log("Hub 連線完成");
+        // }).catch(function (err) {
+        //     alert('連線錯誤: ' + err.toString());
+        // });
 
-        //更新連線 ID 列表事件
-        connection.on("UpdList", function (jsonList) {
-            var list = JSON.parse(jsonList);
-            $("#IDList li").remove();
-            for (i = 0; i < list.length; i++) {
-                // //$("#IDList").append($("<li></li>").attr("class", "list-group-item").text(list[i]));
-                // var newListItem = $("<li>").attr("class", "list-group-item").text(list[i]);
+        // //更新連線 ID 列表事件
+        // connection.on("UpdList", function (jsonList) {
+        //     var list = JSON.parse(jsonList);
+        //     $("#IDList li").remove();
+        //     for (i = 0; i < list.length; i++) {
+        //         // //$("#IDList").append($("<li></li>").attr("class", "list-group-item").text(list[i]));
+        //         // var newListItem = $("<li>").attr("class", "list-group-item").text(list[i]);
 
-                // // 創建新的按鈕
-                // var newButton = $("<button>").attr("id", "button_" + i).text("Click Me");
+        //         // // 創建新的按鈕
+        //         // var newButton = $("<button>").attr("id", "button_" + i).text("Click Me");
 
-                // // 將按鈕添加到 <li> 元素中
-                // newListItem.append(newButton);
+        //         // // 將按鈕添加到 <li> 元素中
+        //         // newListItem.append(newButton);
 
-                // // 將 <li> 元素添加到列表
-                // $("#IDList").append(newListItem);
-                updateUsersList(list);
-            }
-        });
-        async function updateUsersList(users) {
-            // 更新用戶列表的顯示
-            $("#test").load('@Url.Content("~/Admin/SignalRPV")');
+        //         // // 將 <li> 元素添加到列表
+        //         // $("#IDList").append(newListItem);
+        //         updateUsersList(list);
+        //     }
+        // });
+        // async function updateUsersList(users) {
+        //     // 更新用戶列表的顯示
+        //     $("#test").load('@Url.Content("~/Admin/SignalRPV")');
 
-            // 更新管理者在線狀態
-            for (var i = 0; i < users.length; i++) {
-                await getAdminOnlineStatus(users[i]);
-            }
-        }
+        //     // 更新管理者在線狀態
+        //     for (var i = 0; i < users.length; i++) {
+        //         await getAdminOnlineStatus(users[i]);
+        //     }
+        // }
 
-        async function getAdminOnlineStatus(adminName) {
-            // 新增：呼叫 SignalR Hub 方法獲取管理者的在線狀態
-            connection.invoke("GetAdminOnlineStatus", adminName).then(function (isOnline) {
-                // 修改：觸發更新在線狀態的事件
-                connection.invoke("UpdateAdminOnlineStatus", adminName, isOnline);
-            });
-        }
-        connection.on("UpdAdminOnlineStatus", function (adminName, isOnline) {
-            // 根據管理者名稱和在線狀態更新前端顯示
-            var statusId = `#onlineStatus_${adminName}`;
-            $(statusId).text(isOnline ? "在線" : "離線");
-        });
+        // async function getAdminOnlineStatus(adminName) {
+        //     // 新增：呼叫 SignalR Hub 方法獲取管理者的在線狀態
+        //     connection.invoke("GetAdminOnlineStatus", adminName).then(function (isOnline) {
+        //         // 修改：觸發更新在線狀態的事件
+        //         connection.invoke("UpdateAdminOnlineStatus", adminName, isOnline);
+        //     });
+        // }
+        // connection.on("UpdAdminOnlineStatus", function (adminName, isOnline) {
+        //     // 根據管理者名稱和在線狀態更新前端顯示
+        //     var statusId = `#onlineStatus_${adminName}`;
+        //     $(statusId).html(isOnline ? "在線" : "離線");
+        // });
 
         // 更新用戶個人連線 ID 事件
         // connection.on("UpdSelfID", function (userName) {

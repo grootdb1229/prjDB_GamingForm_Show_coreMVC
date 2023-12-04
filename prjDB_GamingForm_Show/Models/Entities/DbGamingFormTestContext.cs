@@ -829,9 +829,6 @@ public partial class DbGamingFormTestContext : DbContext
             entity.Property(e => e.CreateDays)
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("date");
-            entity.Property(e => e.IsMember)
-                .IsRequired()
-                .HasDefaultValueSql("((1))");
         });
 
         modelBuilder.Entity<ShipMethod>(entity =>

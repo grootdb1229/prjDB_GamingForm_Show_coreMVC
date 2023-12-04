@@ -129,9 +129,10 @@ namespace prjDB_GamingForm_Show.Controllers
             }
             else
             {
-
-                if (string.IsNullOrEmpty(vm.txtKeyword))
-                    vm.txtKeyword = "";
+                _db.SerachRecords.Add
+                                (new SerachRecord { Name = vm.txtKeyword, CreateDays = (DateTime.Now.Date)});
+                _db.SaveChanges();
+                
                 datas = List.Where(n => (n.deputeContent.Trim().ToLower().Contains(vm.txtKeyword.Trim().ToLower()) ||
                                           n.providername.Trim().ToLower().Contains(vm.txtKeyword.Trim().ToLower()) ||
                                           n.title.Trim().ToLower().Contains(vm.txtKeyword.Trim().ToLower()) ||

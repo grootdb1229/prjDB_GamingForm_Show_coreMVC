@@ -73,13 +73,20 @@
 
     <!-- Search End -->
 </p>
-
+<div id="Eroor"></div>
 @*<div>
     <span class="badge text-bg-light">Light</span>
 </div>*@
+@if (!string.IsNullOrEmpty(ViewBag.Message))///當搜尋沒有結果時
+{
+    <div class="alert alert-dark" role="alert">
+        @ViewBag.Message
+    </div>
+}else{
 
 <div class="container px-4 px-lg-5 mt-5">
     <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center" id="ContentProduct">
+
        @foreach (var item in Model)
         {
             <div class="col mb-5">
@@ -88,7 +95,7 @@
                     <!-- Sale badge-->
                     <div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem">Sale</div>
                     <!-- Product image-->
-                    <img class="card-img-top" src="~/images/shop/@item.FImagePath" alt="..." style="height:25vh; width=25vw;" />
+                    <img class="card-img-top" src="~/images/shop/@item.FImagePath" alt="..." style="height:25vh; " />
                     <!-- Product details-->
                     <div class="card-body p-4">
                         <div class="text-center">
@@ -97,7 +104,7 @@
                                     string[] tags = item.SubTagName.Split('/');
                                     foreach (var t in tags)
                                     {
-                                            <span class="badge text-bg-light">@t</span>
+                                                                <span class="badge text-bg-light">@t</span>
                                     }
                                 }
                             </div>
@@ -144,6 +151,7 @@
         }
     </div>
 </div>
+}
 <style>
     .textbox {
         max-width: 3rem;
@@ -156,7 +164,7 @@
 
         var ProductContent = document.querySelector('#ContentProduct');
         var DataControl = document.querySelector('#SortControl');//選項
-
+        var errorContent = document.querySelector('#Eroor');
 
         DataControl.addEventListener('change', () => {
             var selectedValue = DataControl.value;
@@ -180,152 +188,32 @@
             }
         });
 
-     
         async function SortByPrice_h() {
             var queryKeyword = document.querySelector('#Kw').value;
             ProductContent.innerHTML = '';
             const response = await fetch(`@Url.Content("~/Shop/IndexbyPrice_H")?CK=${queryKeyword}`);
             const data = await response.json();
-            const sortbydate = data.map(x =>
-                `
-                                         <div class="col mb-5">
-                                <div class="card h-100">
-                                    <div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem">Sale</div>
-                                        <img class="card-img-top" src="../images/shop/${x.fImagePath}" alt="..." style="height:25vh; width=25vw;" />
-                                    <div class="card-body p-4">
-                                        <div class="text-center">
-                                                    <h5 class="fw-bolder">${x.productName}</h5>
-                                            <div class="d-flex justify-content-center small text-warning mb-2">
-                                                <div class="bi-star-fill"></div>
-                                                <div class="bi-star-fill"></div>
-                                                <div class="bi-star-fill"></div>
-                                                <div class="bi-star-fill"></div>
-                                                <div class="bi-star-fill"></div>
-                                            </div>
-                                            <span class="text-muted text-decoration-line-through">${x.price}</span>
-                                            <span style="color:black">${x.price}</span>
-                                        </div>
-                                    </div>
-                                    <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                                        <form action="/Shop/AddToCar" method="post">
-                                            <input type="text" name="txtCount" value="1" class="form-control text-center me-3 textbox" />
-                                            <div class="text-center">
-                                                        <a href="/Shop/Details?id=${x.productId}" class="btn btn-outline-dark mt-auto">查看商品</a>
-                                            </div>
-                                            <div class="text-center">
-                                                        <a href="/Shop/Edit?id=${x.productId}" class="btn btn-outline-dark mt-auto">測試修改</a>
-                                            </div>
-                                                    <input type="hidden" name="ProductID" value="${x.productId}" />
-                                            <div class="text-center">
-                                                <input type="submit" value="加入購物車" class="btn btn-outline-dark mt-auto" />
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                                                `);
-            ProductContent.innerHTML = sortbydate.join("");
-
-        }
-
+            const productCards = data.map(createProductCard);
+            ProductContent.innerHTML = productCards.join("");
+               
+        }    
         async function SortByDate() {
             var queryKeyword = document.querySelector('#Kw').value;
-
             ProductContent.innerHTML = '';
-            const response = await fetch(`@Url.Content("~/Shop/IndexbyDate")?CK=${queryKeyword}`); 
-            const data = await response.json(); 
-            console.log('Json後' + data);    
-            const sortbydate = data.map(x =>
-                `
-                                                 <div class="col mb-5">
-                                        <div class="card h-100">
-                                            <div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem">Sale</div>
-                                                <img class="card-img-top" src="../images/shop/${x.fImagePath}" alt="..." style="height:25vh; width=25vw;" />
-                                            <div class="card-body p-4">
-                                                <div class="text-center">
-                                                            <h5 class="fw-bolder">${x.productName}</h5>
-                                                    <div class="d-flex justify-content-center small text-warning mb-2">
-                                                        <div class="bi-star-fill"></div>
-                                                        <div class="bi-star-fill"></div>
-                                                        <div class="bi-star-fill"></div>
-                                                        <div class="bi-star-fill"></div>
-                                                        <div class="bi-star-fill"></div>
-                                                    </div>
-                                                     ${x.tags.map(tag => `<span class="badge text-bg-light">${tag}+這裡還沒寫好</span>`).join("")}
-                                                    <span class="text-muted text-decoration-line-through">${x.price}</span>
-                                                    <span style="color:black">${x.price}</span>
-                                                </div>
-                                            </div>
-                                            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                                                <form action="/Shop/AddToCar" method="post">
-                                                    <input type="text" name="txtCount" value="1" class="form-control text-center me-3 textbox" />
-                                                    <div class="text-center">
-                                                                <a href="/Shop/Details?id=${x.productId}" class="btn btn-outline-dark mt-auto">查看商品</a>
-                                                    </div>
-                                                    <div class="text-center">
-                                                                <a href="/Shop/Edit?id=${x.productId}" class="btn btn-outline-dark mt-auto">測試修改</a>
-                                                    </div>
-                                                            <input type="hidden" name="ProductID" value="${x.productId}" />
-                                                    <div class="text-center">
-                                                        <input type="submit" value="加入購物車" class="btn btn-outline-dark mt-auto" />
-                                                    </div>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div>
-                                                        `);
-            ProductContent.innerHTML = sortbydate.join("");
-
+            const response = await fetch(`@Url.Content("~/Shop/IndexbyDate")?CK=${queryKeyword}`);
+            const data = await response.json();
+            const productCards = data.map(createProductCard);
+            ProductContent.innerHTML = productCards.join("");
         }
-
         async function SortByPrice_l() {
             var queryKeyword = document.querySelector('#Kw').value;
-
             ProductContent.innerHTML = '';
             const response = await fetch(`@Url.Content("~/Shop/IndexbyPrice_L")?CK=${queryKeyword}`);
             const data = await response.json();
-            // console.log(data);
-            const sortbydate = data.map(x =>
-                `
-                                                         <div class="col mb-5">
-                                                <div class="card h-100">
-                                                    <div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem">Sale</div>
-                                                        <img class="card-img-top" src="../images/shop/${x.fImagePath}" alt="..." style="height:25vh; width=25vw;" />
-                                                    <div class="card-body p-4">
-                                                        <div class="text-center">
-                                                                    <h5 class="fw-bolder">${x.productName}</h5>
-                                                            <div class="d-flex justify-content-center small text-warning mb-2">
-                                                                <div class="bi-star-fill"></div>
-                                                                <div class="bi-star-fill"></div>
-                                                                <div class="bi-star-fill"></div>
-                                                                <div class="bi-star-fill"></div>
-                                                                <div class="bi-star-fill"></div>
-                                                            </div>
-                                                            <span class="text-muted text-decoration-line-through">${x.price}</span>
-                                                            <span style="color:black">${x.price}</span>
-                                                        </div>
-                                                    </div>
-                                                    <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                                                        <form action="/Shop/AddToCar" method="post">
-                                                            <input type="text" name="txtCount" value="1" class="form-control text-center me-3 textbox" />
-                                                            <div class="text-center">
-                                                                        <a href="/Shop/Details?id=${x.productId}" class="btn btn-outline-dark mt-auto">查看商品</a>
-                                                            </div>
-                                                            <div class="text-center">
-                                                                        <a href="/Shop/Edit?id=${x.productId}" class="btn btn-outline-dark mt-auto">測試修改</a>
-                                                            </div>
-                                                                    <input type="hidden" name="ProductID" value="${x.productId}" />
-                                                            <div class="text-center">
-                                                                <input type="submit" value="加入購物車" class="btn btn-outline-dark mt-auto" />
-                                                            </div>
-                                                        </form>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                                                `);
-            ProductContent.innerHTML = sortbydate.join("");
-
+            const productCards = data.map(createProductCard);
+            ProductContent.innerHTML = productCards.join("");
         }
+       
 
         //標籤搜尋
         var tags = document.querySelector('#tags');
@@ -348,6 +236,48 @@
       
         CreateTag();
         //標籤搜尋END
+
+        //以下是商品呈現標準格式
+        function createProductCard(product) {
+            return `
+                <div class="col mb-5">
+                    <div class="card h-100">
+                        <div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem">Sale</div>
+                        <img class="card-img-top" src="../images/shop/${product.FImagePath}" alt="..." style="height:25vh; " />
+                        <div class="card-body p-4">
+                            <div class="text-center">
+                                ${product.SubTagName.split('/').map(tag => `<span class="badge text-bg-light">${tag}</span>`).join("")}
+                                <h5 class="fw-bolder">${product.ProductName}</h5>
+                                <div class="d-flex justify-content-center small text-warning mb-2">
+                                    <div class="bi-star-fill"></div>
+                                    <div class="bi-star-fill"></div>
+                                    <div class="bi-star-fill"></div>
+                                    <div class="bi-star-fill"></div>
+                                    <div class="bi-star-fill"></div>
+                                </div>
+                                <span class="text-muted text-decoration-line-through">${product.Price}</span>
+                                <span style="color:black">${product.Price}</span>
+                            </div>
+                        </div>
+                        <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                            <form action="/Shop/AddToCar" method="post">
+                                <input type="text" name="txtCount" value="1" class="form-control text-center me-3 textbox" />
+                                <div class="text-center">
+                                    <a href="/Shop/Details?id=${product.ProductId}" class="btn btn-outline-dark mt-auto">查看商品</a>
+                                </div>
+                                <div class="text-center">
+                                    <a href="/Shop/Edit?id=${product.ProductId}" class="btn btn-outline-dark mt-auto">測試修改</a>
+                                </div>
+                                <input type="hidden" name="ProductID" value="${product.ProductId}" />
+                                <div class="text-center">
+                                    <input type="submit" value="加入購物車" class="btn btn-outline-dark mt-auto" />
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
 
 
     </script>
