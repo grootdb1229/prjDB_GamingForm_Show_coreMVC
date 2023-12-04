@@ -19,6 +19,8 @@ public partial class Product
 
     public int StatusId { get; set; }
 
+    public int ViewCount { get; set; }
+
     public int? MemberId { get; set; }
 
     public int? FirmId { get; set; }

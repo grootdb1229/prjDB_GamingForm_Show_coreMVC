@@ -24,33 +24,39 @@
             </div>
             <div class="col-md-2">
                 @Html.ActionLink("重設","DeputeList","Depute",null,new{@class ="btn btn-dark border-0 w-100",@id="search",name="txtKeyword"})
-                
             </div>
+                
+
         </div>
     </div>
 </div>
 
 <!-- Search End -->
 <!-- Jobs Start -->
-<div class="container">
+<div id="popmenu" class="container" >
+    <dl>
+        <dt style="width:100%;height:20px;border:dashed black 2px">
+            <span>進階搜尋</span>
+            
+        </dt>
     <div class="row g-4" style="float:right;">
         <div class="col-md-6">
-            <p>大類別</p>
+            <label style="float:left;text-align:right;">大類別</label>
             <select id="skillclass" class="form-select border-0"></select>
         </div>
         <div class="col-md-6">
-            <p>小類別</p>
+            <label style="float:left;text-align:right;">小類別</label>
             <select id="skill" class="form-select border-0"></select>
         </div>
     </div>
     <div class="row g-4" style="float:left">
         <div class="col-md-6">
-            <p>地區</p>
+            <label style="float:left;text-align:right;">地區</label>
             <select id="regions" class="form-select border-0"></select>
         </div>
         <div class="col-md-6">
-            <p>金額</p>
-            <div class="row g-2">
+            <label style="float:left;text-align:right;">金額</label>
+            
                 <select id="money" class="form-select border-0">
                     <option name="txtSalary" selected>請選擇...</option>
                     <option name="txtSalary" value="1">10000</option>
@@ -58,14 +64,18 @@
                     <option name="txtSalary" value="3">30000</option>
                     <option name="txtSalary" value="4">50000</option>
                 </select>
-            </div>
+            
         </div>
     </div>
+    </dl>
 </div>
+<img src="~/images/down-arrow.png" />
+<h1 id="totalcount" class="text-center mb-5 wow fadeInUp" data-wow-delay="0.1s">懸賞清單</h1>
+@* <h3 id="totalcount" class="text-center mb-3 wow fadeInUp" data-wow-delay="0.1s">test</h3> *@
 <div class="container-xxl py-5">
     
     <div class="container">
-        <h1 class="text-center mb-5 wow fadeInUp" data-wow-delay="0.1s">懸賞清單</h1>
+        
 
         <div class="tab-class text-center wow fadeInUp" data-wow-delay="0.3s">
 
@@ -90,6 +100,7 @@
                                         @Html.ActionLink("詳細", "DeputeDetails", "Depute", new { id = item.id },new{@class ="btn btn-primary"})
                                         @Html.ActionLink("我要應徵", "Apply", "Depute", new { id = item.id },new{@class ="btn btn-primary"})
                                 </div>
+                                    <small class="text-truncate"><i class="far fa-calendar-alt text-primary me-2"></i>狀態 : @Html.DisplayFor(modelItem => item.status)</small>
                                     <small class="text-truncate"><i class="far fa-calendar-alt text-primary me-2"></i>Last Update : @Html.DisplayFor(modelItem => item.modifieddate)</small>
                             </div>
                             }
@@ -118,7 +129,6 @@
         skillclass.addEventListener("change", () => { loadSkill() })
         skillclass.addEventListener("change", () => { loadList() })
         skill.addEventListener("change", () => { loadList() })
-
         const selSkillClasses = document.querySelector('#skillclass');
         const selectSkills = document.querySelector('#skill');
         const selectRegions = document.querySelector('#regions');
@@ -133,7 +143,9 @@
                 (`@Url.Content("~/Depute/Search")?txtKeyword=${text.value}&txtHotkey=${hotkey}&txtRegion=${selectRegions.options[selectRegions.selectedIndex].text}`);
             // console.log(response)
             const data = await response.json();
-            // console.log(data);
+            console.log(data);
+            console.log(data.length);
+            $('#totalcount').html(`相關結果有${data.length}筆`);
             const list = data.map(list =>
                 `                           <input type="hidden" name="${list.id}" value=${list.id}/>
                                                     <div  class="col-sm-12 col-md-8 d-flex align-items-center">
@@ -153,14 +165,11 @@
                                                                             <a href="/Depute/Apply/${list.id}" class="btn btn-primary"  id=btndp"">我要應徵...</a>
 
                                                     </div>
+                                                            <small class="text-truncate"><i class="far fa-calendar-alt text-primary me-2"></i>狀態 : ${list.status}</small>
                                                             <small class="text-truncate"><i class="far fa-calendar-alt text-primary me-2"></i>Last Update : ${list.modifieddate}</small>
+                                                            
                                                     </div>
-
-
                                             `
-
-
-
             )
             lstFrag.append(list);
             // console.log(lstFrag)
@@ -179,8 +188,6 @@
             const SkillClassess = data.map(SkillClassess => `<option name="txtSkillClass" value='${SkillClassess.skillClassId}'>${SkillClassess.name}</option>`)
             SkillClasseFrag.append(SkillClassess);
             $('#skillclass').html(SkillClasseFrag)
-            // selSkillClasses.innerHTML = SkillClassesks.join("");
-
             loadSkill();
 
         }
@@ -196,8 +203,6 @@
             const Skills = data.map(Skills => `<option name="txtSkill" value='${Skills.skillId}'>${Skills.name}</option>`)
             SkillFrag.append(Skills);
             $('#skill').html(SkillFrag)
-            
-            // loadList();
         }
 
         async function loadRegion() {
@@ -223,23 +228,9 @@
             HkFrag.append(snd);
             const data = await response.json();
             // console.log(data);
-            // <a href="/Depute/DeputeDetails/${list.id}" class="btn btn-primary" id = " btndp" name="txtKeyword" > 詳細...</a>
-            // const Hotkeys = data.map(Hotkeys => `<a href="/Depute/Search?${Hotkeys}" id="${Hotkeys}">${Hotkeys} </a>`)
-            const Hotkeys = data.map(Hotkeys => `<span" id="${Hotkeys}" onclick="loadList('${Hotkeys}')">${Hotkeys} </span>`)
-            // console.log(Hotkeys);
+            const Hotkeys = data.map(Hotkeys => `<a href="#" id="${Hotkeys}" onclick="loadList('${Hotkeys}')">${Hotkeys}  </a>`)
             HkFrag.append(Hotkeys);
             $('#hotkey').html(HkFrag)
-
-
-            
-
-            
-            
-        }
-       
-
-        function search1(keyword) {
-            alert(keyword);
         }
     </script>
 }
