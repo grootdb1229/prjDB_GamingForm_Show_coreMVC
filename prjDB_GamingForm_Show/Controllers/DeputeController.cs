@@ -325,7 +325,9 @@ namespace prjDB_GamingForm_Show.Controllers
             if (_db.Statuses.Any(_ => _.StatusId == statusID))
                 o.ApplyStatusId = Convert.ToInt32(statusID);
             _db.SaveChanges();
-            return Ok();
+
+            var statusName = _db.Statuses.FirstOrDefault(_ => _.StatusId == statusID).Name;
+            return Content(statusName);
         }
         public IActionResult individualDetials(int id)
         {
