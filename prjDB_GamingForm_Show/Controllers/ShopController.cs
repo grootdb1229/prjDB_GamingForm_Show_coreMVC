@@ -137,13 +137,6 @@ namespace prjDB_GamingForm_Show.Controllers
             //}
             public IActionResult Index(CKeyWord ck)
             {
-                //UI相關
-                //Todo 商品切成XX個一頁，下面要有1~XX個頁，上面要有選項讓客人決定一頁呈現 20 OR 40個   //補充 蝦皮沒分 大約60件一頁
-                //軟體功能相關
-                //Todo  你的交易邏輯這個版本根本還沒寫上去
-                //Todo  產品留言功能目前未實作
-                //Todo 熱門銷售排序還沒做
-                //Todo  Tag選擇排序還沒做
 
                 String CK = ck.txtKeyword;
                 _db.ProductTags.Load();
@@ -184,7 +177,7 @@ namespace prjDB_GamingForm_Show.Controllers
                 }
                 else
                 {
-                    var data = from n in _db.ProductTags
+                    var data = (from n in _db.ProductTags
                                where n.Product.ProductName.Contains(CK) && n.Product.StatusId == 1
                                select new
                                {
@@ -193,7 +186,7 @@ namespace prjDB_GamingForm_Show.Controllers
                                    n.Product.Price,
                                    n.Product.FImagePath,
                                    SubTagName = n.SubTag.Name
-                               };
+                               }).ToList();
                     foreach (var item in data)
                     {
                         string s = "";
@@ -213,44 +206,52 @@ namespace prjDB_GamingForm_Show.Controllers
                         List.Add(Pdb);
                     };
                 }
-                bool flag = false;
-                List<CShopPageViewModel> List2 = new List<CShopPageViewModel>();
-                List2.Add(List[0]);
-                for (int i = 1; i < List.Count; i++)
+                if (List.Count==0)//////"查無資料"邏輯 
                 {
-                    for (int j = 0; j < List2.Count; j++)
+                    //return RedirectToAction("Index");
+                    ViewBag.Message = "查無資料，請確認輸入內容"; 
+                    return View(); 
+                }
+                else
+                {
+                    bool flag = false;
+                    List<CShopPageViewModel> List2 = new List<CShopPageViewModel>();
+                    List2.Add(List[0]);
+                    for (int i = 1; i < List.Count; i++)
                     {
-                        if (List[i].ProductId == List2[j].ProductId)
+                        for (int j = 0; j < List2.Count; j++)
                         {
-                            flag = true;
-                            break;
+                            if (List[i].ProductId == List2[j].ProductId)
+                            {
+                                flag = true;
+                                break;
+                            }
                         }
+                        if (flag == false)
+                        {
+                            List2.Add(List[i]);
+                        }
+                        flag = false;
                     }
-                    if (flag == false)
+
+                    string json = "";
+                    ViewBag.Car = 0;
+                    if (HttpContext.Session.Keys.Contains(CDictionary.SK_PURCHASED_PRODUCES_LIST))
                     {
-                        List2.Add(List[i]);
+                        json = HttpContext.Session.GetString(CDictionary.SK_PURCHASED_PRODUCES_LIST);
+                        List<ShoppingCar> car = JsonSerializer.Deserialize<List<ShoppingCar>>(json);
+                        ViewBag.Car = car.Count();
                     }
-                    flag = false;
+
+                    var tags = _db.Tags.Where(x => x.TagId > 0 && x.TagId < 4).Select(x => x.Name);
+                    //dynamic myModels = new ExpandoObject();      
+                    //myModels.product = List2; 
+                    //myModels.customerdetail = tags;
+                    string jsonResult = JsonSerializer.Serialize(List2);
+                    Trace.WriteLine("檢查裝什麼1" + jsonResult);
+                    Trace.WriteLine("檢查裝什麼2" + List2);
+                    return View(List2);
                 }
-
-                string json = "";
-                ViewBag.Car = 0;
-                if (HttpContext.Session.Keys.Contains(CDictionary.SK_PURCHASED_PRODUCES_LIST))
-                {
-                    json = HttpContext.Session.GetString(CDictionary.SK_PURCHASED_PRODUCES_LIST);
-                    List<ShoppingCar> car = JsonSerializer.Deserialize<List<ShoppingCar>>(json);
-                    ViewBag.Car = car.Count();
-                }
-
-                var tags = _db.Tags.Where(x => x.TagId > 0 && x.TagId < 4).Select(x => x.Name);
-                //dynamic myModels = new ExpandoObject();      
-                //myModels.product = List2; 
-                //myModels.customerdetail = tags;
-                string jsonResult = JsonSerializer.Serialize(List2);
-                Trace.WriteLine("檢查裝什麼1" + jsonResult);      
-                Trace.WriteLine("檢查裝什麼2" + List2);
-                return View(List2);
-
             }
 
 
@@ -316,6 +317,7 @@ namespace prjDB_GamingForm_Show.Controllers
                                    n.Product.FImagePath,
                                    SubTagName = n.SubTag.Name
                                }).OrderByDescending(x => x.AvailableDate.Date).ToList();
+                   
                     foreach (var item in data)
                     {
                         string s = "";
@@ -335,60 +337,271 @@ namespace prjDB_GamingForm_Show.Controllers
                         List.Add(Pdb);
                     };
                 }
-                bool flag = false;
-                List<CShopPageViewModel> List2 = new List<CShopPageViewModel>();
-                List2.Add(List[0]);
-                for (int i = 1; i < List.Count; i++)
+                if (List.Count == 0)
                 {
-                    for (int j = 0; j < List2.Count; j++)
-                    {
-                        if (List[i].ProductId == List2[j].ProductId)
-                        {
-                            flag = true;
-                            break;
-                        }
-                    }
-                    if (flag == false)
-                    {
-                        List2.Add(List[i]);
-                    }
-                    flag = false;
+                    ViewBag.Message = "查無資料，請確認輸入內容";
+                    return View();
                 }
-                string jsonResult = JsonSerializer.Serialize(List2);
-                Trace.WriteLine("AAA" + jsonResult);
-                Trace.WriteLine("BBB" + List2);
-                return Json(jsonResult);
+                else
+                {
+                    bool flag = false;
+                    List<CShopPageViewModel> List2 = new List<CShopPageViewModel>();
+                    List2.Add(List[0]);
+                    for (int i = 1; i < List.Count; i++)
+                    {
+                        for (int j = 0; j < List2.Count; j++)
+                        {
+                            if (List[i].ProductId == List2[j].ProductId)
+                            {
+                                flag = true;
+                                break;
+                            }
+                        }
+                        if (flag == false)
+                        {
+                            List2.Add(List[i]);
+                        }
+                        flag = false;
+                    }
+                    string jsonResult = JsonSerializer.Serialize(List2);
+                    Trace.WriteLine("AAA" + jsonResult);
+                    Trace.WriteLine("BBB" + List2);
+                    //return Json(List2);
+                    return Content(jsonResult, "application/json");
+                }
             }
             public IActionResult IndexbyPrice_H(String CK)
             {
                 //Trace.WriteLine("CCC" + CK);
-                IEnumerable<Product> Pdb = null;
+                //IEnumerable<Product> Pdb = null;
+                //if (string.IsNullOrEmpty(CK))
+                //{
+                //    Pdb = _db.Products.Where(x => x.StatusId == 1).OrderByDescending(x => x.Price);
+                //}
+                //else
+                //{
+                //    Pdb = _db.Products.Where(p => p.ProductName.Contains(CK) && p.StatusId == 1)
+                //        .OrderByDescending(x => x.Price);
+                //}
+                //return Json(Pdb);
+                _db.ProductTags.Load();
+                _db.Products.Load();
+                _db.SubTags.Load();
+                List<CShopPageViewModel> List = new List<CShopPageViewModel>();
+                CShopPageViewModel Pdb = null;
                 if (string.IsNullOrEmpty(CK))
                 {
-                    Pdb = _db.Products.Where(x => x.StatusId == 1).OrderByDescending(x => x.Price);
+                    var data = (from n in _db.ProductTags
+                                where n.Product.StatusId == 1
+                                select new
+                                {
+                                    n.Product.AvailableDate,
+                                    n.Product.ProductId,
+                                    n.Product.ProductName,
+                                    n.Product.Price,
+                                    n.Product.FImagePath,
+                                    n.SubTag.Name
+                                }).OrderByDescending(x => x.Price).ToList();
+                    foreach (var item in data)
+                    {
+                        string s = "";
+                        var tagname = _db.ProductTags.Where(x => x.ProductId == item.ProductId).Select(x => x.SubTag.Name).ToList();
+                        foreach (var t in tagname)
+                        {
+                            s += t.ToString() + "/";
+                        }
+                        Pdb = new CShopPageViewModel
+                        {
+                            ProductId = item.ProductId,
+                            ProductName = item.ProductName,
+                            Price = item.Price,
+                            FImagePath = item.FImagePath,
+                            SubTagName = s
+                        };
+                        List.Add(Pdb);
+                    };
                 }
                 else
                 {
-                    Pdb = _db.Products.Where(p => p.ProductName.Contains(CK) && p.StatusId == 1)
-                        .OrderByDescending(x => x.Price);
+                    var data = (from n in _db.ProductTags
+                                where n.Product.ProductName.Contains(CK) && n.Product.StatusId == 1
+                                select new
+                                {
+                                    n.Product.AvailableDate,
+                                    n.Product.ProductId,
+                                    n.Product.ProductName,
+                                    n.Product.Price,
+                                    n.Product.FImagePath,
+                                    SubTagName = n.SubTag.Name
+                                }).OrderByDescending(x => x.Price).ToList();
+                    foreach (var item in data)
+                    {
+                        string s = "";
+                        var tagname = _db.ProductTags.Where(x => x.ProductId == item.ProductId).Select(x => x.SubTag.Name).ToList();
+                        foreach (var t in tagname)
+                        {
+                            s += t.ToString() + "/";
+                        }
+                        Pdb = new CShopPageViewModel
+                        {
+                            ProductId = item.ProductId,
+                            ProductName = item.ProductName,
+                            Price = item.Price,
+                            FImagePath = item.FImagePath,
+                            SubTagName = s
+                        };
+                        List.Add(Pdb);
+                    };
                 }
-                return Json(Pdb);
+                if (List.Count == 0)
+                {
+                    ViewBag.Message = "查無資料，請確認輸入內容";
+                    return View();
+                }
+                else
+                {
+                    bool flag = false;
+                    List<CShopPageViewModel> List2 = new List<CShopPageViewModel>();
+                    List2.Add(List[0]);
+                    for (int i = 1; i < List.Count; i++)
+                    {
+                        for (int j = 0; j < List2.Count; j++)
+                        {
+                            if (List[i].ProductId == List2[j].ProductId)
+                            {
+                                flag = true;
+                                break;
+                            }
+                        }
+                        if (flag == false)
+                        {
+                            List2.Add(List[i]);
+                        }
+                        flag = false;
+                    }
+                    string jsonResult = JsonSerializer.Serialize(List2);
+                    Trace.WriteLine("AAA" + jsonResult);
+                    Trace.WriteLine("BBB" + List2);
+                    //return Json(List2);
+                    return Content(jsonResult, "application/json");
+                }
             }
             public IActionResult IndexbyPrice_L(String CK)
             {
 
-                IEnumerable<Product> Pdb = null;
+                //IEnumerable<Product> Pdb = null;
+                //if (string.IsNullOrEmpty(CK))
+                //{
+                //    Pdb = _db.Products.Where(x => x.StatusId == 1).OrderBy(x => x.Price);
+                //}
+                //else
+                //{
+                //    Pdb = _db.Products.Where(p => p.ProductName.Contains(CK) && p.StatusId == 1)
+                //        .OrderBy(x => x.Price);
+                //}
+                ////Trace.WriteLine("BBBB" + Pdb);
+                //return Json(Pdb);
+                _db.ProductTags.Load();
+                _db.Products.Load();
+                _db.SubTags.Load();
+                List<CShopPageViewModel> List = new List<CShopPageViewModel>();
+                CShopPageViewModel Pdb = null;
                 if (string.IsNullOrEmpty(CK))
                 {
-                    Pdb = _db.Products.Where(x => x.StatusId == 1).OrderBy(x => x.Price);
+                    var data = (from n in _db.ProductTags
+                                where n.Product.StatusId == 1
+                                select new
+                                {
+                                    n.Product.AvailableDate,
+                                    n.Product.ProductId,
+                                    n.Product.ProductName,
+                                    n.Product.Price,
+                                    n.Product.FImagePath,
+                                    n.SubTag.Name
+                                }).OrderBy(x => x.Price).ToList();
+                    foreach (var item in data)
+                    {
+                        string s = "";
+                        var tagname = _db.ProductTags.Where(x => x.ProductId == item.ProductId).Select(x => x.SubTag.Name).ToList();
+                        foreach (var t in tagname)
+                        {
+                            s += t.ToString() + "/";
+                        }
+                        Pdb = new CShopPageViewModel
+                        {
+                            ProductId = item.ProductId,
+                            ProductName = item.ProductName,
+                            Price = item.Price,
+                            FImagePath = item.FImagePath,
+                            SubTagName = s
+                        };
+                        List.Add(Pdb);
+                    };
                 }
                 else
                 {
-                    Pdb = _db.Products.Where(p => p.ProductName.Contains(CK) && p.StatusId == 1)
-                        .OrderBy(x => x.Price);
+                    var data = (from n in _db.ProductTags
+                                where n.Product.ProductName.Contains(CK) && n.Product.StatusId == 1
+                                select new
+                                {
+                                    n.Product.AvailableDate,
+                                    n.Product.ProductId,
+                                    n.Product.ProductName,
+                                    n.Product.Price,
+                                    n.Product.FImagePath,
+                                    SubTagName = n.SubTag.Name
+                                }).OrderBy(x => x.Price).ToList();
+                    foreach (var item in data)
+                    {
+                        string s = "";
+                        var tagname = _db.ProductTags.Where(x => x.ProductId == item.ProductId).Select(x => x.SubTag.Name).ToList();
+                        foreach (var t in tagname)
+                        {
+                            s += t.ToString() + "/";
+                        }
+                        Pdb = new CShopPageViewModel
+                        {
+                            ProductId = item.ProductId,
+                            ProductName = item.ProductName,
+                            Price = item.Price,
+                            FImagePath = item.FImagePath,
+                            SubTagName = s
+                        };
+                        List.Add(Pdb);
+                    };
                 }
-                //Trace.WriteLine("BBBB" + Pdb);
-                return Json(Pdb);
+                if (List.Count == 0)
+                {
+                    ViewBag.Message = "查無資料，請確認輸入資料";
+                    return View();
+                }
+                else
+                {
+                    bool flag = false;
+                    List<CShopPageViewModel> List2 = new List<CShopPageViewModel>();
+                    List2.Add(List[0]);
+                    for (int i = 1; i < List.Count; i++)
+                    {
+                        for (int j = 0; j < List2.Count; j++)
+                        {
+                            if (List[i].ProductId == List2[j].ProductId)
+                            {
+                                flag = true;
+                                break;
+                            }
+                        }
+                        if (flag == false)
+                        {
+                            List2.Add(List[i]);
+                        }
+                        flag = false;
+                    }
+                    string jsonResult = JsonSerializer.Serialize(List2);
+                    Trace.WriteLine("AAA" + jsonResult);
+                    Trace.WriteLine("BBB" + List2);
+                    //return Json(List2);
+                    return Content(jsonResult, "application/json");
+                }
             }
             //    public IActionResult IndexPage(int? id) //拿來跳page用的 id用變數去計算，++--一個變數去控制讀取到的最後一個商品控制Page
             //{
