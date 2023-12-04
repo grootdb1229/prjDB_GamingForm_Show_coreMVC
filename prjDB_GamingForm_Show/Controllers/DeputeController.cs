@@ -110,9 +110,17 @@ namespace prjDB_GamingForm_Show.Controllers
         }
 
         //TODO #2 搜尋
+        //~/Depute/search?keyword=abc
+        //public IActionResult Search(string keyword)
+        //{
+
+        //}
         public IActionResult Search(CKeyWord vm)
         {
             IEnumerable<CDeputeViewModel> datas = null;
+            if (string.IsNullOrEmpty(vm.txtKeyword) && (!string.IsNullOrEmpty(vm.txtHotkey)))
+                vm.txtKeyword = vm.txtHotkey;
+            
             if (string.IsNullOrEmpty(vm.txtKeyword))
             {
                 ListLoad();
