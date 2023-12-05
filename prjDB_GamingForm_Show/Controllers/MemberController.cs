@@ -186,11 +186,15 @@ namespace prjDB_GamingForm_Show.Controllers
 
         public IActionResult MyOrders() 
         {
-            return View();
+            var data = _db.Orders.Include(O => O.OrderProducts).ThenInclude(P => P.Product)
+                      .Where(O => O.MemberId == HttpContext.Session.GetInt32(CDictionary.SK_UserID))
+                      .Select(O => O);
+            return Json(data);
         }
 
         public IActionResult MyCollections() 
         {
+           
             return View();
         }
 
@@ -209,9 +213,6 @@ namespace prjDB_GamingForm_Show.Controllers
             var data = _db.Articles.Include(a => a.SubBlog).ThenInclude(s => s.Blog)
                 .Where(a => a.MemberId == HttpContext.Session.GetInt32(CDictionary.SK_UserID))
                 .Select(a => a);
-
-
-
             var datas = from A in _db.Articles
                         where A.MemberId == HttpContext.Session.GetInt32(CDictionary.SK_UserID)
                         select A;
