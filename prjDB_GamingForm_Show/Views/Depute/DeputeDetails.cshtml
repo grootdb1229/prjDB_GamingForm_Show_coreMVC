@@ -154,23 +154,4 @@
 <script src="~/layout/jobentry-1.0.0/lib/waypoints/waypoints.min.js"></script>
 <script src="~/layout/jobentry-1.0.0/lib/owlcarousel/owl.carousel.min.js"></script>
 
-@section Scripts
-{
-    Cookie();
-    <script>
-
-        function Cookie() {
-            $.ajax('@Url.Content("~/Depute/Cookie")', {
-                "type": 'Post', //POST、PUT、DELETE
-                "data": { "id": @Html.DisplayFor(model => model.id) },
-                "dataType": "json"
-            })
-               
-            loadSkill();
-        }
-
-
-    </script>
-
-}
 
