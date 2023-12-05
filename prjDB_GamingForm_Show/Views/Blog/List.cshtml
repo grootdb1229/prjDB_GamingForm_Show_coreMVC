@@ -49,47 +49,43 @@
     </div>
 </header>
 <section class="instagram-post-section spad" style="background-color:#272727">
-    <div style="float:right;padding:10px;margin-right:5%">
-        <div style="float:left;padding:10px;">
-            <p style="text-align:center;font-size:24px">熱門看板</p>
-            @{
-                //int totalCount = 0;
+    <div style="float:right;margin-left:10px;margin-right:10px;width:350px;background-color:#4F4F4F;-webkit-box-shadow: #FFF 0 -1px 4px, #ff0 0 -2px 10px, #ff8000 0 -10px 20px, red 0 -18px 40px, 5px 5px 15px 5px rgba(0,0,0,0);
+    box-shadow: #FFF 0 -1px 4px, #ff0 0 -2px 10px, #ff8000 0 -10px 20px, red 0 -18px 40px, 5px 5px 15px 5px rgba(0,0,0,0);> 火燒厝
+    @*<div style="float:right;margin-left:10px;margin-right:10px;width:350px;background-color:#4F4F4F;box-shadow:0px 0px 8px 8px #cccccc;border-radius:8px">*@
+        <div style="padding:10px;margin-right:5%">
+            <div >
+                <table class="table" style="color:antiquewhite; ">
+                    <tr style="text-align:center;font-size:24px">
+                        <th>熱門看板</th>
+                    </tr>
+                    @{
 
-                //foreach (var blog in Model.subBlogs.OrderByDescending(s => s.Articles.Sum(a => a.ViewCount)).Take(5))
-                //{
-                //    <p>
-                //        @blog.Title
-                //        @blog.Articles.Sum(a => a.ViewCount);
-                //    </p>
-            //}
-                @foreach (var blog in Model.blogs.OrderByDescending(b => b.SubBlogs.Sum(sb => sb.Articles.Sum(a => a.ViewCount))).Take(5))
-                {
-                    <a href="@Url.Action("ArticleList", "Blog", new { FId = blog.BlogId})">
-                        <p>@blog.Title - 人氣: @blog.SubBlogs.Sum(sb => sb.Articles.Sum(a => a.ViewCount))</p>
-                    </a>
-
-
-                    //<ul>
-                    //    @foreach (var subBlog in blog.SubBlogs.OrderByDescending(sb => sb.Articles.Sum(a => a.ViewCount)).Take(5))
-                    //    {
-                    //        <li>
-                    //            @subBlog.Title - Total ViewCount: @subBlog.Articles.Sum(a => a.ViewCount)
-                    //        </li>
-                    //    }
-                    //</ul>
-                }
-            }
+                        @foreach (var blog in Model.blogs.OrderByDescending(b => b.SubBlogs.Sum(sb => sb.Articles.Sum(a => a.ViewCount))).Take(5))
+                        {
+                            <tr>
+                                <td>
+                                    <a style="text-decoration:none" href="@Url.Action("ArticleList", "Blog", new { FId = blog.BlogId})">
+                                        <p>@blog.Title - 人氣: @blog.SubBlogs.Sum(sb => sb.Articles.Sum(a => a.ViewCount))</p>
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </table>
+            </div>
         </div>
     </div>
+
+
 
 
     <div style="float:left;padding:10px">
         <p style="text-align:center;font-size:24px">熱門商品</p>
         <div id="div1">@*會顯示輪播廣告*@</div>
         <br />
-        <div style="padding:10px;display:flex">
+        <div style="display:flex">
             <a href="@Url.Action("DeputeList","Depute")" target="_blank">
-                <img src="~/images/AD/forjob.jpg" width="330" height="450" alt="" style="border-radius:5px">
+                <img src="~/images/AD/forjob.jpg" width="330" height="450" alt="" style=" margin-right:15px;border-radius:5px">
             </a>
         </div>
     </div>
@@ -113,13 +109,16 @@
                             <div class="ip-text" style="margin-bottom:24px">
                                 <i class="bi bi-caret-up-fill" style="color:red"></i>
                                 <a style="text-decoration:none" href="@Url.Action("ArticleList", "Blog", new { FId =item.BlogId})">
-                                    <span style="color: #FFFFFF;font-size:32px">@item.Title</span>
+                                    <span style="color: #FFFFFF;font-size:28px">@item.Title</span>
                                 </a>
                                 <br />
                                 @{
-                                    if (!item.SubBlogs.Any(s=>s.Articles.Any()))
+                                    if (!item.SubBlogs.Any(s => s.Articles.Any()))
                                     {
-                                        <p style="font-size:16px">目前還沒有文章</p>
+                                        <a style="text-decoration:none" href="@Url.Action("ArticleList", "Blog", new { FId =item.BlogId})">
+                                            <span style="color: #FFFFFF;font-size:16px">目前還沒有文章</span>
+                                        </a>
+                                        //<p style="font-size:16px">目前還沒有文章</p>
                                     }
                                     else
                                     {
@@ -129,9 +128,9 @@
 
                                         <a style="font-size:16px;text-decoration:none" href="@Url.Action("ArticleContent", "Blog", new { FId =item.BlogId,AFId=latestArticle.ArticleId})">@latestArticle.Title</a>
                                     }
-                                }
-                            </div>
+                                }<br/>
                             <i class="bi bi-file-earmark-text" title="昨日發文數" style="">@item.SubBlogs.FirstOrDefault().Articles.Count(a => a.ModifiedDate.Date == DateTime.Today.AddDays(-1))</i>
+                            </div>
                         </div>
                     }
                 }
@@ -164,10 +163,10 @@
                     const encodedFImagePath = encodeURIComponent(data.fImagePath);
                     $('#div1').html(
                         `
-                                            <a href="@Url.Content("~/Shop/Details")?id=${data.productId}">
-                                                <img src="/images/shop/${data.fImagePath}" width="330" height="450"/>
-                                        </a>
-                                        `
+                                                        <a href="@Url.Content("~/Shop/Details")?id=${data.productId}">
+                                                                <img src="/images/shop/${data.fImagePath}" width="330" height="450" style="border-radius:5px"/>
+                                                    </a>
+                                                    `
                     );
                 });
         }

@@ -53,6 +53,8 @@ public partial class DbGamingFormTestContext : DbContext
 
     public virtual DbSet<Member> Members { get; set; }
 
+    public virtual DbSet<MemberCollection> MemberCollections { get; set; }
+
     public virtual DbSet<MemberCoupon> MemberCoupons { get; set; }
 
     public virtual DbSet<MemberStatus> MemberStatuses { get; set; }
@@ -471,6 +473,23 @@ public partial class DbGamingFormTestContext : DbContext
             entity.Property(e => e.Phone).HasMaxLength(24);
         });
 
+        modelBuilder.Entity<MemberCollection>(entity =>
+        {
+            entity.ToTable("MemberCollection");
+
+            entity.Property(e => e.Id).HasColumnName("ID");
+            entity.Property(e => e.CollectionId).HasColumnName("CollectionID");
+            entity.Property(e => e.FImagePath).HasColumnName("fImagePath");
+            entity.Property(e => e.Intro).HasMaxLength(50);
+            entity.Property(e => e.MemberId).HasColumnName("MemberID");
+            entity.Property(e => e.Title).HasMaxLength(50);
+
+            entity.HasOne(d => d.Member).WithMany(p => p.MemberCollections)
+                .HasForeignKey(d => d.MemberId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_MemberCollection_Member");
+        });
+
         modelBuilder.Entity<MemberCoupon>(entity =>
         {
             entity.ToTable("MemberCoupon");
@@ -618,7 +637,6 @@ public partial class DbGamingFormTestContext : DbContext
             entity.Property(e => e.ProductId).HasColumnName("ProductID");
             entity.Property(e => e.AvailableDate).HasColumnType("date");
             entity.Property(e => e.FImagePath).HasColumnName("fImagePath");
-            entity.Property(e => e.FirmId).HasColumnName("FirmID");
             entity.Property(e => e.MemberId)
                 .HasDefaultValueSql("((0))")
                 .HasColumnName("MemberID");
