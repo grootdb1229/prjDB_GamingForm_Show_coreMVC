@@ -102,18 +102,18 @@ namespace prjDB_GamingForm_Show.Hubs
         {
             var senderUserName = ConnectedUsers.FirstOrDefault(u => u.UserName == selfID)?.UserName;
             var selfSid = ConnectedUsers.FirstOrDefault(u => u.UserName == selfID)?.ConnectionId;
-            if (string.IsNullOrEmpty(sendToID))
-            {
-                await Clients.All.SendAsync("UpdContent", senderUserName + " 說: " + message);
-            }
-            else
-            {
-                // 接收人
-                await Clients.Client(sendToID).SendAsync("UpdContent", senderUserName + " 私訊向你說: " + message);
+            //if (string.IsNullOrEmpty(sendToID))
+            //{
+            //    await Clients.All.SendAsync("UpdContent", senderUserName + " 說: " + message);
+            //}
 
-                // 發送人
-                await Clients.Client(selfSid).SendAsync("UpdContent", "你向 " + ConnectedUsers.FirstOrDefault(u => u.ConnectionId == sendToID)?.UserName + " 私訊說: " + message);
-            }
+
+            // 接收人
+            await Clients.Client(sendToID).SendAsync("UpdContent", senderUserName + " 私訊向你說: " + message);
+
+            // 發送人
+            await Clients.Client(selfSid).SendAsync("UpdContent", "你向 " + ConnectedUsers.FirstOrDefault(u => u.ConnectionId == sendToID)?.UserName + " 私訊說: " + message);
+
 
             var senderAdminId = _db.Admins.FirstOrDefault(a => a.Name == selfID).AdminId;
             var receiveAdminId = _db.Admins.FirstOrDefault(a => a.Name == sendToName).AdminId;
@@ -124,7 +124,7 @@ namespace prjDB_GamingForm_Show.Hubs
                 chat.ReceiveAdmin = receiveAdminId;
                 chat.ChatContent = message;
                 chat.ModefiedDate = DateTime.UtcNow.ToLocalTime().ToString("yyyy/MM/dd/HH/mm/ss");
-                
+
                 _db.Chats.Add(chat);
                 await _db.SaveChangesAsync();
             }
@@ -140,7 +140,7 @@ namespace prjDB_GamingForm_Show.Hubs
             await Clients.All.SendAsync("UpdAdminOnlineStatus", adminName, isOnline);
         }
         public bool GetAdminOnlineStatus(string adminName)
-        {            
+        {
             var admin = ConnectedUsers.FirstOrDefault(u => u.UserName == adminName);
             return admin != null && admin.IsOnline;
         }

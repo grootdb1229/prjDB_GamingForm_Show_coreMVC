@@ -354,8 +354,41 @@ namespace prjDB_GamingForm_Show.Controllers
                     };
                     chats.Add(ori);
                 }
+                else if(chat.SenderAdmin == id && chat.ReceiveAdmin == senderid)
+                {
+                    CAdminChatViewModel ori = new CAdminChatViewModel()
+                    {
+                        SenderName = _db.Admins.Where(a => a.AdminId == id).Select(a => a.Name).FirstOrDefault(),
+                        ReceiverName = HttpContext.Session.GetString(CDictionary.SK_管理者名稱),
+                        SenderId = id,
+                        ReceiverId = senderid,
+                        SenderImg = _db.Admins.Where(a => a.AdminId == senderid).Select(a => a.ImgPath).FirstOrDefault(),
+                        ReceiverImg = _db.Admins.Where(a => a.AdminId == id).Select(a => a.ImgPath).FirstOrDefault(),
+                        ChatContent = chat.ChatContent,
+                        ModefiedDate = chat.ModefiedDate,
+                        IsCheck = chat.IsCheck
+                    };
+                    chats.Add(ori);
+                }
             }
-            return PartialView(chats);
+            if (chats != null && chats.Count>0)
+            {
+                return PartialView(chats);
+            }
+            else
+            {
+                CAdminChatViewModel newchat = new CAdminChatViewModel()
+                {
+                    SenderName = HttpContext.Session.GetString(CDictionary.SK_管理者名稱),
+                    ReceiverName = _db.Admins.Where(a => a.AdminId == id).Select(a => a.Name).FirstOrDefault(),
+                    SenderId = senderid,
+                    ReceiverId = id,
+                    SenderImg = _db.Admins.Where(a => a.AdminId == senderid).Select(a => a.ImgPath).FirstOrDefault(),
+                    ReceiverImg = _db.Admins.Where(a => a.AdminId == id).Select(a => a.ImgPath).FirstOrDefault(),
+                };
+                chats.Add(newchat);
+                return PartialView(chats);
+            }
         }
         //public IActionResult MemberListNexttest()
         //{
