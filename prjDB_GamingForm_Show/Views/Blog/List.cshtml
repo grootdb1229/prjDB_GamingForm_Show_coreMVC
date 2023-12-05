@@ -108,13 +108,16 @@
                             <div class="ip-text" style="margin-bottom:24px">
                                 <i class="bi bi-caret-up-fill" style="color:red"></i>
                                 <a style="text-decoration:none" href="@Url.Action("ArticleList", "Blog", new { FId =item.BlogId})">
-                                    <span style="color: #FFFFFF;font-size:32px">@item.Title</span>
+                                    <span style="color: #FFFFFF;font-size:28px">@item.Title</span>
                                 </a>
                                 <br />
                                 @{
                                     if (!item.SubBlogs.Any(s => s.Articles.Any()))
                                     {
-                                        <p style="font-size:16px">目前還沒有文章</p>
+                                        <a style="text-decoration:none" href="@Url.Action("ArticleList", "Blog", new { FId =item.BlogId})">
+                                            <span style="color: #FFFFFF;font-size:16px">目前還沒有文章</span>
+                                        </a>
+                                        //<p style="font-size:16px">目前還沒有文章</p>
                                     }
                                     else
                                     {
@@ -124,9 +127,9 @@
 
                                         <a style="font-size:16px;text-decoration:none" href="@Url.Action("ArticleContent", "Blog", new { FId =item.BlogId,AFId=latestArticle.ArticleId})">@latestArticle.Title</a>
                                     }
-                                }
-                            </div>
+                                }<br/>
                             <i class="bi bi-file-earmark-text" title="昨日發文數" style="">@item.SubBlogs.FirstOrDefault().Articles.Count(a => a.ModifiedDate.Date == DateTime.Today.AddDays(-1))</i>
+                            </div>
                         </div>
                     }
                 }
