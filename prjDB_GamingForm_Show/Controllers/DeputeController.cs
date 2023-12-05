@@ -646,7 +646,7 @@ namespace prjDB_GamingForm_Show.Controllers
             return Json(n);
         }
 
-        #region mainView
+        #region MainView
         public IActionResult Personal()
         {
             ViewBag.memberid = _memberIdtest;
@@ -680,6 +680,10 @@ namespace prjDB_GamingForm_Show.Controllers
             return PartialView(q);
         }
         public IActionResult PartialGallery()
+        {
+            return PartialView();
+        }
+        public IActionResult Contact()
         {
             return PartialView();
         }

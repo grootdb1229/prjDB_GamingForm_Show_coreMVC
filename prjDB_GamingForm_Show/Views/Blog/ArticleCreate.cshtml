@@ -91,17 +91,12 @@
                 <div class="form-group column" style="margin-top:4px;display: flex; justify-content: space-between;">
                     @* <input type="submit" value="發文" class="btn btn-primary" /> *@
                     <span style="margin-top:3px">
-
                     @Html.ActionLink("回列表", "ArticleList", "Blog", new { FId = Model.blogs.FirstOrDefault().BlogId }, new
                         {
                             @class = "btn btn-warning"
                         })
                     </span>
-                    <span>
-                 @*        @Html.ActionLink("回列表", "ArticleList", "Blog", new { FId = Model.blogs.FirstOrDefault().BlogId }, new
-                            {
-                                @class = "btn btn-warning"
-                            }) *@
+                    <span>            
                         <input type="submit" value="發文" class="btn btn-primary" />
                     </span>
                 </div>
