@@ -68,6 +68,8 @@
                 <span asp-validation-for="DeputeContent" class="text-danger"></span>
             </div>
             <button type="button" class="btn btn-info mb-3" onclick="openSkillBrowser()">編輯所需技能</button>
+            <span id="skillCount" hidden></span>
+
             @* <div class="row">
                 <div class="col-6">
                     <div class="list-group" id="list-tab" role="tablist">
@@ -96,9 +98,10 @@
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
     <script>
+        const selSkills = [];
         const divSkillClasses = document.querySelector('#list-tab'),
             divSkillsGroup = document.querySelector('#nav-tabContent');
-
+        var selectedCount = 0;
         var chooseClass;
 
         document.addEventListener('DOMContentLoaded', () => {
@@ -126,18 +129,17 @@
                 title: "請選擇所需技能",
                 width: '50rem',
                 html: `<div class="row">
-                                <div class="col-6">
-                                    <div class="list-group" id="list-tab" role="tablist">
-                                    </div>
+                            <div class="col-6">
+                                <div class="list-group" id="list-tab" role="tablist">
                                 </div>
-
-                                <div class="col-6">
-                                    <ul style="overflow-y:auto;height:300px" class="list-group tab-content" id="nav-tabContent">
-                                    </ul>
-                                    <ul class="list-group col-6">
-                                    </ul>
-                                </div>
-                            </div>`
+                            </div>
+                            <div class="col-6">
+                                <ul style="overflow-y:auto;height:300px" class="list-group tab-content" id="nav-tabContent">
+                                </ul>
+                                <ul class="list-group col-6">
+                                </ul>
+                            </div>
+                       </div>`
             });
             loadSkillClasses();
         }
@@ -156,7 +158,7 @@
             }
         }
 
-        const selSkills = [];
+        
         async function loadSkills() {
             const response = await fetch(`@Url.Content("~/depute/skillss")?skillClass=${chooseClass}`);
             const datas = await response.json();
@@ -177,8 +179,22 @@
                         const index = selSkills.findIndex(i => i.skillclass == chooseClass && i.skill == selSK);
                         selSkills.splice(index, 1);
                     }
+                    choiceCount();
                 })
             })
+        }
+
+        function choiceCount() {
+            selectedCount = selSkills.length;
+            const spanCount = document.querySelector('#skillCount');
+            if (selectedCount != 0) {
+                spanCount.hidden = false;
+
+                spanCount.innerHTML = `已選擇${selectedCount}項技能`;
+            }
+            else {
+                spanCount.hidden = true;
+            }
         }
 
         async function loadRegions() {
