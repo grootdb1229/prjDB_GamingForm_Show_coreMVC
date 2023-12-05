@@ -49,38 +49,33 @@
     </div>
 </header>
 <section class="instagram-post-section spad" style="background-color:#272727">
-    <div style="float:right;padding:10px;margin-right:5%">
-        <div style="float:left;padding:10px;">
-            <p style="text-align:center;font-size:24px">熱門看板</p>
-            @{
-                //int totalCount = 0;
 
-                //foreach (var blog in Model.subBlogs.OrderByDescending(s => s.Articles.Sum(a => a.ViewCount)).Take(5))
-                //{
-                //    <p>
-                //        @blog.Title
-                //        @blog.Articles.Sum(a => a.ViewCount);
-                //    </p>
-            //}
-                @foreach (var blog in Model.blogs.OrderByDescending(b => b.SubBlogs.Sum(sb => sb.Articles.Sum(a => a.ViewCount))).Take(5))
-                {
-                    <a href="@Url.Action("ArticleList", "Blog", new { FId = blog.BlogId})">
-                        <p>@blog.Title - 人氣: @blog.SubBlogs.Sum(sb => sb.Articles.Sum(a => a.ViewCount))</p>
-                    </a>
+    <div style="float:right;margin-left:10px;margin-right:10px;width:350px;background-color:#4F4F4F;box-shadow:0px 0px 8px 8px #cccccc;border-radius:8px">
+        <div style="padding:10px;margin-right:5%">
+            <div >
+                <table class="table" style="color:antiquewhite; ">
+                    <tr style="text-align:center;font-size:24px">
+                        <th>熱門看板</th>
+                    </tr>
+                    @{
 
-
-                    //<ul>
-                    //    @foreach (var subBlog in blog.SubBlogs.OrderByDescending(sb => sb.Articles.Sum(a => a.ViewCount)).Take(5))
-                    //    {
-                    //        <li>
-                    //            @subBlog.Title - Total ViewCount: @subBlog.Articles.Sum(a => a.ViewCount)
-                    //        </li>
-                    //    }
-                    //</ul>
-                }
-            }
+                        @foreach (var blog in Model.blogs.OrderByDescending(b => b.SubBlogs.Sum(sb => sb.Articles.Sum(a => a.ViewCount))).Take(5))
+                        {
+                            <tr>
+                                <td>
+                                    <a style="text-decoration:none" href="@Url.Action("ArticleList", "Blog", new { FId = blog.BlogId})">
+                                        <p>@blog.Title - 人氣: @blog.SubBlogs.Sum(sb => sb.Articles.Sum(a => a.ViewCount))</p>
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </table>
+            </div>
         </div>
     </div>
+
+
 
 
     <div style="float:left;padding:10px">
@@ -117,7 +112,7 @@
                                 </a>
                                 <br />
                                 @{
-                                    if (!item.SubBlogs.Any(s=>s.Articles.Any()))
+                                    if (!item.SubBlogs.Any(s => s.Articles.Any()))
                                     {
                                         <p style="font-size:16px">目前還沒有文章</p>
                                     }
@@ -164,10 +159,10 @@
                     const encodedFImagePath = encodeURIComponent(data.fImagePath);
                     $('#div1').html(
                         `
-                                            <a href="@Url.Content("~/Shop/Details")?id=${data.productId}">
-                                                <img src="/images/shop/${data.fImagePath}" width="330" height="450"/>
-                                        </a>
-                                        `
+                                                        <a href="@Url.Content("~/Shop/Details")?id=${data.productId}">
+                                                            <img src="/images/shop/${data.fImagePath}" width="330" height="450"/>
+                                                    </a>
+                                                    `
                     );
                 });
         }
