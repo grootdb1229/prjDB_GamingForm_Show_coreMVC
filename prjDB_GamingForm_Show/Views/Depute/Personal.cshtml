@@ -4,7 +4,11 @@
 }
 @section scripts{
     <script>
-        
+        function loadOverview() {
+            $('#divOverview').load('@Url.Content("~/depute/PartialOverview")');
+        }
+        loadOverview()
+
         function loadReleaseList() {
             $('#divReleasePart').load('@Url.Content("~/depute/PartialReleaseList")');
         }
@@ -19,6 +23,10 @@
             $('#divGalleryPart').load('@Url.Content("~/depute/PartialGallery")');
         }
         loadGallery()
-        
+
+        function loadContact() {
+            $('#divContact').load('@Url.Content("~/depute/Contact")');
+        }
+        loadContact()
     </script>
 }
