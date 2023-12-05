@@ -1,10 +1,12 @@
 ﻿using DB_GamingForm_Show.Job.DeputeClass;
 using Elfie.Serialization;
+using MailKit.Search;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Org.BouncyCastle.Bcpg;
 using prjDB_GamingForm_Show.Models;
 using prjDB_GamingForm_Show.Models.Entities;
 using prjDB_GamingForm_Show.Models.Shop;
@@ -15,6 +17,7 @@ using System.Net;
 using System.Text.Json;
 using System.Web;
 using static prjDB_GamingForm_Show.Controllers.DeputeController;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace prjDB_GamingForm_Show.Controllers
 {
@@ -24,6 +27,7 @@ namespace prjDB_GamingForm_Show.Controllers
         private readonly DbGamingFormTestContext _db;
         public List<CDeputeViewModel> List { get; set; }
         public List<CDeputeViewModel> Temp { get; set; }
+        public List<CDeputeViewModel> CookieList { get; set; }
         public DeputeController(IWebHostEnvironment host, DbGamingFormTestContext context)
         {
             _host = host;
@@ -227,7 +231,6 @@ namespace prjDB_GamingForm_Show.Controllers
         }
 
 
-        public List<int> ClickID = new List<int>();
         //TODO #3 委託詳細
         public IActionResult DeputeDetails(int? id)
         {
@@ -265,36 +268,47 @@ namespace prjDB_GamingForm_Show.Controllers
         }
         public void Cookie(int? id)
         {
+            int userid =0;
+            if (HttpContext.Session.GetInt32(CDictionary.SK_UserID)!=null)
+                userid = (int)HttpContext.Session.GetInt32(CDictionary.SK_UserID);
+            
             string record = "";
-            if (HttpContext.Request.Cookies["ClickID"] != null)
-                record = JsonSerializer.Serialize(HttpContext.Request.Cookies["ClickID"]);
+            if (HttpContext.Request.Cookies[userid.ToString()] != null)
+                record = HttpContext.Request.Cookies[userid.ToString()];
 
             CookieOptions options = new CookieOptions();
             options.Expires = DateTime.Now.AddDays(30);
-            record += $",{id}";
-            HttpContext.Response.Cookies.Append("ClickID", record, options);//
-
-           
-            
+            record += $"{id},";
+            HttpContext.Response.Cookies.Append(userid.ToString(), record, options);//
 
         }
-        public IActionResult Cookie1(int? id)
+        public IActionResult GetCookie()
         {
+            CookieList = new List<CDeputeViewModel>();
+            int userid = 0;
+            if (HttpContext.Session.GetInt32(CDictionary.SK_UserID) != null)
+                userid = (int)HttpContext.Session.GetInt32(CDictionary.SK_UserID);
             string record = "";
-            if (HttpContext.Request.Cookies["ClickID"] != null)
-                record = JsonSerializer.Serialize(HttpContext.Request.Cookies["ClickID"]);
-
-            CookieOptions options = new CookieOptions();
-            options.Expires = DateTime.Now.AddDays(30);
-
-            var data = from n in List
-                       where n.id == id
-                       select n;
-            record = JsonSerializer.Serialize(data);
-            HttpContext.Response.Cookies.Append("ClickID", record, options);
-
-
-            return Json(record);
+            if (HttpContext.Request.Cookies[userid.ToString()] != null)
+                record = HttpContext.Request.Cookies[userid.ToString()];
+            string[] strResult = record.Split(',');
+            strResult = strResult.Reverse().Distinct().ToArray();
+            IEnumerable<CDeputeViewModel> datas = null;
+            foreach (var item in strResult)
+            {
+                if (!string.IsNullOrEmpty(item))
+                {
+                    datas = from n in List
+                            where n.id == Convert.ToInt32(item)
+                            select n;
+                    foreach (var data in datas) 
+                    {
+                        CookieList.Add(data);
+                    }
+                }
+                
+            }
+            return Json(CookieList);
         }
 
 
