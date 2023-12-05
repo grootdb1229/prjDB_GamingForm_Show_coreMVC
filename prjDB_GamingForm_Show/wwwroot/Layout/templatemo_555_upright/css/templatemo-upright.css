@@ -187,7 +187,9 @@ hr { border-top: 4px solid #CCC; }
 }
 
 /* Home section */
-#home { min-height: 100vh; }
+#home, #release, #receive, #gallery, #contact {
+    min-height: 100vh;
+}
 .tm-col-home-l { width: calc(100% - 300px); }
 
 .tm-img-home-container {
