@@ -14,7 +14,6 @@
                     <div class="col-md-15">
                         <input type="text" id="text" name="txtKeyword" class="form-control border-0" placeholder="Keyword" />
                         <div id="hotkey">
-                            
                         </div>
                     </div>
                 </div>
@@ -25,7 +24,7 @@
             <div class="col-md-2">
                 @Html.ActionLink("重設","DeputeList","Depute",null,new{@class ="btn btn-dark border-0 w-100",@id="search",name="txtKeyword"})
             </div>
-                
+
 
         </div>
     </div>
@@ -34,7 +33,7 @@
 <!-- Search End -->
 <!-- Jobs Start -->
 
-<div id="popmenu" class="container" >
+<div id="popmenu" class="container">
     <div class="accordion accordion-flush" id="accordionFlushExample">
         <div class="accordion-item">
             <h2 class="accordion-header">
@@ -64,26 +63,26 @@
         </div>
         <div class="col-md-6">
             <label style="float:left;text-align:right;">金額</label>
-            
-                <select id="money" class="form-select border-0">
-                    <option name="txtSalary" selected>請選擇...</option>
-                    <option name="txtSalary" value="1">10000</option>
-                    <option name="txtSalary" value="2">20000</option>
-                    <option name="txtSalary" value="3">30000</option>
-                    <option name="txtSalary" value="4">50000</option>
-                </select>
-            
+
+            <select id="money" class="form-select border-0">
+                <option name="txtSalary" selected>請選擇...</option>
+                <option name="txtSalary" value="1">10000</option>
+                <option name="txtSalary" value="2">20000</option>
+                <option name="txtSalary" value="3">30000</option>
+                <option name="txtSalary" value="4">50000</option>
+            </select>
+
         </div>
     </div>
-    
+
 </div>
 <img src="~/images/down-arrow.png" />
 <h1 id="totalcount" class="text-center mb-5 wow fadeInUp" data-wow-delay="0.1s">懸賞清單</h1>
 @* <h3 id="totalcount" class="text-center mb-3 wow fadeInUp" data-wow-delay="0.1s">test</h3> *@
 <div class="container-xxl py-5">
-    
+
     <div class="container">
-        
+
 
         <div class="tab-class text-center wow fadeInUp" data-wow-delay="0.3s">
 
@@ -91,29 +90,30 @@
                 <div id="tab-1" class="tab-pane fade show p-0 active">
                     <div class="job-item p-4 mb-4">
                         <div id="list" class="row g-4">
-                            @foreach (var item in Model) {
-                            <div class="col-sm-12 col-md-8 d-flex align-items-center">
+                            @foreach (var item in Model)
+                            {
+                                <div class="col-sm-12 col-md-8 d-flex align-items-center">
                                     <img class="flex-shrink-0 img-fluid border rounded" src="~/images/@Html.DisplayFor(modelItem => item.imgfilepath)" alt="" style="width: 80px; height: 80px;">
-                                <div class="text-start ps-4">
+                                    <div class="text-start ps-4">
                                         <h5 class="mb-3">@Html.DisplayFor(modelItem => item.title)</h5>
                                         <span class="text-truncate me-3"><i class="fa fa-map-marker-alt text-primary me-2"></i>@Html.DisplayFor(modelItem => item.region)</span>
                                         <span class="text-truncate me-3"><i class="fa fa-map-marker-alt text-primary me-2"></i>@Html.DisplayFor(modelItem => item.providername)</span>
                                         <span class="text-truncate me-3"><i class="far fa-clock text-primary me-2"></i>@Html.DisplayFor(modelItem => item.startdate)</span>
                                         <span class="text-truncate me-0"><i class="far fa-money-bill-alt text-primary me-2"></i>@item.salary.ToString("$###,###,##0.##")</span>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="col-sm-12 col-md-4 d-flex flex-column align-items-start align-items-md-end justify-content-center">
-                                <div class="d-flex mb-3">
-                                    <a class="btn btn-light btn-square me-3" href=""><i class="far fa-heart text-primary"></i></a>
+                                <div class="col-sm-12 col-md-4 d-flex flex-column align-items-start align-items-md-end justify-content-center">
+                                    <div class="d-flex mb-3">
+                                        <a class="btn btn-light btn-square me-3" href=""><i class="far fa-heart text-primary"></i></a>
                                         @Html.ActionLink("詳細", "DeputeDetails", "Depute", new { id = item.id },new{@class ="btn btn-primary"})
                                         @Html.ActionLink("我要應徵", "Apply", "Depute", new { id = item.id },new{@class ="btn btn-primary"})
-                                </div>
+                                    </div>
                                     <small class="text-truncate"><i class="far fa-calendar-alt text-primary me-2"></i>狀態 : @Html.DisplayFor(modelItem => item.status)</small>
                                     <small class="text-truncate"><i class="far fa-calendar-alt text-primary me-2"></i>Last Update : @Html.DisplayFor(modelItem => item.modifieddate)</small>
-                            </div>
+                                </div>
                             }
                         </div>
-                        
+
                     </div>
                     @Html.ActionLink("回懸賞首頁", "DeputeMain", "Depute", null, new { @class = "btn btn-primary py-3 px-5", @id = "btndp" })
                 </div>
@@ -128,118 +128,206 @@
     <script>
 
 
-        const title = document.querySelector('#list');
         const text = document.querySelector('#text');
-        const search = document.querySelector('#search');
-        const skillclass = document.querySelector('#skillclass');
-        const skill = document.querySelector('#skill');
-        search.addEventListener("click", () => { loadList() })
-        skillclass.addEventListener("change", () => { loadSkill() })
-        skillclass.addEventListener("change", () => { loadList() })
-        skill.addEventListener("change", () => { loadList() })
         const selSkillClasses = document.querySelector('#skillclass');
         const selectSkills = document.querySelector('#skill');
         const selectRegions = document.querySelector('#regions');
         const selSalary = document.querySelector('#money');
 
         //基本搜尋&&進階搜尋///
-        loadHotkey();
-        loadRegion();
-        async function loadList(hotkey) {
-            const lstFrag = $(document.createDocumentFragment());
-            const response = await fetch
-                (`@Url.Content("~/Depute/Search")?txtKeyword=${text.value}&txtHotkey=${hotkey}&txtRegion=${selectRegions.options[selectRegions.selectedIndex].text}`);
-            // console.log(response)
-            const data = await response.json();
-            console.log(data);
-            console.log(data.length);
-            $('#totalcount').html(`相關結果有${data.length}筆`);
-            const list = data.map(list =>
-                `                           <input type="hidden" name="${list.id}" value=${list.id}/>
-                                                    <div  class="col-sm-12 col-md-8 d-flex align-items-center">
-                                                     <img class="flex-shrink-0 img-fluid border rounded" src="/images/${list.imgfilepath}" alt="" style="width: 80px; height: 80px;">
-                                                     <div class="text-start ps-4">
-                                                     <h5 class="mb-3">${list.title}</h5>
-                                                             <span class="text-truncate me-3"><i class="fa fa-map-marker-alt text-primary me-2"></i>${list.region}</span>
-                                                             <span class="text-truncate me-3"><i class="fa fa-map-marker-alt text-primary me-2"></i>${list.providername}</span>
-                                                             <span class="text-truncate me-3"><i class="far fa-clock text-primary me-2"></i>${list.startdate}</span>
-                                                             <span class="text-truncate me-0"><i class="far fa-money-bill-alt text-primary me-2"></i>${list.salary}</span>
-                                                    </div>
-                                                    </div>
-                                                    <div class="col-sm-12 col-md-4 d-flex flex-column align-items-start align-items-md-end justify-content-center">
-                                                    <div class="d-flex mb-3">
-                                                    <a class="btn btn-light btn-square me-3" href=""><i class="far fa-heart text-primary"></i></a>
-                                                            <a href="/Depute/DeputeDetails/${list.id}" class="btn btn-primary" id=" btndp">詳細...</a>
-                                                                            <a href="/Depute/Apply/${list.id}" class="btn btn-primary"  id=btndp"">我要應徵...</a>
+        loadSkillClassess()
+        $('#search').click(loadList);
+        $('#skillclass').change(loadSkill);
+        function loadList(hotkey) {
+            $.ajax('@Url.Content("~/Depute/Search")', {
+                "type": 'Post', //POST、PUT、DELETE
+                "data": { 
+                    "txtKeyword": text.value, 
+                    "txtHotkey": hotkey,
+                    "txtRegion":selectRegions.options[selectRegions.selectedIndex].text 
+                },
+                "dataType": "json"
+            })
+                .done((data) => {
+                    $('#totalcount').html(`相關結果有${data.length}筆`);
+                    const lstFrag = $(document.createDocumentFragment());
+                    const list = data.map(list =>
+                        `<input type="hidden" name="${list.id}" value=${list.id}/>
+                        <div  class="col-sm-12 col-md-8 d-flex align-items-center">
+                        <img class="flex-shrink-0 img-fluid border rounded" src="/images/${list.imgfilepath}" alt="" style="width: 80px; height: 80px;">
+                        <div class="text-start ps-4">
+                        <h5 class="mb-3">${list.title}</h5>
+                        <span class="text-truncate me-3"><i class="fa fa-map-marker-alt text-primary me-2"></i>${list.region}</span>
+                        <span class="text-truncate me-3"><i class="fa fa-map-marker-alt text-primary me-2"></i>${list.providername}</span>
+                        <span class="text-truncate me-3"><i class="far fa-clock text-primary me-2"></i>${list.startdate}</span>
+                        <span class="text-truncate me-0"><i class="far fa-money-bill-alt text-primary me-2"></i>${list.salary}</span>
+                        </div>
+                        </div>
+                        <div class="col-sm-12 col-md-4 d-flex flex-column align-items-start align-items-md-end justify-content-center">
+                        <div class="d-flex mb-3">
+                        <a class="btn btn-light btn-square me-3" href=""><i class="far fa-heart text-primary"></i></a>
+                        <a href="/Depute/DeputeDetails/${list.id}" class="btn btn-primary" id=" btndp">詳細...</a>
+                        <a href="/Depute/Apply/${list.id}" class="btn btn-primary"  id=btndp"">我要應徵...</a>
+                        </div>
+                        <small class="text-truncate"><i class="far fa-calendar-alt text-primary me-2"></i>狀態 : ${list.status}</small>
+                        <small class="text-truncate"><i class="far fa-calendar-alt text-primary me-2"></i>Last Update : ${list.modifieddate}</small>
+                        </div>
+                        `
+                    )
+                    lstFrag.append(list);
+                    $('#list').html(lstFrag);
 
-                                                    </div>
-                                                            <small class="text-truncate"><i class="far fa-calendar-alt text-primary me-2"></i>狀態 : ${list.status}</small>
-                                                            <small class="text-truncate"><i class="far fa-calendar-alt text-primary me-2"></i>Last Update : ${list.modifieddate}</small>
-                                                            
-                                                    </div>
-                                            `
-            )
-            lstFrag.append(list);
-            // console.log(lstFrag)
-            $('#list').html(lstFrag);
+                })
         }
-
-        //下拉式選單//
-        async function loadSkillClassess() {
-            const SkillClasseFrag = $(document.createDocumentFragment());
-            const response = await fetch('@Url.Content("~/Depute/SkillClassess")');
-            // console.log(fst);
-            const data = await response.json();
-            const fst = '<option name="txtSkillClass" value="0">請選擇...</option>'
-            SkillClasseFrag.append(fst);
-            // console.log(data);
-            const SkillClassess = data.map(SkillClassess => `<option name="txtSkillClass" value='${SkillClassess.skillClassId}'>${SkillClassess.name}</option>`)
-            SkillClasseFrag.append(SkillClassess);
-            $('#skillclass').html(SkillClasseFrag)
+        function loadSkillClassess() {
+            $.ajax('@Url.Content("~/Depute/SkillClassess")', {
+                "type": 'Post', //POST、PUT、DELETE
+                "dataType": "json"
+            })
+                .done((data) => {
+                    const SkillClasseFrag = $(document.createDocumentFragment());
+                    const fst = '<option name="txtSkillClass" value="0">請選擇...</option>'
+                    SkillClasseFrag.append(fst);
+                    const SkillClassess = data.map(SkillClassess => `<option name="txtSkillClass" value='${SkillClassess.skillClassId}'>${SkillClassess.name}</option>`)
+                    SkillClasseFrag.append(SkillClassess);
+                    $('#skillclass').html(SkillClasseFrag)
+                })
             loadSkill();
-
         }
-
-        async function loadSkill() {
-            const SkillFrag = $(document.createDocumentFragment());
-            const response = await fetch(`@Url.Content("~/Depute/Skills")?id=${selSkillClasses.value}`);
-             // console.log(response);
-            const snd = '<option name="txtSkill" value="null">請選擇...</option>'
-            SkillFrag.append(snd);
-            const data = await response.json();
-             // console.log(data);
-            const Skills = data.map(Skills => `<option name="txtSkill" value='${Skills.skillId}'>${Skills.name}</option>`)
-            SkillFrag.append(Skills);
-            $('#skill').html(SkillFrag)
+        function loadSkill() {
+            $.ajax('@Url.Content("~/Depute/Skills")', {
+                "type": 'Post', //POST、PUT、DELETE
+                "data": { "id": selSkillClasses.value },
+                "dataType": "json"
+            })
+                .done((data) => {
+                    const SkillFrag = $(document.createDocumentFragment());
+                    const snd = '<option name="txtSkill" value="null">請選擇...</option>'
+                    SkillFrag.append(snd);
+                    const Skills = data.map(Skills => `<option name="txtSkill" value='${Skills.skillId}'>${Skills.name}</option>`)
+                    SkillFrag.append(Skills);
+                    $('#skill').html(SkillFrag);
+                })
+            loadRegion();
         }
-
-        async function loadRegion() {
-            const RegionFrag = $(document.createDocumentFragment());
-            const response = await fetch(`@Url.Content("~/Depute/Region")`);
-            // console.log(response);
-            const snd = '<option name="txtRegion" value="null">請選擇...</option>'
-            RegionFrag.append(snd);
-            const data = await response.json();
-            // console.log(data);
-            const Regions = data.map(Regions => `<option name="txtRegion" value='${Regions.regionId}'>${Regions.city}</option>`)
-            RegionFrag.append(Regions);
-            $('#regions').html(RegionFrag)
-            loadSkillClassess();
+        function loadRegion() {
+            $.ajax('@Url.Content("~/Depute/Region")', {
+                "type": 'Post', //POST、PUT、DELETE
+                "dataType": "json"
+            })
+                .done((data) => {
+                    const RegionFrag = $(document.createDocumentFragment());
+                    const snd = '<option name="txtRegion" value="null">請選擇...</option>'
+                    RegionFrag.append(snd);
+                    const Regions = data.map(Regions => `<option name="txtRegion" value='${Regions.regionId}'>${Regions.city}</option>`)
+                    RegionFrag.append(Regions);
+                    $('#regions').html(RegionFrag)
+                })
+            loadHotkey()
+        }
+        function loadHotkey() {
+            $.ajax('@Url.Content("~/Depute/Hotkey")', {
+                "type": 'Post', //POST、PUT、DELETE
+                "data": { "id": 3},
+                "dataType": "json"
+            })
+                .done((data) => {
+                    const HkFrag = $(document.createDocumentFragment());
+                    const snd = '<span class="text-truncate me-3">熱門關鍵字 :</span>'
+                    HkFrag.append(snd);
+                    const Hotkeys = data.map(Hotkeys => `<a href="#" id="${Hotkeys}" onclick="loadList('${Hotkeys}')">${Hotkeys}  </a>`)
+                    HkFrag.append(Hotkeys);
+                    $('#hotkey').html(HkFrag)
+                })
+            loadList()
         }
         
-        //熱門關鍵字:
-        async function loadHotkey() {
-            const HkFrag = $(document.createDocumentFragment());
-            const response = await fetch(`@Url.Content("~/Depute/Hotkey/3")`);
-            // console.log(response);
-            const snd = '<span class="text-truncate me-3">熱門關鍵字 :</span>'
-            HkFrag.append(snd);
-            const data = await response.json();
-            // console.log(data);
-            const Hotkeys = data.map(Hotkeys => `<a href="#" id="${Hotkeys}" onclick="loadList('${Hotkeys}')">${Hotkeys}  </a>`)
-            HkFrag.append(Hotkeys);
-            $('#hotkey').html(HkFrag)
-        }
+
+
+                        //舊式寫法
+                //
+
+                // const title = document.querySelector('#list');
+                // const text = document.querySelector('#text');
+                // const search = document.querySelector('#search');
+                // const skillclass = document.querySelector('#skillclass');
+                // const skill = document.querySelector('#skill');
+                // search.addEventListener("click", () => { loadList() })
+                // // skillclass.addEventListener("change", () => { loadSkill() })
+                // skillclass.addEventListener("change", () => { loadList() })
+                // skill.addEventListener("change", () => { loadList() })
+                // const selSkillClasses = document.querySelector('#skillclass');
+                // const selectSkills = document.querySelector('#skill');
+                // const selectRegions = document.querySelector('#regions');
+                // const selSalary = document.querySelector('#money');
+
+                // //基本搜尋&&進階搜尋///
+                // loadHotkey();
+                // loadRegion();
+
+
+                // async function loadSkillClassess() {
+                //     const SkillClasseFrag = $(document.createDocumentFragment());
+                //     const response = await fetch('@Url.Content("~/Depute/SkillClassess")');
+                //     // console.log(fst);
+                //     const data = await response.json();
+                //     const fst = '<option name="txtSkillClass" value="0">請選擇...</option>'
+                //     SkillClasseFrag.append(fst);
+                //     // console.log(data);
+                //     const SkillClassess = data.map(SkillClassess => `<option name="txtSkillClass" value='${SkillClassess.skillClassId}'>${SkillClassess.name}</option>`)
+                //     SkillClasseFrag.append(SkillClassess);
+                //     $('#skillclass').html(SkillClasseFrag)
+                //     loadSkill();
+
+                // }
+
+                // async function loadSkill() {
+                //     const SkillFrag = $(document.createDocumentFragment());
+                //     const response = await fetch(`@Url.Content("~/Depute/Skills")?id=${selSkillClasses.value}`);
+                //      // console.log(response);
+                //     const snd = '<option name="txtSkill" value="null">請選擇...</option>'
+                //     SkillFrag.append(snd);
+                //     const data = await response.json();
+                //      // console.log(data);
+                //     const Skills = data.map(Skills => `<option name="txtSkill" value='${Skills.skillId}'>${Skills.name}</option>`)
+                //     SkillFrag.append(Skills);
+                //     $('#skill').html(SkillFrag)
+                // }
+
+                // async function loadRegion() {
+                //     const RegionFrag = $(document.createDocumentFragment());
+                //     const response = await fetch(`@Url.Content("~/Depute/Region")`);
+                //     // console.log(response);
+                //     const snd = '<option name="txtRegion" value="null">請選擇...</option>'
+                //     RegionFrag.append(snd);
+                //     const data = await response.json();
+                //     // console.log(data);
+                //     const Regions = data.map(Regions => `<option name="txtRegion" value='${Regions.regionId}'>${Regions.city}</option>`)
+                //     RegionFrag.append(Regions);
+                //     $('#regions').html(RegionFrag)
+                //     loadSkillClassess();
+                // }
+                // async function loadHotkey() {
+                //     const HkFrag = $(document.createDocumentFragment());
+                //     const response = await fetch(`@Url.Content("~/Depute/Hotkey/3")`);
+                //     // console.log(response);
+                //     const snd = '<span class="text-truncate me-3">熱門關鍵字 :</span>'
+                //     HkFrag.append(snd);
+                //     const data = await response.json();
+                //     // console.log(data);
+                //     const Hotkeys = data.map(Hotkeys => `<a href="#" id="${Hotkeys}" onclick="loadList('${Hotkeys}')">${Hotkeys}  </a>`)
+                //     HkFrag.append(Hotkeys);
+                //     $('#hotkey').html(HkFrag)
+                // }
+
+
+                //舊式寫法
+
+
+
+
+                //熱門關鍵字:
+
     </script>
 }
 
