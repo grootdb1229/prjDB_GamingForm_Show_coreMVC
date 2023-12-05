@@ -335,16 +335,26 @@ namespace prjDB_GamingForm_Show.Controllers
         public IActionResult ChatPV(int id)
         {
             var senderid = _db.Admins.Where(a => a.Name == HttpContext.Session.GetString(CDictionary.SK_管理者名稱)).Select(a => a.AdminId).FirstOrDefault();
-            CAdminChatViewModel chats = new CAdminChatViewModel
+            List<CAdminChatViewModel> chats = new List<CAdminChatViewModel>();
+            foreach (var chat in _db.Chats)
             {
-                SenderName = _db.Admins.Where(a => a.Name == HttpContext.Session.GetString(CDictionary.SK_管理者名稱)).Select(a => a.Name).FirstOrDefault(),
-                ReceiverName = _db.Admins.Where(a => a.AdminId == id).Select(a => a.Name).FirstOrDefault(),
-                SenderId = senderid,
-                ReceiverId = id,
-                ChatContent = _db.Chats.Where(a => a.SenderAdmin == senderid && a.ReceiveAdmin == id).Select(a => a.ChatContent).FirstOrDefault(),
-                ModefiedDate = _db.Chats.Where(a => a.SenderAdmin == senderid && a.ReceiveAdmin == id).Select(a => a.ModefiedDate).FirstOrDefault(),
-                IsCheck = _db.Chats.Where(a => a.SenderAdmin == senderid && a.ReceiveAdmin == id).Select(a => a.IsCheck).FirstOrDefault()
-            };   
+                if (chat.SenderAdmin == senderid && chat.ReceiveAdmin == id)
+                {
+                    CAdminChatViewModel ori = new CAdminChatViewModel()
+                    {
+                        SenderName = HttpContext.Session.GetString(CDictionary.SK_管理者名稱),
+                        ReceiverName = _db.Admins.Where(a => a.AdminId == id).Select(a => a.Name).FirstOrDefault(),
+                        SenderId = senderid,
+                        ReceiverId = id,
+                        SenderImg = _db.Admins.Where(a => a.AdminId == senderid).Select(a => a.ImgPath).FirstOrDefault(),
+                        ReceiverImg = _db.Admins.Where(a => a.AdminId == id).Select(a => a.ImgPath).FirstOrDefault(),
+                        ChatContent = chat.ChatContent,
+                        ModefiedDate = chat.ModefiedDate,
+                        IsCheck = chat.IsCheck
+                    };
+                    chats.Add(ori);
+                }
+            }
             return PartialView(chats);
         }
         //public IActionResult MemberListNexttest()
