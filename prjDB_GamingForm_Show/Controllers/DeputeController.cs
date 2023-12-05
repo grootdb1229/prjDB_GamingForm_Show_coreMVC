@@ -39,7 +39,7 @@ namespace prjDB_GamingForm_Show.Controllers
         //TODO #1 讀資料
         public void ListLoad()
         {
-            //test
+            //te
             Temp = new List<CDeputeViewModel>();
             List = new List<CDeputeViewModel>();
             _db.Members.Load();
