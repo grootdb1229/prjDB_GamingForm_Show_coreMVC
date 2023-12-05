@@ -272,7 +272,7 @@ namespace prjDB_GamingForm_Show.Controllers
             CookieOptions options = new CookieOptions();
             options.Expires = DateTime.Now.AddDays(30);
             record += $",{id}";
-            HttpContext.Response.Cookies.Append("ClickID", record, options);
+            HttpContext.Response.Cookies.Append("ClickID", record, options);//
 
            
             
