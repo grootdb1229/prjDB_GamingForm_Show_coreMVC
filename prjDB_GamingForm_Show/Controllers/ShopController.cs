@@ -136,8 +136,10 @@ namespace prjDB_GamingForm_Show.Controllers
             //    return View(List2);
             //}
             public IActionResult Carousel()
-            {
+            {   _db.Products.Load();
+                _db.ProductTags.Load();
                 return PartialView();
+             
             }
             public IActionResult Index(CKeyWord ck)
             {
@@ -259,353 +261,146 @@ namespace prjDB_GamingForm_Show.Controllers
             }
 
 
-            public IActionResult IndexbyDate(String CK)
+            public IActionResult IndexbyDate(string CK)
             {
-                //Trace.WriteLine("AAAA" + CK);
-                //IEnumerable<Product> Pdb = null;
-                //if (string.IsNullOrEmpty(CK))
-                //{
-                //    Pdb = _db.Products.Where(x => x.StatusId == 1).OrderByDescending(x => x.AvailableDate.Date);
-                //}
-                //else
-                //{
-                //    Pdb = _db.Products.Where(p => p.ProductName.Contains(CK) && p.StatusId == 1)
-                //        .OrderByDescending(x => x.AvailableDate.Date);
-                //}
-                //return Json(Pdb);
                 _db.ProductTags.Load();
                 _db.Products.Load();
                 _db.SubTags.Load();
-                List<CShopPageViewModel> List = new List<CShopPageViewModel>();
-                CShopPageViewModel Pdb = null;
-                if (string.IsNullOrEmpty(CK))
-                {
-                    var data = (from n in _db.ProductTags
-                                where n.Product.StatusId == 1
-                                select new
-                                {   n.Product.AvailableDate,
-                                    n.Product.ProductId,
-                                    n.Product.ProductName,
-                                    n.Product.Price,
-                                    n.Product.FImagePath,
-                                    n.SubTag.Name
-                                }).OrderByDescending(x=>x.AvailableDate.Date).ToList();
-                    foreach (var item in data)
+
+                var data = _db.ProductTags
+                    .Where(n => (string.IsNullOrEmpty(CK) || n.Product.ProductName.Contains(CK)) && n.Product.StatusId == 1)
+                    .Select(n => new
                     {
-                        string s = "";
-                        var tagname = _db.ProductTags.Where(x => x.ProductId == item.ProductId).Select(x => x.SubTag.Name).ToList();
-                        foreach (var t in tagname)
-                        {
-                            s += t.ToString() + "/";
-                        }
-                        Pdb = new CShopPageViewModel
-                        {
-                            ProductId = item.ProductId,
-                            ProductName = item.ProductName,
-                            Price = item.Price,
-                            FImagePath = item.FImagePath,
-                            SubTagName = s
-                        };
-                        List.Add(Pdb);
-                    };
-                }
-                else
-                {
-                    var data = (from n in _db.ProductTags
-                               where n.Product.ProductName.Contains(CK) && n.Product.StatusId == 1
-                               select new
-                               {   n.Product.AvailableDate,
-                                   n.Product.ProductId,
-                                   n.Product.ProductName,
-                                   n.Product.Price,
-                                   n.Product.FImagePath,
-                                   SubTagName = n.SubTag.Name
-                               }).OrderByDescending(x => x.AvailableDate.Date).ToList();
-                   
-                    foreach (var item in data)
+                        n.Product.AvailableDate,
+                        n.Product.ProductId,
+                        n.Product.ProductName,
+                        n.Product.Price,
+                        n.Product.FImagePath,
+                        SubTagName = n.SubTag.Name
+                    })
+                    .OrderByDescending(x => x.AvailableDate.Date)
+                    .ToList();
+
+                List<CShopPageViewModel> List = data.Select(item =>
+                {   //將每個字以/串再一起。
+                    string s = string.Join("/", _db.ProductTags.Where(x => x.ProductId == item.ProductId).Select(x => x.SubTag.Name));
+                    return new CShopPageViewModel //返還這個物件 Lambda多行表達需要加return，不然將會返還錯誤的東西，部分程式碼將不被視為返還值之一
                     {
-                        string s = "";
-                        var tagname = _db.ProductTags.Where(x => x.ProductId == item.ProductId).Select(x => x.SubTag.Name).ToList();
-                        foreach (var t in tagname)
-                        {
-                            s += t.ToString() + "/";
-                        }
-                        Pdb = new CShopPageViewModel
-                        {
-                            ProductId = item.ProductId,
-                            ProductName = item.ProductName,
-                            Price = item.Price,
-                            FImagePath = item.FImagePath,
-                            SubTagName = s
-                        };
-                        List.Add(Pdb);
+                        ProductId = item.ProductId,
+                        ProductName = item.ProductName,
+                        Price = item.Price,
+                        FImagePath = item.FImagePath,
+                        SubTagName = s
                     };
-                }
-                if (List.Count == 0)
+                }).ToList();
+                ///篩掉重複資料
+                List<CShopPageViewModel> List2 = List.GroupBy(p => p.ProductId)
+                                                     .Select(group => group.First())
+                                                     .ToList();
+
+                if (List2.Count == 0)//如果沒有任何搜尋結果
                 {
                     ViewBag.Message = "查無資料，請確認輸入內容";
                     return Content("{'message': '查無資料，請確認輸入內容'}", "application/json");
                 }
-                else
-                {
-                    bool flag = false;
-                    List<CShopPageViewModel> List2 = new List<CShopPageViewModel>();
-                    List2.Add(List[0]);
-                    for (int i = 1; i < List.Count; i++)
-                    {
-                        for (int j = 0; j < List2.Count; j++)
-                        {
-                            if (List[i].ProductId == List2[j].ProductId)
-                            {
-                                flag = true;
-                                break;
-                            }
-                        }
-                        if (flag == false)
-                        {
-                            List2.Add(List[i]);
-                        }
-                        flag = false;
-                    }
-                    string jsonResult = JsonSerializer.Serialize(List2);
-                    Trace.WriteLine("AAA" + jsonResult);
-                    Trace.WriteLine("BBB" + List2);
-                    //return Json(List2);
-                    return Content(jsonResult, "application/json");
-                }
+
+                string jsonResult = JsonSerializer.Serialize(List2);
+                //Trace.WriteLine("AAA" + jsonResult);
+                //Trace.WriteLine("BBB" + List2);
+                return Content(jsonResult, "application/json");
             }
             public IActionResult IndexbyPrice_H(String CK)
             {
-                //Trace.WriteLine("CCC" + CK);
-                //IEnumerable<Product> Pdb = null;
-                //if (string.IsNullOrEmpty(CK))
-                //{
-                //    Pdb = _db.Products.Where(x => x.StatusId == 1).OrderByDescending(x => x.Price);
-                //}
-                //else
-                //{
-                //    Pdb = _db.Products.Where(p => p.ProductName.Contains(CK) && p.StatusId == 1)
-                //        .OrderByDescending(x => x.Price);
-                //}
-                //return Json(Pdb);
                 _db.ProductTags.Load();
                 _db.Products.Load();
                 _db.SubTags.Load();
-                List<CShopPageViewModel> List = new List<CShopPageViewModel>();
-                CShopPageViewModel Pdb = null;
-                if (string.IsNullOrEmpty(CK))
-                {
-                    var data = (from n in _db.ProductTags
-                                where n.Product.StatusId == 1
-                                select new
-                                {
-                                    n.Product.AvailableDate,
-                                    n.Product.ProductId,
-                                    n.Product.ProductName,
-                                    n.Product.Price,
-                                    n.Product.FImagePath,
-                                    n.SubTag.Name
-                                }).OrderByDescending(x => x.Price).ToList();
-                    foreach (var item in data)
+
+                var data = _db.ProductTags
+                    .Where(n => (string.IsNullOrEmpty(CK) || n.Product.ProductName.Contains(CK)) && n.Product.StatusId == 1)
+                    .Select(n => new
                     {
-                        string s = "";
-                        var tagname = _db.ProductTags.Where(x => x.ProductId == item.ProductId).Select(x => x.SubTag.Name).ToList();
-                        foreach (var t in tagname)
-                        {
-                            s += t.ToString() + "/";
-                        }
-                        Pdb = new CShopPageViewModel
-                        {
-                            ProductId = item.ProductId,
-                            ProductName = item.ProductName,
-                            Price = item.Price,
-                            FImagePath = item.FImagePath,
-                            SubTagName = s
-                        };
-                        List.Add(Pdb);
+                        n.Product.AvailableDate,
+                        n.Product.ProductId,
+                        n.Product.ProductName,
+                        n.Product.Price,
+                        n.Product.FImagePath,
+                        SubTagName = n.SubTag.Name
+                    })
+                    .OrderByDescending(x => x.Price)
+                    .ToList();
+
+                List<CShopPageViewModel> List = data.Select(item =>
+                {   //將每個字以/串再一起。
+                    string s = string.Join("/", _db.ProductTags.Where(x => x.ProductId == item.ProductId).Select(x => x.SubTag.Name));
+                    return new CShopPageViewModel //返還這個物件 Lambda多行表達需要加return，不然將會返還錯誤的東西，部分程式碼將不被視為返還值之一
+                    {
+                        ProductId = item.ProductId,
+                        ProductName = item.ProductName,
+                        Price = item.Price,
+                        FImagePath = item.FImagePath,
+                        SubTagName = s
                     };
-                }
-                else
-                {
-                    var data = (from n in _db.ProductTags
-                                where n.Product.ProductName.Contains(CK) && n.Product.StatusId == 1
-                                select new
-                                {
-                                    n.Product.AvailableDate,
-                                    n.Product.ProductId,
-                                    n.Product.ProductName,
-                                    n.Product.Price,
-                                    n.Product.FImagePath,
-                                    SubTagName = n.SubTag.Name
-                                }).OrderByDescending(x => x.Price).ToList();
-                    foreach (var item in data)
-                    {
-                        string s = "";
-                        var tagname = _db.ProductTags.Where(x => x.ProductId == item.ProductId).Select(x => x.SubTag.Name).ToList();
-                        foreach (var t in tagname)
-                        {
-                            s += t.ToString() + "/";
-                        }
-                        Pdb = new CShopPageViewModel
-                        {
-                            ProductId = item.ProductId,
-                            ProductName = item.ProductName,
-                            Price = item.Price,
-                            FImagePath = item.FImagePath,
-                            SubTagName = s
-                        };
-                        List.Add(Pdb);
-                    };
-                }
-                if (List.Count == 0)
-                {
-                    ViewBag.Message = "查無資料，請確認輸入內容";
-                    return View();
-                }
-                else
-                {
-                    bool flag = false;
-                    List<CShopPageViewModel> List2 = new List<CShopPageViewModel>();
-                    List2.Add(List[0]);
-                    for (int i = 1; i < List.Count; i++)
-                    {
-                        for (int j = 0; j < List2.Count; j++)
-                        {
-                            if (List[i].ProductId == List2[j].ProductId)
-                            {
-                                flag = true;
-                                break;
-                            }
-                        }
-                        if (flag == false)
-                        {
-                            List2.Add(List[i]);
-                        }
-                        flag = false;
-                    }
-                    string jsonResult = JsonSerializer.Serialize(List2);
-                    Trace.WriteLine("AAA" + jsonResult);
-                    Trace.WriteLine("BBB" + List2);
-                    //return Json(List2);
-                    return Content(jsonResult, "application/json");
-                }
+                }).ToList();
+                ///篩掉重複資料 GroupBy把一樣的ID篩一起，.First取一個。
+                List<CShopPageViewModel> List2 = List.GroupBy(p => p.ProductId)
+                                                     .Select(group => group.First())
+                                                     .ToList();
+
+         
+
+                string jsonResult = JsonSerializer.Serialize(List2);
+                //Trace.WriteLine("AAA" + jsonResult);
+                //Trace.WriteLine("BBB" + List2);
+                return Content(jsonResult, "application/json");
             }
             public IActionResult IndexbyPrice_L(String CK)
             {
 
-                //IEnumerable<Product> Pdb = null;
-                //if (string.IsNullOrEmpty(CK))
-                //{
-                //    Pdb = _db.Products.Where(x => x.StatusId == 1).OrderBy(x => x.Price);
-                //}
-                //else
-                //{
-                //    Pdb = _db.Products.Where(p => p.ProductName.Contains(CK) && p.StatusId == 1)
-                //        .OrderBy(x => x.Price);
-                //}
-                ////Trace.WriteLine("BBBB" + Pdb);
-                //return Json(Pdb);
                 _db.ProductTags.Load();
                 _db.Products.Load();
                 _db.SubTags.Load();
-                List<CShopPageViewModel> List = new List<CShopPageViewModel>();
-                CShopPageViewModel Pdb = null;
-                if (string.IsNullOrEmpty(CK))
-                {
-                    var data = (from n in _db.ProductTags
-                                where n.Product.StatusId == 1
-                                select new
-                                {
-                                    n.Product.AvailableDate,
-                                    n.Product.ProductId,
-                                    n.Product.ProductName,
-                                    n.Product.Price,
-                                    n.Product.FImagePath,
-                                    n.SubTag.Name
-                                }).OrderBy(x => x.Price).ToList();
-                    foreach (var item in data)
+
+                var data = _db.ProductTags
+                    .Where(n => (string.IsNullOrEmpty(CK) || n.Product.ProductName.Contains(CK)) && n.Product.StatusId == 1)
+                    .Select(n => new
                     {
-                        string s = "";
-                        var tagname = _db.ProductTags.Where(x => x.ProductId == item.ProductId).Select(x => x.SubTag.Name).ToList();
-                        foreach (var t in tagname)
-                        {
-                            s += t.ToString() + "/";
-                        }
-                        Pdb = new CShopPageViewModel
-                        {
-                            ProductId = item.ProductId,
-                            ProductName = item.ProductName,
-                            Price = item.Price,
-                            FImagePath = item.FImagePath,
-                            SubTagName = s
-                        };
-                        List.Add(Pdb);
+                        n.Product.AvailableDate,
+                        n.Product.ProductId,
+                        n.Product.ProductName,
+                        n.Product.Price,
+                        n.Product.FImagePath,
+                        SubTagName = n.SubTag.Name
+                    })
+                    .OrderBy(x => x.Price)
+                    .ToList();
+
+                List<CShopPageViewModel> List = data.Select(item =>
+                {   //將每個字以/串再一起。
+                    string s = string.Join("/", _db.ProductTags.Where(x => x.ProductId == item.ProductId).Select(x => x.SubTag.Name));
+                    return new CShopPageViewModel  //返還這個物件 Lambda多行表達需要加return，不然將會返還錯誤的東西，部分程式碼將不被視為返還值之一
+                    {
+                        ProductId = item.ProductId,
+                        ProductName = item.ProductName,
+                        Price = item.Price,
+                        FImagePath = item.FImagePath,
+                        SubTagName = s
                     };
-                }
-                else
+                }).ToList();
+                    ///篩掉重複資料 GroupBy把一樣的ID篩一起，.First取一個。
+                List<CShopPageViewModel> List2 = List.GroupBy(p => p.ProductId)
+                                                     .Select(group => group.First())
+                                                     .ToList();
+
+                if (List2.Count == 0)//如果沒有任何搜尋結果
                 {
-                    var data = (from n in _db.ProductTags
-                                where n.Product.ProductName.Contains(CK) && n.Product.StatusId == 1
-                                select new
-                                {
-                                    n.Product.AvailableDate,
-                                    n.Product.ProductId,
-                                    n.Product.ProductName,
-                                    n.Product.Price,
-                                    n.Product.FImagePath,
-                                    SubTagName = n.SubTag.Name
-                                }).OrderBy(x => x.Price).ToList();
-                    foreach (var item in data)
-                    {
-                        string s = "";
-                        var tagname = _db.ProductTags.Where(x => x.ProductId == item.ProductId).Select(x => x.SubTag.Name).ToList();
-                        foreach (var t in tagname)
-                        {
-                            s += t.ToString() + "/";
-                        }
-                        Pdb = new CShopPageViewModel
-                        {
-                            ProductId = item.ProductId,
-                            ProductName = item.ProductName,
-                            Price = item.Price,
-                            FImagePath = item.FImagePath,
-                            SubTagName = s
-                        };
-                        List.Add(Pdb);
-                    };
+                    ViewBag.Message = "查無資料，請確認輸入內容";
+                    return Content("{'message': '查無資料，請確認輸入內容'}", "application/json");
                 }
-                if (List.Count == 0)
-                {
-                    ViewBag.Message = "查無資料，請確認輸入資料";
-                    return View();
-                }
-                else
-                {
-                    bool flag = false;
-                    List<CShopPageViewModel> List2 = new List<CShopPageViewModel>();
-                    List2.Add(List[0]);
-                    for (int i = 1; i < List.Count; i++)
-                    {
-                        for (int j = 0; j < List2.Count; j++)
-                        {
-                            if (List[i].ProductId == List2[j].ProductId)
-                            {
-                                flag = true;
-                                break;
-                            }
-                        }
-                        if (flag == false)
-                        {
-                            List2.Add(List[i]);
-                        }
-                        flag = false;
-                    }
-                    string jsonResult = JsonSerializer.Serialize(List2);
-                    Trace.WriteLine("AAA" + jsonResult);
-                    Trace.WriteLine("BBB" + List2);
-                    //return Json(List2);
-                    return Content(jsonResult, "application/json");
-                }
+
+                string jsonResult = JsonSerializer.Serialize(List2);
+                //Trace.WriteLine("AAA" + jsonResult);
+                //Trace.WriteLine("BBB" + List2);
+                return Content(jsonResult, "application/json");
             }
             //    public IActionResult IndexPage(int? id) //拿來跳page用的 id用變數去計算，++--一個變數去控制讀取到的最後一個商品控制Page
             //{

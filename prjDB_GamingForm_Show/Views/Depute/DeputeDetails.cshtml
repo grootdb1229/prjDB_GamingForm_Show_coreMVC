@@ -63,6 +63,7 @@
                         <div class="d-flex align-items-center mb-5">
                             <img class="flex-shrink-0 img-fluid border rounded" src="~/images/04.jfif" alt="" style="width: 80px; height: 80px;">
                             <div class="text-start ps-4">
+                        <input type="hidden" name="@Html.DisplayFor(model => model.id)" value=@Html.DisplayFor(model => model.title) />
                         <h3 class="mb-3">@Html.DisplayFor(model => model.title)</h3>
                         <span class="text-truncate me-3"><i class="fa fa-map-marker-alt text-primary me-2"></i>@Html.DisplayFor(model => model.region)</span>
                         <span class="text-truncate me-3"><i class="far fa-clock text-primary me-2"></i>@Html.DisplayFor(model => model.modifieddate)</span>
@@ -152,16 +153,24 @@
 <script src="~/layout/jobentry-1.0.0/lib/easing/easing.min.js"></script>
 <script src="~/layout/jobentry-1.0.0/lib/waypoints/waypoints.min.js"></script>
 <script src="~/layout/jobentry-1.0.0/lib/owlcarousel/owl.carousel.min.js"></script>
-<script>
-    const button = document.querySelector('#car');
 
-    button.addEventListener('mouseover', () => {
-        button.style.backgroundColor = '#a81d1d';
-    });
+@section Scripts
+{
+    Cookie();
+    <script>
 
-    button.addEventListener('mouseout', () => {
-        button.style.backgroundColor = '';
-    });
-</script>
+        function Cookie() {
+            $.ajax('@Url.Content("~/Depute/Cookie")', {
+                "type": 'Post', //POST、PUT、DELETE
+                "data": { "id": @Html.DisplayFor(model => model.id) },
+                "dataType": "json"
+            })
+               
+            loadSkill();
+        }
 
+
+    </script>
+
+}
 

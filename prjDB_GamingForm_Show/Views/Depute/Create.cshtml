@@ -60,15 +60,15 @@
                    
                 </select>
                 <label asp-for="RegionId" class="control-label" id="RegionId" placeholder="">地區</label>
-                @* <input asp-for="RegionId" class="form-control" />
-                <span asp-validation-for="RegionId" class="text-danger"></span> *@
+
             </div>
             <div class="form-floating mb-3">
                 <textarea asp-for="DeputeContent" class="form-control" style="height:200px" placeholder="在這裡輸入您的委託資訊..." id="DeputeContent" placeholder="" required></textarea>
                 <label asp-for="DeputeContent" class="control-label" for="DeputeContent">委託資訊</label>
                 <span asp-validation-for="DeputeContent" class="text-danger"></span>
             </div>
-            <div class="row">
+            <button type="button" class="btn btn-info mb-3" onclick="openSkillBrowser()">編輯所需技能</button>
+            @* <div class="row">
                 <div class="col-6">
                     <div class="list-group" id="list-tab" role="tablist">
                     </div>
@@ -80,7 +80,7 @@
                     <ul class="list-group col-6">
                     </ul>
                 </div>
-            </div>
+            </div> *@
             <input name="skilllist" id="select-skills" hidden>
             <div class="form-floating mb-3">
                 <a asp-action="personal" class="btn btn-secondary" >取消</a>
@@ -96,7 +96,6 @@
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
     <script>
-        var count = 0;
         const divSkillClasses = document.querySelector('#list-tab'),
             divSkillsGroup = document.querySelector('#nav-tabContent');
 
@@ -122,7 +121,30 @@
             }
         })
 
+        async function openSkillBrowser() {
+            Swal.fire({
+                title: "請選擇所需技能",
+                width: '50rem',
+                html: `<div class="row">
+                                <div class="col-6">
+                                    <div class="list-group" id="list-tab" role="tablist">
+                                    </div>
+                                </div>
+
+                                <div class="col-6">
+                                    <ul style="overflow-y:auto;height:300px" class="list-group tab-content" id="nav-tabContent">
+                                    </ul>
+                                    <ul class="list-group col-6">
+                                    </ul>
+                                </div>
+                            </div>`
+            });
+            loadSkillClasses();
+        }
+
         async function loadSkillClasses() {
+            const divSkillClasses = document.querySelector('#list-tab'),
+                divSkillsGroup = document.querySelector('#nav-tabContent');
             const response = await fetch('@Url.Content("~/depute/skillclasses")');
             const datas = await response.json();
             const skillclasses = datas.skillclasses.map(skillclass => `<a class="list-${skillclass.name}-item-action list-group-item" id="list-${skillclass.name}-list" data-bs-toggle="list" href="#list-${skillclass.name}" role="tab" aria-controls="list-${skillclass.name}">${skillclass.name}<ul id=sel${skillclass.name} class="list-group col-6"></ul></a>`);
@@ -133,7 +155,6 @@
                 loadSkills();
             }
         }
-        loadSkillClasses();
 
         const selSkills = [];
         async function loadSkills() {
@@ -150,11 +171,11 @@
             Array.from(divSkills).forEach(divSkill => {
                 divSkill.addEventListener('change', function (event) {
                     var selSK = event.target.labels[0].textContent;
-                    if(event.target.checked){
+                    if (event.target.checked) {
                         selSkills.push({ skillclass: chooseClass, skill: selSK });
-                    }else{
+                    } else {
                         const index = selSkills.findIndex(i => i.skillclass == chooseClass && i.skill == selSK);
-                        selSkills.splice(index,1);
+                        selSkills.splice(index, 1);
                     }
                 })
             })

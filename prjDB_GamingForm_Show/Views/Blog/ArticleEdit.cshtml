@@ -15,8 +15,11 @@
             margin: 3px 0px;
         }
 
+        a {
+            text-decoration: none
+        }
         .ck {
-            height: 650px;
+            height: 400px;
         }
 
         .ck-editor__editable {
@@ -28,17 +31,39 @@
         }
     </style>
 }
-<h2 style="text-align:center;margin:10px auto;color:whitesmoke">修改文章</h2>
+<header class="header-section">
+    <div class="nav-options">
+        <div class="container">
+            <div class="nav-menu">
+                <ul>
+                    <li>
+                        @Html.ActionLink(Model.blogs.FirstOrDefault().Title, "ArticleContent", "Blog", new { AFId = Model.articles.FirstOrDefault().ArticleId, FId = Model.blogs.FirstOrDefault().BlogId }, null)
+                      @*   @Html.ActionLink("回到文章", "ArticleContent", "Blog", new { AFId = Model.articles.FirstOrDefault().ArticleId, FId = Model.blogs.FirstOrDefault().BlogId }, new
+                            {
+                                @class = "btn btn-warning"
+                            })
+ *@
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+</header>
 
 
 <div class="row" style="margin:10px auto;width:650px;background-color:#4F4F4F">
     <div class="col-md-12" style="background-color:#4F4F4F;border-radius:8px;box-shadow:0px 0px 8px 8px #cccccc">
+        <div>
+            <h2 style="text-align:center;margin:10px auto;color:whitesmoke;border-bottom:dotted">發表文章</h2>
+        </div>
         <form asp-action="ArticleEdit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
             <input type="hidden" name="ArticleId" value="@Model.articles.FirstOrDefault().ArticleId" />
             <input type="hidden" name="AFId" value="@Model.articles.FirstOrDefault().ArticleId" />
             <input type="hidden" name="FId" value="@Model.blogs.FirstOrDefault().BlogId" />
+            <label>選擇分類</label>
             @{
 
                 <select name="SubBlogID" class="form-select" style="margin-top:8px">
@@ -49,24 +74,28 @@
                 </select>
             }
             <div class="form-group">
-                <label asp-for="articles.FirstOrDefault().Title" class="control-label"></label>
+                <label class="control-label">文章標題</label>
                 <input asp-for="articles.FirstOrDefault().Title" class="form-control" />
                 <span asp-validation-for="articles.FirstOrDefault().Title" class="text-danger"></span>
             </div>
+            <label>文章內容</label>
             <textarea name="ArticleContent" id="editor" style="resize:none; height:700px; width: 100%;color:black">
                 @Model.articles.FirstOrDefault().ArticleContent
             </textarea>
             <input type="hidden" name="ModifiedDate" value="@DateTime.Now" />
             <input type="hidden" name="MemberId" value="@Context.Session.GetInt32(CDictionary.SK_UserID)" />
 
-            <div class="form-group">
-                <input type="submit" value="修改" class="btn btn-default" />
-                <p style="margin:3px; float:right;text-align:right">
+            <div class ="form-group column" style="margin-top:4px;display: flex; justify-content: space-between;">
+                <span style="margin-top:3px">
                     @Html.ActionLink("回到文章", "ArticleContent", "Blog", new { AFId = Model.articles.FirstOrDefault().ArticleId, FId = Model.blogs.FirstOrDefault().BlogId }, new
                         {
                             @class = "btn btn-warning"
                         })
-                </p>
+                </span>
+                <span>
+                <input type="submit" value="修改" class="btn btn-default" />
+                </span>
+               
             </div>
         </form>
     </div>

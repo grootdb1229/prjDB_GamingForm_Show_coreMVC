@@ -11,7 +11,9 @@ using prjDB_GamingForm_Show.Models.Shop;
 using prjDB_GamingForm_Show.ViewModels;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text.Json;
+using System.Web;
 using static prjDB_GamingForm_Show.Controllers.DeputeController;
 
 namespace prjDB_GamingForm_Show.Controllers
@@ -110,13 +112,19 @@ namespace prjDB_GamingForm_Show.Controllers
         }
 
         //TODO #2 搜尋
-        //~/Depute/search?keyword=abc
-        //public IActionResult Search(string keyword)
-        //{
-
-        //}
-        public IActionResult Search(CKeyWord vm)
+        public IActionResult demoCountBySession()
         {
+            int count = 0;
+            if (HttpContext.Session.Keys.Contains("COUNT"))
+                count = (int)HttpContext.Session.GetInt32("COUNT");
+            count++;
+            HttpContext.Session.SetInt32("COUNT", count);
+            ViewBag.count = count;
+            return View();
+        }
+        
+        public IActionResult Search(CKeyWord vm)
+         {
             IEnumerable<CDeputeViewModel> datas = null;
             if (string.IsNullOrEmpty(vm.txtKeyword) && (!string.IsNullOrEmpty(vm.txtHotkey)))
                 vm.txtKeyword = vm.txtHotkey;
@@ -218,24 +226,12 @@ namespace prjDB_GamingForm_Show.Controllers
             return Json(datas);
         }
 
-        //public ActionResult demoCountByCookies()
-        //{
-        //    int count = 0;
-        //    HttpCookie cookie = Request.Cookies["COUNT"];
-        //    if (cookie != null)
-        //        count = Convert.ToInt32(cookie.Value);
-        //    count++;
-        //    cookie = new HttpCookie("COUNT");
-        //    cookie.Value = count.ToString();
-        //    cookie.Expires = DateTime.Now.AddSeconds(20);
-        //    Response.Cookies.Add(cookie);
-        //    ViewBag.count = count;
-        //    return View();
-        //}
 
+        public List<int> ClickID = new List<int>();
         //TODO #3 委託詳細
         public IActionResult DeputeDetails(int? id)
         {
+            Cookie(id);
             CDeputeViewModel pln = null;
             Depute pDb = _db.Deputes.FirstOrDefault(n => n.DeputeId == id);
 
@@ -267,6 +263,40 @@ namespace prjDB_GamingForm_Show.Controllers
 
 
         }
+        public void Cookie(int? id)
+        {
+            string record = "";
+            if (HttpContext.Request.Cookies["ClickID"] != null)
+                record = JsonSerializer.Serialize(HttpContext.Request.Cookies["ClickID"]);
+
+            CookieOptions options = new CookieOptions();
+            options.Expires = DateTime.Now.AddDays(30);
+            record += $",{id}";
+            HttpContext.Response.Cookies.Append("ClickID", record, options);//
+
+           
+            
+
+        }
+        public IActionResult Cookie1(int? id)
+        {
+            string record = "";
+            if (HttpContext.Request.Cookies["ClickID"] != null)
+                record = JsonSerializer.Serialize(HttpContext.Request.Cookies["ClickID"]);
+
+            CookieOptions options = new CookieOptions();
+            options.Expires = DateTime.Now.AddDays(30);
+
+            var data = from n in List
+                       where n.id == id
+                       select n;
+            record = JsonSerializer.Serialize(data);
+            HttpContext.Response.Cookies.Append("ClickID", record, options);
+
+
+            return Json(record);
+        }
+
 
         //TODO #4 熱門關鍵字
         public IActionResult HotKey(int id)
@@ -602,7 +632,7 @@ namespace prjDB_GamingForm_Show.Controllers
             return Json(n);
         }
 
-        #region mainView
+        #region MainView
         public IActionResult Personal()
         {
             ViewBag.memberid = _memberIdtest;
@@ -636,6 +666,10 @@ namespace prjDB_GamingForm_Show.Controllers
             return PartialView(q);
         }
         public IActionResult PartialGallery()
+        {
+            return PartialView();
+        }
+        public IActionResult Contact()
         {
             return PartialView();
         }

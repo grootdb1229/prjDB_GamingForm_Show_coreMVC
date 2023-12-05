@@ -23,8 +23,6 @@ public partial class Product
 
     public int? MemberId { get; set; }
 
-    public int? FirmId { get; set; }
-
     public string? FImagePath { get; set; }
 
     public virtual Member? Member { get; set; }
