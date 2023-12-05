@@ -69,6 +69,7 @@
             </div>
             <button type="button" class="btn btn-info mb-3" onclick="openSkillBrowser()">編輯所需技能</button>
             <span id="skillCount" hidden></span>
+
             @* <div class="row">
                 <div class="col-6">
                     <div class="list-group" id="list-tab" role="tablist">
@@ -185,14 +186,14 @@
 
         function choiceCount() {
             selectedCount = selSkills.length;
+            const spanCount = document.querySelector('#skillCount');
             if (selectedCount != 0) {
-                const spanCount = document.querySelector('#skillCount');
                 spanCount.hidden = false;
 
                 spanCount.innerHTML = `已選擇${selectedCount}項技能`;
             }
             else {
-
+                spanCount.hidden = true;
             }
         }
 
