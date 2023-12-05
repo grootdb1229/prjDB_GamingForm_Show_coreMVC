@@ -1,8 +1,12 @@
-﻿<div>@ViewBag.name @ViewBag.id</div>
-<div class="row mt-3">
-    <div class="col-12">
-        <h3>聊天內容</h3>
-        <div id="Content" style="height:150px ;max-height: 150px; overflow-y: auto;">
-        </div>
+﻿@model IEnumerable<prjDB_GamingForm_Show.ViewModels.CAdminChatViewModel>
+<div style="height:350px;width:250px">
+    <div style="border-bottom:solid red 1px">
+        <img src="~/production/images/@Model.FirstOrDefault().ReceiverImg" alt="..." class="img-circle profile_img" style="height:7vh;width:7vh">
+        <span style="font-size:20px;">@Model.FirstOrDefault().ReceiverName</span>
     </div>
+    
 </div>
+
+
+
+

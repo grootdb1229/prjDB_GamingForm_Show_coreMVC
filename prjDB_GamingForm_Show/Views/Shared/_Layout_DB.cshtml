@@ -30,11 +30,11 @@
 <body style="background-color:#272727">
     <!-- 首頁-->
     <!-- Navigation-->
-    
     <!-- 首頁-->
 
-
+    <!-- container-fluid -->
     <div class="container-fluid">
+        <!-- row -->
         <div class="row">
             <!-- Leftside bar -->
             <div id="tm-sidebar" class="tm-sidebar">
@@ -76,209 +76,29 @@
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a href="#about" class="nav-link">
-                                    <div class="triangle-right"></div>
-                                    <i class="fas fa-user-friends nav-icon"></i>
-                                    About
-                                </a>
-                            </li>
-                            <li class="nav-item">
                                 <a href="#contact" class="nav-link">
                                     <div class="triangle-right"></div>
                                     <i class="fas fa-envelope nav-icon"></i>
                                     Contact
                                 </a>
                             </li>
-                            <li class="nav-item">
-                                <a href="" class="nav-link external" target="_parent" rel="sponsored">
-                                    <div class="triangle-right"></div>
-                                    <i class="fas fa-external-link-alt nav-icon"></i>
-                                    External
-                                </a>
-                            </li>
                         </ul>
                     </div>
                 </nav>
-            </div>
+            </div><!-- .Leftside bar -->
 
             <div class="tm-main">
                 <!-- Home section -->
-                <div class="tm-section-wrap">
+                <div class="tm-section-wrap" >
                     <div class="tm-parallax" data-parallax="scroll" data-image-src="../layout/templatemo_555_upright/img/img-01.jpg"></div>
                     <section id="home" class="tm-section">
                         <h2 class="tm-text-primary">委託資訊總覽</h2>
-                        <hr class="mb-5">
-                        <div class="row">
-                            <div class="col-lg-6 tm-col-home mb-4">
-                                <div class="tm-text-container">
-                                    @* <div class="tm-icon-container mb-5 mr-0 ml-auto">
-                                    <i class="fas fa-satellite-dish fa-4x tm-text-primary"></i>
-                                    </div> *@
-                                    <div class="card border-white mb-3 bg-transparent" style="max-width: 36rem;">
-                                        <div class="card-header bg-transparent border-white text-center"><h4>我發送的委託</h4></div>
-                                        <div class="card-body text-light">
-                                            @* <h5 class="card-title">Success card title</h5> *@
-                                            <table class="table table-borderless text-center">
-                                                <tbody>
-                                                    <tr>
-                                                        <td class="col-6">
-                                                            <a class="btn btn-outline-danger position-relative col">
-                                                                <img src="~/layout/templatemo_555_upright/img/me/message-circle.svg" />
-                                                                會員提問
-                                                                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                                                                    99+
-                                                                    <span class="visually-hidden">unread messages</span>
-                                                                </span>
-                                                            </a>
-                                                        </td>
-                                                        <td class="col-6">
-                                                            <a class="btn btn-outline-danger position-relative col">
-                                                                <img src="~/layout/templatemo_555_upright/img/me/users.svg" />
-                                                                待接受
-                                                                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                                                                    10
-                                                                    <span class="visually-hidden">unread messages</span>
-                                                                </span>
-                                                            </a>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>
-                                                            <a class="btn btn-outline-danger position-relative col-12">
-                                                                <img src="~/layout/templatemo_555_upright/img/me/edit.svg" />
-                                                                待收件
-                                                                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                                                                    5
-                                                                    <span class="visually-hidden">unread messages</span>
-                                                                </span>
-                                                            </a>
-                                                        </td>
-                                                        <td>
-                                                            <a class="btn btn-outline-danger position-relative col-12">
-                                                                <img src="~/layout/templatemo_555_upright/img/me/check.svg" />
-                                                                已完成
-                                                                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                                                                    1
-                                                                    <span class="visually-hidden">unread messages</span>
-                                                                </span>
-                                                            </a>
-                                                        </td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-
-
-
-
-                                        </div>
-                                        @* <div class="card-footer bg-transparent border-success">Footer</div> *@
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-6 tm-col-home mb-4">
-                                <div class="tm-text-container">
-                                    @* <div class="tm-icon-container mb-5 mr-0 ml-auto">
-                                    <i class="fas fa-broadcast-tower fa-4x tm-text-primary"></i>
-                                    </div> *@
-                                    <div class="card border-white mb-3 bg-transparent" style="max-width: 36rem;">
-                                        <div class="card-header bg-transparent border-white text-center"><h4>我接受的委託</h4></div>
-                                        <div class="card-body text-light">
-                                            <table class="table table-borderless text-center">
-                                                <tbody>
-                                                    <tr>
-                                                        <td class="col-6">
-                                                            <a class="btn btn-outline-danger position-relative col">
-                                                                <img src="~/layout/templatemo_555_upright/img/me/message-circle.svg" />
-                                                                新委託
-                                                                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                                                                    99+
-                                                                    <span class="visually-hidden">unread messages</span>
-                                                                </span>
-                                                            </a>
-                                                        </td>
-                                                        <td class="col-6">
-                                                            <a class="btn btn-outline-danger position-relative col">
-                                                                <img src="~/layout/templatemo_555_upright/img/me/users.svg" />
-                                                                進行中
-                                                                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                                                                    10
-                                                                    <span class="visually-hidden">unread messages</span>
-                                                                </span>
-                                                            </a>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>
-                                                            <a class="btn btn-outline-danger position-relative col-12">
-                                                                <img src="~/layout/templatemo_555_upright/img/me/edit.svg" />
-                                                                待確認
-                                                                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                                                                    5
-                                                                    <span class="visually-hidden">unread messages</span>
-                                                                </span>
-                                                            </a>
-                                                        </td>
-                                                        <td>
-                                                            <a class="btn btn-outline-danger position-relative col-12">
-                                                                <img src="~/layout/templatemo_555_upright/img/me/check.svg" />
-                                                                已完成
-                                                                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                                                                    1
-                                                                    <span class="visually-hidden">unread messages</span>
-                                                                </span>
-                                                            </a>
-                                                        </td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                        @* <div class="card-footer bg-transparent border-success">Footer</div> *@
-                                    </div>
-                                    <div class="text-right">
-                                        <a href="#gallery" class="btn btn-primary tm-btn-next">下一頁</a>
-                                    </div>
-                                </div>
-                            </div>
+                        <hr class="mb-3">
+                        <div id="divOverview"></div>
+                        <hr class="tm-hr-short mb-3">
+                        <div class="text-right">
+                            <a href="#release" class="btn btn-primary tm-btn-next">下一頁</a>
                         </div>
-                        <hr class="tm-hr-short mb-5">
-                        @* <div class="row tm-row-home">
-                        <div class="tm-col-home tm-col-home-l">
-                        <div class="media mb-4">
-                        <i class="fas fa-scroll fa-4x tm-post-icon tm-text-primary"></i>
-                        <div class="media-body">
-                        <a href="#" class="d-block mb-2 tm-text-primary tm-post-link">24 September 2020</a>
-                        <p>
-                        Upright is free responsive HTML CSS template by <a href="https://templatemo.com/page/1" target="_parent" rel="sponsored">TemplateMo</a>.
-                        You can feel free to adapt and apply this layout for your
-                        commercial or non-commercial websites.
-                        </p>
-                        </div>
-                        </div>
-                        <div class="media mb-4">
-                        <i class="fas fa-cloud-sun fa-4x tm-post-icon tm-text-primary"></i>
-                        <div class="media-body">
-                        <a href="#" class="d-block mb-2 tm-text-primary tm-post-link">22 September 2020</a>
-                        <p>
-                        You are not allowed to re-distribute this template as a ZIP file
-                        on any template collection website for the template download purpose.
-                        Please contact us for more information.
-                        </p>
-                        </div>
-                        </div>
-                        <div class="media mb-4">
-                        <i class="fas fa-dove fa-4x tm-post-icon tm-text-primary"></i>
-                        <div class="media-body">
-                        <a href="#" class="d-block mb-2 tm-text-primary tm-post-link">16 September 2020</a>
-                        <p>
-                        You may want to support us by making   <a href="https://paypal.me/templatemo" target="_parent" rel="sponsored">a small donation via PayPal</a>. That will be helpful. We hope you like this Upright Template for your work.
-                        </p>
-                        </div>
-                        </div>
-                        </div>
-                        <div class="tm-col-home mr-0 ml-auto">
-                        <div class="tm-img-home-container"></div>
-                        </div>
-                        </div> *@
                     </section>
                 </div>
                 <!-- 發出的委託 section -->
@@ -286,361 +106,49 @@
                     <div class="tm-parallax" data-parallax="scroll" data-image-src="../layout/templatemo_555_upright/img/img-02.jpg"></div>
                     <section id="release" class="tm-section">
                         <h2 class="tm-text-primary">管理發出的委託</h2>
-                        <hr class="mb-5">
+                        <hr class="mb-3">
                         <div id="divReleasePart"></div>
                     </section>
                 </div>
                 <!-- 收到的委託 section -->
                 <div class="tm-section-wrap">
-                    <div class="tm-parallax" data-parallax="scroll" data-image-src="../layout/templatemo_555_upright/img/img-02.jpg"></div>
+                    <div class="tm-parallax" data-parallax="scroll" data-image-src="../layout/templatemo_555_upright/img/img-03.jpg"></div>
                     <section id="receive" class="tm-section">
                         <h2 class="tm-text-primary">管理投遞的應徵</h2>
-                        <hr class="mb-5">
+                        <hr class="mb-3">
                         <div id="divReceivePart"></div>
                     </section>
                 </div>
                 <!-- Gallery section -->
                 <div class="tm-section-wrap">
-                    <div class="tm-parallax" data-parallax="scroll" data-image-src="../layout/templatemo_555_upright/img/img-02.jpg"></div>
+                    <div class="tm-parallax" data-parallax="scroll" data-image-src="../layout/templatemo_555_upright/img/img-04.jpg"></div>
                     <section id="gallery" class="tm-section">
                         <h2 class="tm-text-primary">從創作中找合作夥伴</h2>
-                        <hr class="mb-5">
+                        <hr class="mb-3">
                         <div id="divGalleryPart"></div>
-                    </section>
-                </div>
-                <!-- About section -->
-                <div class="tm-section-wrap">
-                    <div class="tm-parallax" data-parallax="scroll" data-image-src="../layout/templatemo_555_upright/img/img-03.jpg"></div>
-                    <section id="about" class="tm-section">
-                        <h2 class="tm-text-primary">About Upright CSS Template</h2>
-                        <hr class="mb-5">
-
-                        <div class="row tm-row-about">
-                            <div class="tm-col-about tm-col-about-l">
-                                <p class="mb-4">
-                                    If you want to support TemplateMo, you can contribute <a rel="sponsored" href="https://paypal.me/templatemo" target="_parent">a small donation via <strong>PayPal</strong></a>. This will be very helpful. Thank you.
-                                </p>
-                                <p class="mb-4">
-                                    Aliquam ornare varius erat vel aliquet. Proin ac neque a tortor tristique semper eget eget sapien. Morbi vitae diam a odio lobortis mattis sed nec justo.
-                                </p>
-                                <p class="mb-4">
-                                    Suspendisse sagittis tortor vel turpis aliquet, vitae molestie erat luctus.
-                                </p>
-                            </div>
-                            <div class="tm-col-about tm-col-about-r">
-                                <img src="~/layout/templatemo_555_upright/img/img-about-01.jpg" alt="Image" class="img-fluid mb-5 tm-img-about">
-                                <p>
-                                    Duis fringilla eget purus luctus sodales. Sed auctor odio quis ligula dignissim efficitur vitae vitae quam.
-                                </p>
-                            </div>
-                        </div>
-                        <div class="mt-5">
-                            <div class="tm-carousel slick-initialized slick-slider slick-dotted">
-                                <div class="slick-list draggable">
-                                    <div class="slick-track" style="opacity: 1; width: 2450px; transform: translate3d(-1960px, 0px, 0px);">
-                                        <div class="slick-slide" data-slick-index="0" aria-hidden="true" role="tabpanel" id="slick-slide00" aria-describedby="slick-slide-control00" style="width: 245px;" tabindex="-1">
-                                            <div>
-                                                <div class="tm-carousel-item" style="width: 100%; display: inline-block;">
-                                                    <figure class="effect-honey mb-4">
-                                                        <img src="~/layout/templatemo_555_upright/img/about-01.jpg" alt="Featured Item">
-                                                        <figcaption>
-                                                            <ul class="tm-social">
-                                                                <li><a href="https://facebook.com" class="tm-social-link" tabindex="-1"><i class="fab fa-facebook"></i></a></li>
-                                                                <li><a href="https://twitter.com" class="tm-social-link" tabindex="-1"><i class="fab fa-twitter"></i></a></li>
-                                                                <li><a href="https://instagram.com" class="tm-social-link" tabindex="-1"><i class="fab fa-instagram"></i></a></li>
-                                                            </ul>
-                                                        </figcaption>
-                                                    </figure>
-                                                    <div class="tm-about-text">
-                                                        <h3 class="mb-3 tm-text-primary tm-about-title">Calvin Walk</h3>
-                                                        <p>Aliquam efficitur, velit ut aliquet molestie, nulla dolor faucibus neque, quis hendrerit.</p>
-                                                        <h4 class="tm-text-secondary tm-about-subtitle">Founder and CEO</h4>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div><div class="slick-slide" data-slick-index="1" aria-hidden="true" role="tabpanel" id="slick-slide01" style="width: 245px;" tabindex="-1">
-                                            <div>
-                                                <div class="tm-carousel-item" style="width: 100%; display: inline-block;">
-                                                    <figure class="effect-honey mb-4">
-                                                        <img src="~/layout/templatemo_555_upright/img/about-02.jpg" alt="Featured Item">
-                                                        <figcaption>
-                                                            <ul class="tm-social">
-                                                                <li><a href="https://facebook.com" class="tm-social-link" tabindex="-1"><i class="fab fa-facebook"></i></a></li>
-                                                                <li><a href="https://twitter.com" class="tm-social-link" tabindex="-1"><i class="fab fa-twitter"></i></a></li>
-                                                                <li><a href="https://instagram.com" class="tm-social-link" tabindex="-1"><i class="fab fa-instagram"></i></a></li>
-                                                            </ul>
-                                                        </figcaption>
-                                                    </figure>
-                                                    <div class="tm-about-text">
-                                                        <h3 class="mb-3 tm-text-primary tm-about-title">Jenifer Soft</h3>
-                                                        <p>This is a carousel for a list of 10 team members. Each member image hover has 3 social icons.</p>
-                                                        <h4 class="tm-text-secondary tm-about-subtitle">Managing Director</h4>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div><div class="slick-slide" data-slick-index="2" aria-hidden="true" role="tabpanel" id="slick-slide02" aria-describedby="slick-slide-control01" style="width: 245px;" tabindex="-1">
-                                            <div>
-                                                <div class="tm-carousel-item" style="width: 100%; display: inline-block;">
-                                                    <figure class="effect-honey mb-4">
-                                                        <img src="~/layout/templatemo_555_upright/img/about-03.jpg" alt="Featured Item">
-                                                        <figcaption>
-                                                            <ul class="tm-social">
-                                                                <li><a href="https://facebook.com" class="tm-social-link" tabindex="-1"><i class="fab fa-facebook"></i></a></li>
-                                                                <li><a href="https://twitter.com" class="tm-social-link" tabindex="-1"><i class="fab fa-twitter"></i></a></li>
-                                                                <li><a href="https://instagram.com" class="tm-social-link" tabindex="-1"><i class="fab fa-instagram"></i></a></li>
-                                                            </ul>
-                                                        </figcaption>
-                                                    </figure>
-                                                    <div class="tm-about-text">
-                                                        <h3 class="mb-3 tm-text-primary tm-about-title">David Rock</h3>
-                                                        <p>Aliquam efficitur, velit ut aliquet molestie, nulla dolor faucibus neque, quis hendrerit.</p>
-                                                        <h4 class="tm-text-secondary tm-about-subtitle">Financial Officer</h4>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div><div class="slick-slide" data-slick-index="3" aria-hidden="true" role="tabpanel" id="slick-slide03" style="width: 245px;" tabindex="-1">
-                                            <div>
-                                                <div class="tm-carousel-item" style="width: 100%; display: inline-block;">
-                                                    <figure class="effect-honey mb-4">
-                                                        <img src="~/layout/templatemo_555_upright/img/about-01.jpg" alt="Featured Item">
-                                                        <figcaption>
-                                                            <ul class="tm-social">
-                                                                <li><a href="https://facebook.com" class="tm-social-link" tabindex="-1"><i class="fab fa-facebook"></i></a></li>
-                                                                <li><a href="https://twitter.com" class="tm-social-link" tabindex="-1"><i class="fab fa-twitter"></i></a></li>
-                                                                <li><a href="https://instagram.com" class="tm-social-link" tabindex="-1"><i class="fab fa-instagram"></i></a></li>
-                                                            </ul>
-                                                        </figcaption>
-                                                    </figure>
-                                                    <div class="tm-about-text">
-                                                        <h3 class="mb-3 tm-text-primary tm-about-title">Calvin Second</h3>
-                                                        <p>Aliquam efficitur, velit ut aliquet molestie, nulla dolor faucibus neque, quis hendrerit.</p>
-                                                        <h4 class="tm-text-secondary tm-about-subtitle">Senior Director</h4>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div><div class="slick-slide" data-slick-index="4" aria-hidden="true" role="tabpanel" id="slick-slide04" aria-describedby="slick-slide-control02" style="width: 245px;" tabindex="-1">
-                                            <div>
-                                                <div class="tm-carousel-item" style="width: 100%; display: inline-block;">
-                                                    <figure class="effect-honey mb-4">
-                                                        <img src="~/layout/templatemo_555_upright/img/about-02.jpg" alt="Featured Item">
-                                                        <figcaption>
-                                                            <ul class="tm-social">
-                                                                <li><a href="https://facebook.com" class="tm-social-link" tabindex="-1"><i class="fab fa-facebook"></i></a></li>
-                                                                <li><a href="https://twitter.com" class="tm-social-link" tabindex="-1"><i class="fab fa-twitter"></i></a></li>
-                                                                <li><a href="https://instagram.com" class="tm-social-link" tabindex="-1"><i class="fab fa-instagram"></i></a></li>
-                                                            </ul>
-                                                        </figcaption>
-                                                    </figure>
-                                                    <div class="tm-about-text">
-                                                        <h3 class="mb-3 tm-text-primary tm-about-title">Jenifer Second</h3>
-                                                        <p>This is a carousel for a list of 10 team members. Each member image hover has 3 social icons.</p>
-                                                        <h4 class="tm-text-secondary tm-about-subtitle">Accounting Officer</h4>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div><div class="slick-slide" data-slick-index="5" aria-hidden="true" role="tabpanel" id="slick-slide05" style="width: 245px;" tabindex="-1">
-                                            <div>
-                                                <div class="tm-carousel-item" style="width: 100%; display: inline-block;">
-                                                    <figure class="effect-honey mb-4">
-                                                        <img src="~/layout/templatemo_555_upright/img/about-03.jpg" alt="Featured Item">
-                                                        <figcaption>
-                                                            <ul class="tm-social">
-                                                                <li><a href="https://facebook.com" class="tm-social-link" tabindex="-1"><i class="fab fa-facebook"></i></a></li>
-                                                                <li><a href="https://twitter.com" class="tm-social-link" tabindex="-1"><i class="fab fa-twitter"></i></a></li>
-                                                                <li><a href="https://instagram.com" class="tm-social-link" tabindex="-1"><i class="fab fa-instagram"></i></a></li>
-                                                            </ul>
-                                                        </figcaption>
-                                                    </figure>
-                                                    <div class="tm-about-text">
-                                                        <h3 class="mb-3 tm-text-primary tm-about-title">David Second</h3>
-                                                        <p>Aliquam efficitur, velit ut aliquet molestie, nulla dolor faucibus neque, quis hendrerit.</p>
-                                                        <h4 class="tm-text-secondary tm-about-subtitle">Financial Assistant</h4>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div><div class="slick-slide" data-slick-index="6" aria-hidden="true" tabindex="-1" role="tabpanel" id="slick-slide06" aria-describedby="slick-slide-control03" style="width: 245px;">
-                                            <div>
-                                                <div class="tm-carousel-item" style="width: 100%; display: inline-block;">
-                                                    <figure class="effect-honey mb-4">
-                                                        <img src="~/layout/templatemo_555_upright/img/about-01.jpg" alt="Featured Item">
-                                                        <figcaption>
-                                                            <ul class="tm-social">
-                                                                <li><a href="https://facebook.com" class="tm-social-link" tabindex="-1"><i class="fab fa-facebook"></i></a></li>
-                                                                <li><a href="https://twitter.com" class="tm-social-link" tabindex="-1"><i class="fab fa-twitter"></i></a></li>
-                                                                <li><a href="https://instagram.com" class="tm-social-link" tabindex="-1"><i class="fab fa-instagram"></i></a></li>
-                                                            </ul>
-                                                        </figcaption>
-                                                    </figure>
-                                                    <div class="tm-about-text">
-                                                        <h3 class="mb-3 tm-text-primary tm-about-title">Calvin Third</h3>
-                                                        <p>Aliquam efficitur, velit ut aliquet molestie, nulla dolor faucibus neque, quis hendrerit.</p>
-                                                        <h4 class="tm-text-secondary tm-about-subtitle">Designer</h4>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div><div class="slick-slide" data-slick-index="7" aria-hidden="true" tabindex="-1" role="tabpanel" id="slick-slide07" style="width: 245px;">
-                                            <div>
-                                                <div class="tm-carousel-item" style="width: 100%; display: inline-block;">
-                                                    <figure class="effect-honey mb-4">
-                                                        <img src="~/layout/templatemo_555_upright/img/about-02.jpg" alt="Featured Item">
-                                                        <figcaption>
-                                                            <ul class="tm-social">
-                                                                <li><a href="https://facebook.com" class="tm-social-link" tabindex="-1"><i class="fab fa-facebook"></i></a></li>
-                                                                <li><a href="https://twitter.com" class="tm-social-link" tabindex="-1"><i class="fab fa-twitter"></i></a></li>
-                                                                <li><a href="https://instagram.com" class="tm-social-link" tabindex="-1"><i class="fab fa-instagram"></i></a></li>
-                                                            </ul>
-                                                        </figcaption>
-                                                    </figure>
-                                                    <div class="tm-about-text">
-                                                        <h3 class="mb-3 tm-text-primary tm-about-title">Jenifer Third</h3>
-                                                        <p>This is a carousel for a list of 10 team members. Each member image hover has 3 social icons.</p>
-                                                        <h4 class="tm-text-secondary tm-about-subtitle">Program Director</h4>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div><div class="slick-slide slick-current slick-active" data-slick-index="8" aria-hidden="false" role="tabpanel" id="slick-slide08" aria-describedby="slick-slide-control04" style="width: 245px;">
-                                            <div>
-                                                <div class="tm-carousel-item" style="width: 100%; display: inline-block;">
-                                                    <figure class="effect-honey mb-4">
-                                                        <img src="~/layout/templatemo_555_upright/img/about-03.jpg" alt="Featured Item">
-                                                        <figcaption>
-                                                            <ul class="tm-social">
-                                                                <li><a href="https://facebook.com" class="tm-social-link" tabindex="0"><i class="fab fa-facebook"></i></a></li>
-                                                                <li><a href="https://twitter.com" class="tm-social-link" tabindex="0"><i class="fab fa-twitter"></i></a></li>
-                                                                <li><a href="https://instagram.com" class="tm-social-link" tabindex="0"><i class="fab fa-instagram"></i></a></li>
-                                                            </ul>
-                                                        </figcaption>
-                                                    </figure>
-                                                    <div class="tm-about-text">
-                                                        <h3 class="mb-3 tm-text-primary tm-about-title">David Three</h3>
-                                                        <p>Aliquam efficitur, velit ut aliquet molestie, nulla dolor faucibus neque, quis hendrerit.</p>
-                                                        <h4 class="tm-text-secondary tm-about-subtitle">Financial Assistant</h4>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div><div class="slick-slide slick-active" data-slick-index="9" aria-hidden="false" role="tabpanel" id="slick-slide09" style="width: 245px;">
-                                            <div>
-                                                <div class="tm-carousel-item" style="width: 100%; display: inline-block;">
-                                                    <figure class="effect-honey mb-4">
-                                                        <img src="~/layout/templatemo_555_upright/img/about-01.jpg" alt="Featured Item">
-                                                        <figcaption>
-                                                            <ul class="tm-social">
-                                                                <li><a href="https://facebook.com" class="tm-social-link" tabindex="0"><i class="fab fa-facebook"></i></a></li>
-                                                                <li><a href="https://twitter.com" class="tm-social-link" tabindex="0"><i class="fab fa-twitter"></i></a></li>
-                                                                <li><a href="https://instagram.com" class="tm-social-link" tabindex="0"><i class="fab fa-instagram"></i></a></li>
-                                                            </ul>
-                                                        </figcaption>
-                                                    </figure>
-                                                    <div class="tm-about-text">
-                                                        <h3 class="mb-3 tm-text-primary tm-about-title">Calvin Four</h3>
-                                                        <p>Aliquam efficitur, velit ut aliquet molestie, nulla dolor faucibus neque, quis hendrerit.</p>
-                                                        <h4 class="tm-text-secondary tm-about-subtitle">Media Partner</h4>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div><ul class="slick-dots" style="" role="tablist"><li class="" role="presentation"><button type="button" role="tab" id="slick-slide-control00" aria-controls="slick-slide00" aria-label="1 of 5" tabindex="-1">1</button></li><li role="presentation" class=""><button type="button" role="tab" id="slick-slide-control01" aria-controls="slick-slide02" aria-label="2 of 5" tabindex="-1">2</button></li><li role="presentation" class=""><button type="button" role="tab" id="slick-slide-control02" aria-controls="slick-slide04" aria-label="3 of 5" tabindex="-1">3</button></li><li role="presentation"><button type="button" role="tab" id="slick-slide-control03" aria-controls="slick-slide06" aria-label="4 of 5" tabindex="-1">4</button></li><li role="presentation" class="slick-active"><button type="button" role="tab" id="slick-slide-control04" aria-controls="slick-slide08" aria-label="5 of 5" tabindex="-1">5</button></li></ul>
-                            </div>
-                        </div>
                     </section>
                 </div>
                 <!-- Contact section -->
                 <div class="tm-section-wrap">
                     <div class="tm-parallax" data-parallax="scroll" data-image-src="../layout/templatemo_555_upright/img/img-04.jpg"></div>
                     <div id="contact" class="tm-section">
-                        <h2 class="tm-text-primary">Contact Upright</h2>
-                        <hr class="mb-5">
-                        <div class="row">
-                            <div class="col-xl-6 tm-contact-col-l mb-4">
-                                <form id="contact-form" action="" method="POST" class="tm-contact-form">
-                                    <div class="form-group">
-                                        <input type="text" name="name" class="form-control rounded-0" placeholder="Name" required="">
-                                    </div>
-                                    <div class="form-group">
-                                        <input type="email" name="email" class="form-control rounded-0" placeholder="Email" required="">
-                                    </div>
-                                    <div class="form-group">
-                                        <select class="form-control" id="contact-select" name="inquiry">
-                                            <option value="-">Subject</option>
-                                            <option value="sales">Sales &amp; Marketing</option>
-                                            <option value="creative">Creative Design</option>
-                                            <option value="uiux">UI / UX</option>
-                                        </select>
-                                    </div>
-                                    <div class="form-group">
-                                        <textarea rows="8" name="message" class="form-control rounded-0" placeholder="Message" required=""></textarea>
-                                    </div>
-
-                                    <div class="form-group tm-text-right">
-                                        <button type="submit" class="btn btn-primary">Send</button>
-                                    </div>
-                                </form>
-                            </div>
-                            <div class="col-xl-6 tm-contact-col-r">
-                                <!-- Map -->
-                                <div class="mapouter mb-4">
-                                    <div class="gmap_canvas">
-                                        <iframe class="w-100" @* width="100%" *@ height="520" id="gmap_canvas" src="https://maps.google.com/maps?q=Av.+L%C3%BAcio+Costa,+Rio+de+Janeiro+-+RJ,+Brazil&amp;t=&amp;z=13&amp;ie=UTF8&amp;iwloc=&amp;output=embed" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"></iframe>
-                                    </div>
-                                </div>
-
-                                <!-- Address -->
-                                <address class="mb-4">
-                                    120-240 eget purus luctus sodales. Sed<br>
-                                    auctor odio quis ligula dignissim efficitur<br>
-                                    vitae vitae quam 16502
-                                </address>
-
-                                <!-- Links -->
-                                <ul class="tm-contact-links mb-4">
-                                    <li class="mb-2">
-                                        <a href="tel:0100200340">
-                                            <i class="fas fa-phone mr-2 tm-contact-link-icon"></i>
-                                            Tel: 010-020-0340
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="mailto:info@company.com">
-                                            <i class="fas fa-at mr-2 tm-contact-link-icon"></i>
-                                            Email: info@company.com
-                                        </a>
-                                    </li>
-                                </ul>
-                                <ul class="tm-contact-social">
-                                    <li><a href="https://fb.com/templatemo" class="tm-social-link"><i class="fab fa-facebook"></i></a></li>
-                                    <li><a href="https://twitter.com" class="tm-social-link"><i class="fab fa-twitter"></i></a></li>
-                                    <li><a href="https://instagram.com" class="tm-social-link"><i class="fab fa-instagram"></i></a></li>
-                                    <li><a href="https://youtube.com" class="tm-social-link"><i class="fab fa-youtube"></i></a></li>
-                                </ul>
-                            </div>
+                        <h2 class="tm-text-primary">聯繫我們</h2>
+                        <hr class="mb-3">
+                        <div class="row" id="divContact">
+                           
                         </div>
                     </div>
                 </div>
                 @RenderBody()
                 <!-- Copyright -->
-                <div class="tm-section-wrap tm-copyright row">
-                    <div class="col-12">
-                        <div class="text-right">
-                            @* Copyright 2020 Upright Company *@
-
-                        </div>
-                    </div>
-                </div>
             </div> <!-- .tm-main -->
         </div> <!-- .row -->
     </div> <!-- .container-fluid -->
-    <!-- Footer-->
-    <footer class="py-5 bg-dark">
-        <div class="container"><p class="m-0 text-center text-white">Copyright &copy; Your Website 2023</p></div>
-    </footer>
+
     <!-- Bootstrap core JS-->
     @* <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script> *@
     <!-- Core theme JS-->
     <script src="~/js/scripts.js"></script>
-
-
-
 
     <script src="~/layout/templatemo_555_upright/js/jquery-3.4.1.min.js"></script>          <!-- https://jquery.com/ -->
     <script src="~/layout/templatemo_555_upright/js/jquery.singlePageNav.min.js"></script>  <!-- https://github.com/ChrisWojcik/single-page-nav -->
