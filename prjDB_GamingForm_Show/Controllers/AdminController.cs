@@ -334,10 +334,18 @@ namespace prjDB_GamingForm_Show.Controllers
         }
         public IActionResult ChatPV(int id)
         {
-            var name = _db.Admins.FirstOrDefault(a => a.AdminId == id).Name;
-            ViewBag.name = name;
-            ViewBag.id = id;
-            return PartialView();
+            var senderid = _db.Admins.Where(a => a.Name == HttpContext.Session.GetString(CDictionary.SK_管理者名稱)).Select(a => a.AdminId).FirstOrDefault();
+            CAdminChatViewModel chats = new CAdminChatViewModel
+            {
+                SenderName = _db.Admins.Where(a => a.Name == HttpContext.Session.GetString(CDictionary.SK_管理者名稱)).Select(a => a.Name).FirstOrDefault(),
+                ReceiverName = _db.Admins.Where(a => a.AdminId == id).Select(a => a.Name).FirstOrDefault(),
+                SenderId = senderid,
+                ReceiverId = id,
+                ChatContent = _db.Chats.Where(a => a.SenderAdmin == senderid && a.ReceiveAdmin == id).Select(a => a.ChatContent).FirstOrDefault(),
+                ModefiedDate = _db.Chats.Where(a => a.SenderAdmin == senderid && a.ReceiveAdmin == id).Select(a => a.ModefiedDate).FirstOrDefault(),
+                IsCheck = _db.Chats.Where(a => a.SenderAdmin == senderid && a.ReceiveAdmin == id).Select(a => a.IsCheck).FirstOrDefault()
+            };   
+            return PartialView(chats);
         }
         //public IActionResult MemberListNexttest()
         //{
