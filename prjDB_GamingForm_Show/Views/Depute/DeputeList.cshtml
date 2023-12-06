@@ -4,7 +4,36 @@
     Layout = "~/Views/Shared/DeputeLayout2.cshtml";
 }
 <!-- Search Start -->
+<head>
+    <style>
+        .tag_list_wrapper {
+            border: 1px solid red;
+        }
 
+        .tag_list {
+            display: inline-block;
+            vertical-align: top;
+            background: #000000;
+            border-radius: 30px;
+            margin: 5px;
+            padding:10px 25px 10px 10px;
+            /* border: 1px solid #d6d6d6; */
+            position: relative;
+        }
+
+            .tag_list.tag_list_hide {
+                display: none;
+            }
+
+            .tag_list span {
+                position: absolute;
+                right: 8px;
+                top: 10px;
+                cursor: pointer;
+            }
+
+    </style>
+</head>
 
 <div class="container-fluid bg-primary mb-5 wow fadeIn" data-wow-delay="0.1s" style="padding: 35px;">
     <div class="container">
@@ -46,13 +75,24 @@
                     <div class="container">
                         <div class="row">
                             <div class="col order-8">
-                                <label id="test">- 大類別</label>
+                                <label id="skillclass">- 大類別</label>
                             </div>
                             <div class="col order-12">
-                             
+                                <label>- 小類別</label>
+                                <div id="skill"></div>
                             </div>
                             <div class="col order-1">
-                                Third, but first
+                                <label id="regions">- 懸賞區域</label>
+                            </div>
+                            <div class="col order-1">
+                                <label>- 懸賞金額</label>
+                                <select id="money" class="form-select border-0">
+                                    <option name="txtSalary" selected>請選擇...</option>
+                                    <option name="txtSalary" value="1">10000</option>
+                                    <option name="txtSalary" value="2">20000</option>
+                                    <option name="txtSalary" value="3">30000</option>
+                                    <option name="txtSalary" value="4">50000</option>
+                                </select>
                             </div>
                         </div>
                     </div>
@@ -63,40 +103,14 @@
 
         </div>
     </div>
-    <div class="row g-4" style="float:right;">
-        <div class="col-md-6">
-            <label style="float:left;text-align:right;">大類別</label>
-            <select id="skillclass" class="form-select border-0"></select>
-        </div>
-        <div class="col-md-6">
-            <label style="float:left;text-align:right;">小類別</label>
-            <select id="skill" class="form-select border-0"></select>
-        </div>
-    </div>
-    <div class="row g-4" style="float:left">
-        <div class="col-md-6">
-            <label style="float:left;text-align:right;">地區</label>
-            <select id="regions" class="form-select border-0"></select>
-        </div>
-        <div class="col-md-6">
-            <label style="float:left;text-align:right;">金額</label>
-
-            <select id="money" class="form-select border-0">
-                <option name="txtSalary" selected>請選擇...</option>
-                <option name="txtSalary" value="1">10000</option>
-                <option name="txtSalary" value="2">20000</option>
-                <option name="txtSalary" value="3">30000</option>
-                <option name="txtSalary" value="4">50000</option>
-            </select>
-
-        </div>
-    </div>
 
 </div>
-<h1 id="totalcount" class="text-center mb-5 wow fadeInUp" data-wow-delay="0.1s">懸賞清單</h1>
-@* <h3 id="totalcount" class="text-center mb-3 wow fadeInUp" data-wow-delay="0.1s">test</h3> *@
 <div class="container-xxl py-5">
-
+    <h1 id="totalcount" class="text-center mb-5 wow fadeInUp" data-wow-delay="0.1s">懸賞清單</h1>
+    <div class="container">
+        <div id="test" class="tag_list_wrapper">
+        </div>
+    </div>
     <div class="container">
 
 
@@ -146,12 +160,10 @@
 
 
         const text = document.querySelector('#text');
-        const selSkillClasses = document.querySelector('#skillclass');
-        const selectSkills = document.querySelector('#skill');
-        const selectRegions = document.querySelector('#regions');
         const selSalary = document.querySelector('#money');
-        test()
-        function test() {
+        loadSkillClassess()
+        loadRegion();
+        function loadSkillClassess() {
             $.ajax('@Url.Content("~/Depute/SkillClassess")', {
                 "type": 'Post', //POST、PUT、DELETE
                 "dataType": "json"
@@ -160,39 +172,45 @@
                     const SkillClassessFrag = $(document.createDocumentFragment());
                     const SkillClassess = data.map(SkillClassess => 
                         `<div class="form-check">
-                                 <input class="form-check-input" type="checkbox" value="${SkillClassess.name}" id="${SkillClassess.name}">
+                                         <input class="form-check-input" type="checkbox" value="${SkillClassess.skillClassId}" name="${SkillClassess.name}">
                                  <label class="form-check-label" for="${SkillClassess.name}">
                          ${SkillClassess.name}
                          </label>
                          </div>
                          `)
                     SkillClassessFrag.append(SkillClassess);
-                    $('#test').after(SkillClassessFrag)
-
+                    $('#skillclass').after(SkillClassessFrag)
                     let checkValue;
                     $('.form-check-input').click(function () {
                         var isChecked = $(this).is(":checked");
-                        console.log(isChecked)
-                        
-                        checkValue = $(this).val();
-                        console.log(checkValue); //on
+                        // console.log(isChecked)
+                        checkValue = $(this).attr("name");
+                        checkID = $(this).val();
+                        // console.log(checkValue); //on
+                        var tag = `<div class="tag_list">${checkValue}<span>X</span></div>`
+                        if (isChecked == false) 
+                            checkID = "";
+                        else { 
+                            $('#test').append(tag)
+                        }
+                        loadSkill(checkID);
                     });
                 })
             // loadSkill();
         }
-
-
-        function test2() {
+        function loadSkill(value) {
             $.ajax('@Url.Content("~/Depute/Skills")', {
                 "type": 'Post', //POST、PUT、DELETE
-                "data": { "id": selSkillClasses.value },
+                "data": { "id": value },
                 "dataType": "json"
             })
                 .done((data) => {
+
+
                     const SkillFrag = $(document.createDocumentFragment());
                     const Skills = data.map(Skills =>
                         `
-                        <div class="form-check">
+                        <div class="form-check" id = "test4">
                         <input class="form-check-input" type="checkbox" name="${Skills.name}" id="${Skills.name}">
                         <label class="form-check-label" for="${Skills.name}">
                         ${Skills.name}
@@ -202,11 +220,19 @@
                     )
                     SkillFrag.append(Skills);
                     $('#skill').html(SkillFrag);
-                })
-            loadRegion();
-        }
 
-        function test3() {
+                    // $('.form-check-input').click(function () {
+                    //     var isChecked = $(this).is(":checked");
+                    //     // console.log(isChecked)
+                    //     checkValue = $(this).val();
+                    //     // console.log(checkValue); //on
+                    //     if (isChecked == false)
+                    //         checkValue = "";
+                    //     loadSkill(checkValue);
+                    // });
+                })
+        }
+        function loadRegion() {
             $.ajax('@Url.Content("~/Depute/Region")', {
                 "type": 'Post', //POST、PUT、DELETE
                 "dataType": "json"
@@ -225,13 +251,12 @@
                     )
 
                     RegionFrag.append(Regions);
-                    $('#test2').after(RegionFrag)
+                    $('#regions').after(RegionFrag)
                 })
         }
         //基本搜尋&&進階搜尋///
-        loadSkillClassess();
         $('#search').click(() => { loadList() });
-        $('#skillclass').change(() => { loadSkill() });
+        
         function loadList(hotkey) {
             $.ajax('@Url.Content("~/Depute/Search")', {
                 "type": 'Post', //POST、PUT、DELETE
@@ -275,53 +300,6 @@
 
                 })
         }
-        function loadSkillClassess() {
-            $.ajax('@Url.Content("~/Depute/SkillClassess")', {
-                "type": 'Post', //POST、PUT、DELETE
-                "dataType": "json"
-            })
-                .done((data) => {
-                    const SkillClassessFrag = $(document.createDocumentFragment());
-                    const fst = '<option name="txtSkillClass" value="0">請選擇...</option>'
-                    SkillClassessFrag.append(fst);
-                    const SkillClassess = data.map(SkillClassess => `<option name="txtSkillClass" value='${SkillClassess.skillClassId}'>${SkillClassess.name}</option>`)
-                    SkillClassessFrag.append(SkillClassess);
-                    $('#skillclass').html(SkillClassessFrag)
-                    loadSkill();
-                })
-            // loadSkill();
-        }
-        function loadSkill() {
-            $.ajax('@Url.Content("~/Depute/Skills")', {
-                "type": 'Post', //POST、PUT、DELETE
-                "data": { "id": selSkillClasses.value },
-                "dataType": "json"
-            })
-                .done((data) => {
-                    const SkillFrag = $(document.createDocumentFragment());
-                    const snd = '<option name="txtSkill" value="null">請選擇...</option>'
-                    SkillFrag.append(snd);
-                    const Skills = data.map(Skills => `<option name="txtSkill" value='${Skills.skillId}'>${Skills.name}</option>`)
-                    SkillFrag.append(Skills);
-                    $('#skill').html(SkillFrag);
-                })
-            loadRegion();
-        }
-        function loadRegion() {
-            $.ajax('@Url.Content("~/Depute/Region")', {
-                "type": 'Post', //POST、PUT、DELETE
-                "dataType": "json"
-            })
-                .done((data) => {
-                    const RegionFrag = $(document.createDocumentFragment());
-                    const snd = '<option name="txtRegion" value="null">請選擇...</option>'
-                    RegionFrag.append(snd);
-                    const Regions = data.map(Regions => `<option name="txtRegion" value='${Regions.regionId}'>${Regions.city}</option>`)
-                    RegionFrag.append(Regions);
-                    $('#regions').html(RegionFrag)
-                })
-            loadHotkey()
-        }
         function loadHotkey() {
             var count = 0;
             $.ajax('@Url.Content("~/Depute/Hotkey")', {
@@ -344,7 +322,66 @@
 
 
      //舊式寫法
-                        //
+
+        //下拉式選單
+
+        // const text = document.querySelector('#text');
+        // const selSkillClasses = document.querySelector('#skillclass');
+        // const selectSkills = document.querySelector('#skill');
+        // const selectRegions = document.querySelector('#regions');
+        // const selSalary = document.querySelector('#money');
+
+        // $('#skillclass').change(() => { loadSkill() });
+        // function loadSkillClassess() {
+        //     $.ajax('@Url.Content("~/Depute/SkillClassess")', {
+        //         "type": 'Post', //POST、PUT、DELETE
+        //         "dataType": "json"
+        //     })
+        //         .done((data) => {
+        //             const SkillClassessFrag = $(document.createDocumentFragment());
+        //             const fst = '<option name="txtSkillClass" value="0">請選擇...</option>'
+        //             SkillClassessFrag.append(fst);
+        //             const SkillClassess = data.map(SkillClassess => `<option name="txtSkillClass" value='${SkillClassess.skillClassId}'>${SkillClassess.name}</option>`)
+        //             SkillClassessFrag.append(SkillClassess);
+        //             $('#skillclass').html(SkillClassessFrag)
+        //             loadSkill();
+        //         })
+        //     // loadSkill();
+        // }
+        // function loadSkill() {
+        //     $.ajax('@Url.Content("~/Depute/Skills")', {
+        //         "type": 'Post', //POST、PUT、DELETE
+        //         "data": { "id": selSkillClasses.value },
+        //         "dataType": "json"
+        //     })
+        //         .done((data) => {
+        //             const SkillFrag = $(document.createDocumentFragment());
+        //             const snd = '<option name="txtSkill" value="null">請選擇...</option>'
+        //             SkillFrag.append(snd);
+        //             const Skills = data.map(Skills => `<option name="txtSkill" value='${Skills.skillId}'>${Skills.name}</option>`)
+        //             SkillFrag.append(Skills);
+        //             $('#skill').html(SkillFrag);
+        //         })
+        //     loadRegion();
+        // }
+        // function loadRegion() {
+        //     $.ajax('@Url.Content("~/Depute/Region")', {
+        //         "type": 'Post', //POST、PUT、DELETE
+        //         "dataType": "json"
+        //     })
+        //         .done((data) => {
+        //             const RegionFrag = $(document.createDocumentFragment());
+        //             const snd = '<option name="txtRegion" value="null">請選擇...</option>'
+        //             RegionFrag.append(snd);
+        //             const Regions = data.map(Regions => `<option name="txtRegion" value='${Regions.regionId}'>${Regions.city}</option>`)
+        //             RegionFrag.append(Regions);
+        //             $('#regions').html(RegionFrag)
+        //         })
+        //     loadHotkey()
+        // }
+
+
+             //
 
                         // const title = document.querySelector('#list');
                         // const text = document.querySelector('#text');
