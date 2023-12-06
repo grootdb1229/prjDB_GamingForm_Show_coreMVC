@@ -34,22 +34,22 @@
                     @{
                         foreach (var item in Model.subBlogs.GroupBy(p => p.Title))
                         {
-                            <li>
-                                <a href="@Url.Action("ArticleList", "Blog", new {FId=item.First().BlogId ,SFId = item.FirstOrDefault().SubBlogId})">@item.Key</a>
-                            </li>
+                                        <li>
+                                            <a href="@Url.Action("ArticleList", "Blog", new {FId=item.First().BlogId ,SFId = item.FirstOrDefault().SubBlogId})">@item.Key</a>
+                                        </li>
                         }
                     }
                     <li style="float:right;">
                         @{
                             if (Context.Session.GetInt32(CDictionary.SK_UserID) == null)
                             {
-                                <button style="background:#a81d1d ;border:none;height:52.5px" type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-                                    發表回覆
-                                </button>
+                                            <button style="background:#a81d1d ;border:none;height:52.5px" type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                                                發表回覆
+                                            </button>
                             }
                             else
                             {
-                                @Html.ActionLink("發表回覆", "ReplyCreate", "Blog", new { AFId = Model.articles.FirstOrDefault().ArticleId, FId = Model.blogs.FirstOrDefault().BlogId }, new { @class = "btn" })
+                                            @Html.ActionLink("發表回覆", "ReplyCreate", "Blog", new { AFId = Model.articles.FirstOrDefault().ArticleId, FId = Model.blogs.FirstOrDefault().BlogId }, new { @class = "btn" })
                             }
                         }
                     </li>
@@ -68,7 +68,7 @@
                         var author = Model.articles.FirstOrDefault()?.Member;
                         if (author != null)
                         {
-                            <img src="~/MemberPhoto/@author.FImagePath" alt="" style="width: 100px;height:100px;border-radius: 50%;">
+                                        <img src="~/MemberPhoto/@author.FImagePath" alt="" style="width: 100px;height:100px;border-radius: 50%;">
                         }
                     }
                 </div>
@@ -93,11 +93,11 @@
                     <div style="max-width:800px; overflow: hidden; word-wrap: break-word; white-space: pre-line;border-bottom:1px dotted black;border-top:1px dotted black">
                         <p style="margin: 0; max-width:650px;font-size:30px ">
                             <div>
-                            @Html.Raw(Model.articles.FirstOrDefault().ArticleContent)       
+                                @Html.Raw(Model.articles.FirstOrDefault().ArticleContent)
                             </div>
                         </p>
                     </div>
-                    <div style="width:800px;">
+                    <div style="width:800px;" class="clearfix">
                         <p style="font-size:15px;text-align:right">
                             發表時間: @Html.DisplayFor(modelItem => Model.articles.FirstOrDefault().ModifiedDate)
                         </p>
@@ -106,58 +106,75 @@
                             int like = 0;
                             if (Context.Session.GetInt32(CDictionary.SK_UserID) == null)
                             {
-                                <button type="button" class="btn btn-danger" id="btnLike" data-bs-toggle="modal" data-bs-target="#staticBackdrop" >
-                                    <img src="~/images/like.png" alt="Like" width="20px" height="20px" />
-                                </button>
+                                            <button type="button" class="btn btn-danger" id="btnLike" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                                                <img src="~/images/like.png" alt="Like" width="20px" height="20px" />
+                                            </button>
                             }
                             else
                             {
-                                <button type="button" class="btn btn-danger" id="btnLike" style="float:left">
-                                    <img src="~/images/like.png" alt="Like" width="20px" height="20px" />
-                                </button>
+                                            <button type="button" class="btn btn-danger" id="btnLike" style="float:left">
+                                                <img src="~/images/like.png" alt="Like" width="20px" height="20px" />
+                                            </button>
                             }
                             like = Model.articleActions.Count(a => a.ActionId == 1);
-                            <span id="spLike" style="font-size:25px;clear:both">
-                                @like
-                            </span>
+                                        <span id="spLike" style="font-size:25px;clear:both">
+                                            @like
+                                        </span>
                         }
-                        @*-----------------漢堡-----------------*@
-                        <ul class="nav nav-pills">
-                            
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">Dropdown</a>
-                                <ul class="dropdown-menu">
-                                    <li >
-                                        <a class="dropdown-item" href="@Url.Action("ReplyCreate", "Blog", new { AFId = Model.articles.FirstOrDefault().ArticleId, FId = Model.blogs.FirstOrDefault().BlogId})" style="color: black;">
-                                            發表回覆
-                                        </a>
-                                    </li>
-                                    <li>
-                                        123
-                                    </li>
-                                    <li><hr class="dropdown-divider"></li>
-                                    <li><a class="dropdown-item" href="#">Separated link</a></li>
-                                </ul>
-                            </li>
-                          
-                        </ul>
-                        @*-----------------漢堡-----------------*@
+                        <div style="display:inline-block;float:right;">
 
-                        @if (Model.articles.First().MemberId == Context.Session.GetInt32(CDictionary.SK_UserID))
-                        {
+                            <ul class="nav nav-pills" style="margin:0" title="看更多選項">
+                                <li class="nav-item dropdown">
+                                    <a data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false"><img src="~/images/blogimages/3844442_dot_menu_more_vertical_icon.png" style="width:45px;height:40px" /></a>
+                                    <ul class="dropdown-menu">
+                                        @{
+                                            if (Context.Session.GetInt32(CDictionary.SK_UserID) == null)
+                                            {
+                                                            <li data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                                                                <a href="#" class="dropdown-item" style="color:black">
+                                                                    檢舉
+                                                                </a>
+                                                            </li>
+                                                            <li data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                                                                <a href="#" class="dropdown-item" style="color:black">
+                                                                    發表回覆
+                                                                </a>
+                                                            </li>
+                                            }
+                                            else
+                                            {
+                                                            <li data-bs-toggle="modal" data-bs-target="#ComplaimBackdrop">
+                                                                <a href="#" class="dropdown-item" style="color:black">
+                                                                    檢舉
+                                                                </a>
+                                                            </li>
+                                                            <li>
+                                                                @Html.ActionLink("發表回覆", "ReplyCreate", "Blog", new { AFId = Model.articles.FirstOrDefault().ArticleId, FId = Model.blogs.FirstOrDefault().BlogId }, new { style = "color:black;", @class = "dropdown-item" })
+                                                            </li>
+                                            }
+                                        }
 
-                            <button type="button" class="btn btn-warning" style="float:right;margin: 0 5px" onclick="location.href='@Url.Action( "ArticleEdit","Blog", new { AFId = Model.articles.FirstOrDefault().ArticleId ,FId = Model.blogs.FirstOrDefault().BlogId})'">修改</button>
-                            <button type="button" class="btn btn-secondary" style="float:right;margin:0 5px" onclick="ArticleDelete()">刪除文章</button>
-                        }
-                        <script>
-                            function ArticleDelete() {
-                                var result = confirm('確定刪除嗎?');
-                                if (result) {
-                                    location.href = '@Html.Raw(Url.Action("ArticleDelete", "Blog", new { FId = Model.blogs.FirstOrDefault().BlogId, AFId = Model.articles.FirstOrDefault().ArticleId }))';
-                                }
-                            }
-                        </script>
-
+                                        <li>
+                                            @if (Model.articles.First().MemberId == Context.Session.GetInt32(CDictionary.SK_UserID))
+                                            {
+                                                @Html.ActionLink("修改", "ArticleEdit", "Blog", new { AFId = Model.articles.FirstOrDefault().ArticleId, FId = Model.blogs.FirstOrDefault().BlogId }, new { style = "color:black;", @class = "dropdown-item" })
+                                                @*   <button type="button" class="btn btn-warning" style="float:right;margin: 0 5px" onclick="location.href='@Url.Action( "ArticleEdit","Blog", new { AFId = Model.articles.FirstOrDefault().ArticleId ,FId = Model.blogs.FirstOrDefault().BlogId})'">修改</button> *@
+                                                @Html.ActionLink("刪除", "ArticleDelete", "Blog", new { AFId = Model.articles.FirstOrDefault().ArticleId, FId = Model.blogs.FirstOrDefault().BlogId }, new { style = "color:black;", @class = "dropdown-item" })
+                                                @* <button type="button" class="btn btn-secondary" style="float:right;margin:0 5px" onclick="ArticleDelete()">刪除文章</button> *@
+                                            }
+                                            <script>
+                                                function ArticleDelete() {
+                                                    var result = confirm('確定刪除嗎?');
+                                                    if (result) {
+                                                        location.href = '@Html.Raw(Url.Action("ArticleDelete", "Blog", new { FId = Model.blogs.FirstOrDefault().BlogId, AFId = Model.articles.FirstOrDefault().ArticleId }))';
+                                                    }
+                                                }
+                                            </script>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
                         <!-- HTML 中的按鈕 -->
                         <button id="copyButton" class="btn btn-info" data-clipboard-target="#urlToCopy" style="float:right;margin:0 5px">分享</button>
                         <!-- 顯示的網址 -->
@@ -180,18 +197,18 @@
 
                             @*------Line按鈕------*@
                             @{
-                                <div class="line-it-button"
-                                     data-lang="zh_Hant"
-                                     data-type="share-c"
-                                     data-env="REAL"
-                                     data-url="https://localhost:7056/Blog/ArticleContent?FId=@(Model.blogs?.FirstOrDefault()?.BlogId)&AFId=@(Model.articles?.FirstOrDefault()?.ArticleId)"
-                                     data-color="default"
-                                     data-size="large"
-                                     data-count="false"
-                                     data-ver="3"
-                                     style="float:right ;margin:5px">
-                                </div>
-                                <script src="https://www.line-website.com/social-plugins/js/thirdparty/loader.min.js" async="async" defer="defer"></script>
+                                            <div class="line-it-button"
+                                                 data-lang="zh_Hant"
+                                                 data-type="share-c"
+                                                 data-env="REAL"
+                                                 data-url="https://localhost:7056/Blog/ArticleContent?FId=@(Model.blogs?.FirstOrDefault()?.BlogId)&AFId=@(Model.articles?.FirstOrDefault()?.ArticleId)"
+                                                 data-color="default"
+                                                 data-size="large"
+                                                 data-count="false"
+                                                 data-ver="3"
+                                                 style="float:right ;margin:5px">
+                                            </div>
+                                            <script src="https://www.line-website.com/social-plugins/js/thirdparty/loader.min.js" async="async" defer="defer"></script>
                             }
                             @*------Line按鈕------*@
 
@@ -199,25 +216,6 @@
 
 
                         </div>
-
-
-                        @*<div>
-                        @if (Model.articles.First().MemberId == Context.Session.GetInt32(CDictionary.SK_UserID))
-                        {
-
-                        <button type="button" class="btn btn-warning" onclick="location.href='@Url.Action( "ArticleEdit","Blog", new { AFId = Model.articles.FirstOrDefault().ArticleId ,FId = Model.blogs.FirstOrDefault().BlogId})'">修改</button>
-                        <button type="button" class="btn btn-secondary" onclick="ArticleDelete()">刪除文章</button>
-                        }
-                        <script>
-                        function ArticleDelete() {
-                        var result = confirm('確定刪除嗎?');
-                        if (result) {
-                        location.href = '@Html.Raw(Url.Action("ArticleDelete", "Blog", new { FId = Model.blogs.FirstOrDefault().BlogId, AFId = Model.articles.FirstOrDefault().ArticleId }))';
-                        }
-                        }
-                        </script>
-                        </div>*@
-
                     </div>
                 </div>
             </div>
@@ -231,52 +229,92 @@
                 foreach (var item in Model.replies)
                 {
                     count++;
-                    <div style="border: 2px solid red; padding: 3px; margin: 8px 0; border-radius: 5px;display: flex;background-color:#4F4F4F">
-                        <div div style="margin-right: 10px;">
-                            @{
+                                <div style="border: 2px solid red; padding: 3px; margin: 8px 0; border-radius: 5px;display: flex;background-color:#4F4F4F">
+                                    <div div style="margin-right: 10px;">
+                                        @{
                                 var replyAuthor = item.Member;
                                 if (replyAuthor != null)
                                 {
-                                    <img src="~/images/@replyAuthor.FImagePath" alt="" style="max-width: 100px; border-radius: 50%;">
+                                                            <img src="~/images/@replyAuthor.FImagePath" alt="" style="max-width: 100px; border-radius: 50%;">
                                 }
-                            }
-                        </div>
-                        <div style="flex-grow: 1;">
-                            <div style="margin:8px 0">
-                                <span style="font-size:18px">
-                                    @count 樓 : @item.Member.Name
-                                </span>
-                            </div>
-                            <div style="max-width:800px; overflow: hidden; word-wrap: break-word; white-space: pre-line;border-bottom:1px dotted black;border-top:1px dotted black">
-                                <p style="margin: 0; max-width:650px;font-size:30px ">
-                                    @Html.Raw(item.ReplyContents)                                                                      
-                                    </p>
-                            </div>
-                            <div>
-                                <p style="font-size:15px;text-align:right">
-                                    發表時間: @Html.DisplayFor(modelitem => item.ModifiedDate)
-                                </p>
-                            </div>
+                                        }
+                                    </div>
+                                    <div style="flex-grow: 1;">
+                                        <div style="margin:8px 0">
+                                            <span style="font-size:18px">
+                                                @count 樓 : @item.Member.Name
+                                            </span>
+                                        </div>
+                                        <div style="max-width:800px; overflow: hidden; word-wrap: break-word; white-space: pre-line;border-bottom:1px dotted black;border-top:1px dotted black">
+                                            <p style="margin: 0; max-width:650px;font-size:30px ">
+                                                @Html.Raw(item.ReplyContents)
+                                            </p>
+                                        </div>
+                                        <div>
+                                            <p style="font-size:15px;text-align:right">
+                                                發表時間: @Html.DisplayFor(modelitem => item.ModifiedDate)
+                                            </p>
+                                        </div>
 
-                            <br />
-                            <div style="width:800px">
-                                <p style="float:right">
-                                    @if (Model.replies.First().MemberId == Context.Session.GetInt32(CDictionary.SK_UserID))
+                                        <br />
+                                        <div style="width:800px">
+                                            <p style="float:right">
+                                                @if (Model.replies.First().MemberId == Context.Session.GetInt32(CDictionary.SK_UserID))
                                     {
-                                        <button type="button" class="btn btn-warning" onclick="location.href='@Url.Action( "ReplyEdit","Blog", new { AFId = Model.articles.FirstOrDefault().ArticleId ,FId = Model.blogs.FirstOrDefault().BlogId, RFId =item.ReplyId})'">修改</button>
+                                                    <button type="button" class="btn btn-warning" onclick="location.href='@Url.Action( "ReplyEdit","Blog", new { AFId = Model.articles.FirstOrDefault().ArticleId ,FId = Model.blogs.FirstOrDefault().BlogId, RFId =item.ReplyId})'">修改</button>
 
-                                        @Html.ActionLink("刪除回覆", "ReplyDelete", new { AFId = Model.articles.FirstOrDefault().ArticleId, RFId = item.ReplyId, FId = Model.blogs.FirstOrDefault().BlogId }, new { onclick = "return confirm ('確定刪除嗎?')", @class = "btn btn-secondary" })
+                                                    @Html.ActionLink("刪除回覆", "ReplyDelete", new { AFId = Model.articles.FirstOrDefault().ArticleId, RFId = item.ReplyId, FId = Model.blogs.FirstOrDefault().BlogId }, new { onclick = "return confirm ('確定刪除嗎?')", @class = "btn btn-secondary" })
 
                                     }
-                                </p>
-                            </div>
-                        </div>
-                    </div>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
                 }
             }
         </div>
     </div>
 </div>
+
+<!-- Modal -->
+<div class="modal fade" id="ComplaimBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="staticBackdropLabel">檢舉文章</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+                <form asp-action="ArticleComplain" method="post">
+                <input type="hidden" name="MemberID" value="@Context.Session.GetInt32(CDictionary.SK_UserID)"/>
+                <input type="hidden" name="ArticleId" value="@Model.articles.FirstOrDefault().ArticleId" />
+                <input type="hidden" name="AFId" value=" @Model.articles.First().ArticleId" />
+                <input type="hidden" name="FId" value=" @Model.blogs.FirstOrDefault().BlogId" />
+
+                <input type="hidden" name="ReportDate" value="@DateTime.Now" />
+
+            <div class="modal-body">                
+                <label style="color:black;font-size:16px">檢舉類型</label>
+                <br />
+                    <select id="selCom" name="SubTagId"  style="margin-top:3px">
+                        @{
+                            foreach(var type in Model.ComplainssubTags.Where(s=>s.TagId==6))
+                            {
+                                        <option value="@type.SubTagId">@type.Name</option>                                
+                            }
+                    }                    
+                </select>
+                <br />
+                    <textarea id="txtCom" name="ReportContent" style="height:66px;width:300px;margin-top:8px;display: none"></textarea>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                <input type="submit" value="檢舉" class="btn btn-primary" />
+            </div>
+                </form>
+        </div>
+    </div>
+</div>
+
 
 
 @section Scripts {
@@ -318,7 +356,19 @@
             })
         }
 
+        const selCom = document.querySelector('#selCom')
+        const txtCom = document.querySelector('#txtCom')
+        selCom.addEventListener('change', () => {
+            if (selCom.value == 65) 
+            {
+                txtCom.style.display=""
+            }
+            else
+            {
+                txtCom.style.display = "none"
 
+            }
+        })
 
     </script>
 }

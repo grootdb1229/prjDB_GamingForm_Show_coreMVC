@@ -336,6 +336,7 @@ namespace prjDB_GamingForm_Show.Controllers
         {
             var senderid = _db.Admins.Where(a => a.Name == HttpContext.Session.GetString(CDictionary.SK_管理者名稱)).Select(a => a.AdminId).FirstOrDefault();
             List<CAdminChatViewModel> chats = new List<CAdminChatViewModel>();
+            ViewBag.SendToName = _db.Admins.Where(a => a.AdminId == id).Select(a => a.Name).FirstOrDefault();
             foreach (var chat in _db.Chats)
             {
                 if (chat.SenderAdmin == senderid && chat.ReceiveAdmin == id)

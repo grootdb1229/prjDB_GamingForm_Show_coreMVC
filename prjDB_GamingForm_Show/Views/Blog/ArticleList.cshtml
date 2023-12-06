@@ -134,7 +134,7 @@
                             </h4>
                         </th>
                         <th>
-                            <h4 style="color:antiquewhite;text-align:center" >
+                            <h4 style="color:antiquewhite;text-align:center">
                                 互動/人氣
                             </h4>
                         </th>
@@ -178,8 +178,7 @@
                                     </a>
                                 </td>
                                 <td style="color:wheat;font-size:15px;text-align:center">
-                                    @((item.Replies != null) ? item.Replies.Count() : 0) /      @* 回文次數 *@
-                                    @Html.DisplayFor(modelItem => item.ViewCount)               @* 瀏覽次數 *@
+                                    @((item.Replies != null) ? item.Replies.Count() : 0) / @* 回文次數 *@@Html.DisplayFor(modelItem => item.ViewCount)               @* 瀏覽次數 *@
                                     <br />
                                     <p style="text-align:center;font-size:12px"> @Html.DisplayFor(modelItem => item.Member.Name) </p>  @* 預計顯示作者名稱在發文時間下面 *@
 

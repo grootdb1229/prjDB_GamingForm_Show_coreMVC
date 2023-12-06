@@ -2,8 +2,8 @@
 <div style="height:350px;width:250px">
     <div style="border-bottom:solid red 1px">
         <img src="~/production/images/@Model.FirstOrDefault().ReceiverImg" alt="..." class="img-circle profile_img" style="height:7vh;width:7vh">
-        <span id="rn" style="font-size:20px;">@Model.FirstOrDefault().ReceiverName</span>
-        <span id="sn" hidden>@Model.FirstOrDefault().SenderName</span>        
+        <span id="rn" style="font-size:20px;">@ViewBag.SendToName</span>
+        <span id="sn" hidden>@Context.Session.GetString(CDictionary.SK_管理者名稱)</span>        
     </div>
     <div id="chatContent" style="height:150px ;max-height: 150px; overflow-y: auto;border:solid blue">
         @foreach (var chat in Model)
@@ -25,7 +25,7 @@
         }
     </div>
     <div class="mb-3">
-        <input type="text" class="form-control" id="message">
+        <input class="form-control" type="text" placeholder="請輸入..." aria-label="default input example" id="message">
         <button type="button" class="btn btn-primary" id="sendButton">傳送訊息</button>
     </div>
 
@@ -60,22 +60,28 @@
     connection.on("SenderUpdContent", function (msg) {
         var messageBlock = document.getElementById("chatContent");
 
-        // 取得當前時間
-        var currentTime = new Date();
-        var timeString = currentTime.toLocaleTimeString();
+        // 獲取當前日期時間
+        var currentDate = new Date();
+
+        // 格式化日期時間為 "yyyy/MM/dd HH:mm"
+        var formattedDateTime = currentDate.getFullYear() + "/" +
+            (currentDate.getMonth() + 1).toString().padStart(2, '0') + "/" +
+            currentDate.getDate().toString().padStart(2, '0') + " " +
+            currentDate.getHours().toString().padStart(2, '0') + ":" +
+            currentDate.getMinutes().toString().padStart(2, '0');
 
         // 創建一個 <div> 用於分辨發送人或接收人
-        var senderDiv = document.createElement("div")
-        senderDiv.style.textAlign = "right";
-        senderDiv.style.color = "red";
-        messageBlock.appendChild(senderDiv)
+        var div = document.createElement("div")
+        div.style.textAlign = "right";
+        div.style.color = "red";
+        messageBlock.appendChild(div)
 
         // 創建一個 <span> 用於顯示時間
         var timeSpan = document.createElement("span");
-        timeSpan.innerText = " (" + timeString + ")";
+        timeSpan.innerText = formattedDateTime;
 
         // 將 <span> 加入訊息內容
-        senderDiv.appendChild(timeSpan);
+        div.appendChild(timeSpan);
 
         // 創建一個新的 <p> 元素
         var newMessage = document.createElement("p");
@@ -83,27 +89,36 @@
         newMessage.innerText = msg;
 
         // 將新元素加入訊息區塊
-        timeSpan.appendChild(newMessage);      
+        timeSpan.appendChild(newMessage);  
+        
+        // 卷軸捲到最底部
+        messageBlock.scrollTop = messageBlock.scrollHeight;
     });
     connection.on("ReceiverUpdContent", function (msg) {
         var messageBlock = document.getElementById("chatContent");
 
-        // 取得當前時間
-        var currentTime = new Date();
-        var timeString = currentTime.toLocaleTimeString();
+        // 獲取當前日期時間
+        var currentDate = new Date();
+
+        // 格式化日期時間為 "yyyy/MM/dd HH:mm"
+        var formattedDateTime = currentDate.getFullYear() + "/" +
+            (currentDate.getMonth() + 1).toString().padStart(2, '0') + "/" +
+            currentDate.getDate().toString().padStart(2, '0') + " " +
+            currentDate.getHours().toString().padStart(2, '0') + ":" +
+            currentDate.getMinutes().toString().padStart(2, '0');
 
         // 創建一個 <div> 用於分辨發送人或接收人
-        var receiverDiv = document.createElement("div")
-        senderDiv.style.textAlign = "left";
-        senderDiv.style.color = "blue";
-        messageBlock.appendChild(receiverDiv)
+        var div = document.createElement("div")
+        div.style.textAlign = "left";
+        div.style.color = "blue";
+        messageBlock.appendChild(div)
 
         // 創建一個 <span> 用於顯示時間
         var timeSpan = document.createElement("span");
-        timeSpan.innerText = " (" + timeString + ")";
+        timeSpan.innerText = formattedDateTime;
 
         // 將 <span> 加入訊息內容
-        receiverDiv.appendChild(timeSpan);
+        div.appendChild(timeSpan);
 
         // 創建一個新的 <p> 元素
         var newMessage = document.createElement("p");
@@ -111,8 +126,13 @@
         newMessage.innerText = msg;
 
         // 將新元素加入訊息區塊
-        timeSpan.appendChild(newMessage);
+        timeSpan.appendChild(newMessage);    
+        
+        // 卷軸捲到最底部
+        messageBlock.scrollTop = messageBlock.scrollHeight;
     });
+    var chatContentDiv = document.getElementById("chatContent");
+    chatContentDiv.scrollTop = chatContentDiv.scrollHeight;
 </script>
 
 

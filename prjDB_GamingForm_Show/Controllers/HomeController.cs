@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿//using AspNetCore;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Query.Internal;
 using Newtonsoft.Json;
 using prjDB_GamingForm_Show.Models;
 using prjDB_GamingForm_Show.Models.Entities;
@@ -91,6 +93,13 @@ namespace prjDB_GamingForm_Show.Controllers
 
             }
             return RedirectToAction("Create", "Member");
+        }
+
+        public IActionResult ShopItems() 
+        {
+            var data = from P in _db.Products
+                       select new { P.ProductName, P.AvailableDate, P.ProductContent , P.FImagePath , P.ProductId };
+            return Json(data);
         }
 
 
