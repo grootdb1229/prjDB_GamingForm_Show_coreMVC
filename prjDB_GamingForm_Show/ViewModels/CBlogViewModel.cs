@@ -15,10 +15,14 @@ namespace prjDB_GamingForm_Show.ViewModels
         public IEnumerable<ArticleAction>? articleActions { get; set; }
         public IEnumerable<Reply>? replies { get; set; }
         public IEnumerable<Member>? members { get; set; }
+        public IEnumerable<ArticleComplain>? articleComplains { get; set; }
+        public IEnumerable<SubTag>? ComplainssubTags { get; set; }
 
         public IEnumerable<Image>? Images { get; set; }
 
-       
+        public IEnumerable<ArticleComplain>? articleComplain  { get; set; }
+
+
 
     }
 }

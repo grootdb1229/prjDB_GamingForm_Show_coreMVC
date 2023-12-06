@@ -40,6 +40,7 @@ namespace prjDB_GamingForm_Show.Controllers
                     blogs = _db.Blogs.Where(b => b.SubTagId != 14 && b.Title.Contains(kw.txtKeyWord)).Include(b => b.SubBlogs).ThenInclude(s => s.Articles).Select(p => p),
                     subBlogs = _db.SubBlogs.Include(a => a.Articles).Select(p => p),
                     articles = _db.Articles.Where(a => a.SubBlog.Blog.SubTagId != 14).OrderByDescending(a => a.ModifiedDate).Select(p => p),
+                    
                 };
             }
             else
@@ -139,7 +140,8 @@ namespace prjDB_GamingForm_Show.Controllers
                 actions = _db.Actions,
                 articleActions = _db.ArticleActions.Where(a => a.ArticleId == AFId).Select(p => p),
                 replies = _db.Replies.Include(a => a.Member).Where(a => a.ArticleId == AFId).ToList(),
-                members = _db.Members
+                members = _db.Members,
+                ComplainssubTags=_db.SubTags.Where(s=>s.TagId==6)
             };
             var artcon = _db.Articles.Where(a => a.ArticleId == AFId).Select(a => a);
 
@@ -324,7 +326,15 @@ namespace prjDB_GamingForm_Show.Controllers
 
             return Json(mo.ToList()[ram]);
         }
+        //------------------檢舉------------
+        [HttpPost]
+        public IActionResult ArticleComplain(ArticleComplain inCom, int? AFId, int? FId)
+        {
+            _db.ArticleComplains.Add(inCom);
+            _db.SaveChanges();
 
+            return RedirectToAction("ArticleContent", "Blog", new { AFId, FId });
+        }
 
 
     }

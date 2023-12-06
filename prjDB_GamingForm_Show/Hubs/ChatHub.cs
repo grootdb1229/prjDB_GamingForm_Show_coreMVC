@@ -127,7 +127,7 @@ namespace prjDB_GamingForm_Show.Hubs
                 chat.SenderAdmin = senderAdminId;
                 chat.ReceiveAdmin = receiveAdminId;
                 chat.ChatContent = message;
-                chat.ModefiedDate = DateTime.UtcNow.ToLocalTime().ToString("yyyy/MM/dd/HH/mm/ss");
+                chat.ModefiedDate = DateTime.UtcNow.ToLocalTime().ToString("yyyy/MM/dd HH:mm");
 
                 _db.Chats.Add(chat);
                 await _db.SaveChangesAsync();

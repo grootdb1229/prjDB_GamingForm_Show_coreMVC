@@ -77,8 +77,9 @@
 <div id="Eroor"></div>
 
 <div class="container px-4 px-lg-5 mt-5">
-            <div class ="" id="BodySelSub"></div>
-            <div id="Hotproduct"></div>
+ <div class ="" id="BodySelSub"></div>
+        <div class=""  id="Hotproduct"></div>
+        <div class="" id="Seenproduct"></div>
     <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center" id="ContentProduct">
 
        @foreach (var item in Model)
@@ -161,6 +162,10 @@
             $('#headerCarousel').load('@Url.Content("~/shop/Carousel")');
         }
         loadCarousel();
+        function loadSeenProduct() {
+            $('#Seenproduct').load('@Url.Content("~/shop/SeenProduct")');
+        }
+        loadSeenProduct();
         function loadBodySel() {
             $('#BodySelSub').load('@Url.Content("~/shop/SelSubtag")');
         }
