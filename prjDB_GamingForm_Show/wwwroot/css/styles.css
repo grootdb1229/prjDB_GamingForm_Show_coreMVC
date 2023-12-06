@@ -4471,7 +4471,7 @@ textarea.form-control-lg {
 }
 
 .accordion-item {
-  color: var(--bs-accordion-color);
+  /*color: var(--bs-accordion-color);老朱*/
   background-color: var(--bs-accordion-bg);
   border: var(--bs-accordion-border-width) solid var(--bs-accordion-border-color);
 }
