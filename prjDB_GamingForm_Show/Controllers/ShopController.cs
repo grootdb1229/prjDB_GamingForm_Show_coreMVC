@@ -266,8 +266,7 @@ namespace prjDB_GamingForm_Show.Controllers
                     return View(List2);
                 }
             }
-
-
+     
             public IActionResult IndexbyAjax(string CK)
             {
                 _db.ProductTags.Load();
@@ -477,12 +476,22 @@ namespace prjDB_GamingForm_Show.Controllers
                 return Json(Lang);
             }
             public ActionResult GameTag()
-            {
-                _db.SubTags.Load();
-                var SelSub = _db.SubTags.Where(p => p.TagId == 1).Select(s => new { s.SubTagId, s.Name }).ToList();
-                return Json(SelSub);
-            }
-            public ActionResult WhenYouEditTags(int? id)
+                {
+				// 假設 SubTag 類別有一個名為 ProductTags 的導覽屬性
+				var SelSub = _db.SubTags
+					.Where(p => p.TagId == 1)
+					.Select(s => new
+					{
+						s.SubTagId,
+					    s.Name,
+						ProductTagCount = s.ProductTags.Count() // 使用導覽屬性的 Count 方法
+					})
+					.ToList();
+
+				return Json(SelSub);
+
+			}
+			public ActionResult WhenYouEditTags(int? id)
             {
                 _db.ProductTags.Load();
                 //Trace.WriteLine("BBBBB" + id);
