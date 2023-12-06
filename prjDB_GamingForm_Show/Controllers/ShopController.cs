@@ -136,18 +136,29 @@ namespace prjDB_GamingForm_Show.Controllers
             //    return View(List2);
             //}
             public IActionResult Carousel()
-            {   _db.Products.Load();
-                _db.ProductTags.Load();
+            {  
                 return PartialView();
-             
             }
 
             public IActionResult SelSubtag()
             {
-              
                 return PartialView();
-
             }
+			public IActionResult HotProduct()
+			{
+				return PartialView();
+			}
+            public IActionResult HotTopFive() //取熱門商品
+            {
+                var TopFive=_db.Products.Select(x=>new { x.FImagePath,x.ViewCount,x.ProductName,x.ProductId}).OrderByDescending(x=>x.ViewCount).Take(5).ToList();
+                return Json(TopFive);
+            }
+            public void Cookie(int? id) 
+            {
+            
+            }
+
+
             public IActionResult Index(CKeyWord ck)
             {
 
@@ -476,20 +487,17 @@ namespace prjDB_GamingForm_Show.Controllers
                 return Json(Lang);
             }
             public ActionResult GameTag()
-                {
-				// 假設 SubTag 類別有一個名為 ProductTags 的導覽屬性
+                {		
 				var SelSub = _db.SubTags
 					.Where(p => p.TagId == 1)
 					.Select(s => new
 					{
 						s.SubTagId,
 					    s.Name,
-						ProductTagCount = s.ProductTags.Count() // 使用導覽屬性的 Count 方法
+						ProductTagCount = s.ProductTags.Count()
 					})
 					.ToList();
-
 				return Json(SelSub);
-
 			}
 			public ActionResult WhenYouEditTags(int? id)
             {
@@ -661,6 +669,9 @@ namespace prjDB_GamingForm_Show.Controllers
                     SubTagName=s
                     
                 };
+                x.ViewCount++;
+                _db.SaveChanges();
+
                 return View(ProductInfo);
             }
             public IActionResult AddToCar(int? id)

@@ -77,7 +77,8 @@
 <div id="Eroor"></div>
 
 <div class="container px-4 px-lg-5 mt-5">
-            <div class ="" id="BodySelSub"></div>
+ <div class ="" id="BodySelSub"></div>
+        <div class=""  id="Hotproduct"></div>
     <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center" id="ContentProduct">
 
        @foreach (var item in Model)
@@ -155,6 +156,7 @@
 @section  Scripts
     {
     <script>
+        //PartialView
         function loadCarousel() {
             $('#headerCarousel').load('@Url.Content("~/shop/Carousel")');
         }
@@ -163,6 +165,13 @@
             $('#BodySelSub').load('@Url.Content("~/shop/SelSubtag")');
         }
         loadBodySel();
+        function loadHotProduct() {
+            $('#Hotproduct').load('@Url.Content("~/shop/HotProduct")');
+        }
+        loadHotProduct();
+
+        //PartialView
+
         var queryButton = document.getElementById('QueryAjax');
 
 
