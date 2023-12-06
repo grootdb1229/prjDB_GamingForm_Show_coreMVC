@@ -515,7 +515,7 @@ namespace prjDB_GamingForm_Show.Controllers
                     x.AvailableDate = product.AvailableDate;
                     x.ProductContent = product.ProductContent;
                     x.UnitStock = product.UnitStock;
-                    x.StatusId = (int)product.StatusID;
+                    x.StatusId = 7;
                     x.MemberId = product.MemberID;
 
                     _db.Products.Add(x);
@@ -775,8 +775,8 @@ namespace prjDB_GamingForm_Show.Controllers
                 List<CShoppingCarViewModel> car = JsonSerializer.Deserialize<List<CShoppingCarViewModel>>(json);
                 Order order = new Order()
                 {
-                    MemberId = 34,
-                    ShipName = _db.Members.FirstOrDefault(x => x.MemberId == 34).Name,
+                    MemberId = HttpContext.Session.GetInt32(CDictionary.SK_UserID),
+                    ShipName = _db.Members.FirstOrDefault(x => x.MemberId == HttpContext.Session.GetInt32(CDictionary.SK_UserID)).Name,
                     OrderDate = DateTime.Now,
                     PaymentId = payment,
                     StatusId = 13,
@@ -789,7 +789,7 @@ namespace prjDB_GamingForm_Show.Controllers
                 {
                     OrderProduct orderproduct = new OrderProduct()
                     {
-                        OrderId = _db.Orders.Where(x => x.MemberId == 34).OrderByDescending(x => x.OrderId).First().OrderId,
+                        OrderId = _db.Orders.Where(x => x.MemberId == HttpContext.Session.GetInt32(CDictionary.SK_UserID)).OrderByDescending(x => x.OrderId).First().OrderId,
                         ProductId = p.ProductID,
                         UnitPrice = p.Price,
                         Quantinty = p.Count,
