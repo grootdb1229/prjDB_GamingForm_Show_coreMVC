@@ -121,50 +121,27 @@
                                 @like
                             </span>
                         }
-
+                        @*-----------------漢堡-----------------*@
                         <ul class="nav nav-pills">
                             
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">Dropdown</a>
                                 <ul class="dropdown-menu">
-                                    <li>
-                                        @{
-                                            if (Context.Session.GetInt32(CDictionary.SK_UserID) == null)
-                                            {
-                                                <button style="background:#a81d1d ;border:none;height:52.5px" type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-                                                    發表回覆
-                                                </button>
-                                            }
-                                            else
-                                            {
-                                                @Html.ActionLink("發表回覆", "ReplyCreate", "Blog", new { AFId = Model.articles.FirstOrDefault().ArticleId, FId = Model.blogs.FirstOrDefault().BlogId }, new { @class = "btn" })
-                                            }
-                                        }
+                                    <li >
+                                        <a class="dropdown-item" href="@Url.Action("ReplyCreate", "Blog", new { AFId = Model.articles.FirstOrDefault().ArticleId, FId = Model.blogs.FirstOrDefault().BlogId})" style="color: black;">
+                                            發表回覆
+                                        </a>
                                     </li>
                                     <li>
-                                        @if (Model.articles.First().MemberId == Context.Session.GetInt32(CDictionary.SK_UserID))
-                                        {
-
-                                            <button type="button" class="btn btn-warning" style="float:right;margin: 0 5px" onclick="location.href='@Url.Action( "ArticleEdit","Blog", new { AFId = Model.articles.FirstOrDefault().ArticleId ,FId = Model.blogs.FirstOrDefault().BlogId})'">修改</button>
-                                            <button type="button" class="btn btn-secondary" style="float:right;margin:0 5px" onclick="ArticleDelete()">刪除文章</button>
-                                        }
-                                        <script>
-                                            function ArticleDelete() {
-                                                var result = confirm('確定刪除嗎?');
-                                                if (result) {
-                                                    location.href = '@Html.Raw(Url.Action("ArticleDelete", "Blog", new { FId = Model.blogs.FirstOrDefault().BlogId, AFId = Model.articles.FirstOrDefault().ArticleId }))';
-                                                }
-                                            }
-                                        </script>
+                                        123
                                     </li>
-                                    <li><a class="dropdown-item" href="#">Something else here</a></li>
                                     <li><hr class="dropdown-divider"></li>
                                     <li><a class="dropdown-item" href="#">Separated link</a></li>
                                 </ul>
                             </li>
                           
                         </ul>
-
+                        @*-----------------漢堡-----------------*@
 
                         @if (Model.articles.First().MemberId == Context.Session.GetInt32(CDictionary.SK_UserID))
                         {

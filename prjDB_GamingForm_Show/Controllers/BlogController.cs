@@ -40,6 +40,7 @@ namespace prjDB_GamingForm_Show.Controllers
                     blogs = _db.Blogs.Where(b => b.SubTagId != 14 && b.Title.Contains(kw.txtKeyWord)).Include(b => b.SubBlogs).ThenInclude(s => s.Articles).Select(p => p),
                     subBlogs = _db.SubBlogs.Include(a => a.Articles).Select(p => p),
                     articles = _db.Articles.Where(a => a.SubBlog.Blog.SubTagId != 14).OrderByDescending(a => a.ModifiedDate).Select(p => p),
+                    
                 };
             }
             else

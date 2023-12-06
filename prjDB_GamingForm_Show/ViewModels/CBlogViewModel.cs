@@ -18,7 +18,9 @@ namespace prjDB_GamingForm_Show.ViewModels
 
         public IEnumerable<Image>? Images { get; set; }
 
-       
+        public IEnumerable<ArticleComplain>? articleComplain  { get; set; }
+
+
 
     }
 }
