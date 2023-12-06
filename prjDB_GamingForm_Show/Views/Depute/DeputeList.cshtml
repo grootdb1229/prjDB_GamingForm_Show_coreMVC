@@ -38,12 +38,29 @@
         <div class="accordion-item">
             <h2 class="accordion-header">
                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
-                    Accordion Item #1
+                    進階搜尋:
                 </button>
             </h2>
             <div id="flush-collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
-                <div class="accordion-body">Placeholder content for this accordion, which is intended to demonstrate the <code>.accordion-flush</code> class. This is the first item's accordion body.</div>
+                <div  class="accordion-body">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col order-8">
+                                <label id="test">- 大類別</label>
+                            </div>
+                            <div class="col order-12">
+                             
+                            </div>
+                            <div class="col order-1">
+                                Third, but first
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+
             </div>
+
         </div>
     </div>
     <div class="row g-4" style="float:right;">
@@ -133,8 +150,49 @@
         const selectSkills = document.querySelector('#skill');
         const selectRegions = document.querySelector('#regions');
         const selSalary = document.querySelector('#money');
+        test()
+        function test() {
+            $.ajax('@Url.Content("~/Depute/SkillClassess")', {
+                "type": 'Post', //POST、PUT、DELETE
+                "dataType": "json"
+            })
+                .done((data) => {
+                    const SkillClassessFrag = $(document.createDocumentFragment());
+                    const SkillClassess = data.map(SkillClassess => 
+                        `<div class="form-check">
+                                                  <input class="form-check-input" type="checkbox" value="${SkillClassess.name}" name="${SkillClassess.skillClassId}">
+                                                  <label class="form-check-label" for="${SkillClassess.skillClassId}">
+                                    ${SkillClassess.name}
+                          </label>
+                         </div>
+                         `)
+                    SkillClassessFrag.append(SkillClassess);
+                    $('#test').after(SkillClassessFrag)
+                })
+            // loadSkill();
+        }
+        function test2() {
+            $.ajax('@Url.Content("~/Depute/Region")', {
+                "type": 'Post', //POST、PUT、DELETE
+                "dataType": "json"
+            })
+                .done((data) => {
+                    const RegionFrag = $(document.createDocumentFragment());
+                    const Regions = data.map(Regions => 
+                        `
+                                 <div class="col order-12">
+                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                        <label class="form-check-label" for="flexCheckDefault">
+                         ${Regions.city}
+                        </label>
+                        </div>
+                         `
+                    )
 
-
+                    RegionFrag.append(Regions);
+                    $('#test2').after(RegionFrag)
+                })
+        }
         //基本搜尋&&進階搜尋///
         loadSkillClassess();
         $('#search').click(() => { loadList() });
@@ -188,12 +246,12 @@
                 "dataType": "json"
             })
                 .done((data) => {
-                    const CookieFrag = $(document.createDocumentFragment());
+                    const SkillClassessFrag = $(document.createDocumentFragment());
                     const fst = '<option name="txtSkillClass" value="0">請選擇...</option>'
-                    CookieFrag.append(fst);
-                    const Cookies = data.map(SkillClassess => `<option name="txtSkillClass" value='${SkillClassess.skillClassId}'>${SkillClassess.name}</option>`)
-                    CookieFrag.append(Cookies);
-                    $('#skillclass').html(CookieFrag)
+                    SkillClassessFrag.append(fst);
+                    const SkillClassess = data.map(SkillClassess => `<option name="txtSkillClass" value='${SkillClassess.skillClassId}'>${SkillClassess.name}</option>`)
+                    SkillClassessFrag.append(SkillClassess);
+                    $('#skillclass').html(SkillClassessFrag)
                     loadSkill();
                 })
             // loadSkill();

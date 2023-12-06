@@ -25,6 +25,8 @@ public partial class Product
 
     public string? FImagePath { get; set; }
 
+    public int Goods { get; set; }
+
     public virtual Member? Member { get; set; }
 
     public virtual ICollection<OrderProduct> OrderProducts { get; set; } = new List<OrderProduct>();
@@ -37,7 +39,7 @@ public partial class Product
 
     public virtual ICollection<ProductTag> ProductTags { get; set; } = new List<ProductTag>();
 
-    public virtual Status? Status { get; set; } = null!;
+    public virtual Status Status { get; set; } = null!;
 
     public virtual ICollection<WishList> WishLists { get; set; } = new List<WishList>();
 }
