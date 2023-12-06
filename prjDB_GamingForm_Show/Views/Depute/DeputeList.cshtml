@@ -160,18 +160,53 @@
                     const SkillClassessFrag = $(document.createDocumentFragment());
                     const SkillClassess = data.map(SkillClassess => 
                         `<div class="form-check">
-                                                  <input class="form-check-input" type="checkbox" value="${SkillClassess.name}" name="${SkillClassess.skillClassId}">
-                                                  <label class="form-check-label" for="${SkillClassess.skillClassId}">
-                                    ${SkillClassess.name}
-                          </label>
+                                 <input class="form-check-input" type="checkbox" value="${SkillClassess.name}" id="${SkillClassess.name}">
+                                 <label class="form-check-label" for="${SkillClassess.name}">
+                         ${SkillClassess.name}
+                         </label>
                          </div>
                          `)
                     SkillClassessFrag.append(SkillClassess);
                     $('#test').after(SkillClassessFrag)
+
+                    let checkValue;
+                    $('.form-check-input').click(function () {
+                        var isChecked = $(this).is(":checked");
+                        console.log(isChecked)
+                        
+                        checkValue = $(this).val();
+                        console.log(checkValue); //on
+                    });
                 })
             // loadSkill();
         }
+
+
         function test2() {
+            $.ajax('@Url.Content("~/Depute/Skills")', {
+                "type": 'Post', //POST、PUT、DELETE
+                "data": { "id": selSkillClasses.value },
+                "dataType": "json"
+            })
+                .done((data) => {
+                    const SkillFrag = $(document.createDocumentFragment());
+                    const Skills = data.map(Skills =>
+                        `
+                        <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="${Skills.name}" id="${Skills.name}">
+                        <label class="form-check-label" for="${Skills.name}">
+                        ${Skills.name}
+                        </label>
+                        </div>
+                       `
+                    )
+                    SkillFrag.append(Skills);
+                    $('#skill').html(SkillFrag);
+                })
+            loadRegion();
+        }
+
+        function test3() {
             $.ajax('@Url.Content("~/Depute/Region")', {
                 "type": 'Post', //POST、PUT、DELETE
                 "dataType": "json"
