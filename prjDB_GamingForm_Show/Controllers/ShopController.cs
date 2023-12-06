@@ -148,18 +148,65 @@ namespace prjDB_GamingForm_Show.Controllers
 			{
 				return PartialView();
 			}
+            public IActionResult SeenProduct()
+            {
+                return PartialView();
+            }
             public IActionResult HotTopFive() //取熱門商品
             {
                 var TopFive=_db.Products.Select(x=>new { x.FImagePath,x.ViewCount,x.ProductName,x.ProductId}).OrderByDescending(x=>x.ViewCount).Take(5).ToList();
                 return Json(TopFive);
             }
-            public void Cookie(int? id) 
+
+
+            public void Cookie(int? id)  //Cookies設定
             {
+                int userId = 0;//檢測有沒有登入
+                if(HttpContext.Session.GetInt32(CDictionary.SK_UserID)!=null) //利用Session確認登入狀況
+                    userId=(int)HttpContext.Session.GetInt32(CDictionary.SK_UserID); //有登入複寫Userid，反之維持0。
+             
+                string record = "";
+                if (HttpContext.Request.Cookies[userId.ToString()]!=null) //此用戶沒有Cookies讓他的紀錄=""，有的畫幫他調閱。
+                    record = HttpContext.Request.Cookies[userId.ToString()];
             
+                CookieOptions options = new CookieOptions();
+                options.Expires = DateTime.Now.AddDays(30);//餅乾效期設定
+                record += $"{id},";//紀錄id 用，逗號分隔，待會以逗號切割Split。
+                HttpContext.Response.Cookies.Append(userId.ToString(), record, options);//設定Cookies 同時裡面只能接受字串所以用ToString
+            }
+
+            public IActionResult GetCookie() ///Cookie存取客人看過的商品
+            {
+              
+                List<Product> CookieList = new List<Product>();
+                int userId = 0;
+                if (HttpContext.Session.GetInt32(CDictionary.SK_UserID) != null)
+                    userId = (int)HttpContext.Session.GetInt32(CDictionary.SK_UserID);
+                string record = "";
+                if (HttpContext.Request.Cookies[userId.ToString()] != null)
+                    record = HttpContext.Request.Cookies[userId.ToString()];
+                string[] strResult = record.Split(',');
+                strResult = strResult.Reverse().Distinct().ToArray();
+                IEnumerable<Product> datas = null;
+                foreach (var item in strResult)
+                {
+                    if (!string.IsNullOrEmpty(item))
+                    {
+                        datas = from n in _db.Products
+                                where n.ProductId == Convert.ToInt32(item)
+                                select n;
+                        foreach (var data in datas)
+                        {
+                            CookieList.Add(data);
+                        }
+                    }
+
+                }
+                return Json(CookieList.Take(5));
             }
 
 
-            public IActionResult Index(CKeyWord ck)
+                public IActionResult Index(CKeyWord ck)
             {
 
                 String CK = ck.txtKeyword;
@@ -648,6 +695,7 @@ namespace prjDB_GamingForm_Show.Controllers
 
             public ActionResult Details(int id)
             {
+                Cookie(id);
                 _db.Products.Load();
                 Product x = _db.Products.FirstOrDefault(p => p.ProductId == id);
                
