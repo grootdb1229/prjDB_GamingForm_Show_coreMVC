@@ -3,14 +3,14 @@
     <div style="border-bottom:solid red 1px">
         <img src="~/production/images/@Model.FirstOrDefault().ReceiverImg" alt="..." class="img-circle profile_img" style="height:7vh;width:7vh">
         <span id="rn" style="font-size:20px;">@Model.FirstOrDefault().ReceiverName</span>
-        <span id="sn" hidden>@Model.FirstOrDefault().SenderName</span>
+        <span id="sn" hidden>@Model.FirstOrDefault().SenderName</span>        
     </div>
     <div id="chatContent" style="height:150px ;max-height: 150px; overflow-y: auto;border:solid blue">
         @foreach (var chat in Model)
         {
             if(chat.SenderName == Context.Session.GetString(CDictionary.SK_管理者名稱))
             {
-               <div style="text-align:right; color:red">
+                <div style="text-align:right; color:red">
                     <span>@chat.ModefiedDate</span>
                     <p>@chat.ChatContent</p>
                </div>
@@ -57,19 +57,53 @@
         });
     }
     // 更新聊天內容事件
-    connection.on("UpdContent", function (msg) {
-        var messageBlock = document.getElementById("chatContent");       
+    connection.on("SenderUpdContent", function (msg) {
+        var messageBlock = document.getElementById("chatContent");
 
         // 取得當前時間
         var currentTime = new Date();
         var timeString = currentTime.toLocaleTimeString();
+
+        // 創建一個 <div> 用於分辨發送人或接收人
+        var senderDiv = document.createElement("div")
+        senderDiv.style.textAlign = "right";
+        senderDiv.style.color = "red";
+        messageBlock.appendChild(senderDiv)
 
         // 創建一個 <span> 用於顯示時間
         var timeSpan = document.createElement("span");
         timeSpan.innerText = " (" + timeString + ")";
 
         // 將 <span> 加入訊息內容
-        messageBlock.appendChild(timeSpan);
+        senderDiv.appendChild(timeSpan);
+
+        // 創建一個新的 <p> 元素
+        var newMessage = document.createElement("p");
+        // 設定新元素的內容為用戶傳遞的訊息
+        newMessage.innerText = msg;
+
+        // 將新元素加入訊息區塊
+        timeSpan.appendChild(newMessage);      
+    });
+    connection.on("ReceiverUpdContent", function (msg) {
+        var messageBlock = document.getElementById("chatContent");
+
+        // 取得當前時間
+        var currentTime = new Date();
+        var timeString = currentTime.toLocaleTimeString();
+
+        // 創建一個 <div> 用於分辨發送人或接收人
+        var receiverDiv = document.createElement("div")
+        senderDiv.style.textAlign = "left";
+        senderDiv.style.color = "blue";
+        messageBlock.appendChild(receiverDiv)
+
+        // 創建一個 <span> 用於顯示時間
+        var timeSpan = document.createElement("span");
+        timeSpan.innerText = " (" + timeString + ")";
+
+        // 將 <span> 加入訊息內容
+        receiverDiv.appendChild(timeSpan);
 
         // 創建一個新的 <p> 元素
         var newMessage = document.createElement("p");
@@ -78,9 +112,6 @@
 
         // 將新元素加入訊息區塊
         timeSpan.appendChild(newMessage);
-
-        // 將新元素加入訊息區塊
-        messageBlock.appendChild(timeSpan);
     });
 </script>
 

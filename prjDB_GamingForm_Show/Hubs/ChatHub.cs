@@ -109,10 +109,14 @@ namespace prjDB_GamingForm_Show.Hubs
 
 
             // 接收人
-            await Clients.Client(sendToID).SendAsync("UpdContent", senderUserName + " 私訊向你說: " + message);
+            if (sendToID != null)
+            {
+                await Clients.Client(sendToID).SendAsync("ReceiverUpdContent", message);
+            }
+            
 
             // 發送人
-            await Clients.Client(selfSid).SendAsync("UpdContent", "你向 " + ConnectedUsers.FirstOrDefault(u => u.ConnectionId == sendToID)?.UserName + " 私訊說: " + message);
+            await Clients.Client(selfSid).SendAsync("SenderUpdContent", message);
 
 
             var senderAdminId = _db.Admins.FirstOrDefault(a => a.Name == selfID).AdminId;
