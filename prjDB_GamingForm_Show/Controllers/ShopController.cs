@@ -148,10 +148,14 @@ namespace prjDB_GamingForm_Show.Controllers
 			{
 				return PartialView();
 			}
-            public IActionResult HotTopFive() 
+            public IActionResult HotTopFive() //取熱門商品
             {
-                var TopFive=_db.Products.Select(x=>new { x.FImagePath,x.ViewCount}).OrderByDescending(x=>x.ViewCount).Take(5).ToList();
+                var TopFive=_db.Products.Select(x=>new { x.FImagePath,x.ViewCount,x.ProductName,x.ProductId}).OrderByDescending(x=>x.ViewCount).Take(5).ToList();
                 return Json(TopFive);
+            }
+            public void Cookie(int? id) 
+            {
+            
             }
 
 
@@ -483,20 +487,17 @@ namespace prjDB_GamingForm_Show.Controllers
                 return Json(Lang);
             }
             public ActionResult GameTag()
-                {
-				// 假設 SubTag 類別有一個名為 ProductTags 的導覽屬性
+                {		
 				var SelSub = _db.SubTags
 					.Where(p => p.TagId == 1)
 					.Select(s => new
 					{
 						s.SubTagId,
 					    s.Name,
-						ProductTagCount = s.ProductTags.Count() // 使用導覽屬性的 Count 方法
+						ProductTagCount = s.ProductTags.Count()
 					})
 					.ToList();
-
 				return Json(SelSub);
-
 			}
 			public ActionResult WhenYouEditTags(int? id)
             {
