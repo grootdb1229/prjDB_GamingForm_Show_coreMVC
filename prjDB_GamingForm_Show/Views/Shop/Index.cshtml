@@ -32,7 +32,7 @@
                                 <input type="text" class="form-control border-0" placeholder="Keyword" id="Kw" name="txtKeyword" />
                             </div>
                             <div class="col-md-2">
-                                <input type="submit" value="查詢" style="padding: 0.375rem 0.75rem" />
+                                <input id="QueryAjax" type="button" value="查詢" style="padding: 0.375rem 0.75rem" />
                             </div>
                             <div class="col-md-3">
                                 @Html.ActionLink("我要上架", "Create", "Shop",null, new { @class = "btn btn-outline-dark mt-auto" })
@@ -76,13 +76,6 @@
 </p>
 <div id="Eroor"></div>
 
-@if (!string.IsNullOrEmpty(ViewBag.Message))///當搜尋沒有結果時
-{
-    <div class="alert alert-dark" role="alert">
-        @ViewBag.Message
-    </div>
-}else{
-
 <div class="container px-4 px-lg-5 mt-5">
             <div class ="" id="BodySelSub"></div>
     <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center" id="ContentProduct">
@@ -97,19 +90,19 @@
                     <!-- Product image-->
                     <img class="card-img-top" src="~/images/shop/@item.FImagePath" alt="..." style="height:25vh; " />
                     <!-- Product details-->
-                    <div class="card-body p-4">
+                            <div class="card-body p-4" style="background-color:#4F4F4F">
                         <div class="text-center">
                             <div>
                                 @{
                                     string[] tags = item.SubTagName.Split('/');
                                     foreach (var t in tags)
                                     {
-                                                                <span class="badge text-bg-light">@t</span>
+                                                                                                    <span class="badge text-bg-light">@t</span>
                                     }
                                 }
                             </div>
                             <!-- Product name-->
-                            <h5 class="fw-bolder">@Html.DisplayFor(modelItem => item.ProductName)</h5>
+                             <h5 class="fw-bolder" style="color:black">@Html.DisplayFor(modelItem => item.ProductName)</h5>
                             <!-- Product reviews-->
                             <div class="d-flex justify-content-center small text-warning mb-2">
                                 <div class="bi-star-fill"></div>
@@ -127,7 +120,7 @@
                     
 
                     <!-- Product actions-->
-                    <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                            <div class="card-footer p-4 pt-0 border-top-0" style="background-color:#4F4F4F">
                         @using (Html.BeginForm("AddToCar", "Shop", FormMethod.Post))
                         {
                             @Html.TextBox("txtCount", "1", new { @class = "form-control text-center me-3 textbox", @style="display:none"})
@@ -151,7 +144,7 @@
         }
     </div>
 </div>
-    }
+    
 </body>
 <style>
     .textbox {
@@ -170,7 +163,10 @@
             $('#BodySelSub').load('@Url.Content("~/shop/SelSubtag")');
         }
         loadBodySel();
+        var queryButton = document.getElementById('QueryAjax');
 
+
+        queryButton.addEventListener('click', function () { QueryByAjax();});
 
         var ProductContent = document.querySelector('#ContentProduct');
         var DataControl = document.querySelector('#SortControl');//選項
@@ -203,8 +199,13 @@
             ProductContent.innerHTML = '';
             const response = await fetch(`@Url.Content("~/Shop/IndexbyPrice_H")?CK=${queryKeyword}`);
             const data = await response.json();
-            const productCards = data.map(createProductCard);
-            ProductContent.innerHTML = productCards.join("");
+            if (data.message) {
+                ProductContent.innerHTML = '<div class="alert alert-dark" role = "alert" > "查無資料，請確認輸入內容" </div>'
+            }
+            else {
+                const productCards = data.map(createProductCard);
+                ProductContent.innerHTML = productCards.join("");
+            }
                
         }    
         async function SortByDate() {
@@ -212,19 +213,41 @@
             ProductContent.innerHTML = '';
             const response = await fetch(`@Url.Content("~/Shop/IndexbyDate")?CK=${queryKeyword}`);
             const data = await response.json();
-            const productCards = data.map(createProductCard);
-            ProductContent.innerHTML = productCards.join("");
+            if (data.message) {
+                ProductContent.innerHTML = '<div class="alert alert-dark" role = "alert" > "查無資料，請確認輸入內容" </div>'
+            }
+            else {
+                const productCards = data.map(createProductCard);
+                ProductContent.innerHTML = productCards.join("");
+            }
         }
         async function SortByPrice_l() {
             var queryKeyword = document.querySelector('#Kw').value;
             ProductContent.innerHTML = '';
             const response = await fetch(`@Url.Content("~/Shop/IndexbyPrice_L")?CK=${queryKeyword}`);
             const data = await response.json();
-            const productCards = data.map(createProductCard);
-            ProductContent.innerHTML = productCards.join("");
+            if (data.message) {
+                ProductContent.innerHTML = '<div class="alert alert-dark" role = "alert" > "查無資料，請確認輸入內容" </div>'
+            }
+            else {
+                const productCards = data.map(createProductCard);
+                ProductContent.innerHTML = productCards.join("");
+            }
         }
-       
-
+        async function QueryByAjax() 
+        {
+            var queryKeyword = document.querySelector('#Kw').value;
+            ProductContent.innerHTML = '';
+            const response = await fetch(`@Url.Content("~/Shop/IndexbyAjax")?CK=${queryKeyword}`);
+            const data = await response.json();
+            console.log(data);
+            if (data.message) {
+                ProductContent.innerHTML = '<div class="alert alert-dark" role = "alert" > "查無資料，請確認輸入內容" </div>'}
+            else {
+                const productCards = data.map(createProductCard);
+                ProductContent.innerHTML = productCards.join("");
+            }
+        }
         //標籤搜尋
         var tags = document.querySelector('#tags');
         var tagclick = document.querySelector('.tagclick');
@@ -254,10 +277,10 @@
                     <div class="card h-100">
                         <div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem">Sale</div>
                         <img class="card-img-top" src="../images/shop/${product.FImagePath}" alt="..." style="height:25vh; " />
-                        <div class="card-body p-4">
+                                <div class="card-body p-4"style="background-color:#4F4F4F">
                             <div class="text-center">
                                 ${product.SubTagName.split('/').map(tag => `<span class="badge text-bg-light">${tag}</span>`).join("")}
-                                <h5 class="fw-bolder">${product.ProductName}</h5>
+                                        <h5 class="fw-bolder" style="color:black">${product.ProductName}</h5>
                                 <div class="d-flex justify-content-center small text-warning mb-2">
                                     <div class="bi-star-fill"></div>
                                     <div class="bi-star-fill"></div>
@@ -269,9 +292,8 @@
                                 <span style="color:black">${product.Price}</span>
                             </div>
                         </div>
-                        <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                                <div class="card-footer p-4 pt-0 border-top-0 " style="background-color:#4F4F4F">
                             <form action="/Shop/AddToCar" method="post">
-                                <input type="text" name="txtCount" value="1" class="form-control text-center me-3 textbox" />
                                 <div class="text-center">
                                     <a href="/Shop/Details?id=${product.ProductId}" class="btn btn-outline-dark mt-auto">查看商品</a>
                                 </div>
@@ -289,6 +311,6 @@
             `;
         }
 
-
+              
     </script>
 }

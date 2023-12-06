@@ -266,7 +266,53 @@ namespace prjDB_GamingForm_Show.Controllers
                     return View(List2);
                 }
             }
+     
+            public IActionResult IndexbyAjax(string CK)
+            {
+                _db.ProductTags.Load();
+                _db.Products.Load();
+                _db.SubTags.Load();
 
+                var data = _db.ProductTags
+                    .Where(n => (string.IsNullOrEmpty(CK) || n.Product.ProductName.Contains(CK)) && n.Product.StatusId == 1)
+                    .Select(n => new
+                    {
+                        n.Product.AvailableDate,
+                        n.Product.ProductId,
+                        n.Product.ProductName,
+                        n.Product.Price,
+                        n.Product.FImagePath,
+                        SubTagName = n.SubTag.Name
+                    })           
+                    .ToList();
+
+                List<CShopPageViewModel> List = data.Select(item =>
+                {   //將每個字以/串再一起。
+                    string s = string.Join("/", _db.ProductTags.Where(x => x.ProductId == item.ProductId).Select(x => x.SubTag.Name));
+                    return new CShopPageViewModel //返還這個物件 Lambda多行表達需要加return，不然將會返還錯誤的東西，部分程式碼將不被視為返還值之一
+                    {
+                        ProductId = item.ProductId,
+                        ProductName = item.ProductName,
+                        Price = item.Price,
+                        FImagePath = item.FImagePath,
+                        SubTagName = s
+                    };
+                }).ToList();
+                ///篩掉重複資料
+                List<CShopPageViewModel> List2 = List.GroupBy(p => p.ProductId)
+                                                     .Select(group => group.First())
+                                                     .ToList();
+
+                if (List2.Count == 0)//如果沒有任何搜尋結果
+                {              
+                    return Json(new { message = "查無資料，請確認輸入內容" });
+                }
+
+                string jsonResult = JsonSerializer.Serialize(List2);
+                //Trace.WriteLine("AAA" + jsonResult);
+                //Trace.WriteLine("BBB" + List2);
+                return Content(jsonResult, "application/json");
+            }
 
             public IActionResult IndexbyDate(string CK)
             {
@@ -307,9 +353,9 @@ namespace prjDB_GamingForm_Show.Controllers
 
                 if (List2.Count == 0)//如果沒有任何搜尋結果
                 {
-                    ViewBag.Message = "查無資料，請確認輸入內容";
-                    return Content("{'message': '查無資料，請確認輸入內容'}", "application/json");
+                    return Json(new { message = "查無資料，請確認輸入內容" });
                 }
+
 
                 string jsonResult = JsonSerializer.Serialize(List2);
                 //Trace.WriteLine("AAA" + jsonResult);
@@ -353,7 +399,10 @@ namespace prjDB_GamingForm_Show.Controllers
                                                      .Select(group => group.First())
                                                      .ToList();
 
-         
+                if (List2.Count == 0)//如果沒有任何搜尋結果
+                {
+                    return Json(new { message = "查無資料，請確認輸入內容" });
+                }
 
                 string jsonResult = JsonSerializer.Serialize(List2);
                 //Trace.WriteLine("AAA" + jsonResult);
@@ -400,8 +449,7 @@ namespace prjDB_GamingForm_Show.Controllers
 
                 if (List2.Count == 0)//如果沒有任何搜尋結果
                 {
-                    ViewBag.Message = "查無資料，請確認輸入內容";
-                    return Content("{'message': '查無資料，請確認輸入內容'}", "application/json");
+                    return Json(new { message = "查無資料，請確認輸入內容" });
                 }
 
                 string jsonResult = JsonSerializer.Serialize(List2);
@@ -428,12 +476,22 @@ namespace prjDB_GamingForm_Show.Controllers
                 return Json(Lang);
             }
             public ActionResult GameTag()
-            {
-                _db.SubTags.Load();
-                var SelSub = _db.SubTags.Where(p => p.TagId == 1).Select(s => new { s.SubTagId, s.Name }).ToList();
-                return Json(SelSub);
-            }
-            public ActionResult WhenYouEditTags(int? id)
+                {
+				// 假設 SubTag 類別有一個名為 ProductTags 的導覽屬性
+				var SelSub = _db.SubTags
+					.Where(p => p.TagId == 1)
+					.Select(s => new
+					{
+						s.SubTagId,
+					    s.Name,
+						ProductTagCount = s.ProductTags.Count() // 使用導覽屬性的 Count 方法
+					})
+					.ToList();
+
+				return Json(SelSub);
+
+			}
+			public ActionResult WhenYouEditTags(int? id)
             {
                 _db.ProductTags.Load();
                 //Trace.WriteLine("BBBBB" + id);
@@ -466,7 +524,7 @@ namespace prjDB_GamingForm_Show.Controllers
                     x.AvailableDate = product.AvailableDate;
                     x.ProductContent = product.ProductContent;
                     x.UnitStock = product.UnitStock;
-                    x.StatusId = (int)product.StatusID;
+                    x.StatusId = 7;
                     x.MemberId = product.MemberID;
 
                     _db.Products.Add(x);
@@ -726,8 +784,8 @@ namespace prjDB_GamingForm_Show.Controllers
                 List<CShoppingCarViewModel> car = JsonSerializer.Deserialize<List<CShoppingCarViewModel>>(json);
                 Order order = new Order()
                 {
-                    MemberId = 34,
-                    ShipName = _db.Members.FirstOrDefault(x => x.MemberId == 34).Name,
+                    MemberId = HttpContext.Session.GetInt32(CDictionary.SK_UserID),
+                    ShipName = _db.Members.FirstOrDefault(x => x.MemberId == HttpContext.Session.GetInt32(CDictionary.SK_UserID)).Name,
                     OrderDate = DateTime.Now,
                     PaymentId = payment,
                     StatusId = 13,
@@ -740,7 +798,7 @@ namespace prjDB_GamingForm_Show.Controllers
                 {
                     OrderProduct orderproduct = new OrderProduct()
                     {
-                        OrderId = _db.Orders.Where(x => x.MemberId == 34).OrderByDescending(x => x.OrderId).First().OrderId,
+                        OrderId = _db.Orders.Where(x => x.MemberId == HttpContext.Session.GetInt32(CDictionary.SK_UserID)).OrderByDescending(x => x.OrderId).First().OrderId,
                         ProductId = p.ProductID,
                         UnitPrice = p.Price,
                         Quantinty = p.Count,
