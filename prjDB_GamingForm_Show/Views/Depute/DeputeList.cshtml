@@ -188,10 +188,8 @@
                         checkID = $(this).val();
                         // console.log(checkValue); //on
                         var tag = `<div class="tag_list">${checkValue}<span>X</span></div>`
-                        if (isChecked == false) {
+                        if (isChecked == false) 
                             checkID = "";
-                            $('#test').remove(tag)
-                        }
                         else { 
                             $('#test').append(tag)
                         }
@@ -223,15 +221,15 @@
                     SkillFrag.append(Skills);
                     $('#skill').html(SkillFrag);
 
-                    $('.form-check-input').click(function () {
-                        var isChecked = $(this).is(":checked");
-                        // console.log(isChecked)
-                        checkValue = $(this).val();
-                        // console.log(checkValue); //on
-                        if (isChecked == false)
-                            checkValue = "";
-                        loadSkill(checkValue);
-                    });
+                    // $('.form-check-input').click(function () {
+                    //     var isChecked = $(this).is(":checked");
+                    //     // console.log(isChecked)
+                    //     checkValue = $(this).val();
+                    //     // console.log(checkValue); //on
+                    //     if (isChecked == false)
+                    //         checkValue = "";
+                    //     loadSkill(checkValue);
+                    // });
                 })
         }
         function loadRegion() {
