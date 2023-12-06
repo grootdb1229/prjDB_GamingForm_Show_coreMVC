@@ -590,7 +590,7 @@ public partial class DbGamingFormTestContext : DbContext
 
             entity.Property(e => e.OrderId).HasColumnName("OrderID");
             entity.Property(e => e.CompletedDate).HasColumnType("date");
-            entity.Property(e => e.FirmId).HasColumnName("FirmID");
+            entity.Property(e => e.CouponId).HasColumnName("CouponID");
             entity.Property(e => e.MemberId).HasColumnName("MemberID");
             entity.Property(e => e.Note).HasMaxLength(50);
             entity.Property(e => e.OrderDate).HasColumnType("date");

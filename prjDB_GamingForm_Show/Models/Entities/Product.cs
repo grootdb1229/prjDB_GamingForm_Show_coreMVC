@@ -25,6 +25,8 @@ public partial class Product
 
     public string? FImagePath { get; set; }
 
+    public int Goods { get; set; }
+
     public virtual Member? Member { get; set; }
 
     public virtual ICollection<OrderProduct> OrderProducts { get; set; } = new List<OrderProduct>();
