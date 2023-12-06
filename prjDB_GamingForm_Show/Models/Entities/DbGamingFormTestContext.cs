@@ -27,6 +27,8 @@ public partial class DbGamingFormTestContext : DbContext
 
     public virtual DbSet<ArticleAction> ArticleActions { get; set; }
 
+    public virtual DbSet<ArticleComplain> ArticleComplains { get; set; }
+
     public virtual DbSet<Blog> Blogs { get; set; }
 
     public virtual DbSet<Chat> Chats { get; set; }
@@ -115,7 +117,10 @@ public partial class DbGamingFormTestContext : DbContext
 
     public virtual DbSet<WishList> WishLists { get; set; }
 
-//    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+/// <summary>
+/// /   protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+/// </summary>
+/// <param name="modelBuilder"></param>//
 //#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
 //        => optionsBuilder.UseSqlServer("Data Source=.;Initial Catalog=DB_GamingForm_test;Integrated Security=True;Trust Server Certificate=True");
 
@@ -185,7 +190,6 @@ public partial class DbGamingFormTestContext : DbContext
             entity.Property(e => e.ModifiedDate).HasColumnType("datetime");
             entity.Property(e => e.ReplyArticleId).HasColumnName("ReplyArticleID");
             entity.Property(e => e.SubBlogId).HasColumnName("SubBlogID");
-            entity.Property(e => e.Title).HasMaxLength(50);
 
             entity.HasOne(d => d.Member).WithMany(p => p.Articles)
                 .HasForeignKey(d => d.MemberId)
@@ -227,6 +231,32 @@ public partial class DbGamingFormTestContext : DbContext
                 .HasForeignKey(d => d.MemberId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_ArticleAction_Member");
+        });
+
+        modelBuilder.Entity<ArticleComplain>(entity =>
+        {
+            entity.ToTable("ArticleComplain");
+
+            entity.Property(e => e.Id).HasColumnName("ID");
+            entity.Property(e => e.ArticleId).HasColumnName("ArticleID");
+            entity.Property(e => e.MemberId).HasColumnName("MemberID");
+            entity.Property(e => e.ReportDate).HasColumnType("datetime");
+            entity.Property(e => e.SubTagId).HasColumnName("SubTagID");
+
+            entity.HasOne(d => d.Article).WithMany(p => p.ArticleComplains)
+                .HasForeignKey(d => d.ArticleId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_ArticleComplain_Article");
+
+            entity.HasOne(d => d.Member).WithMany(p => p.ArticleComplains)
+                .HasForeignKey(d => d.MemberId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_ArticleComplain_Member");
+
+            entity.HasOne(d => d.SubTag).WithMany(p => p.ArticleComplains)
+                .HasForeignKey(d => d.SubTagId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_ArticleComplain_SubTag");
         });
 
         modelBuilder.Entity<Blog>(entity =>
@@ -563,7 +593,7 @@ public partial class DbGamingFormTestContext : DbContext
 
             entity.Property(e => e.OrderId).HasColumnName("OrderID");
             entity.Property(e => e.CompletedDate).HasColumnType("date");
-            entity.Property(e => e.FirmId).HasColumnName("FirmID");
+            entity.Property(e => e.CouponId).HasColumnName("CouponID");
             entity.Property(e => e.MemberId).HasColumnName("MemberID");
             entity.Property(e => e.Note).HasMaxLength(50);
             entity.Property(e => e.OrderDate).HasColumnType("date");

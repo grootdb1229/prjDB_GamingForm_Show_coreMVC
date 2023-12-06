@@ -13,8 +13,6 @@
                 <div class="row g-2">
                     <div class="col-md-15">
                         <input type="text" id="text" name="txtKeyword" class="form-control border-0" placeholder="Keyword" />
-                        <div id="hotkey">
-                        </div>
                     </div>
                 </div>
             </div>
@@ -23,6 +21,8 @@
             </div>
             <div class="col-md-2">
                 @Html.ActionLink("重設","DeputeList","Depute",null,new{@class ="btn btn-dark border-0 w-100",@id="search",name="txtKeyword"})
+            </div>
+            <div style="margin-top:5px" id="hotkey">
             </div>
 
 
@@ -38,12 +38,29 @@
         <div class="accordion-item">
             <h2 class="accordion-header">
                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
-                    Accordion Item #1
+                    進階搜尋:
                 </button>
             </h2>
             <div id="flush-collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
-                <div class="accordion-body">Placeholder content for this accordion, which is intended to demonstrate the <code>.accordion-flush</code> class. This is the first item's accordion body.</div>
+                <div  class="accordion-body">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col order-8">
+                                <label id="test">- 大類別</label>
+                            </div>
+                            <div class="col order-12">
+                             
+                            </div>
+                            <div class="col order-1">
+                                Third, but first
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+
             </div>
+
         </div>
     </div>
     <div class="row g-4" style="float:right;">
@@ -96,9 +113,10 @@
                                     <div class="text-start ps-4">
                                         <h5 class="mb-3">@Html.DisplayFor(modelItem => item.title)</h5>
                                         <span class="text-truncate me-3"><i class="fa fa-map-marker-alt text-primary me-2"></i>@Html.DisplayFor(modelItem => item.region)</span>
-                                        <span class="text-truncate me-3"><i class="fa fa-map-marker-alt text-primary me-2"></i>@Html.DisplayFor(modelItem => item.providername)</span>
+                                        <span class="text-truncate me-3"><i class="fa fa-user-tie text-primary me-2"></i>@Html.DisplayFor(modelItem => item.providername)</span>
                                         <span class="text-truncate me-3"><i class="far fa-clock text-primary me-2"></i>@Html.DisplayFor(modelItem => item.startdate)</span>
-                                        <span class="text-truncate me-0"><i class="far fa-money-bill-alt text-primary me-2"></i>@item.salary.ToString("$###,###,##0.##")</span>
+                                        <span class="text-truncate me-3"><i class="far fa-money-bill-alt text-primary me-2"></i>@item.salary.ToString("$###,###,##0.##")</span>
+                                        <span class="text-truncate me-3"><i class="far fa-solid fa-eye text-primary me-2"></i>@Html.DisplayFor(modelItem => item.viewcount)</span>
                                     </div>
                                 </div>
                                 <div class="col-sm-12 col-md-4 d-flex flex-column align-items-start align-items-md-end justify-content-center">
@@ -107,7 +125,7 @@
                                         @Html.ActionLink("詳細", "DeputeDetails", "Depute", new { id = item.id },new{@class ="btn btn-primary"})
                                         @Html.ActionLink("我要應徵", "Apply", "Depute", new { id = item.id },new{@class ="btn btn-primary"})
                                     </div>
-                                    <small class="text-truncate"><i class="far fa-calendar-alt text-primary me-2"></i>狀態 : @Html.DisplayFor(modelItem => item.status)</small>
+                                    <small class="text-truncate"><i class="far fa-regular fa-chart-bar text-primary me-2"></i>狀態 : @Html.DisplayFor(modelItem => item.status)</small>
                                     <small class="text-truncate"><i class="far fa-calendar-alt text-primary me-2"></i>Last Update : @Html.DisplayFor(modelItem => item.modifieddate)</small>
                                 </div>
                             }
@@ -132,8 +150,84 @@
         const selectSkills = document.querySelector('#skill');
         const selectRegions = document.querySelector('#regions');
         const selSalary = document.querySelector('#money');
+        test()
+        function test() {
+            $.ajax('@Url.Content("~/Depute/SkillClassess")', {
+                "type": 'Post', //POST、PUT、DELETE
+                "dataType": "json"
+            })
+                .done((data) => {
+                    const SkillClassessFrag = $(document.createDocumentFragment());
+                    const SkillClassess = data.map(SkillClassess => 
+                        `<div class="form-check">
+                                 <input class="form-check-input" type="checkbox" value="${SkillClassess.name}" id="${SkillClassess.name}">
+                                 <label class="form-check-label" for="${SkillClassess.name}">
+                         ${SkillClassess.name}
+                         </label>
+                         </div>
+                         `)
+                    SkillClassessFrag.append(SkillClassess);
+                    $('#test').after(SkillClassessFrag)
+
+                    let checkValue;
+                    $('.form-check-input').click(function () {
+                        var isChecked = $(this).is(":checked");
+                        console.log(isChecked)
+                        
+                        checkValue = $(this).val();
+                        console.log(checkValue); //on
+                    });
+                })
+            // loadSkill();
+        }
 
 
+        function test2() {
+            $.ajax('@Url.Content("~/Depute/Skills")', {
+                "type": 'Post', //POST、PUT、DELETE
+                "data": { "id": selSkillClasses.value },
+                "dataType": "json"
+            })
+                .done((data) => {
+                    const SkillFrag = $(document.createDocumentFragment());
+                    const Skills = data.map(Skills =>
+                        `
+                        <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="${Skills.name}" id="${Skills.name}">
+                        <label class="form-check-label" for="${Skills.name}">
+                        ${Skills.name}
+                        </label>
+                        </div>
+                       `
+                    )
+                    SkillFrag.append(Skills);
+                    $('#skill').html(SkillFrag);
+                })
+            loadRegion();
+        }
+
+        function test3() {
+            $.ajax('@Url.Content("~/Depute/Region")', {
+                "type": 'Post', //POST、PUT、DELETE
+                "dataType": "json"
+            })
+                .done((data) => {
+                    const RegionFrag = $(document.createDocumentFragment());
+                    const Regions = data.map(Regions => 
+                        `
+                                 <div class="col order-12">
+                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                        <label class="form-check-label" for="flexCheckDefault">
+                         ${Regions.city}
+                        </label>
+                        </div>
+                         `
+                    )
+
+                    RegionFrag.append(Regions);
+                    $('#test2').after(RegionFrag)
+                })
+        }
         //基本搜尋&&進階搜尋///
         loadSkillClassess();
         $('#search').click(() => { loadList() });
@@ -144,7 +238,7 @@
                 "data": {
                     "txtKeyword": text.value,
                     "txtHotkey": hotkey,
-                    "txtRegion": selectRegions.options[selectRegions.selectedIndex].text
+                    // "txtRegion": selectRegions.options[selectRegions.selectedIndex]
                 },
                 "dataType": "json"
             })
@@ -152,27 +246,29 @@
                     $('#totalcount').html(`相關結果有${data.length}筆`);
                     const lstFrag = $(document.createDocumentFragment());
                     const list = data.map(list =>
-                        `<input type="hidden" name="${list.id}" value=${list.id}/>
+                        `
                                 <div  class="col-sm-12 col-md-8 d-flex align-items-center">
                                 <img class="flex-shrink-0 img-fluid border rounded" src="/images/${list.imgfilepath}" alt="" style="width: 80px; height: 80px;">
                                 <div class="text-start ps-4">
                                 <h5 class="mb-3">${list.title}</h5>
                                 <span class="text-truncate me-3"><i class="fa fa-map-marker-alt text-primary me-2"></i>${list.region}</span>
-                                <span class="text-truncate me-3"><i class="fa fa-map-marker-alt text-primary me-2"></i>${list.providername}</span>
+                                <span class="text-truncate me-3"><i class="fa fa-user-tie text-primary me-2"></i>${list.providername}</span>
                                 <span class="text-truncate me-3"><i class="far fa-clock text-primary me-2"></i>${list.startdate}</span>
-                                <span class="text-truncate me-0"><i class="far fa-money-bill-alt text-primary me-2"></i>${list.salary}</span>
+                                <span class="text-truncate me-3"><i class="far fa-money-bill-alt text-primary me-2"></i>${list.salary}</span>
+                                <span class="text-truncate me-3"><i class="far fa-solid fa-eye text-primary me-2"></i>${list.viewcount}</span>
                                 </div>
                                 </div>
                                 <div class="col-sm-12 col-md-4 d-flex flex-column align-items-start align-items-md-end justify-content-center">
                                 <div class="d-flex mb-3">
                                 <a class="btn btn-light btn-square me-3" href=""><i class="far fa-heart text-primary"></i></a>
-                                <a href="/Depute/DeputeDetails/${list.id}" class="btn btn-primary" id=" btndp">詳細...</a>
-                                <a href="/Depute/Apply/${list.id}" class="btn btn-primary"  id=btndp"">我要應徵...</a>
+                                <a href="/Depute/DeputeDetails/${list.id}" class="btn btn-primary id=" btndp"">詳細...</a>
+                                <a href="/Depute/Apply/${list.id}" class="btn btn-primary id=" btndp"">我要應徵...</a>
                                 </div>
-                                <small class="text-truncate"><i class="far fa-calendar-alt text-primary me-2"></i>狀態 : ${list.status}</small>
-                                <small class="text-truncate"><i class="far fa-calendar-alt text-primary me-2"></i>Last Update : ${list.modifieddate}</small>
+                                        <small class="text-truncate"><i class="far fa-regular fa-chart-bar text-primary me-2"></i>狀態 : ${list.status}</small>
+                                        <small class="text-truncate"><i class="far fa-calendar-alt text-primary me-2"></i>Last Update : ${list.modifieddate}</small>
                                 </div>
-                                `
+
+                                        `
                     )
                     lstFrag.append(list);
                     $('#list').html(lstFrag);
@@ -185,12 +281,12 @@
                 "dataType": "json"
             })
                 .done((data) => {
-                    const CookieFrag = $(document.createDocumentFragment());
+                    const SkillClassessFrag = $(document.createDocumentFragment());
                     const fst = '<option name="txtSkillClass" value="0">請選擇...</option>'
-                    CookieFrag.append(fst);
-                    const Cookies = data.map(SkillClassess => `<option name="txtSkillClass" value='${SkillClassess.skillClassId}'>${SkillClassess.name}</option>`)
-                    CookieFrag.append(Cookies);
-                    $('#skillclass').html(CookieFrag)
+                    SkillClassessFrag.append(fst);
+                    const SkillClassess = data.map(SkillClassess => `<option name="txtSkillClass" value='${SkillClassess.skillClassId}'>${SkillClassess.name}</option>`)
+                    SkillClassessFrag.append(SkillClassess);
+                    $('#skillclass').html(SkillClassessFrag)
                     loadSkill();
                 })
             // loadSkill();
@@ -227,21 +323,22 @@
             loadHotkey()
         }
         function loadHotkey() {
-            count++;
+            var count = 0;
             $.ajax('@Url.Content("~/Depute/Hotkey")', {
                 "type": 'Post', //POST、PUT、DELETE
                 "data": { "id": 3 },
                 "dataType": "json"
             })
                 .done((data) => {
+                    // count++;
                     const HkFrag = $(document.createDocumentFragment());
-                    const snd = '<span class="text-truncate me-3">熱門關鍵字 :</span>'
+                    const snd = '<span class="text-truncate me-1">熱門關鍵字 :</span>'
                     HkFrag.append(snd);
-                    const Hotkeys = data.map(Hotkeys => `<a href="#" id="${Hotkeys}" onclick="loadList('${Hotkeys}')">${count++}.${ Hotkeys } < /a>`)
+                    const Hotkeys = data.map(Hotkeys => `<a href="#" id="${Hotkeys}" onclick="loadList('${Hotkeys}')">#${Hotkeys} </a>`)
                     HkFrag.append(Hotkeys);
                     $('#hotkey').html(HkFrag)
                 })
-            loadList()
+            // loadList()
         }
 
 

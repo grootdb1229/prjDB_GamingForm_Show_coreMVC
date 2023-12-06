@@ -19,6 +19,8 @@ public partial class Coupon
 
     public int StatusId { get; set; }
 
+    public int? Quantity { get; set; }
+
     public virtual ICollection<MemberCoupon> MemberCoupons { get; set; } = new List<MemberCoupon>();
 
     public virtual Status Status { get; set; } = null!;
