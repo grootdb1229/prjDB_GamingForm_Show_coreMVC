@@ -4,6 +4,19 @@
     ViewData["Title"] = "Create";
     Layout = "~/Views/Shared/_Layout_DBM.cshtml";
 }
+@section styles{
+
+<style>
+    .custom-popover {
+  --bs-popover-max-width: 200px;
+  /* --bs-popover-border-color: var(--bd-violet-bg);
+  --bs-popover-header-bg: var(--bd-violet-bg); */
+  --bs-popover-header-color: var(--bs-black);
+  --bs-popover-body-padding-x: 1rem;
+  --bs-popover-body-padding-y: .5rem;
+}
+</style>
+}
 
 <h2>發佈委託</h2>
 
@@ -12,10 +25,10 @@
 <div class="row">
     <div class="col-md-10">
         <form asp-action="Create">
-            <div class="p-3 mb-3 bg-opacity-10 border border-danger border-start-0 rounded-end">
-                <div class="form-check form-switch form-check " style="padding-left:0">
+            <div class="p-3 mb-3 bg-opacity-10 border border-danger  rounded-end rounded-start">
+                <div class="form-check form-switch form-check " style="">
                     <label class="form-check-label" style="color:white" for="flexSwitchCheckReverse">開立專屬委託</label>
-                    <input class="form-check-input" style="margin-left:0" type="checkbox" id="flexSwitchCheckReverse">
+                    <input class="form-check-input" style="" type="checkbox" id="flexSwitchCheckReverse">
                 </div>
                 <input class="form-control col-4" type="text" id="privatetxt" placeholder="請輸入對方會員編號" hidden />
             </div>
@@ -35,13 +48,13 @@
                 <label asp-for="Title" for="Title">委託主題</label>
                 <span asp-validation-for="Title" class="text-danger"></span>
             </div>
-            <div class="form-floating mb-3">
-                <input name="開始日期" value="@DateTime.Now" class="form-control" hidden />
+            <div class="form-floating mb-3" hidden>
+                <input name="開始日期" value="@DateTime.Now" class="form-control"  />
                 <label asp-for="StartDate" class="control-label">開始時間</label>
                 <span asp-validation-for="StartDate" class="text-danger"></span>
             </div>
-            <div class="form-floating mb-3">
-                <input name="更新日期" value="@DateTime.Now" class="form-control" hidden />
+            <div class="form-floating mb-3" hidden>
+                <input name="更新日期" value="@DateTime.Now" class="form-control"  />
                 <label asp-for="Modifiedate" class="control-label">更新時間</label>
                 <span asp-validation-for="Modifiedate" class="text-danger"></span>
             </div>
@@ -67,23 +80,23 @@
                 <label asp-for="DeputeContent" class="control-label" for="DeputeContent">委託資訊</label>
                 <span asp-validation-for="DeputeContent" class="text-danger"></span>
             </div>
-            <button type="button" class="btn btn-info mb-3" onclick="openSkillBrowser()">編輯所需技能</button>
+            
             <span id="skillCount" hidden></span>
+            <a class="btn btn-secondary mb-3" id="aSkillList"
+               tabindex="0"
+               data-bs-toggle="popover" data-bs-placement="right"
+               data-bs-trigger="focus"
+               data-bs-custom-class="custom-popover"
+               data-bs-title="已選技能"
+               data-bs-html="true"
+               data-bs-content=''
+               hidden>
+                檢視所選技能
+            </a>
+            <button type="button" class="btn btn-info mb-3" onclick="openSkillBrowser()">編輯所需技能</button>
 
-            @* <div class="row">
-                <div class="col-6">
-                    <div class="list-group" id="list-tab" role="tablist">
-                    </div>
-                </div>
-
-                <div class="col-6">
-                    <ul style="overflow-y:auto;height:300px" class="list-group tab-content" id="nav-tabContent">
-                    </ul>
-                    <ul class="list-group col-6">
-                    </ul>
-                </div>
-            </div> *@
             <input name="skilllist" id="select-skills" hidden>
+
             <div class="form-floating mb-3">
                 <a asp-action="personal" class="btn btn-secondary" >取消</a>
                 <input type="submit" value="送出並發佈" class="btn btn-success" onclick="prepareAndSubmit()"/>
@@ -98,10 +111,13 @@
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
     <script>
+        const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]')
+        const popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl))
         const selSkills = [];
         const divSkillClasses = document.querySelector('#list-tab'),
             divSkillsGroup = document.querySelector('#nav-tabContent');
         var selectedCount = 0;
+        var totalcount = 0;
         var chooseClass;
 
         document.addEventListener('DOMContentLoaded', () => {
@@ -126,7 +142,7 @@
 
         async function openSkillBrowser() {
             Swal.fire({
-                title: "請選擇所需技能",
+                title: totalcount == 0 ?`請選擇所需技能`:`請選擇所需技能(${totalcount})`,
                 width: '50rem',
                 html: `<div class="row">
                             <div class="col-6">
@@ -157,7 +173,6 @@
                 loadSkills();
             }
         }
-
         
         async function loadSkills() {
             const response = await fetch(`@Url.Content("~/depute/skillss")?skillClass=${chooseClass}`);
@@ -170,14 +185,22 @@
             document.querySelector(`#${chooseClassID}`).innerHTML = skills.join("");
 
             const divSkills = document.getElementsByClassName('me-1');
+            const divSkillClass = document.querySelector('.active');
+
+            var count = 0;
+            
             Array.from(divSkills).forEach(divSkill => {
                 divSkill.addEventListener('change', function (event) {
                     var selSK = event.target.labels[0].textContent;
                     if (event.target.checked) {
                         selSkills.push({ skillclass: chooseClass, skill: selSK });
+                        totalcount = selSkills.length;
+                        divSkillClass.textContent = `${chooseClass}(${count})`
                     } else {
                         const index = selSkills.findIndex(i => i.skillclass == chooseClass && i.skill == selSK);
                         selSkills.splice(index, 1);
+                        totalcount = selSkills.length;
+                        divSkillClass.textContent = `${chooseClass}(${count})`
                     }
                     choiceCount();
                 })
@@ -186,15 +209,30 @@
 
         function choiceCount() {
             selectedCount = selSkills.length;
+            const divSkillTitle = document.querySelector('#swal2-title');
             const spanCount = document.querySelector('#skillCount');
+            const aChoiceSkillList = document.querySelector('#aSkillList');
+            divSkillTitle.textContent = totalcount == 0 ? `請選擇所需技能` : `請選擇所需技能(${totalcount})`
             if (selectedCount != 0) {
                 spanCount.hidden = false;
-
+                aChoiceSkillList.hidden = false;
                 spanCount.innerHTML = `已選擇${selectedCount}項技能`;
+                addToChoiceSkillList();
             }
             else {
                 spanCount.hidden = true;
+                aChoiceSkillList.hidden = true;
             }
+        }
+        
+        async function addToChoiceSkillList(){
+            var popover = bootstrap.Popover.getOrCreateInstance('#aSkillList');
+            const choiceskill = selSkills.map((skills, index) => `<li class='list-group-item'>${index+1}.${skills.skillclass}-${skills.skill}</li>`);
+            var newContent = `<ul class='list-group'>${choiceskill.join('')}</ul>`
+            popover.setContent({
+                '.popover-header': '已選技能',
+                '.popover-body': newContent
+            });
         }
 
         async function loadRegions() {
