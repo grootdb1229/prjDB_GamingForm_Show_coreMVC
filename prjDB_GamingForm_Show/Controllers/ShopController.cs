@@ -268,6 +268,53 @@ namespace prjDB_GamingForm_Show.Controllers
             }
 
 
+            public IActionResult IndexbyAjax(string CK)
+            {
+                _db.ProductTags.Load();
+                _db.Products.Load();
+                _db.SubTags.Load();
+
+                var data = _db.ProductTags
+                    .Where(n => (string.IsNullOrEmpty(CK) || n.Product.ProductName.Contains(CK)) && n.Product.StatusId == 1)
+                    .Select(n => new
+                    {
+                        n.Product.AvailableDate,
+                        n.Product.ProductId,
+                        n.Product.ProductName,
+                        n.Product.Price,
+                        n.Product.FImagePath,
+                        SubTagName = n.SubTag.Name
+                    })           
+                    .ToList();
+
+                List<CShopPageViewModel> List = data.Select(item =>
+                {   //將每個字以/串再一起。
+                    string s = string.Join("/", _db.ProductTags.Where(x => x.ProductId == item.ProductId).Select(x => x.SubTag.Name));
+                    return new CShopPageViewModel //返還這個物件 Lambda多行表達需要加return，不然將會返還錯誤的東西，部分程式碼將不被視為返還值之一
+                    {
+                        ProductId = item.ProductId,
+                        ProductName = item.ProductName,
+                        Price = item.Price,
+                        FImagePath = item.FImagePath,
+                        SubTagName = s
+                    };
+                }).ToList();
+                ///篩掉重複資料
+                List<CShopPageViewModel> List2 = List.GroupBy(p => p.ProductId)
+                                                     .Select(group => group.First())
+                                                     .ToList();
+
+                if (List2.Count == 0)//如果沒有任何搜尋結果
+                {              
+                    return Json(new { message = "查無資料，請確認輸入內容" });
+                }
+
+                string jsonResult = JsonSerializer.Serialize(List2);
+                //Trace.WriteLine("AAA" + jsonResult);
+                //Trace.WriteLine("BBB" + List2);
+                return Content(jsonResult, "application/json");
+            }
+
             public IActionResult IndexbyDate(string CK)
             {
                 _db.ProductTags.Load();
@@ -307,9 +354,9 @@ namespace prjDB_GamingForm_Show.Controllers
 
                 if (List2.Count == 0)//如果沒有任何搜尋結果
                 {
-                    ViewBag.Message = "查無資料，請確認輸入內容";
-                    return Content("{'message': '查無資料，請確認輸入內容'}", "application/json");
+                    return Json(new { message = "查無資料，請確認輸入內容" });
                 }
+
 
                 string jsonResult = JsonSerializer.Serialize(List2);
                 //Trace.WriteLine("AAA" + jsonResult);
@@ -353,7 +400,10 @@ namespace prjDB_GamingForm_Show.Controllers
                                                      .Select(group => group.First())
                                                      .ToList();
 
-         
+                if (List2.Count == 0)//如果沒有任何搜尋結果
+                {
+                    return Json(new { message = "查無資料，請確認輸入內容" });
+                }
 
                 string jsonResult = JsonSerializer.Serialize(List2);
                 //Trace.WriteLine("AAA" + jsonResult);
@@ -400,8 +450,7 @@ namespace prjDB_GamingForm_Show.Controllers
 
                 if (List2.Count == 0)//如果沒有任何搜尋結果
                 {
-                    ViewBag.Message = "查無資料，請確認輸入內容";
-                    return Content("{'message': '查無資料，請確認輸入內容'}", "application/json");
+                    return Json(new { message = "查無資料，請確認輸入內容" });
                 }
 
                 string jsonResult = JsonSerializer.Serialize(List2);
