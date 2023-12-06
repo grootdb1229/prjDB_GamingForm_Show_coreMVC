@@ -23,6 +23,8 @@ public partial class Article
 
     public virtual ICollection<ArticleAction> ArticleActions { get; set; } = new List<ArticleAction>();
 
+    public virtual ICollection<ArticleComplain> ArticleComplains { get; set; } = new List<ArticleComplain>();
+
     public virtual ICollection<Article> InverseReplyArticle { get; set; } = new List<Article>();
 
     public virtual Member Member { get; set; } = null!;

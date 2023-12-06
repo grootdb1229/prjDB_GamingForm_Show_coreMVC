@@ -27,6 +27,8 @@ public partial class DbGamingFormTestContext : DbContext
 
     public virtual DbSet<ArticleAction> ArticleActions { get; set; }
 
+    public virtual DbSet<ArticleComplain> ArticleComplains { get; set; }
+
     public virtual DbSet<Blog> Blogs { get; set; }
 
     public virtual DbSet<Chat> Chats { get; set; }
@@ -185,7 +187,6 @@ public partial class DbGamingFormTestContext : DbContext
             entity.Property(e => e.ModifiedDate).HasColumnType("datetime");
             entity.Property(e => e.ReplyArticleId).HasColumnName("ReplyArticleID");
             entity.Property(e => e.SubBlogId).HasColumnName("SubBlogID");
-            entity.Property(e => e.Title).HasMaxLength(50);
 
             entity.HasOne(d => d.Member).WithMany(p => p.Articles)
                 .HasForeignKey(d => d.MemberId)
@@ -227,6 +228,32 @@ public partial class DbGamingFormTestContext : DbContext
                 .HasForeignKey(d => d.MemberId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_ArticleAction_Member");
+        });
+
+        modelBuilder.Entity<ArticleComplain>(entity =>
+        {
+            entity.ToTable("ArticleComplain");
+
+            entity.Property(e => e.Id).HasColumnName("ID");
+            entity.Property(e => e.ArticleId).HasColumnName("ArticleID");
+            entity.Property(e => e.MemberId).HasColumnName("MemberID");
+            entity.Property(e => e.ReportDate).HasColumnType("datetime");
+            entity.Property(e => e.SubTagId).HasColumnName("SubTagID");
+
+            entity.HasOne(d => d.Article).WithMany(p => p.ArticleComplains)
+                .HasForeignKey(d => d.ArticleId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_ArticleComplain_Article");
+
+            entity.HasOne(d => d.Member).WithMany(p => p.ArticleComplains)
+                .HasForeignKey(d => d.MemberId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_ArticleComplain_Member");
+
+            entity.HasOne(d => d.SubTag).WithMany(p => p.ArticleComplains)
+                .HasForeignKey(d => d.SubTagId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_ArticleComplain_SubTag");
         });
 
         modelBuilder.Entity<Blog>(entity =>
