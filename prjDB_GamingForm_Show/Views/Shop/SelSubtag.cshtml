@@ -26,11 +26,12 @@
 async function LoadTag() { //讀取遊戲標籤列表
 			const response = await fetch('@Url.Content("~/Shop/GameTag")');
 			const data = await response.json();
-
+			console.log(data)
 			const Tag = data.map(x => `
 			<div class="col-3">
 				<label style="margin-bottom: 10px; display: block;">
-				<input type="checkbox" name="GameTag" value="${x.subTagId}">${x.name}
+											<input type="checkbox" name="GameTag" value="${x.subTagId}">${x.name
+			}(${x.productTagCount})
 				</label>
 			</div>
 						`).join('');
