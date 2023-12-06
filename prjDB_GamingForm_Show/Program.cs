@@ -12,7 +12,7 @@ builder.Services.AddDbContext<DbGamingFormTestContext>(options => options.UseSql
 builder.Services.AddControllers().AddJsonOptions(x => x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 builder.Services.AddSignalR();
 var app = builder.Build();
-// Configure the HTTP request pipeline.
+// //Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
