@@ -52,8 +52,8 @@
             回復發表</h2>
         <div class="col-md-12" style="margin:10px 0">
             <form asp-action="ReplyCreate" method="post">
-                <input type="hidden" name="AFId" value=" @Model.articles.First().ArticleId" />
                 <input type="hidden" name="ArticleId" value=" @Model.articles.First().ArticleId" />
+                <input type="hidden" name="AFId" value=" @Model.articles.First().ArticleId" />
                 <input type="hidden" name="FId" value=" @Model.blogs.FirstOrDefault().BlogId" />                
                 <div>
                     <textarea name="ReplyContents" id="editor" style="resize:none; height:700px;margin:3px">                    
