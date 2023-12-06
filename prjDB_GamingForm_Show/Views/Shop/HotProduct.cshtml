@@ -1,0 +1,19 @@
+﻿<div id="carouselExampleFade" class="carousel slide carousel-fade">
+    <div class="carousel-inner">
+        <div id="top5">                        
+        </div>
+    </div>
+  
+</div>
+
+<script>
+    async function LoadTopFive() 
+    {
+        const response = await fetch(`@Url.Content("~/Shop/HotTopFive")`);
+        const data=await response.json();
+        console.log(data);
+        const MapPic = data.map(x => `  <div ><img src="~/images/shop/${x.fImagePath}" class="img-fluid rounded-start"  style="flex: 1; object-fit: cover;"></div>`).join('');
+        document.querySelector('#top5').innerHTML = MapPic;
+    } LoadTopFive()
+
+</script>

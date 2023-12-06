@@ -136,18 +136,25 @@ namespace prjDB_GamingForm_Show.Controllers
             //    return View(List2);
             //}
             public IActionResult Carousel()
-            {   _db.Products.Load();
-                _db.ProductTags.Load();
+            {  
                 return PartialView();
-             
             }
 
             public IActionResult SelSubtag()
             {
-              
                 return PartialView();
-
             }
+			public IActionResult HotProduct()
+			{
+				return PartialView();
+			}
+            public IActionResult HotTopFive() 
+            {
+                var TopFive=_db.Products.Select(x=>new { x.FImagePath,x.ViewCount}).OrderByDescending(x=>x.ViewCount).Take(5).ToList();
+                return Json(TopFive);
+            }
+
+
             public IActionResult Index(CKeyWord ck)
             {
 
@@ -661,6 +668,9 @@ namespace prjDB_GamingForm_Show.Controllers
                     SubTagName=s
                     
                 };
+                x.ViewCount++;
+                _db.SaveChanges();
+
                 return View(ProductInfo);
             }
             public IActionResult AddToCar(int? id)
