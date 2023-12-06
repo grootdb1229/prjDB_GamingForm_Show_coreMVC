@@ -158,21 +158,21 @@
 .page-header .container {
     position: relative;
     padding: 45px 0 45px 35px;
-    border-left: 15px solid var(--primary);
+    border-left: 15px solid #a81d1d;
 }
 
-.header-carousel .container::before,
-.header-carousel .container::after,
-.page-header .container::before,
-.page-header .container::after {
-    position: absolute;
-    content: "";
-    top: 0;
-    left: 0;
-    width: 100px;
-    height: 15px;
-    background: var(--primary);
-}
+    .header-carousel .container::before,
+    .header-carousel .container::after,
+    .page-header .container::before,
+    .page-header .container::after {
+        position: absolute;
+        content: "";
+        top: 0;
+        left: 0;
+        width: 100px;
+        height: 15px;
+        background: #a81d1d;
+    }
 
 .header-carousel .container::after,
 .page-header .container::after {

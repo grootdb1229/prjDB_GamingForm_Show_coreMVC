@@ -75,9 +75,7 @@
     <!-- Search End -->
 </p>
 <div id="Eroor"></div>
-@*<div>
-    <span class="badge text-bg-light">Light</span>
-</div>*@
+
 @if (!string.IsNullOrEmpty(ViewBag.Message))///當搜尋沒有結果時
 {
     <div class="alert alert-dark" role="alert">
@@ -86,6 +84,7 @@
 }else{
 
 <div class="container px-4 px-lg-5 mt-5">
+            <div class ="" id="BodySelSub"></div>
     <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center" id="ContentProduct">
 
        @foreach (var item in Model)
@@ -166,8 +165,12 @@
         function loadCarousel() {
             $('#headerCarousel').load('@Url.Content("~/shop/Carousel")');
         }
-        loadCarousel()
-        
+        loadCarousel();
+        function loadBodySel() {
+            $('#BodySelSub').load('@Url.Content("~/shop/SelSubtag")');
+        }
+        loadBodySel();
+
 
         var ProductContent = document.querySelector('#ContentProduct');
         var DataControl = document.querySelector('#SortControl');//選項

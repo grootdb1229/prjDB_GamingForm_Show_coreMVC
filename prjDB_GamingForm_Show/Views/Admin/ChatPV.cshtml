@@ -2,11 +2,86 @@
 <div style="height:350px;width:250px">
     <div style="border-bottom:solid red 1px">
         <img src="~/production/images/@Model.FirstOrDefault().ReceiverImg" alt="..." class="img-circle profile_img" style="height:7vh;width:7vh">
-        <span style="font-size:20px;">@Model.FirstOrDefault().ReceiverName</span>
+        <span id="rn" style="font-size:20px;">@Model.FirstOrDefault().ReceiverName</span>
+        <span id="sn" hidden>@Model.FirstOrDefault().SenderName</span>
     </div>
-    
+    <div id="chatContent" style="height:150px ;max-height: 150px; overflow-y: auto;border:solid blue">
+        @foreach (var chat in Model)
+        {
+            if(chat.SenderName == Context.Session.GetString(CDictionary.SK_管理者名稱))
+            {
+               <div style="text-align:right; color:red">
+                    <span>@chat.ModefiedDate</span>
+                    <p>@chat.ChatContent</p>
+               </div>
+            }
+            else
+            {
+                <div style="text-align:left ; color:blue">
+                    <span>@chat.ModefiedDate</span>
+                    <p>@chat.ChatContent</p>
+                </div>
+            }
+        }
+    </div>
+    <div class="mb-3">
+        <input type="text" class="form-control" id="message">
+        <button type="button" class="btn btn-primary" id="sendButton">傳送訊息</button>
+    </div>
+
 </div>
 
+<script>
+    //傳送訊息
+    $('#sendButton').on('click', function () {
+        let selfUserName = $('#sn').text() // 使用者名稱
+        let message = $('#message').val();
+        let sendToUserName = $('#rn').text() // 接收者的使用者名稱
 
+        // 新增：呼叫 SignalR Hub 方法獲取接收者的 SignalR ID
+        getSignalRIdByUserName(sendToUserName).then(function (connectionId) {
+            // 修改：傳送訊息時使用接收者的 SignalR ID
+            connection.invoke("SendMessage", selfUserName, message, connectionId, sendToUserName).catch(function (err) {
+                console.error('傳送錯誤: ' + err.toString());
+            });
+        });
+    });
+    function getSignalRIdByUserName(userName) {
+        return new Promise((resolve, reject) => {
+            connection.invoke("GetConnectionIdByUserName", userName).then(function (connectionId) {
+                // 在這裡可以使用 connectionId 進行相應的處理
+                resolve(connectionId);
+            }).catch(function (err) {
+                reject(err);
+            });
+        });
+    }
+    // 更新聊天內容事件
+    connection.on("UpdContent", function (msg) {
+        var messageBlock = document.getElementById("chatContent");       
+
+        // 取得當前時間
+        var currentTime = new Date();
+        var timeString = currentTime.toLocaleTimeString();
+
+        // 創建一個 <span> 用於顯示時間
+        var timeSpan = document.createElement("span");
+        timeSpan.innerText = " (" + timeString + ")";
+
+        // 將 <span> 加入訊息內容
+        messageBlock.appendChild(timeSpan);
+
+        // 創建一個新的 <p> 元素
+        var newMessage = document.createElement("p");
+        // 設定新元素的內容為用戶傳遞的訊息
+        newMessage.innerText = msg;
+
+        // 將新元素加入訊息區塊
+        timeSpan.appendChild(newMessage);
+
+        // 將新元素加入訊息區塊
+        messageBlock.appendChild(timeSpan);
+    });
+</script>
 
 

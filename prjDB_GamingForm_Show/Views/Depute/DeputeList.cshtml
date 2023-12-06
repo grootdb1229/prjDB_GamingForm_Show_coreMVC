@@ -13,8 +13,6 @@
                 <div class="row g-2">
                     <div class="col-md-15">
                         <input type="text" id="text" name="txtKeyword" class="form-control border-0" placeholder="Keyword" />
-                        <div id="hotkey">
-                        </div>
                     </div>
                 </div>
             </div>
@@ -23,6 +21,8 @@
             </div>
             <div class="col-md-2">
                 @Html.ActionLink("重設","DeputeList","Depute",null,new{@class ="btn btn-dark border-0 w-100",@id="search",name="txtKeyword"})
+            </div>
+            <div style="margin-top:5px" id="hotkey">
             </div>
 
 
@@ -96,9 +96,10 @@
                                     <div class="text-start ps-4">
                                         <h5 class="mb-3">@Html.DisplayFor(modelItem => item.title)</h5>
                                         <span class="text-truncate me-3"><i class="fa fa-map-marker-alt text-primary me-2"></i>@Html.DisplayFor(modelItem => item.region)</span>
-                                        <span class="text-truncate me-3"><i class="fa fa-map-marker-alt text-primary me-2"></i>@Html.DisplayFor(modelItem => item.providername)</span>
+                                        <span class="text-truncate me-3"><i class="fa fa-user-tie text-primary me-2"></i>@Html.DisplayFor(modelItem => item.providername)</span>
                                         <span class="text-truncate me-3"><i class="far fa-clock text-primary me-2"></i>@Html.DisplayFor(modelItem => item.startdate)</span>
-                                        <span class="text-truncate me-0"><i class="far fa-money-bill-alt text-primary me-2"></i>@item.salary.ToString("$###,###,##0.##")</span>
+                                        <span class="text-truncate me-3"><i class="far fa-money-bill-alt text-primary me-2"></i>@item.salary.ToString("$###,###,##0.##")</span>
+                                        <span class="text-truncate me-3"><i class="far fa-solid fa-eye text-primary me-2"></i>@Html.DisplayFor(modelItem => item.viewcount)</span>
                                     </div>
                                 </div>
                                 <div class="col-sm-12 col-md-4 d-flex flex-column align-items-start align-items-md-end justify-content-center">
@@ -107,7 +108,7 @@
                                         @Html.ActionLink("詳細", "DeputeDetails", "Depute", new { id = item.id },new{@class ="btn btn-primary"})
                                         @Html.ActionLink("我要應徵", "Apply", "Depute", new { id = item.id },new{@class ="btn btn-primary"})
                                     </div>
-                                    <small class="text-truncate"><i class="far fa-calendar-alt text-primary me-2"></i>狀態 : @Html.DisplayFor(modelItem => item.status)</small>
+                                    <small class="text-truncate"><i class="far fa-regular fa-chart-bar text-primary me-2"></i>狀態 : @Html.DisplayFor(modelItem => item.status)</small>
                                     <small class="text-truncate"><i class="far fa-calendar-alt text-primary me-2"></i>Last Update : @Html.DisplayFor(modelItem => item.modifieddate)</small>
                                 </div>
                             }
@@ -144,7 +145,7 @@
                 "data": {
                     "txtKeyword": text.value,
                     "txtHotkey": hotkey,
-                    "txtRegion": selectRegions.options[selectRegions.selectedIndex].text
+                    // "txtRegion": selectRegions.options[selectRegions.selectedIndex]
                 },
                 "dataType": "json"
             })
@@ -152,27 +153,29 @@
                     $('#totalcount').html(`相關結果有${data.length}筆`);
                     const lstFrag = $(document.createDocumentFragment());
                     const list = data.map(list =>
-                        `<input type="hidden" name="${list.id}" value=${list.id}/>
+                        `
                                 <div  class="col-sm-12 col-md-8 d-flex align-items-center">
                                 <img class="flex-shrink-0 img-fluid border rounded" src="/images/${list.imgfilepath}" alt="" style="width: 80px; height: 80px;">
                                 <div class="text-start ps-4">
                                 <h5 class="mb-3">${list.title}</h5>
                                 <span class="text-truncate me-3"><i class="fa fa-map-marker-alt text-primary me-2"></i>${list.region}</span>
-                                <span class="text-truncate me-3"><i class="fa fa-map-marker-alt text-primary me-2"></i>${list.providername}</span>
+                                <span class="text-truncate me-3"><i class="fa fa-user-tie text-primary me-2"></i>${list.providername}</span>
                                 <span class="text-truncate me-3"><i class="far fa-clock text-primary me-2"></i>${list.startdate}</span>
-                                <span class="text-truncate me-0"><i class="far fa-money-bill-alt text-primary me-2"></i>${list.salary}</span>
+                                <span class="text-truncate me-3"><i class="far fa-money-bill-alt text-primary me-2"></i>${list.salary}</span>
+                                <span class="text-truncate me-3"><i class="far fa-solid fa-eye text-primary me-2"></i>${list.viewcount}</span>
                                 </div>
                                 </div>
                                 <div class="col-sm-12 col-md-4 d-flex flex-column align-items-start align-items-md-end justify-content-center">
                                 <div class="d-flex mb-3">
                                 <a class="btn btn-light btn-square me-3" href=""><i class="far fa-heart text-primary"></i></a>
-                                <a href="/Depute/DeputeDetails/${list.id}" class="btn btn-primary" id=" btndp">詳細...</a>
-                                <a href="/Depute/Apply/${list.id}" class="btn btn-primary"  id=btndp"">我要應徵...</a>
+                                <a href="/Depute/DeputeDetails/${list.id}" class="btn btn-primary id=" btndp"">詳細...</a>
+                                <a href="/Depute/Apply/${list.id}" class="btn btn-primary id=" btndp"">我要應徵...</a>
                                 </div>
-                                <small class="text-truncate"><i class="far fa-calendar-alt text-primary me-2"></i>狀態 : ${list.status}</small>
-                                <small class="text-truncate"><i class="far fa-calendar-alt text-primary me-2"></i>Last Update : ${list.modifieddate}</small>
+                                        <small class="text-truncate"><i class="far fa-regular fa-chart-bar text-primary me-2"></i>狀態 : ${list.status}</small>
+                                        <small class="text-truncate"><i class="far fa-calendar-alt text-primary me-2"></i>Last Update : ${list.modifieddate}</small>
                                 </div>
-                                `
+
+                                        `
                     )
                     lstFrag.append(list);
                     $('#list').html(lstFrag);
@@ -227,21 +230,22 @@
             loadHotkey()
         }
         function loadHotkey() {
-            count++;
+            var count = 0;
             $.ajax('@Url.Content("~/Depute/Hotkey")', {
                 "type": 'Post', //POST、PUT、DELETE
                 "data": { "id": 3 },
                 "dataType": "json"
             })
                 .done((data) => {
+                    // count++;
                     const HkFrag = $(document.createDocumentFragment());
-                    const snd = '<span class="text-truncate me-3">熱門關鍵字 :</span>'
+                    const snd = '<span class="text-truncate me-1">熱門關鍵字 :</span>'
                     HkFrag.append(snd);
-                    const Hotkeys = data.map(Hotkeys => `<a href="#" id="${Hotkeys}" onclick="loadList('${Hotkeys}')">${count++}.${ Hotkeys } < /a>`)
+                    const Hotkeys = data.map(Hotkeys => `<a href="#" id="${Hotkeys}" onclick="loadList('${Hotkeys}')">#${Hotkeys} </a>`)
                     HkFrag.append(Hotkeys);
                     $('#hotkey').html(HkFrag)
                 })
-            loadList()
+            // loadList()
         }
 
 

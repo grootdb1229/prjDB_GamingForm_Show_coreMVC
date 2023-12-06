@@ -141,6 +141,13 @@ namespace prjDB_GamingForm_Show.Controllers
                 return PartialView();
              
             }
+
+            public IActionResult SelSubtag()
+            {
+              
+                return PartialView();
+
+            }
             public IActionResult Index(CKeyWord ck)
             {
 

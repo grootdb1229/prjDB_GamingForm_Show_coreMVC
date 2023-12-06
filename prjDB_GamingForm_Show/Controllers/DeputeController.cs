@@ -308,7 +308,7 @@ namespace prjDB_GamingForm_Show.Controllers
                 }
                 
             }
-            return Json(CookieList);
+            return Json(CookieList.Take(5));
         }
 
 
