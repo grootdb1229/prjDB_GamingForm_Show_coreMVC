@@ -1,0 +1,38 @@
+﻿@model prjDB_GamingForm_Show.ViewModels.CBlogViewModel
+
+@{
+    ViewData["Title"] = "BlogSubTagEdit";
+}
+
+<h2>BlogSubTagEdit</h2>
+
+<h4>CBlogViewModel</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="BlogSubTagEdit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" name="SubTagId" value="@Model.subTags.FirstOrDefault().SubTagId" />
+            <input type="hidden" name="SId" value="@Model.subTags.FirstOrDefault().SubTagId" />
+
+            <div class="form-group">
+                <label class="control-label">分類名稱</label>
+                <input asp-for="subTags.FirstOrDefault().Name" class="form-control" />
+                <span asp-validation-for="subTags.FirstOrDefault().Name" class="text-danger"></span>
+            </div>
+            <span>
+                <input type="submit" value="修改" class="btn btn-info" />
+            </span>
+
+            <span>
+                @Html.ActionLink("回到列表", "BlogCategoryList", "Admin", new{ @class = "btn btn-warning" })
+            </span>
+
+        </form>
+    </div>
+</div>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
