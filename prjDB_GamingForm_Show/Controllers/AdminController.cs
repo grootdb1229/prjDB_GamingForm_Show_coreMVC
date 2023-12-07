@@ -298,7 +298,34 @@ namespace prjDB_GamingForm_Show.Controllers
                 chats.Add(newchat);
                 return PartialView(chats);
             }
-        }        
+        }
+        [HttpPost]
+        public int HowMuchMessageNotCheck()
+        {
+            int count = 0;
+            int reid = _db.Admins.Where(a => a.Name == HttpContext.Session.GetString(CDictionary.SK_管理者名稱)).Select(a => a.AdminId).FirstOrDefault();
+            foreach(var m in _db.Chats)
+            {
+                if(m.ReceiveAdmin == reid && m.IsCheck == false)
+                {
+                    count++;
+                }
+            }            
+            return count;
+        }
+        [HttpPost]
+        public void CheckAllMessage(int senderid)
+        {
+            int reid = _db.Admins.Where(a => a.Name == HttpContext.Session.GetString(CDictionary.SK_管理者名稱)).Select(a => a.AdminId).FirstOrDefault();
+            foreach(var m in _db.Chats)
+            {
+                if(m.ReceiveAdmin == reid && m.SenderAdmin == senderid && m.IsCheck == false)
+                {
+                    m.IsCheck = true;
+                }
+            }
+            _db.SaveChanges();
+        }
         //public IActionResult MemberListNexttest()
         //{
         //    if (HttpContext.Session.Keys.Contains(CDictionary.SK_管理者觀看會員清單頁數使用關鍵字))
