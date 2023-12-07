@@ -2,6 +2,7 @@
 using MailKit.Search;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis;
+using Microsoft.DotNet.Scaffolding.Shared.Messaging;
 using Microsoft.EntityFrameworkCore;
 using NuGet.Packaging;
 using prjDB_GamingForm_Show.Models;
@@ -185,6 +186,10 @@ namespace prjDB_GamingForm_Show.Controllers
                 string record = "";
                 if (HttpContext.Request.Cookies[userId.ToString()] != null)
                     record = HttpContext.Request.Cookies[userId.ToString()];
+                if (userId == 0) 
+                {
+                    return  Json (new { message = "請先登入" });       
+                }
                 string[] strResult = record.Split(',');
                 strResult = strResult.Reverse().Distinct().ToArray();
                 IEnumerable<Product> datas = null;
