@@ -179,6 +179,7 @@
             });
             loadSkillClasses();
             refreshAccordion();
+            skillsCount();
         }
 
         async function loadSkillClasses() {
@@ -221,11 +222,12 @@
                             return
                         }
                         selSkills.push({ skillclass: chooseClass, skill: selSK });
-                    } 
+                    }
                     else {
                         const index = selSkills.findIndex(i => i.skillclass == chooseClass && i.skill == selSK);
                         selSkills.splice(index, 1);
                     }
+                    console.log(selSkills);
                     refreshAccordion();
                     skillsCount();
                 })
@@ -233,8 +235,9 @@
         }
 
         function removeSkill(event) {
-            if (event == null) {
-                selSkills.slice(0, selSkills.length);
+            if (event == undefined) {
+                selSkills.splice(0, selSkills.length);
+                console.log(selSkills);
             }
             else {
                 console.log(event.target.previousSibling);
@@ -243,6 +246,7 @@
                 const index = selSkills.findIndex(_ => _.skillclass == skillteam[0] && _.skill == skillteam[1]);
                 selSkills.splice(index, 1);
             }
+            loadSkills();
             refreshAccordion();
             skillsCount();
         }
@@ -271,7 +275,7 @@
             const aChoiceSkillList = document.querySelector('#aSkillList');
 
             var boolanyselected = selectedCount == 0;
-            divSkillTitle.textContent = boolanyselected ? `請選擇所需技能` : `請選擇所需技能(${selectedCount})`;
+            divSkillTitle.innerHTML = boolanyselected ? `請選擇所需技能` : `請選擇所需技能(${selectedCount})<buuton class="btn btn-secondary" onclick="removeSkill()">清除全部</button>`;
             spanCount.textContent = boolanyselected ? "" : `已選擇${selectedCount}項技能`;
             spanCount.hidden = boolanyselected;
             aChoiceSkillList.hidden = boolanyselected;
