@@ -20,12 +20,10 @@
 <link rel="stylesheet" href="~/css/blogstyle.css" type="text/css">
 <header class="header-section">
     <div class="nav-options">
-
         <div class="container">
             <div class="humberger-menu ">
                 @Html.ActionLink("前往首頁", "List", "Blog")
             </div>
-
             <div class="nav-menu">
                 <ul>
                     <li>
@@ -72,17 +70,11 @@
                         }
                     }
                 </div>
-
-
-
                 <div style="flex-grow: 1;">
                     <!-- 使用 flex-grow: 1; 讓這個區塊填滿剩餘的寬度 -->
-
-
                     <h2 style="color:white">
                         @Html.DisplayFor(modelItem => Model.articles.FirstOrDefault().Title)
                     </h2>
-
                     <div>
                         @* 超連結個人頁面 *@
                         <span>樓主 : </span>
@@ -122,7 +114,6 @@
                             </span>
                         }
                         <div style="display:inline-block;float:right;">
-
                             <ul class="nav nav-pills" style="margin:0" title="看更多選項">
                                 <li class="nav-item dropdown">
                                     <a data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false"><img src="~/images/blogimages/3844442_dot_menu_more_vertical_icon.png" style="width:45px;height:40px" /></a>
@@ -287,8 +278,8 @@
             <form id="formCom" method="post">
                 <input type="hidden" name="MemberID" value="@Context.Session.GetInt32(CDictionary.SK_UserID)" />
                 <input type="hidden" name="ArticleId" value="@Model.articles.FirstOrDefault().ArticleId" />
-                <input type="hidden" name="AFId" value=" @Model.articles.First().ArticleId" />
-                <input type="hidden" name="FId" value=" @Model.blogs.FirstOrDefault().BlogId" />
+                @* <input type="hidden" name="AFId" value=" @Model.articles.First().ArticleId" />
+                <input type="hidden" name="FId" value=" @Model.blogs.FirstOrDefault().BlogId" /> *@
 
                 <input type="hidden" name="ReportDate" value="@DateTime.Now" />
 
