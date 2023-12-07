@@ -456,7 +456,7 @@ namespace prjDB_GamingForm_Show.Controllers
         {
             CBlogViewModel vm = new CBlogViewModel()
             {
-                subTags = _db.SubTags.Where(P => P.SubTagId == SId).Select(a => a),
+                subTags = _db.SubTags.Where(P => P.SubTagId == BId).Select(a => a),
                 
 
             };
