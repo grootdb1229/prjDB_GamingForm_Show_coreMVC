@@ -162,7 +162,6 @@
         const text = document.querySelector('#text');
         const selSalary = document.querySelector('#money');
         loadSkillClassess()
-        loadRegion();
         function loadSkillClassess() {
             $.ajax('@Url.Content("~/Depute/SkillClassess")', {
                 "type": 'Post', //POST、PUT、DELETE
@@ -183,20 +182,19 @@
                     let checkValue;
                     $('.form-check-input').click(function () {
                         var isChecked = $(this).is(":checked");
-                        // console.log(isChecked)
+                        console.log(isChecked)
                         checkValue = $(this).attr("name");
                         checkID = $(this).val();
-                        // console.log(checkValue); //on
-                        var tag = `<div class="tag_list">${checkValue}<span>X</span></div>`
+                        console.log(checkValue); //on
+                        
                         if (isChecked == false) 
                             checkID = "";
-                        else { 
-                            $('#test').append(tag)
-                        }
+                        var tag = `<div class="tag_list">${checkValue}<span>X</span></div>`
+                        $('#test').append(tag)
                         loadSkill(checkID);
                     });
+                    loadRegion();
                 })
-            // loadSkill();
         }
         function loadSkill(value) {
             $.ajax('@Url.Content("~/Depute/Skills")', {
@@ -221,14 +219,19 @@
                     SkillFrag.append(Skills);
                     $('#skill').html(SkillFrag);
 
+                    // let checkValue;
                     // $('.form-check-input').click(function () {
                     //     var isChecked = $(this).is(":checked");
                     //     // console.log(isChecked)
-                    //     checkValue = $(this).val();
+                    //     checkValue = $(this).attr("name");
+                    //     checkID = $(this).val();
                     //     // console.log(checkValue); //on
+                    //     var tag = `<div class="tag_list" id="${checkValue}">${checkValue}<span>X</span></div>`
                     //     if (isChecked == false)
-                    //         checkValue = "";
-                    //     loadSkill(checkValue);
+                    //         $(`#${checkValue}`).remove()
+                    //     else {
+                    //         $('#test').append(tag)
+                    //     }
                     // });
                 })
         }
@@ -252,6 +255,7 @@
 
                     RegionFrag.append(Regions);
                     $('#regions').after(RegionFrag)
+                    loadHotkey()
                 })
         }
         //基本搜尋&&進階搜尋///
