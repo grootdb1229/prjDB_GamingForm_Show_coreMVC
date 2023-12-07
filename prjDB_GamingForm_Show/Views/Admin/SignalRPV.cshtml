@@ -1,9 +1,10 @@
 ﻿@model IEnumerable<prjDB_GamingForm_Show.ViewModels.CSignalRUseAdminList>
 
 <p>
-    <h2>管理者列表</h2>
+    <h2 style="font-size:30px">管理者列表</h2>
 </p>
-<table class="table">
+
+<table class="table table-dark table-hover" style="color:cornsilk;font-size:20px;border-radius:5px">
     <thead>
         <tr>
             <th>
@@ -34,7 +35,7 @@
                     <!-- 在線狀態將在此處更新 -->離線
                 </td>
                 <td>
-                    <button id="@($"sendMessage_{item.AdminName}")" onclick="openChat(@item.AdminId)">開啟</button>
+                    <button id="@($"sendMessage_{item.AdminName}")" onclick="openChat(@item.AdminId)" class="btn btn-outline-light">開啟</button>
                 </td>
             </tr>
         }
