@@ -2,6 +2,7 @@
 using MailKit.Search;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis;
+using Microsoft.DotNet.Scaffolding.Shared.Messaging;
 using Microsoft.EntityFrameworkCore;
 using NuGet.Packaging;
 using prjDB_GamingForm_Show.Models;
@@ -185,6 +186,10 @@ namespace prjDB_GamingForm_Show.Controllers
                 string record = "";
                 if (HttpContext.Request.Cookies[userId.ToString()] != null)
                     record = HttpContext.Request.Cookies[userId.ToString()];
+                if (userId == 0) 
+                {
+                    return  Json (new { message = "請先登入" });       
+                }
                 string[] strResult = record.Split(',');
                 strResult = strResult.Reverse().Distinct().ToArray();
                 IEnumerable<Product> datas = null;
@@ -204,6 +209,8 @@ namespace prjDB_GamingForm_Show.Controllers
                 }
                 return Json(CookieList.Take(5));
             }
+
+
 
 
                 public IActionResult Index(CKeyWord ck)
@@ -515,12 +522,7 @@ namespace prjDB_GamingForm_Show.Controllers
                 //Trace.WriteLine("BBB" + List2);
                 return Content(jsonResult, "application/json");
             }
-            //    public IActionResult IndexPage(int? id) //拿來跳page用的 id用變數去計算，++--一個變數去控制讀取到的最後一個商品控制Page
-            //{
-            //    IEnumerable<Product> Pdb = null;
-            //    Pdb = (from aa in _db.Products select aa).Skip((int)id).Take(25);//到最後一頁之後不能按 邏輯再補充
-            //    return Json(Pdb);
-            //}
+     
             public ActionResult Create()
             {
                 _db.Products.Load();

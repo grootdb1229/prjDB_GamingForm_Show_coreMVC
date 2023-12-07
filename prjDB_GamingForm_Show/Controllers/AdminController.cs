@@ -292,7 +292,7 @@ namespace prjDB_GamingForm_Show.Controllers
                 chats.Add(newchat);
                 return PartialView(chats);
             }
-        }
+        }        
         //public IActionResult MemberListNexttest()
         //{
         //    if (HttpContext.Session.Keys.Contains(CDictionary.SK_管理者觀看會員清單頁數使用關鍵字))
