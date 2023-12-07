@@ -39,9 +39,9 @@
                     @Html.DisplayFor(modelItem => item.Name)
                 </td>
                 <td>
-                    @Html.ActionLink("修改", "Edit","Admin", new { /* id=item.PrimaryKey */ },new  { @class = "btn btn-dark" })
-                    @Html.ActionLink("詳細", "Details","Admin", new { /* id=item.PrimaryKey */ },new  { @class = "btn btn-dark" })
-                    @Html.ActionLink("刪除", "Delete","Admin", new { /* id=item.PrimaryKey */ },new  { @class = "btn btn-dark" })
+                    @Html.ActionLink("修改", "BlogSubTagEdit","Admin", new { SId = item.SubTagId },new  { @class = "btn btn-dark" })
+                    @Html.ActionLink("詳細", "BlogList","Admin", new { txtKeyWord = item.Name},  new { @class = "btn btn-dark" })
+                    @Html.ActionLink("刪除", "BlogSubTagDelete","Admin", new { SId = item.SubTagId },new  { @class = "btn btn-dark" , onclick = "return confirm('確定要刪除嗎?')" })
                 </td>
             </tr>
         }
