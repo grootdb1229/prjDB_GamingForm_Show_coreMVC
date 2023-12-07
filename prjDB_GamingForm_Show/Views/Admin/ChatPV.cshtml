@@ -33,7 +33,8 @@
             align-self: flex-end;
             font-size:20px;
             margin-top:8px;
-            margin-bottom:0px
+            margin-bottom:0px;
+            color: #FCFCFC
         }
         
         .messageSpan{
@@ -82,7 +83,7 @@
     $('#sendButton').on('click', sendMessageBySignalR);
 
     $('#message').on('keydown', function (event) {
-        if (event.key === "Enter") {
+        if (event.key === "Enter" && !event.shiftKey) {
             event.preventDefault();
             sendMessageBySignalR();
         }
@@ -132,7 +133,7 @@
 
         // 創建一個 <span> 用於顯示時間
         var timeSpan = document.createElement("span");
-        
+        timeSpan.classList.add("messageSpan")
         timeSpan.innerText = formattedDateTime;
 
         // 將 <span> 加入訊息內容
@@ -140,6 +141,7 @@
 
         // 創建一個新的 <p> 元素
         var newMessage = document.createElement("p");
+        newMessage.classList.add("messageP")
         // 設定新元素的內容為用戶傳遞的訊息
         newMessage.innerText = msg;
 
