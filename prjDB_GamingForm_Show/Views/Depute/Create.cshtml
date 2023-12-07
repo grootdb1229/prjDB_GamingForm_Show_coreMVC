@@ -111,8 +111,8 @@
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
     <script>
-        const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]')
-        const popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl))
+        const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]');
+        const popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl));
         const selSkills = [];
         const divSkillClasses = document.querySelector('#list-tab'),
             divSkillsGroup = document.querySelector('#nav-tabContent');
@@ -139,7 +139,7 @@
             }
         })
 
-        async function openSkillBrowser() {
+        function openSkillBrowser() {
             Swal.fire({
                 title: selectedCount == 0 ? `請選擇所需技能` : `請選擇所需技能(${selectedCount})`,
                 width: '50rem',
@@ -190,7 +190,7 @@
             const skillclasses = datas.skillclasses.map(skillclass => {
                 const count = skillclassesCount(skillclass.name);
                 const spanhidden = count == 0 ? "hidden" : "";
-                return `<a class="list-${skillclass.name}-item-action list-group-item" id="list-${skillclass.name}-list" data-bs-toggle="list" href="#list-${skillclass.name}" role="tab" aria-controls="list-${skillclass.name}">${skillclass.name}<span ${spanhidden}>(${count})</span><ul id=sel${skillclass.name} class="list-group col-6"></ul></a>`
+                return `<a class="list-${skillclass.name}-item-action list-group-item skillclasstab" id="list-${skillclass.name}-list" data-bs-toggle="list" href="#list-${skillclass.name}" role="tab" aria-controls="list-${skillclass.name}">${skillclass.name}<span ${spanhidden}>(${count})</span><ul id=sel${skillclass.name} class="list-group col-6"></ul></a>`
             });
             const skillsgroup = datas.skillclasses.map(skillclass => `<div class="tab-pane fade" id="list-${skillclass.name}" role="tabpanel" aria-labelledby="list-${skillclass.name}-list">${skillclass.name}</div>`)
             divSkillClasses.innerHTML = skillclasses.join("");
@@ -286,12 +286,17 @@
         }
 
         function refreshSkillClassSpan() {
-            const selectedSkillClass = document.querySelector('.active').firstChild.textContent,
-                skillClassCount = skillclassesCount(selectedSkillClass),
-                spanSkillClass = document.querySelector('.active').lastChild.previousSibling,
-                boolSkillClassCountZero = skillClassCount == 0;
-            spanSkillClass.textContent = boolSkillClassCountZero ? `` : `(${skillClassCount})`;
-            spanSkillClass.hidden = boolSkillClassCountZero;
+            const allskillclasstab = document.querySelectorAll('.skillclasstab');
+            //因為nodelist只可讀取不可修改，故用Array.from()，轉換成陣列
+            const allskillclasstablist = Array.from(allskillclasstab);
+
+            allskillclasstablist.map(skillclass => {
+                const skillclasscount = selSkills.filter(_ => _.skillclass == skillclass.firstChild.textContent).length,
+                    boolSkillClassCountZero = skillclasscount == 0,
+                    spanSkilClass = skillclass.lastChild.previousSibling;
+                spanSkilClass.textContent = `(${skillclasscount})`;
+                spanSkilClass.hidden = boolSkillClassCountZero;
+            })
         }
 
         function refreshChoiceSkillList() {
