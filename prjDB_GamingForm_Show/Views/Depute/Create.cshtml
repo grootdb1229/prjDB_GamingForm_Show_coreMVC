@@ -179,6 +179,7 @@
             });
             loadSkillClasses();
             refreshAccordion();
+            skillsCount();
         }
 
         async function loadSkillClasses() {
@@ -203,8 +204,9 @@
             const response = await fetch(`@Url.Content("~/depute/skillss")?skillClass=${chooseClass}`);
             const datas = await response.json();
             const skills = datas.map(skill => {
+                var checked = "";
                 if (selSkills.find(_ => _.skillclass == `${chooseClass}` && _.skill == `${skill.name}`))
-                    var checked = "checked";
+                    checked = "checked";
                 return `<li class="list-group-item"><input class="form-check-input me-1" type="checkbox" value="" id="${skill.name}" ${checked}><label class="form-check-label stretched-link" for="${skill.name}">${skill.name}</label></li>`
             })
             document.querySelector(`#${chooseClassID}`).innerHTML = skills.join("");
@@ -221,11 +223,12 @@
                             return
                         }
                         selSkills.push({ skillclass: chooseClass, skill: selSK });
-                    } 
+                    }
                     else {
                         const index = selSkills.findIndex(i => i.skillclass == chooseClass && i.skill == selSK);
                         selSkills.splice(index, 1);
                     }
+                    console.log(selSkills);
                     refreshAccordion();
                     skillsCount();
                 })
@@ -233,8 +236,9 @@
         }
 
         function removeSkill(event) {
-            if (event == null) {
-                selSkills.slice(0, selSkills.length);
+            if (event == undefined) {
+                selSkills.splice(0, selSkills.length);
+                console.log(selSkills);
             }
             else {
                 console.log(event.target.previousSibling);
@@ -243,6 +247,7 @@
                 const index = selSkills.findIndex(_ => _.skillclass == skillteam[0] && _.skill == skillteam[1]);
                 selSkills.splice(index, 1);
             }
+            loadSkills();
             refreshAccordion();
             skillsCount();
         }
@@ -271,7 +276,7 @@
             const aChoiceSkillList = document.querySelector('#aSkillList');
 
             var boolanyselected = selectedCount == 0;
-            divSkillTitle.textContent = boolanyselected ? `請選擇所需技能` : `請選擇所需技能(${selectedCount})`;
+            divSkillTitle.innerHTML = boolanyselected ? `請選擇所需技能` : `請選擇所需技能(${selectedCount})<buuton class="btn btn-secondary" onclick="removeSkill()">清除全部</button>`;
             spanCount.textContent = boolanyselected ? "" : `已選擇${selectedCount}項技能`;
             spanCount.hidden = boolanyselected;
             aChoiceSkillList.hidden = boolanyselected;
