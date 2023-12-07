@@ -8,8 +8,7 @@
         <div class="row gx-4 gx-lg-5 align-items-center">
 
             <div class="col-md-6"><img class="card-img-top" src="~/images/shop/@Model.FImagePath" alt="..." /></div>
-            <div class="col-md-6">
-                <div class="small mb-1">SKU: BST-498</div>
+            <div class="col-md-6">               
                 <h1 class="display-5 fw-bolder">@Html.DisplayFor(model => model.ProductName)</h1>
                 <div>
                     @{
@@ -36,6 +35,19 @@
 
                     <!-- 右側的按鈕和其他內容 -->
                     <div style="margin-left: auto;">
+                        <!-- 收藏按鈕 -->
+                        @if (Context.Session.GetInt32(CDictionary.SK_UserID) == null)
+                        {
+                            <button type="button" class="btn btn-info" id="btnLike" data-bs-toggle="modal" data-bs-target="#staticBackdrop" style="float:right;margin:0 5px">
+                                <img src="~/images/shop/heart.png"  width="20px" height="20px" />
+                        </button>
+                        }
+                        else
+                        {
+                            <button type="button" class="btn btn-info" id="btnLike" style="float:right;margin:0 5px">
+                                <img src="~/images/shop/heart.png"  width="20px" height="20px" />
+                        </button>
+                        }
                         <!-- HTML 中的按鈕 -->
                         <button id="copyButton" class="btn btn-info" data-clipboard-target="#urlToCopy" style="float:right;margin:0 5px">分享</button>
                         <!-- 網址藏在這 -->
@@ -141,4 +153,39 @@
             }
         </div>
     </div>
-</section>*@
+
+         //彈出MODAL
+        const btnlike = document.getElementById("btnLike");
+        var splike = document.getElementById("spLike")
+
+        if (!btnlike.hasAttribute('data-bs-toggle')) {
+            btnlike.addEventListener('click', () => {
+                fetch('@Url.Content("~/Blog/Like")?AFId=@Model.articles.FirstOrDefault().ArticleId')
+                    .then(response => response.text())
+                    .then(data => {
+                        console.log(data)
+                        splike.innerHTML = data
+                    })
+            })
+        }
+
+        public IActionResult Like(int? AFId)
+        {
+            int memberId = (int)HttpContext.Session.GetInt32(CDictionary.SK_UserID);
+            var art = _db.ArticleActions.Where(a => a.ArticleId == AFId && a.MemberId == memberId && a.ActionId == 1).Select(a => a).FirstOrDefault();
+            if (art != null)
+            {
+                _db.ArticleActions.Remove(art);
+            }
+            else
+            {
+                ArticleAction x = new ArticleAction();
+                x.ArticleId = (int)AFId;
+                x.MemberId = memberId;
+                x.ActionId = 1;
+                _db.ArticleActions.Add(x);
+            }
+            _db.SaveChanges();
+            var likeCount = _db.ArticleActions.Count(a => a.ArticleId == AFId && a.ActionId == 1);
+            return Content(likeCount.ToString());
+        } *@
