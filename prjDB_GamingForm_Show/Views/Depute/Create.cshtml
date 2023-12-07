@@ -2,7 +2,7 @@
 
 @{
     ViewData["Title"] = "Create";
-    Layout = "~/Views/Shared/_Layout_DBM.cshtml";
+    Layout = "~/Views/Shared/_Layout_DB.cshtml";
 }
 @section styles{
 
@@ -17,7 +17,7 @@
 }
 </style>
 }
-
+<div class="tm-section-wrap">
 <h2>發佈委託</h2>
 
 <h4>請輸入委託資訊</h4>
@@ -98,13 +98,13 @@
             <input name="skilllist" id="select-skills" hidden>
 
             <div class="form-floating mb-3">
-                <a asp-action="personal" class="btn btn-secondary" >取消</a>
+                <a asp-action="homeframe" class="btn btn-secondary" >取消</a>
                 <input type="submit" value="送出並發佈" class="btn btn-success" onclick="prepareAndSubmit()"/>
             </div>
         </form>
     </div>
 </div>
-
+</div>
 
 @section Scripts {
     @{
@@ -312,6 +312,7 @@
         function refreshAccordion() {
             const divAccordion = document.querySelector('#divaccordion'),
                 divAccordionBnt = document.querySelector('#divaccordionbtn');
+            
             const skills = selSkills.map(skill => `<span class="badge rounded-pill text-bg-secondary m-1">${skill.skillclass}-${skill.skill}<button type="button" class="btn-close" aria-label="Close" onclick="removeSkill(event)"></button></span>`);
             var boolSkillCountZero = selSkills.length == 0;
             divAccordionBnt.disabled = boolSkillCountZero;

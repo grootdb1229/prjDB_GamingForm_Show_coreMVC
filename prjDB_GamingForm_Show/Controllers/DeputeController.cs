@@ -455,7 +455,7 @@ namespace prjDB_GamingForm_Show.Controllers
             _db.Deputes.Load();
             Depute n = _db.Deputes.FirstOrDefault(_ => _.DeputeId == id);
             if (n == null)
-                return RedirectToAction("Personal");
+                return RedirectToAction("HomeFrame");
             return View(n);
         }
         [HttpPost]
@@ -491,7 +491,7 @@ namespace prjDB_GamingForm_Show.Controllers
                 _db.DeputeSkills.Add(ndsk);
                 _db.SaveChanges();
             }
-            return RedirectToAction("Personal");
+            return RedirectToAction("HomeFrame");
         }
         public IActionResult SkillClasses()
         {
@@ -594,14 +594,14 @@ namespace prjDB_GamingForm_Show.Controllers
                 _db.DeputeSkills.Add(ndsk);
                 _db.SaveChanges();
             }
-            return RedirectToAction("Personal");
+            return RedirectToAction("HomeFrame");
         }
         public IActionResult DeleteDeputeRecord(int id)
         {
             DeputeRecord o = _db.DeputeRecords.FirstOrDefault(_ => _.Id == id);
             _db.DeputeRecords.Remove(o);
             _db.SaveChanges();
-            return RedirectToAction("Personal");
+            return RedirectToAction("HomeFrame");
         }
         public IActionResult DeleteDepute(int id)
         {
@@ -624,14 +624,14 @@ namespace prjDB_GamingForm_Show.Controllers
             }
             _db.Deputes.Remove(o);
             _db.SaveChanges();
-            return RedirectToAction("Personal");
+            return RedirectToAction("HomeFrame");
         }
         public IActionResult DeputeDetial(int? id)
         {
             _db.DeputeRecords.Load();
             Depute o = _db.Deputes.FirstOrDefault(_ => _.DeputeId == id);
             if (o == null)
-                return RedirectToAction("Personal");
+                return RedirectToAction("HomeFrame");
             CDeputeViewModel n = new CDeputeViewModel()
             {
                 title = o.Title,
@@ -649,7 +649,7 @@ namespace prjDB_GamingForm_Show.Controllers
         }
 
         #region MainView
-        public IActionResult Personal()
+        public IActionResult HomeFrame()
         {
             ViewBag.memberid = _memberIdtest;
             return View();
