@@ -328,12 +328,12 @@ namespace prjDB_GamingForm_Show.Controllers
         }
         //------------------檢舉------------
         [HttpPost]
-        public IActionResult ArticleComplain(ArticleComplain inCom, int? AFId, int? FId)
+        public IActionResult ArticleComplain(ArticleComplain inCom)
         {
             _db.ArticleComplains.Add(inCom);
             _db.SaveChanges();
 
-            return RedirectToAction("ArticleContent", "Blog", new { AFId, FId });
+            return Content("檢舉成功");
         }
 
 

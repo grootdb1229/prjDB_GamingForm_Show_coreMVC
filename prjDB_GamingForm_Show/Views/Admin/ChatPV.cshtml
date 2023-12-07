@@ -1,43 +1,97 @@
 ﻿@model IEnumerable<prjDB_GamingForm_Show.ViewModels.CAdminChatViewModel>
-<div style="height:350px;width:250px">
-    <div style="border-bottom:solid red 1px">
-        <img src="~/production/images/@Model.FirstOrDefault().ReceiverImg" alt="..." class="img-circle profile_img" style="height:7vh;width:7vh">
-        <span id="rn" style="font-size:20px;">@ViewBag.SendToName</span>
-        <span id="sn" hidden>@Context.Session.GetString(CDictionary.SK_管理者名稱)</span>        
-    </div>
-    <div id="chatContent" style="height:150px ;max-height: 150px; overflow-y: auto;border:solid blue">
-        @foreach (var chat in Model)
-        {
-            if(chat.SenderName == Context.Session.GetString(CDictionary.SK_管理者名稱))
-            {
-                <div style="text-align:right; color:red">
-                    <span>@chat.ModefiedDate</span>
-                    <p>@chat.ChatContent</p>
-               </div>
-            }
-            else
-            {
-                <div style="text-align:left ; color:blue">
-                    <span>@chat.ModefiedDate</span>
-                    <p>@chat.ChatContent</p>
-                </div>
-            }
+<head>
+    <style>
+        .sender {
+            text-align: right;
+            border-radius: 5px;
+            background-color: #0080FF;
+            color: antiquewhite;
+            margin-left: auto;
+            margin-right: 5px;
+            padding: 5px;
+            margin-bottom: 5px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
-    </div>
-    <div class="mb-3">
-        <input class="form-control" type="text" placeholder="請輸入..." aria-label="default input example" id="message">
-        <button type="button" class="btn btn-primary" id="sendButton">傳送訊息</button>
-    </div>
 
+        .receiver {
+            text-align: left;
+            border-radius: 5px;
+            background-color: #272727;
+            color: antiquewhite;
+            margin-right: auto;
+            margin-left: 5px;
+            padding: 5px;
+            margin-bottom: 5px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .messageP{
+            align-self: flex-end;
+            font-size:20px;
+            margin-top:8px;
+            margin-bottom:0px
+        }
+        
+        .messageSpan{
+            color: #BEBEBE
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+</head>
+<div style="height:520px;width:350px">
+    <div style="border-bottom:groove 3px black;border-radius:5px;display: flex; align-items: center; padding: 10px;">
+        <img src="~/production/images/@Model.FirstOrDefault().ReceiverImg" alt="..." class="img-circle profile_img" style="height:7vh;width:7vh;margin-right: 10px;margin-left:0px;margin-top:0px">
+        <div style="flex-grow: 1;">
+            <span id="rn" style="font-size:30px;color:cornsilk">@ViewBag.SendToName</span>
+            <span id="sn" hidden>@Context.Session.GetString(CDictionary.SK_管理者名稱)</span>
+        </div>
+
+    </div>
+    <div id="chatContent" style="height:350px ;max-height: 350px; overflow-y: auto;display: flex; flex-direction: column;" ">
+    @foreach (var chat in Model)
+    {
+        if (chat.SenderName == Context.Session.GetString(CDictionary.SK_管理者名稱))
+        {
+                <div class="sender">
+                    <span class="messageSpan">@chat.ModefiedDate</span>
+                    <p class="messageP">@chat.ChatContent</p>
+                </div>
+        }
+        else
+        {
+                <div class="receiver">
+                    <span class="messageSpan">@chat.ModefiedDate</span>
+                    <p class="messageP">@chat.ChatContent</p>
+                </div>
+        }
+    }
+    </div>
+    <div class="form-floating" style="display: flex; align-items: flex-end;margin-top:5px;">
+        <textarea class="form-control" placeholder="請輸入..." id="message" style="border-radius:5px;background-color:#E0E0E0;"></textarea>
+        <button type="button" class="btn btn-primary" id="sendButton"><i class="fa-solid fa-paper-plane"></i></button>
+    </div>
+    
 </div>
 
 <script>
     //傳送訊息
-    $('#sendButton').on('click', function () {
+    $('#sendButton').on('click', sendMessageBySignalR);
+
+    $('#message').on('keydown', function (event) {
+        if (event.key === "Enter") {
+            event.preventDefault();
+            sendMessageBySignalR();
+        }
+    });
+    function sendMessageBySignalR() {
         let selfUserName = $('#sn').text() // 使用者名稱
         let message = $('#message').val();
         let sendToUserName = $('#rn').text() // 接收者的使用者名稱
-
+        
         // 新增：呼叫 SignalR Hub 方法獲取接收者的 SignalR ID
         getSignalRIdByUserName(sendToUserName).then(function (connectionId) {
             // 修改：傳送訊息時使用接收者的 SignalR ID
@@ -45,7 +99,8 @@
                 console.error('傳送錯誤: ' + err.toString());
             });
         });
-    });
+        document.querySelector('#message').value = "";
+    };
     function getSignalRIdByUserName(userName) {
         return new Promise((resolve, reject) => {
             connection.invoke("GetConnectionIdByUserName", userName).then(function (connectionId) {
@@ -63,7 +118,7 @@
         // 獲取當前日期時間
         var currentDate = new Date();
 
-        // 格式化日期時間為 "yyyy/MM/dd HH:mm"
+        // 格式化日期時間
         var formattedDateTime = currentDate.getFullYear() + "/" +
             (currentDate.getMonth() + 1).toString().padStart(2, '0') + "/" +
             currentDate.getDate().toString().padStart(2, '0') + " " +
@@ -72,12 +127,12 @@
 
         // 創建一個 <div> 用於分辨發送人或接收人
         var div = document.createElement("div")
-        div.style.textAlign = "right";
-        div.style.color = "red";
+        div.classList.add("sender")
         messageBlock.appendChild(div)
 
         // 創建一個 <span> 用於顯示時間
         var timeSpan = document.createElement("span");
+        
         timeSpan.innerText = formattedDateTime;
 
         // 將 <span> 加入訊息內容
@@ -89,8 +144,8 @@
         newMessage.innerText = msg;
 
         // 將新元素加入訊息區塊
-        timeSpan.appendChild(newMessage);  
-        
+        timeSpan.appendChild(newMessage);
+
         // 卷軸捲到最底部
         messageBlock.scrollTop = messageBlock.scrollHeight;
     });
@@ -100,7 +155,7 @@
         // 獲取當前日期時間
         var currentDate = new Date();
 
-        // 格式化日期時間為 "yyyy/MM/dd HH:mm"
+        // 格式化日期時間
         var formattedDateTime = currentDate.getFullYear() + "/" +
             (currentDate.getMonth() + 1).toString().padStart(2, '0') + "/" +
             currentDate.getDate().toString().padStart(2, '0') + " " +
@@ -109,8 +164,7 @@
 
         // 創建一個 <div> 用於分辨發送人或接收人
         var div = document.createElement("div")
-        div.style.textAlign = "left";
-        div.style.color = "blue";
+        div.classList.add("receiver")
         messageBlock.appendChild(div)
 
         // 創建一個 <span> 用於顯示時間
@@ -126,8 +180,8 @@
         newMessage.innerText = msg;
 
         // 將新元素加入訊息區塊
-        timeSpan.appendChild(newMessage);    
-        
+        timeSpan.appendChild(newMessage);
+
         // 卷軸捲到最底部
         messageBlock.scrollTop = messageBlock.scrollHeight;
     });
