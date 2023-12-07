@@ -6,7 +6,6 @@
 
 <h2>BlogSubTagEdit</h2>
 
-<h4>CBlogViewModel</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -20,6 +19,7 @@
                 <input asp-for="subTags.FirstOrDefault().Name" class="form-control" />
                 <span asp-validation-for="subTags.FirstOrDefault().Name" class="text-danger"></span>
             </div>
+
             <span>
                 <input type="submit" value="修改" class="btn btn-info" />
             </span>

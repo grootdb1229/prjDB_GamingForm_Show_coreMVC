@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using prjDB_GamingForm_Show.Models;
 using prjDB_GamingForm_Show.Models.Entities;
@@ -9,13 +10,18 @@ namespace prjDB_GamingForm_Show.Controllers
 {
     public class AdminController : AdminUseSuperController
     {
+        
         private readonly IWebHostEnvironment _host;
         private readonly DbGamingFormTestContext _db;
-        public AdminController(IWebHostEnvironment host, DbGamingFormTestContext db)
+        public AdminController(IWebHostEnvironment host, DbGamingFormTestContext db) 
         {
             _host = host;
             _db = db;
+            
         }
+        
+        
+
         public IActionResult Index()
         {
             string name = TempData["AdminName"] as string;
@@ -292,7 +298,34 @@ namespace prjDB_GamingForm_Show.Controllers
                 chats.Add(newchat);
                 return PartialView(chats);
             }
-        }        
+        }
+        [HttpPost]
+        public int HowMuchMessageNotCheck()
+        {
+            int count = 0;
+            int reid = _db.Admins.Where(a => a.Name == HttpContext.Session.GetString(CDictionary.SK_管理者名稱)).Select(a => a.AdminId).FirstOrDefault();
+            foreach(var m in _db.Chats)
+            {
+                if(m.ReceiveAdmin == reid && m.IsCheck == false)
+                {
+                    count++;
+                }
+            }            
+            return count;
+        }
+        [HttpPost]
+        public void CheckAllMessage(int senderid)
+        {
+            int reid = _db.Admins.Where(a => a.Name == HttpContext.Session.GetString(CDictionary.SK_管理者名稱)).Select(a => a.AdminId).FirstOrDefault();
+            foreach(var m in _db.Chats)
+            {
+                if(m.ReceiveAdmin == reid && m.SenderAdmin == senderid && m.IsCheck == false)
+                {
+                    m.IsCheck = true;
+                }
+            }
+            _db.SaveChanges();
+        }
         //public IActionResult MemberListNexttest()
         //{
         //    if (HttpContext.Session.Keys.Contains(CDictionary.SK_管理者觀看會員清單頁數使用關鍵字))
@@ -451,33 +484,70 @@ namespace prjDB_GamingForm_Show.Controllers
 
 
 
-        //--1207--未完工
+       
         public IActionResult BlogEdit(int? BId)
         {
             CBlogViewModel vm = new CBlogViewModel()
             {
-                subTags = _db.SubTags.Where(P => P.SubTagId == BId).Select(a => a),
-                
+                blogs = _db.Blogs.Where(a => a.BlogId == BId).Select(a => a)               
 
             };
             return View(vm);
         }
 
         [HttpPost]
-        public IActionResult BlogEdit(SubTag Snart, int? SId)
+        public IActionResult BlogEdit(Blog Bnart, int? BId)
         {
-            SubTag dbsub = _db.SubTags.First(a => a.SubTagId == Snart.SubTagId);
-            if (dbsub != null)
+            Blog dbblog = _db.Blogs.First(a => a.BlogId == Bnart.BlogId);
+
+            if (dbblog != null)
             {
-                dbsub.Name = Snart.Name;
+                dbblog.Title = Bnart.Title;
+                _db.SaveChanges();
             }
+
+            return RedirectToAction("BlogList");
+        }
+
+        public ActionResult BlogDelete(int? BId)
+        {
+            Blog dbblog = _db.Blogs.FirstOrDefault(a => a.BlogId == BId);
+            if (dbblog != null)
+            {
+                dbblog.SubTagId = 14;
+                _db.SaveChanges();
+            }
+            return RedirectToAction("BlogList");
+        }
+
+
+        public IActionResult SubTagCreate(/*int? STId*/)
+        {
+
+            CBlogViewModel vm = null;
+            //if (STId == null)
+            //    return RedirectToAction("BlogCategoryList");
+            vm = new CBlogViewModel
+            {
+                subTags = _db.SubTags
+
+                //blogs = _db.Blogs.Include(b => b.SubBlogs).Where(p => p.BlogId == FId),
+                //subBlogs = _db.SubBlogs.Include(s => s.Blog).Where(p => p.BlogId == FId).Select(p => p),
+                //articles = _db.Articles,
+            };
+
+            return View(vm);
+        }
+        [HttpPost]
+        public IActionResult SubTagCreate(SubTag sub)
+        {
+            _db.SubTags.Add(sub);
             _db.SaveChanges();
             return RedirectToAction("BlogCategoryList");
         }
 
 
-
         #endregion
         //---------------------------論壇---------------------------
     }
-    }
+}

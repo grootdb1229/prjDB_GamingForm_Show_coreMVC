@@ -50,9 +50,9 @@
                         @Html.DisplayFor(modelItem => item.SubTag.Name)
                     </td>
                     <td>
-                        @Html.ActionLink("修改", "Edit","Admin", new { /* id=item.PrimaryKey */ },new  { @class = "btn btn-dark" })
+                        @Html.ActionLink("修改", "BlogEdit", "Admin", new { BId = item.BlogId}, new { @class = "btn btn-dark" })
                         @Html.ActionLink("詳細", "Details","Admin", new { /* id=item.PrimaryKey */ },new  { @class = "btn btn-dark" })
-                        @Html.ActionLink("刪除", "Delete","Admin", new { /* id=item.PrimaryKey */ },new  { @class = "btn btn-dark" })
+                        @Html.ActionLink("刪除", "BlogDelete", "Admin", new { BId = item.BlogId }, new { @class = "btn btn-dark", onclick = "return confirm('確定要刪除嗎?')" })
                     </td>
                 </tr>
             }
