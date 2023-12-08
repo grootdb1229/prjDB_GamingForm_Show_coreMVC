@@ -122,7 +122,7 @@
             <div class="tab-content">
                 <div id="tab-1" class="tab-pane fade show p-0 active">
                     <div class="job-item p-4 mb-4">
-                        <div id="list" class="row g-4">
+                        <div id="resultlist" class="row g-4">
                             @foreach (var item in Model)
                             {
                                 <div class="col-sm-12 col-md-8 d-flex align-items-center">
@@ -166,7 +166,6 @@
         const selSalary = document.querySelector('#money');
         loadSkillClassess();
         let keyword = [];
-        let temp = '';
         function loadSkillClassess() {
             $.ajax('@Url.Content("~/Depute/SkillClassess")', {
                 "type": 'Post', //POST、PUT、DELETE
@@ -177,7 +176,7 @@
                     const SkillClassess = data.map(value => 
                        `<div class="form-check">
                                          <input class="form-check-input skillclass" type="checkbox" id="${value.name}-1" value="${value.skillClassId}"name="${value.name}">
-                         <label class="form-check-label" for="${value.name}">
+                         <label class="form-check-label" for="${value.name}-1">
                          ${value.name}
                          </label>
                          </div>
@@ -193,7 +192,6 @@
                         checkValue = $(this).attr("name");
                         checkID = $(this).val();
                         console.log(checkValue); //on
-                        loadList(checkValue);
                         var tag = `<div class="tag_list" onclick="Tags2(event)" id="${checkValue}-2">${checkValue}<span>X</span></div>`
                         if (isChecked == false) {
                             checkID = "";
@@ -207,6 +205,7 @@
                             console.log(keyword);
                             $('#loadtags').append(tag)
                         }
+                        MutiSearch(keyword);
                         loadSkill(checkID);
                         
                         
@@ -228,7 +227,7 @@
                             var hi = 'checked'
                      return   `<div class="form-check">
                                   <input class="form-check-input skill" type="checkbox" ${hi} id="${Skills.name}-1" name="${Skills.name}">
-                                  <label class="form-check-label" for="${Skills.name}">
+                                  <label class="form-check-label" for="${Skills.name}-1">
                                   ${Skills.name}
                                  </label>
                                  </div>
@@ -238,15 +237,12 @@
                     $('#skill').html(SkillFrag);
                     //tag
                     let checkValue;
-                    $('.form-check-input.skill').click(Tags);
-                    
-                    function Tags(){
+                    $('.form-check-input.skill').click(function (){
                         var isChecked = $(this).is(":checked");
                         console.log(isChecked)
                         checkValue = $(this).attr("name");
                         checkID = $(this).val();
                         console.log(checkValue); //on
-                        loadList(checkValue);
                         var tag = `<div class="tag_list" onclick="Tags2(event)" id="${checkValue}-2">${checkValue}<span>X</span></div>`
                         if (isChecked == false) {
                             checkID = "";
@@ -260,8 +256,8 @@
                             console.log(keyword);
                             $('#loadtags').append(tag)
                         }
-
-                    }
+                        MutiSearch(keyword);
+                    })
                 })
         } 
         
@@ -275,7 +271,9 @@
             $(`#${checkValue}-2`).remove();
             console.log($(`#${checkValue}`)[0]);
             $(`#${checkValue}-1`)[0].checked=false
+            MutiSearch(keyword);
         }
+
         function loadRegion() {
             $.ajax('@Url.Content("~/Depute/Region")', {
                 "type": 'Post', //POST、PUT、DELETE
@@ -285,9 +283,9 @@
                     const RegionFrag = $(document.createDocumentFragment());
                     const Regions = data.map(Regions => 
                         `
-                                 <div class="col order-12">
-                                                <input class="form-check-input region" type="checkbox" id="${Regions.city}-1" value="${Regions.city}" name="${Regions.city}">
-                        <label class="form-check-label" for="flexCheckDefault">
+                        <div class="col order-12">
+                        <input class="form-check-input region" type="checkbox" id="${Regions.city}-1" value="${Regions.city}" name="${Regions.city}">
+                        <label class="form-check-label" for="${Regions.city}-1">
                          ${Regions.city}
                         </label>
                         </div>
@@ -303,7 +301,6 @@
                         checkValue = $(this).attr("name");
                         checkID = $(this).val();
                         console.log(checkValue); //on
-                        loadList(checkValue);
                         var tag = `<div class="tag_list" onclick="Tags2(event)" id="${checkValue}-2">${checkValue}<span>X</span></div>`
                         if (isChecked == false) {
                             checkID = "";
@@ -317,12 +314,55 @@
                             console.log(keyword);
                             $('#loadtags').append(tag)
                         }
-
+                        MutiSearch(keyword);
                     });
 
                 })
         }
         //基本搜尋&&進階搜尋///
+
+        function MutiSearch(value) {
+            $.ajax('@Url.Content("~/Depute/MutipleSearch")', {
+                "type": 'Post', //POST、PUT、DELETE
+                "data": {
+                        "txtMutiKeywords": value
+                    // "txtRegion": selectRegions.options[selectRegions.selectedIndex]
+                },
+                "dataType": "json"
+            })
+                .done((data) => {
+                    $('#totalcount').html(`相關結果有${data.length}筆`);
+                    const lstFrag = $(document.createDocumentFragment());
+                        const resultlist = data.map(resultlist =>
+                        `
+                                        <div  class="col-sm-12 col-md-8 d-flex align-items-center">
+                                                <img class="flex-shrink-0 img-fluid border rounded" src="/images/${resultlist.imgfilepath}" alt="" style="width: 80px; height: 80px;">
+                                        <div class="text-start ps-4">
+                                                <h5 class="mb-3">${resultlist.title}</h5>
+                                                <span class="text-truncate me-3"><i class="fa fa-map-marker-alt text-primary me-2"></i>${resultlist.region}</span>
+                                                <span class="text-truncate me-3"><i class="fa fa-user-tie text-primary me-2"></i>${resultlist.providername}</span>
+                                                <span class="text-truncate me-3"><i class="far fa-clock text-primary me-2"></i>${resultlist.startdate}</span>
+                                        <span class="text-truncate me-3"><i class="far fa-money-bill-alt text-primary me-2"></i>${resultlist.salary}</span>
+                                                <span class="text-truncate me-3"><i class="far fa-solid fa-eye text-primary me-2"></i>${resultlist.viewcount}</span>
+                                        </div>
+                                        </div>
+                                        <div class="col-sm-12 col-md-4 d-flex flex-column align-items-start align-items-md-end justify-content-center">
+                                        <div class="d-flex mb-3">
+                                        <a class="btn btn-light btn-square me-3" href=""><i class="far fa-heart text-primary"></i></a>
+                                                <a href="/Depute/DeputeDetails/${resultlist.id}" class="btn btn-primary id=" btndp"">詳細...</a>
+                                                <a href="/Depute/Apply/${resultlist.id}" class="btn btn-primary id=" btndp"">我要應徵...</a>
+                                        </div>
+                                                        <small class="text-truncate"><i class="far fa-regular fa-chart-bar text-primary me-2"></i>狀態 : ${resultlist.status}</small>
+                                                        <small class="text-truncate"><i class="far fa-calendar-alt text-primary me-2"></i>Last Update : ${resultlist.modifieddate}</small>
+                                        </div>
+
+                                                `
+                    )
+                        lstFrag.append(resultlist);
+                        $('#resultlist').html(lstFrag);
+
+                })
+        }
         function loadList(hotkey) {
             $.ajax('@Url.Content("~/Depute/Search")', {
                 "type": 'Post', //POST、PUT、DELETE
@@ -369,7 +409,7 @@
         function loadHotkey() {
             var count = 0;
             $.ajax('@Url.Content("~/Depute/Hotkey")', {
-                "type": 'Post', //POST、PUT、DELETE
+                "type": 'Post', //POST、PUT、DELETE//
                 "data": { "id": 3 },
                 "dataType": "json"
             })
@@ -378,7 +418,7 @@
                     const HkFrag = $(document.createDocumentFragment());
                     const snd = '<span class="text-truncate me-1">熱門關鍵字 :</span>'
                     HkFrag.append(snd);
-                    const Hotkeys = data.map(Hotkeys => `<a href="#" id="${Hotkeys}" onclick="loadList('${Hotkeys}')">#${Hotkeys} </a>`)
+                    const Hotkeys = data.map(Hotkeys => `<a href="#" id="${Hotkeys}" onclick="MutiSearch('${Hotkeys}')">#${Hotkeys} </a>`)
                     HkFrag.append(Hotkeys);
                     $('#hotkey').html(HkFrag)
                 })

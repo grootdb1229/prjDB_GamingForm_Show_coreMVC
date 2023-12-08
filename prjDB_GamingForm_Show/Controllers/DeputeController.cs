@@ -28,6 +28,8 @@ namespace prjDB_GamingForm_Show.Controllers
         public List<CDeputeViewModel> List { get; set; }
         public List<CDeputeViewModel> Temp { get; set; }
         public List<CDeputeViewModel> CookieList { get; set; }
+
+        public string[] MutipleKeywords { get; set; }
         public DeputeController(IWebHostEnvironment host, DbGamingFormTestContext context)
         {
             _host = host;
@@ -187,47 +189,34 @@ namespace prjDB_GamingForm_Show.Controllers
 
             
         }
-        public IActionResult DetailsSearch(CKeyWord vm)
+        public IActionResult MutipleSearch(CKeyWord vm)
         {
+            Temp = List;
             IEnumerable<CDeputeViewModel> datas = null;
-            if (vm.txtSkillClass == "請選擇..." &&
-                vm.txtSkill == "請選擇..." &&
-                vm.txtSalary == "請選擇..." &&
-                vm.txtRegion == "請選擇...")
+            if (vm.txtMutiKeywords == null)
+                return Json(List);
+            foreach (var item in vm.txtMutiKeywords)
             {
-                ListLoad();
-                datas = from n in List
-                        select n;
+                if (string.IsNullOrEmpty(item))
+                 return Content("沒有符合的條件");
 
+               datas = Temp.Where(n => (n.deputeContent.Trim().ToLower().Contains(item.Trim().ToLower()) ||
+                                          n.title.Trim().ToLower().Contains(item.Trim().ToLower()) ||
+                                          n.providername.Trim().ToLower().Contains(item.Trim().ToLower()) ||
+                                          n.region.Trim().ToLower().Contains(item.Trim().ToLower())
+                                          ))
+                                          .OrderByDescending(n => n.modifieddate);
+                Temp = datas.ToList();
+
+            }
+            if (Temp.Count==0)
+            {
+                return Json(Temp);
             }
             else
             {
-
-                if (vm.txtSkillClass == "請選擇...")
-                    vm.txtSkillClass = "";
-                if (vm.txtSkill == "請選擇...")
-
-                    if (vm.txtRegion == "請選擇...")
-                        vm.txtRegion = "";
-                if (vm.txtSalary == "請選擇...")
-                    vm.txtSalary = "0";
-                datas = Temp.Where(n => ((n.deputeContent.Trim().ToLower().Contains(vm.txtKeyword.Trim().ToLower()) ||
-                                          n.providername.Trim().ToLower().Contains(vm.txtKeyword.Trim().ToLower()) ||
-                                          n.region.Trim().ToLower().Contains(vm.txtKeyword.Trim().ToLower()))) &&
-                                          (n.region.Trim().ToLower().Contains(vm.txtRegion.Trim().ToLower())) &&
-                                          (n.salary >= (Convert.ToInt32(vm.txtSalary)) &&
-                                          n.deputeContent.Trim().ToLower().Contains(vm.txtSkillClass.Trim().ToLower()) &&
-                                          n.deputeContent.Trim().ToLower().Contains(vm.txtSkill.Trim().ToLower())
-                                          )
-                                          )
-                   .OrderByDescending(n => n.modifieddate);
-                Temp = datas.ToList();
+                return Json(Temp);
             }
-            if (datas == null || datas.Count() == 0)
-            {
-                return Content("No result");
-            }
-            return Json(datas);
         }
 
 
@@ -657,6 +646,11 @@ namespace prjDB_GamingForm_Show.Controllers
         #endregion
 
         #region PartialView
+
+        public IActionResult PartialFrame()
+        {
+            return PartialView();
+        }
         public IActionResult PartialOverview()
         {
             return PartialView();
@@ -689,6 +683,7 @@ namespace prjDB_GamingForm_Show.Controllers
         {
             return PartialView();
         }
+
         #endregion
 
         #endregion
