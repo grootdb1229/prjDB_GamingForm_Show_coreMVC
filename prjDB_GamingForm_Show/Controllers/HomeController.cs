@@ -102,10 +102,10 @@ namespace prjDB_GamingForm_Show.Controllers
 
         public IActionResult PopularShopItems() 
         {
-            var data = from P in _db.Products
+            var datas = from P in _db.Products
                        orderby P.ViewCount descending 
                        select new { P.ProductName, P.AvailableDate, P.ProductContent , P.FImagePath , P.ProductId };
-            return Json(data);
+            return Json(datas);
         }
 
         public IActionResult PopularArticles() 
@@ -114,6 +114,15 @@ namespace prjDB_GamingForm_Show.Controllers
                         .OrderBy(a => a.ViewCount).Take(6).
                         Select(a => a);
             return Json(datas);          
+        }
+
+        public IActionResult PopularDeputes()
+        {
+            var datas = from D in _db.Deputes
+                        orderby D.ViewCount descending
+                        select new { D.Title, D.DeputeContent , D.DeputeId };
+
+            return Json(datas);
         }
 
 
