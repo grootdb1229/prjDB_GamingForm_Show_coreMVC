@@ -1058,6 +1058,12 @@ ol {
 	transition: all 0.3s;
 }
 
+	.nav-options .nav-menu ul li.selected-item a {
+		/* 選中項目的樣式設定 */
+		color: #fff; /* 白色字體 */
+		background-color: #ff9800; /* 橙色背景 */
+	}
+
 .nav-options .nav-menu ul li a span {
 	-webkit-transform: skewX(15deg);
 	-ms-transform: skewX(15deg);

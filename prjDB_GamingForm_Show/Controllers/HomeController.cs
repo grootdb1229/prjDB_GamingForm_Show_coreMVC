@@ -1,6 +1,7 @@
 ﻿//using AspNetCore;
 using MailKit.Search;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query.Internal;
 using Newtonsoft.Json;
 using prjDB_GamingForm_Show.Models;
@@ -99,12 +100,20 @@ namespace prjDB_GamingForm_Show.Controllers
             return RedirectToAction("Create", "Member");
         }
 
-        public IActionResult ShopItems() 
+        public IActionResult PopularShopItems() 
         {
             var data = from P in _db.Products
                        orderby P.ViewCount descending 
                        select new { P.ProductName, P.AvailableDate, P.ProductContent , P.FImagePath , P.ProductId };
             return Json(data);
+        }
+
+        public IActionResult PopularArticles() 
+        {
+            var datas = _db.Articles.Include(a => a.SubBlog).ThenInclude(b => b.Blog)
+                        .OrderBy(a => a.ViewCount).Take(6).
+                        Select(a => a);
+            return Json(datas);          
         }
 
 

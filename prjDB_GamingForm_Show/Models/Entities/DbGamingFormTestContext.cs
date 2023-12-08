@@ -77,6 +77,8 @@ public partial class DbGamingFormTestContext : DbContext
 
     public virtual DbSet<ProductEvaluate> ProductEvaluates { get; set; }
 
+    public virtual DbSet<ProductImage> ProductImages { get; set; }
+
     public virtual DbSet<ProductTag> ProductTags { get; set; }
 
     public virtual DbSet<Region> Regions { get; set; }
@@ -117,10 +119,7 @@ public partial class DbGamingFormTestContext : DbContext
 
     public virtual DbSet<WishList> WishLists { get; set; }
 
-/// <summary>
-/// /   protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-/// </summary>
-/// <param name="modelBuilder"></param>//
+//    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 //#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
 //        => optionsBuilder.UseSqlServer("Data Source=.;Initial Catalog=DB_GamingForm_test;Integrated Security=True;Trust Server Certificate=True");
 
@@ -458,10 +457,7 @@ public partial class DbGamingFormTestContext : DbContext
             entity.ToTable("Image");
 
             entity.Property(e => e.ImageId).HasColumnName("ImageID");
-            entity.Property(e => e.Image1).HasColumnName("Image");
-            entity.Property(e => e.Name)
-                .HasMaxLength(50)
-                .HasDefaultValueSql("(N'image')");
+            entity.Property(e => e.FImagePath).HasColumnName("fImagePath");
         });
 
         modelBuilder.Entity<JobAdvertise>(entity =>
@@ -736,6 +732,25 @@ public partial class DbGamingFormTestContext : DbContext
                 .HasForeignKey(d => d.ProductId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_ProductEvaluate_Product");
+        });
+
+        modelBuilder.Entity<ProductImage>(entity =>
+        {
+            entity.ToTable("ProductImage");
+
+            entity.Property(e => e.Id).HasColumnName("ID");
+            entity.Property(e => e.ImageId).HasColumnName("ImageID");
+            entity.Property(e => e.ProductId).HasColumnName("ProductID");
+
+            entity.HasOne(d => d.Image).WithMany(p => p.ProductImages)
+                .HasForeignKey(d => d.ImageId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_ProductImage_Image");
+
+            entity.HasOne(d => d.Product).WithMany(p => p.ProductImages)
+                .HasForeignKey(d => d.ProductId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_ProductImage_Product");
         });
 
         modelBuilder.Entity<ProductTag>(entity =>
