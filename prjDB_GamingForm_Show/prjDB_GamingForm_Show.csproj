@@ -186,6 +186,17 @@
     <None Include="wwwroot\Layout\jobentry-1.0.0\scss\bootstrap\scss\_type.scss" />
     <None Include="wwwroot\Layout\jobentry-1.0.0\scss\bootstrap\scss\_utilities.scss" />
     <None Include="wwwroot\Layout\jobentry-1.0.0\scss\bootstrap\scss\_variables.scss" />
+    <None Include="wwwroot\Layout\startup2-1.0.0\js\main.js" />
+    <None Include="wwwroot\Layout\startup2-1.0.0\lib\counterup\counterup.min.js" />
+    <None Include="wwwroot\Layout\startup2-1.0.0\lib\easing\easing.js" />
+    <None Include="wwwroot\Layout\startup2-1.0.0\lib\easing\easing.min.js" />
+    <None Include="wwwroot\Layout\startup2-1.0.0\lib\owlcarousel\LICENSE" />
+    <None Include="wwwroot\Layout\startup2-1.0.0\lib\owlcarousel\owl.carousel.js" />
+    <None Include="wwwroot\Layout\startup2-1.0.0\lib\owlcarousel\owl.carousel.min.js" />
+    <None Include="wwwroot\Layout\startup2-1.0.0\lib\waypoints\links.php" />
+    <None Include="wwwroot\Layout\startup2-1.0.0\lib\waypoints\waypoints.min.js" />
+    <None Include="wwwroot\Layout\startup2-1.0.0\lib\wow\wow.js" />
+    <None Include="wwwroot\Layout\startup2-1.0.0\lib\wow\wow.min.js" />
     <None Include="wwwroot\Layout\templatemo_555_upright\fontawesome\webfonts\fa-brands-400.svg" />
     <None Include="wwwroot\Layout\templatemo_555_upright\fontawesome\webfonts\fa-brands-400.woff2" />
     <None Include="wwwroot\Layout\templatemo_555_upright\fontawesome\webfonts\fa-regular-400.svg" />
