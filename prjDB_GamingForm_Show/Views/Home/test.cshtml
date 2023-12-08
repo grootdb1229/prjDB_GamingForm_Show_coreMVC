@@ -278,22 +278,9 @@
     <div class="container-xxl py-5">
         <div class="container">
             <div class="section-title text-center">
-                <h1 class="display-5 mb-5" style="color:white">Our Services</h1>
+                <h1 class="display-5 mb-5" style="color:white">熱門文章</h1>
             </div>
-            <div class="row g-4">
-                <div class="col-md-6 col-lg-4 wow fadeInUp" data-wow-delay="0.1s">
-                    <div class="service-item">
-                        <div class="overflow-hidden">
-                            <img class="img-fluid" src="~/Layout/woody-1.0.0/img/service-1.jpg" alt="">
-                        </div>
-                        <div class="p-4 text-center border border-5 border-light border-top-0">
-                            <h4 class="mb-3">General Carpentry</h4>
-                            <p>Stet stet justo dolor sed duo. Ut clita sea sit ipsum diam lorem diam.</p>
-                            <a class="fw-medium" href="">Read More<i class="fa fa-arrow-right ms-2"></i></a>
-                        </div>
-                    </div>
-                </div>
-                
+            <div class="row g-4" id="PopularArticles">                
             </div>
         </div>
     </div>
@@ -369,7 +356,7 @@
     <div class="container-xxl py-5">
         <div class="container">
             <div class="section-title text-center">
-                <h1 class="display-5 mb-5" style="color:white">Our Services</h1>
+                <h1 class="display-5 mb-5" style="color:white">熱門委託</h1>
             </div>
             <div class="row g-4">
                 <div class="col-md-6 col-lg-4 wow fadeInUp" data-wow-delay="0.1s">
@@ -536,7 +523,7 @@
     </div>      *@   
 <script>
     $(document).ready(function () {
-        fetch('@Url.Content("~/Home/ShopItems")')
+            fetch('@Url.Content("~/Home/PopularShopItems")')
             .then(response => response.json())
             .then(data => {
                 console.log(data)
@@ -546,11 +533,9 @@
                    `<div class="col-md-6 col-lg-4 wow fadeInUp" data-wow-delay="0.1s" >
                     <div class="service-item">
                     <div class="overflow-hidden">
-
-                                    <img src="/images/shop/${data[index].fImagePath}" alt="" class="img-fluid" style="object-fit: cover;height:300px;width:400px">
-                    
+                    <img src="/images/shop/${data[index].fImagePath}" alt="" class="img-fluid" style="object-fit: cover;height:300px;width:400px">
                     </div>
-                            <div class="p-4 text-center border border-5 border-light border-top-0" style="height:200px">
+                    <div class="p-4 text-center border border-5 border-light border-top-0" style="height:200px">
                     <h5 class="mb-3">${data[index].productName}</h5>
                     <p>${data[index].productContent.split('').slice(0, 10).join('')}....</p>
                     <a class="fw-medium" href="@Url.Content("~/Shop/Details")?id=${data[index].productId}">點擊看更多<i class="fa fa-arrow-right ms-2"></i></a>
@@ -562,31 +547,34 @@
             });
     });
 
-</script>
-}
-
-        $(document).ready(function () {
-        fetch('@Url.Content("~/Home/ShopItems")')
+    $(document).ready(function () {
+        fetch('@Url.Content("~/Home/PopularArticles")')
             .then(response => response.json())
-            .then(data => {
-                console.log(data)
-                for (let index = 0; index < 4; index++) {
-                    var DivHtml = `
-
-<a href="@Url.Content("~/Shop/Details")?id=${data[index].productId}">
-    <img src="/images/shop/${data[index].fImagePath}" alt="" class="img-fluid">
-</a>
-<div class="post-meta">
-    <span class="date">遊戲商城</span>
-    <span class="mx-1">&bullet;</span>
-    <span>${data[index].availableDate}</span>
-</div>
-<div class="post-meta">
-    <h4><a href="@Url.Content("~/Shop/Details")?id=${data[index].productId}">${data[index].productName}</a></h4>
-    <p class="mb-4 d-block">${data[index].productContent.split('').slice(0, 10).join('')}....</p>
-</div>
-                                                                                            `;
-                    $('#ShopItem1').append(DivHtml);
+            .then(datas => {
+                console.log(datas)
+                for (let index = 0; index < 6; index++) 
+                {
+                        var DivHtml = `<div class="col-md-6 col-lg-4 wow fadeInUp" data-wow-delay="0.1s" >
+                            <div class="service-item">
+                            <div class="overflow-hidden">
+                            <img src="/images/Blogimages/${datas[index].subBlog.blog.fImagePath}" alt="" class="img-fluid" style="object-fit: cover;height:300px;width:400px">
+                            </div>
+                            <div class="p-4 text-center border border-5 border-light border-top-0" style="height:200px">
+                            <h5 class="mb-3">${datas[index].title}</h5>
+                            <p>${datas[index].articleContent.split('').slice(0, 10).join('')}....</p>
+                                                    <a class="fw-medium" href="@Url.Content("~/Blog/ArticleContent")?FId=${datas[index].subBlog.blog.blogId}&AFId=${datas[index].articleId}">點擊看更多<i class="fa fa-arrow-right ms-2"></i></a>
+                            </div>
+                            </div>
+                            </div>`;
+                            $('#PopularArticles').append(DivHtml)
                 }
             });
+
     });
+
+
+
+
+
+</script>
+}
