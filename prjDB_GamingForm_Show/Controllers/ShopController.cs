@@ -137,7 +137,7 @@ namespace prjDB_GamingForm_Show.Controllers
             //    List = List.Distinct().ToList();
             //    return View(List2);
             //}
-            public IActionResult Carousel()
+            public IActionResult Carousel()//大廣告牆
             {
                 return PartialView();
             }
@@ -159,8 +159,21 @@ namespace prjDB_GamingForm_Show.Controllers
                 var TopFive = _db.Products.Select(x => new { x.FImagePath, x.ViewCount, x.ProductName, x.ProductId }).OrderByDescending(x => x.ViewCount).Take(5).ToList();
                 return Json(TopFive);
             }
-
-
+            public IActionResult YourFavorite() 
+            {
+                return PartialView();
+            }
+            public IActionResult FavoriteTop5() 
+            {
+                
+                int userId = 0;//檢測有沒有登入
+                if (HttpContext.Session.GetInt32(CDictionary.SK_UserID) != null) //利用Session確認登入狀況
+                { userId = (int)HttpContext.Session.GetInt32(CDictionary.SK_UserID); }//有登入複寫Userid，反之維持0。
+                else { return Json(new { message = "請先登入" }); }
+                var top5 =_db.WishLists.Where(x=>x.MemberId== userId).Select(x=>x.Product).Take(5).ToList();     
+                //Trace.WriteLine("檢查TOP5"+top5);
+                return Json(top5);
+            }
             public void Cookie(int? id)  //Cookies設定
             {
                 int userId = 0;//檢測有沒有登入
