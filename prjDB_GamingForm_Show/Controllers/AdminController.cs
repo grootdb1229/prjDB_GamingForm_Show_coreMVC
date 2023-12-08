@@ -19,7 +19,7 @@ namespace prjDB_GamingForm_Show.Controllers
             _db = db;
             
         }
-        
+        private bool ChatIsOpen {  get; set; }
         
 
         public IActionResult Index()
@@ -325,7 +325,7 @@ namespace prjDB_GamingForm_Show.Controllers
                 }
             }
             _db.SaveChanges();
-        }
+        }        
         //public IActionResult MemberListNexttest()
         //{
         //    if (HttpContext.Session.Keys.Contains(CDictionary.SK_管理者觀看會員清單頁數使用關鍵字))
