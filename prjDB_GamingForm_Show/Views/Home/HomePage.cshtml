@@ -1,7 +1,7 @@
 ﻿@model prjDB_GamingForm_Show.Models.Entities.Member
 @{
     ViewData["Title"] = "HomePage";
-    // Layout = "~/Views/Shared/_HomeLayout.cshtml";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <h1>歡迎來到GROOT論壇</h1>
@@ -75,143 +75,73 @@
             <h2>各類商品</h2>
             <div><a href=@Url.Action("Index" , "Shop") class="more">查看所有熱門商品</a></div>
         </div>
-
-        <div class="row g-5">
-            <div class="col-lg-4">
-                <div class="post-entry-1 lg" id="ShopItem1">
-           </div>
-        </div>
-            <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
-            <script>
-                $(document).ready(function () {
-                    fetch('@Url.Content("~/Home/ShopItems")')
-                        .then(response => response.json())
-                        .then(data => {
-                            console.log(data)
-                            for (let index = 0; index < 4; index++) {
-                                var DivHtml = `
-
-                                        <a href= "@Url.Content("~/Shop/Details")?id=${data[index].productId}">
-                                        <img src="/images/shop/${data[index].fImagePath}" alt="" class="img-fluid">
-                                    </a>
-                                    <div class="post-meta">
-                                        <span class="date">遊戲商城</span>
-                                        <span class="mx-1">&bullet;</span>
-                                        <span>${data[index].availableDate}</span>
-                                    </div>
-                                    <h2><a href="@Url.Content("~/Shop/Details")?id=${data[index].productId}">${data[index].productName}</a></h2>
-                                    <p class="mb-4 d-block">${data[index].productContent.split('').slice(0,10).join('')}....</p>
-                                `;
-                                $('#ShopItem1').append(DivHtml);
-                            }
-                        });
-                });
-            </script>
-            <div class="col-lg-8">
-                <div class="row g-5">
-                    <div class="col-lg-4 border-start custom-border" id="ShopItem2">
+        <div class="contanier">
+            <div class="row">
+                <div id="ShopItem1" class="col-sm">
+                        @* <div class="post-entry-1 lg" id="ShopItem1">
+                        </div> *@
                     </div>
-                    <script>
-                        $(document).ready(function () {
-                            fetch('@Url.Content("~/Home/ShopItems")')
-                                .then(response => response.json())
-                                .then(data => {
-                                    console.log(data)
-                                    for (let index = 4; index < 7; index++) {
-                                        var DivHtml = `
-                                        <div class="post-entry-1">
-                                        <a href="@Url.Content("~/Shop/Details")?id=${data[index].productId}">
-                                        <img src="/images/shop/${data[index].fImagePath}" alt="" class="img-fluid"></a>
-                                        <div class="post-meta"><span class="date">遊戲商城</span> 
-                                        <span class="mx-1">&bullet;</span>
-                                        <span>${data[index].availableDate}</span></div>
-                                        <h2><a href="@Url.Content("~/Shop/Details")?id=${data[index].productId}">${data[index].productName}</a></h2>
-                                        <p class="mb-4 d-block">${data[index].productContent.split('').slice(0, 10).join('')}....</p>
-                                        </div>`
-                                            ;
-                                        $('#ShopItem2').append(DivHtml)
-                                    }
-                                });
-                        });
-                    </script>
-                    <div class="col-lg-8">
-                        <div class="row g-5">
-                            <div class="col-lg-4 border-start custom-border" id="ShopItem3">
-                            </div>
-                            <script>
-                                $(document).ready(function () {
-                                    fetch('@Url.Content("~/Home/ShopItems")')
-                                        .then(response => response.json())
-                                        .then(data => {
-                                            console.log(data)
-                                            for (let index = 7; index < 10; index++) {
-                                                var DivHtml 
-                                                = `
-                                                <div class="post-entry-1">
-                                                <a href="@Url.Content("~/Shop/Details")?id=${data[index].productId}">
-                                                <img src="/images/shop/${data[index].fImagePath}" alt="" class="img-fluid"></a>
-                                                <div class="post-meta"><span class="date">遊戲商城</span>
-                                                <span class="mx-1">&bullet;</span>
-                                                <span>${data[index].availableDate}</span></div>
-                                                <h2><a href="@Url.Content("~/Shop/Details")?id=${data[index].productId}">${data[index].productName}</a></h2>
-                                                <p class="mb-4 d-block">${data[index].productContent.split('').slice(0, 10).join('')}....</p>
-                                                </div>`
-                                                    ;
-                                                $('#ShopItem3').append(DivHtml)
-                                            }
-                                        });
-                                });
-                            </script>
-                    <!-- Trending Section -->
-                    <div class="col-lg-4">
-
-                        <div class="trending">
-                            <h3>熱門商品</h3>
-                            <ul class="trending-post">
-                                <li>
-                                    <a href=@Url.Action("Index" , "Shop")>
-                                        <span class="number">1</span>
-                                        <h3>世紀帝國4</h3>
-                                        <span class="author">Relics</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href=@Url.Action("Index" , "Shop")>
-                                        <span class="number">2</span>
-                                        <h3>白色相簿2．幸福的另一側</h3>
-                                        <span class="author">Leaf社</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href=@Url.Action("Index" , "Shop")>
-                                        <span class="number">3</span>
-                                        <h3>人中之龍7外傳 英雄無名</h3>
-                                        <span class="author">SEGA</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href=@Url.Action("Index" , "Shop")>
-                                        <span class="number">4</span>
-                                        <h3>艾爾登法環</h3>
-                                        <span class="author">FromSoftware</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href=@Url.Action("Index" , "Shop")>
-                                        <span class="number">5</span>
-                                        <h3>薩爾達傳說 王國之淚</h3>
-                                        <span class="author">任天堂</span>
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-
-                    </div> <!-- End Trending Section -->
+                <div class="col-sm" id="ShopItem2">
+                    @* <div class="col-lg-4 border-start custom-border col-6 col-sm-3" id="ShopItem2">
+                    </div> *@
                 </div>
-            </div>
+                <div class="col-sm" id="ShopItem3">
+                    @* <div class="row g-5">
+                        <div class="col-lg-4 border-start custom-border" id="ShopItem3">
+                        </div>
+                    </div> *@
 
-        </div> <!-- End .row -->
-    </div>
+
+
+                    <!-- Trending Section -->
+                    @* <div class="col-lg-4">
+
+                    <div class="trending">
+                    <h3>熱門商品</h3>
+                    <ul class="trending-post">
+                    <li>
+                    <a href=@Url.Action("Index" , "Shop")>
+                    <span class="number">1</span>
+                    <h3>世紀帝國4</h3>
+                    <span class="author">Relics</span>
+                    </a>
+                    </li>
+                    <li>
+                    <a href=@Url.Action("Index" , "Shop")>
+                    <span class="number">2</span>
+                    <h3>白色相簿2．幸福的另一側</h3>
+                    <span class="author">Leaf社</span>
+                    </a>
+                    </li>
+                    <li>
+                    <a href=@Url.Action("Index" , "Shop")>
+                    <span class="number">3</span>
+                    <h3>人中之龍7外傳 英雄無名</h3>
+                    <span class="author">SEGA</span>
+                    </a>
+                    </li>
+                    <li>
+                    <a href=@Url.Action("Index" , "Shop")>
+                    <span class="number">4</span>
+                    <h3>艾爾登法環</h3>
+                    <span class="author">FromSoftware</span>
+                    </a>
+                    </li>
+                    <li>
+                    <a href=@Url.Action("Index" , "Shop")>
+                    <span class="number">5</span>
+                    <h3>薩爾達傳說 王國之淚</h3>
+                    <span class="author">任天堂</span>
+                    </a>
+                    </li>
+                    </ul>
+                    </div> *@
+
+                </div> <!-- End Trending Section -->
+            </div>
+        </div>
+    </div> <!-- End .row -->
+    
 </section> <!-- End Post Grid Section -->
 <!-- ======= Culture Category Section ======= -->
 <section class="category-section">
@@ -405,7 +335,88 @@
             </div>
         </div>
     </div>
-</section><!-- End Business Category Section -->
+</section>
+
+
+
+<!-- End Business Category Section -->
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+@section Scripts
+{
+<script>
+    $(document).ready(function () {
+        fetch('@Url.Content("~/Home/ShopItems")')
+            .then(response => response.json())
+            .then(data => {
+                console.log(data)
+                for (let index = 0; index < 4; index++) {
+                    var DivHtml = `
+
+                                                               <a href= "@Url.Content("~/Shop/Details")?id=${data[index].productId}">
+                                                               <img src="/images/shop/${data[index].fImagePath}" alt="" class="img-fluid">
+                                                                                            </a>
+                                                                                            <div class="post-meta">
+                                                                                                <span class="date">遊戲商城</span>
+                                                                                                <span class="mx-1">&bullet;</span>
+                                                                                                <span>${data[index].availableDate}</span>
+                                                                                            </div>
+                                                                                                <div class="post-meta">
+                                                                                            <h4><a href="@Url.Content("~/Shop/Details")?id=${data[index].productId}">${data[index].productName}</a></h4>
+                                                                                            <p class="mb-4 d-block">${data[index].productContent.split('').slice(0, 10).join('')}....</p>
+                                                                                            </div>
+                                                                                            `;
+                    $('#ShopItem1').append(DivHtml);
+                }
+            });
+    });
+
+    $(document).ready(function () {
+            fetch('@Url.Content("~/Home/ShopItems")')
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data)
+                    for (let index = 4; index < 7; index++) {
+                        var DivHtml = `
+                        <div class="post-entry-1">
+                        <a href="@Url.Content("~/Shop/Details")?id=${data[index].productId}">
+                        <img src="/images/shop/${data[index].fImagePath}" alt="" class="img-fluid"></a>
+                        <div class="post-meta"><span class="date">遊戲商城</span>
+                        <span class="mx-1">&bullet;</span>
+                        <span>${data[index].availableDate}</span></div>
+                        <h6><a href="@Url.Content("~/Shop/Details")?id=${data[index].productId}">${data[index].productName}</a></h6>
+                        <p class="mb-4 d-block">${data[index].productContent.split('').slice(0, 10).join('')}....</p>
+                        </div>`
+                            ;
+                        $('#ShopItem2').append(DivHtml)
+                    }
+                });
+        });
+
+    $(document).ready(function () {
+            fetch('@Url.Content("~/Home/ShopItems")')
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data)
+                    for (let index = 7; index < 10; index++) {
+                        var DivHtml
+                            = `
+                            <div class="post-entry-1">
+                            <a href="@Url.Content("~/Shop/Details")?id=${data[index].productId}">
+                            <img src="/images/shop/${data[index].fImagePath}" alt="" class="img-fluid"></a>
+                            <div class="post-meta"><span class="date">遊戲商城</span>
+                            <span class="mx-1">&bullet;</span>
+                            <span>${data[index].availableDate}</span></div>
+                            <h6><a href="@Url.Content("~/Shop/Details")?id=${data[index].productId}">${data[index].productName}</a></h6>
+                            <p class="mb-4 d-block">${data[index].productContent.split('').slice(0, 10).join('')}....</p>
+                            </div>`
+                            ;
+                        $('#ShopItem3').append(DivHtml)
+                    }
+                });
+        });
+</script>
+}
 <!-- ======= Lifestyle Category Section ======= -->
 @*<section class="category-section">
     <div class="container" data-aos="fade-up">
