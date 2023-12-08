@@ -9,6 +9,6 @@ namespace prjDB_GamingForm_Show.ViewModels
         [DisplayName("輸入新的會員密碼")]
         public string txtVal_Password { get; set; }
         [DisplayName("請輸入驗證碼")]
-        public string txtVal_Code  {get;set;}
+        public string txtVal_Guid  {get;set;}
     }
 }

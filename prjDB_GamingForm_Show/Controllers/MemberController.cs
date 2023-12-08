@@ -130,6 +130,8 @@ namespace prjDB_GamingForm_Show.Controllers
         }
         public IActionResult SendEmail()
         {
+            string ValidationGuid = Guid.NewGuid().ToString();
+            HttpContext.Session.SetString(CDictionary.SK_Validation_Guid, ValidationGuid);
             var message = new MimeMessage();
             message.From.Add(new MailboxAddress("grootdb1229", "grootdb1229@gmail.com"));
             message.To.Add(new MailboxAddress("alan90306", "alan90306@gmail.com"));
@@ -140,8 +142,8 @@ namespace prjDB_GamingForm_Show.Controllers
                         "<html>" +
                         "<h2> 電子信件已寄送 請至電子信箱進行確認 </h2>" +
                         "<h3> 您的驗證碼 及 會員編號 </h3>" +
-                        "<p> 您的會員編號為:" + HttpContext.Session.GetInt32(CDictionary.SK_Confirmed_MemberID)+ "</p>" +
-                        "<p> 您的驗證碼為:"   + @Guid.NewGuid() + "</p>" +
+                        "<p> 您的會員編號為:" + HttpContext.Session.GetInt32(CDictionary.SK_Confirmed_MemberID) + "</p>" +
+                        "<p> 您的驗證碼為:" + HttpContext.Session.GetString(CDictionary.SK_Validation_Guid) + "</p>" +
                         "</html>"
             };
 
@@ -158,14 +160,19 @@ namespace prjDB_GamingForm_Show.Controllers
         {
             return View();
         }
-        //[HttpPost]
-        //public IActionResult ValidationPage(CValidationViewModel CV)
-        //{
-
-        //}
-
-
-
-
+        [HttpPost]
+        public IActionResult ValidationPage(CValidationViewModel CV)
+        {
+            
+            if (CV.txtVal_MemberID == HttpContext.Session.GetInt32(CDictionary.SK_Confirmed_MemberID) &&
+                CV.txtVal_Guid == HttpContext.Session.GetString(CDictionary.SK_Validation_Guid))
+            {
+                Member dbmember = (from m in _db.Members
+                                   where m.MemberId == HttpContext.Session.GetInt32(CDictionary.SK_Confirmed_MemberID)
+                                   select m).FirstOrDefault();
+                dbmember.Password = CV.txtVal_Password;
+            }
+            return RedirectToAction("Login" , "Home");
+        }
     }
 }
