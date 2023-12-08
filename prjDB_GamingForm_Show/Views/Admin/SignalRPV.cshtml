@@ -1,9 +1,10 @@
 ﻿@model IEnumerable<prjDB_GamingForm_Show.ViewModels.CSignalRUseAdminList>
 
 <p>
-    <h2>管理者列表</h2>
+    <h2 style="font-size:30px">管理者列表</h2>
 </p>
-<table class="table">
+
+<table class="table table-dark table-hover" style="color:cornsilk;font-size:20px;border-radius:5px">
     <thead>
         <tr>
             <th>
@@ -34,7 +35,7 @@
                     <!-- 在線狀態將在此處更新 -->離線
                 </td>
                 <td>
-                    <button id="@($"sendMessage_{item.AdminName}")" onclick="openChat(@item.AdminId)">開啟</button>
+                    <button id="@($"sendMessage_{item.AdminName}")" onclick="openChat(@item.AdminId)" class="btn btn-outline-light">開/關</button>
                 </td>
             </tr>
         }
@@ -44,13 +45,25 @@
  <script>
 
     var connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
-
+    var notCheckMessage = 0;    
     // 與Server建立連線
     connection.start().then(function () {
         console.log("Hub 連線完成");
     }).catch(function (err) {
         alert('連線錯誤: ' + err.toString());
     });
+
+    connection.on("ReceiverUpdContent", function () {
+        updateNotificationCount();
+    })
+    function updateNotificationCount() {
+        notCheckMessage = $('#notCheckMessageCount').text()
+        notCheckMessage++;
+        $('#notCheckMessageCount').text(notCheckMessage)
+    }
+    function isChatOpen(){
+
+    }
 
     //更新連線 ID 列表事件
     connection.on("UpdList", function (jsonList) {
@@ -84,16 +97,20 @@
         $(statusId).html(isOnline ? "在線" : "離線");
     });
 
-    function openChat(id){        
+    function openChat(id) {
         var div = document.querySelector('#AdminsChat');
         if (div.style.display === "none") {
+            $('#AdminsChat').load(`@Url.Content("~/Admin/ChatPV")?id=${id}`);
             div.style.display = "block"; // 顯示
         }
         else {
             div.style.display = "none"; // 隱藏
         }
-
-        $('#AdminsChat').load(`@Url.Content("~/Admin/ChatPV")?id=${id}`);
+        $.ajax({
+            type: 'post',
+            url: '/Admin/CheckAllMessage',
+            data: { senderid: id }
+        });
     }
 
 </script>

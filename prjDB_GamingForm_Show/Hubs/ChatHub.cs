@@ -111,7 +111,7 @@ namespace prjDB_GamingForm_Show.Hubs
             // 接收人
             if (sendToID != null)
             {
-                await Clients.Client(sendToID).SendAsync("ReceiverUpdContent", message);
+                await Clients.Client(sendToID).SendAsync("ReceiverUpdContent", message);                
             }
             
 
@@ -128,6 +128,7 @@ namespace prjDB_GamingForm_Show.Hubs
                 chat.ReceiveAdmin = receiveAdminId;
                 chat.ChatContent = message;
                 chat.ModefiedDate = DateTime.UtcNow.ToLocalTime().ToString("yyyy/MM/dd HH:mm");
+                chat.IsCheck = false;
 
                 _db.Chats.Add(chat);
                 await _db.SaveChangesAsync();

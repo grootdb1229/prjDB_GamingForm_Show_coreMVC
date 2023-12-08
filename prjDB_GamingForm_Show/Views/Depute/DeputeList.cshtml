@@ -64,28 +64,31 @@
 
 <div id="popmenu" class="container">
     <div class="accordion accordion-flush" id="accordionFlushExample">
-        <div class="accordion-item">
+        <div class="accordion-item" >
             <h2 class="accordion-header">
                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
                     進階搜尋:
                 </button>
             </h2>
             <div id="flush-collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
-                <div  class="accordion-body">
-                    <div class="container">
+                <div  class="accordion-body" >
+                    
                         <div class="row">
-                            <div class="col order-8">
-                                <label id="skillclass">- 大類別</label>
+                        <div class="col-6 col-sm-3">- 大類別</div>
+                        <div class="col-6 col-sm-3">- 小類別</div>
+                        <div class="col-6 col-sm-3">- 懸賞區域</div>
+                        <div class="col-6 col-sm-3">- 懸賞金額</div>
+                        <div class="w-100"></div>
+                        <div class="col-6 col-sm-3" style="height:200px;">
+                                <div id="skillclass"></div>
                             </div>
-                            <div class="col order-12">
-                                <label>- 小類別</label>
+                        <div class="col-6 col-sm-3" style="height:200px;overflow-y:auto">
                                 <div id="skill"></div>
                             </div>
-                            <div class="col order-1">
-                                <label id="regions">- 懸賞區域</label>
+                        <div class="col-6 col-sm-3" style="height:200px;overflow-y:auto">
+                                <div id="regions"></div>
                             </div>
-                            <div class="col order-1">
-                                <label>- 懸賞金額</label>
+                        <div class="col-6 col-sm-3">
                                 <select id="money" class="form-select border-0">
                                     <option name="txtSalary" selected>請選擇...</option>
                                     <option name="txtSalary" value="1">10000</option>
@@ -95,7 +98,7 @@
                                 </select>
                             </div>
                         </div>
-                    </div>
+                    
                     
                 </div>
 
@@ -108,7 +111,7 @@
 <div class="container-xxl py-5">
     <h1 id="totalcount" class="text-center mb-5 wow fadeInUp" data-wow-delay="0.1s">懸賞清單</h1>
     <div class="container">
-        <div id="test" class="tag_list_wrapper">
+        <div id="loadtags" class="tag_list_wrapper">
         </div>
     </div>
     <div class="container">
@@ -158,11 +161,12 @@
 @section Scripts {
     <script>
 
-
+        $('#search').click(() => { loadList() });
         const text = document.querySelector('#text');
         const selSalary = document.querySelector('#money');
-        loadSkillClassess()
-        loadRegion();
+        loadSkillClassess();
+        let keyword = [];
+        let temp = '';
         function loadSkillClassess() {
             $.ajax('@Url.Content("~/Depute/SkillClassess")', {
                 "type": 'Post', //POST、PUT、DELETE
@@ -170,33 +174,44 @@
             })
                 .done((data) => {
                     const SkillClassessFrag = $(document.createDocumentFragment());
-                    const SkillClassess = data.map(SkillClassess => 
-                        `<div class="form-check">
-                                         <input class="form-check-input" type="checkbox" value="${SkillClassess.skillClassId}" name="${SkillClassess.name}">
-                                 <label class="form-check-label" for="${SkillClassess.name}">
-                         ${SkillClassess.name}
+                    const SkillClassess = data.map(value => 
+                       `<div class="form-check">
+                                         <input class="form-check-input skillclass" type="checkbox" id="${value.name}-1" value="${value.skillClassId}"name="${value.name}">
+                         <label class="form-check-label" for="${value.name}">
+                         ${value.name}
                          </label>
                          </div>
-                         `)
+                                 ` )
                     SkillClassessFrag.append(SkillClassess);
                     $('#skillclass').after(SkillClassessFrag)
+                    loadRegion();
+                    //tag
                     let checkValue;
-                    $('.form-check-input').click(function () {
+                    $('.form-check-input.skillclass').click(function () {
                         var isChecked = $(this).is(":checked");
-                        // console.log(isChecked)
+                        console.log(isChecked)
                         checkValue = $(this).attr("name");
                         checkID = $(this).val();
-                        // console.log(checkValue); //on
-                        var tag = `<div class="tag_list">${checkValue}<span>X</span></div>`
-                        if (isChecked == false) 
+                        console.log(checkValue); //on
+                        loadList(checkValue);
+                        var tag = `<div class="tag_list" onclick="Tags2(event)" id="${checkValue}-2">${checkValue}<span>X</span></div>`
+                        if (isChecked == false) {
                             checkID = "";
-                        else { 
-                            $('#test').append(tag)
+                            var del = keyword.indexOf(checkValue)
+                            keyword.splice(del,1);
+                            console.log(keyword);
+                            $(`#${checkValue}-2`).remove()
+                        }
+                        else {
+                            keyword.push(checkValue);
+                            console.log(keyword);
+                            $('#loadtags').append(tag)
                         }
                         loadSkill(checkID);
+                        
+                        
                     });
                 })
-            // loadSkill();
         }
         function loadSkill(value) {
             $.ajax('@Url.Content("~/Depute/Skills")', {
@@ -208,29 +223,58 @@
 
 
                     const SkillFrag = $(document.createDocumentFragment());
-                    const Skills = data.map(Skills =>
-                        `
-                        <div class="form-check" id = "test4">
-                        <input class="form-check-input" type="checkbox" name="${Skills.name}" id="${Skills.name}">
-                        <label class="form-check-label" for="${Skills.name}">
-                        ${Skills.name}
-                        </label>
-                        </div>
-                       `
-                    )
+                    const Skills = data.map(Skills => {
+                        if (keyword.find(n=>n==Skills.name))
+                            var hi = 'checked'
+                     return   `<div class="form-check">
+                                  <input class="form-check-input skill" type="checkbox" ${hi} id="${Skills.name}-1" name="${Skills.name}">
+                                  <label class="form-check-label" for="${Skills.name}">
+                                  ${Skills.name}
+                                 </label>
+                                 </div>
+                                 `
+                    })
                     SkillFrag.append(Skills);
                     $('#skill').html(SkillFrag);
+                    //tag
+                    let checkValue;
+                    $('.form-check-input.skill').click(Tags);
+                    
+                    function Tags(){
+                        var isChecked = $(this).is(":checked");
+                        console.log(isChecked)
+                        checkValue = $(this).attr("name");
+                        checkID = $(this).val();
+                        console.log(checkValue); //on
+                        loadList(checkValue);
+                        var tag = `<div class="tag_list" onclick="Tags2(event)" id="${checkValue}-2">${checkValue}<span>X</span></div>`
+                        if (isChecked == false) {
+                            checkID = "";
+                            var del = keyword.indexOf(checkValue)
+                            keyword.splice(del, 1);
+                            console.log(keyword);
+                            $(`#${checkValue}-2`).remove()
+                        }
+                        else {
+                            keyword.push(checkValue);
+                            console.log(keyword);
+                            $('#loadtags').append(tag)
+                        }
 
-                    // $('.form-check-input').click(function () {
-                    //     var isChecked = $(this).is(":checked");
-                    //     // console.log(isChecked)
-                    //     checkValue = $(this).val();
-                    //     // console.log(checkValue); //on
-                    //     if (isChecked == false)
-                    //         checkValue = "";
-                    //     loadSkill(checkValue);
-                    // });
+                    }
                 })
+        } 
+        
+        function Tags2(event) {
+            checkValue = event.target.previousSibling.textContent;
+            console.log(checkValue); //on
+
+                var del = keyword.indexOf(checkValue)
+                keyword.splice(del, 1);
+                console.log(keyword);
+            $(`#${checkValue}-2`).remove();
+            console.log($(`#${checkValue}`)[0]);
+            $(`#${checkValue}-1`)[0].checked=false
         }
         function loadRegion() {
             $.ajax('@Url.Content("~/Depute/Region")', {
@@ -242,7 +286,7 @@
                     const Regions = data.map(Regions => 
                         `
                                  <div class="col order-12">
-                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                                                <input class="form-check-input region" type="checkbox" id="${Regions.city}-1" value="${Regions.city}" name="${Regions.city}">
                         <label class="form-check-label" for="flexCheckDefault">
                          ${Regions.city}
                         </label>
@@ -252,11 +296,33 @@
 
                     RegionFrag.append(Regions);
                     $('#regions').after(RegionFrag)
+                    loadHotkey()
+                    $('.form-check-input.region').click(function () {
+                        var isChecked = $(this).is(":checked");
+                        console.log(isChecked)
+                        checkValue = $(this).attr("name");
+                        checkID = $(this).val();
+                        console.log(checkValue); //on
+                        loadList(checkValue);
+                        var tag = `<div class="tag_list" onclick="Tags2(event)" id="${checkValue}-2">${checkValue}<span>X</span></div>`
+                        if (isChecked == false) {
+                            checkID = "";
+                            var del = keyword.indexOf(checkValue)
+                            keyword.splice(del, 1);
+                            console.log(keyword);
+                            $(`#${checkValue}-2`).remove()
+                        }
+                        else {
+                            keyword.push(checkValue);
+                            console.log(keyword);
+                            $('#loadtags').append(tag)
+                        }
+
+                    });
+
                 })
         }
         //基本搜尋&&進階搜尋///
-        $('#search').click(() => { loadList() });
-        
         function loadList(hotkey) {
             $.ajax('@Url.Content("~/Depute/Search")', {
                 "type": 'Post', //POST、PUT、DELETE
