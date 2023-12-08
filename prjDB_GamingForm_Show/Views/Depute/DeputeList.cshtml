@@ -322,7 +322,6 @@
         //基本搜尋&&進階搜尋///
 
         function MutiSearch(value) {
-            var Keyword = 
             $.ajax('@Url.Content("~/Depute/MutipleSearch")', {
                 "type": 'Post', //POST、PUT、DELETE
                 "data": {
@@ -410,7 +409,7 @@
         function loadHotkey() {
             var count = 0;
             $.ajax('@Url.Content("~/Depute/Hotkey")', {
-                "type": 'Post', //POST、PUT、DELETE
+                "type": 'Post', //POST、PUT、DELETE//
                 "data": { "id": 3 },
                 "dataType": "json"
             })
@@ -419,7 +418,7 @@
                     const HkFrag = $(document.createDocumentFragment());
                     const snd = '<span class="text-truncate me-1">熱門關鍵字 :</span>'
                     HkFrag.append(snd);
-                    const Hotkeys = data.map(Hotkeys => `<a href="#" id="${Hotkeys}" onclick="loadList('${Hotkeys}')">#${Hotkeys} </a>`)
+                    const Hotkeys = data.map(Hotkeys => `<a href="#" id="${Hotkeys}" onclick="MutiSearch('${Hotkeys}')">#${Hotkeys} </a>`)
                     HkFrag.append(Hotkeys);
                     $('#hotkey').html(HkFrag)
                 })
