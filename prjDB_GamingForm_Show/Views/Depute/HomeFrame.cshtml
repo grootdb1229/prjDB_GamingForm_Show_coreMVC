@@ -1,0 +1,81 @@
+﻿@{
+    ViewData["Title"] = "Personal";
+    // Layout = "~/Views/Shared/_Layout_DB.cshtml";
+}
+<div id="divShadow">
+
+</div>
+<div id="host"></div>
+<span>I'm not in the shadow DOM</span>
+<br />
+
+<button id="upper" type="button">将 span 元素转换为大写</button>
+<button id="reload" type="button">重新加载</button>
+
+
+@section scripts{
+    <script>
+        const host = document.querySelector("#host");
+        const shadow = host.attachShadow({ mode: "open" });
+        const span = document.createElement("span");
+        span.textContent = "I'm in the shadow DOM";
+        shadow.appendChild(span);
+
+        const upper = document.querySelector("button#upper");
+        upper.addEventListener("click", () => {
+            const spans = Array.from(document.querySelectorAll("span"));
+            for (const span of spans) {
+                span.textContent = span.textContent.toUpperCase();
+            }
+        });
+
+        const reload = document.querySelector("#reload");
+        reload.addEventListener("click", () => document.location.reload());
+        // const divShadow = document.querySelector('#divShadow');
+        // const shadowRoot = divShadow.attachShadow({ mode: 'open' });
+
+        // const bootstrap5link = document.createElement('link');
+        // bootstrap5link.rel = "stylesheet";
+        // bootstrap5link.href = "https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css";
+        // bootstrap5link.integrity = "sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN";
+        // bootstrap5link.crossorigin = "anonymous";
+        // shadowRoot.append(bootstrap5link);
+
+        // $(document).ready(function(){
+        //     $.when(loadFrame()).then(function () {
+        //         loadOverview(), loadReleaseList(), loadReceiveList(), loadGallery(), loadContact();
+        //     })
+        // })
+
+
+        // function loadFrame() {
+        //     $('#divShadow').load('@Url.Content("~/depute/PartialFrame")');
+        // }
+        // loadFrame()
+
+        // function loadOverview() {
+        //     $('#divOverview').load('@Url.Content("~/depute/PartialOverview")');
+        // }
+        // loadOverview()
+
+        // function loadReleaseList() {
+        //     $('#divReleasePart').load('@Url.Content("~/depute/PartialReleaseList")');
+        // }
+        // loadReleaseList()
+
+        // function loadReceiveList() {
+        //     $('#divReceivePart').load('@Url.Content("~/depute/PartialReceiveList")');
+        // }
+        // loadReceiveList()
+
+        // function loadGallery() {
+        //     $('#divGalleryPart').load('@Url.Content("~/depute/PartialGallery")');
+        // }
+        // loadGallery()
+
+        // function loadContact() {
+        //     $('#divContact').load('@Url.Content("~/depute/Contact")');
+        // }
+        // loadContact()
+    </script>
+}

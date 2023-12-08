@@ -1,7 +1,7 @@
 ﻿@model prjDB_GamingForm_Show.Models.Entities.Member
 @{
     ViewData["Title"] = "HomePage";
-    // Layout = "~/Views/Shared/_HomeLayout.cshtml";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <h1>歡迎來到GROOT論壇</h1>
@@ -75,118 +75,73 @@
             <h2>各類商品</h2>
             <div><a href=@Url.Action("Index" , "Shop") class="more">查看所有熱門商品</a></div>
         </div>
-
-        <div class="row g-5">
-            <div class="col-lg-4">
-                <div class="post-entry-1 lg">
-                    <a href=@Url.Action("Index" , "Shop")><img src="~/HomePageTemImage/AOE4_Homeprod.jpg" alt="" class="img-fluid"></a>
-                    <div class="post-meta"><span class="date">遊戲商城</span> <span class="mx-1">&bullet;</span> <span>2023/11/19</span></div>
-                    <h2><a href=@Url.Action("Index" , "Shop")>蘇丹飛升已經開放下載</a></h2>
-                    <p class="mb-4 d-block">世紀帝國四首部大型資料片正式發布,遊戲本體內容現在只要399!!趕快加入一同見證聖殿騎士團和中東文明的壯絕激鬥吧</p>
-
-                    @* <div class="d-flex align-items-center author">
-                    <div class="photo"><img src="~/Layout/ZenBlog/assets/img/person-1.jpg" alt="" class="img-fluid"></div>
-                    <div class="name">
-                    <h3 class="m-0 p-0">Cameron Williamson</h3>
+        <div class="contanier">
+            <div class="row">
+                <div id="ShopItem1" class="col-sm">
+                        @* <div class="post-entry-1 lg" id="ShopItem1">
+                        </div> *@
                     </div>
-                    </div>*@
+                <div class="col-sm" id="ShopItem2">
+                    @* <div class="col-lg-4 border-start custom-border col-6 col-sm-3" id="ShopItem2">
+                    </div> *@
                 </div>
+                <div class="col-sm" id="ShopItem3">
+                    @* <div class="row g-5">
+                        <div class="col-lg-4 border-start custom-border" id="ShopItem3">
+                        </div>
+                    </div> *@
 
-            </div>
 
-            <div class="col-lg-8">
-                <div class="row g-5">
-                    <div class="col-lg-4 border-start custom-border">
-                        <div class="post-entry-1">
-                            <a href=@Url.Action("Index" , "Shop")><img src="~/HomePageTemImage/WhiteAlbum2.jpg" alt="" class="img-fluid"></a>
-                            <div class="post-meta"><span class="date">遊戲商城</span> <span class="mx-1">&bullet;</span> <span>2023/11/11</span></div>
-                            <h2><a href=@Url.Action("Index" , "Shop")>~驀然雪化，且靜候飛雪再臨之時~</a></h2>
-                            <p class="mb-4 d-block">聖誕佳期倒數一個月!還不快和你的心上人再次重溫白色相簿2三人組那剪不斷理還亂的三角愛戀?白色相簿2幸福的另一側限時下殺199元!!!</p>
-                        </div>
-                        <div class="post-entry-1">
-                            <a href=@Url.Action("Index" , "Shop")><img src="~/HomePageTemImage/人中之龍7.jpg" alt="" class="img-fluid"></a>
-                            <div class="post-meta"><span class="date">遊戲商城</span> <span class="mx-1">&bullet;</span> <span>2023/11/19</span></div>
-                            <h2><a href="single-post.html">人中之龍7外傳 英雄無名正式開賣!!!!</a></h2>
-                            <p class="mb-4 d-block">堂島之龍 桐生一馬回歸 東城會還不快回來支持!?</p>
-                        </div>
-                        <div class="post-entry-1">
-                            <a href=@Url.Action("Index" , "Shop")><img src="~/HomePageTemImage/EldenRing.jpg" alt="" class="img-fluid"></a>
-                            <div class="post-meta"><span class="date">遊戲商城</span> <span class="mx-1">&bullet;</span> <span>2023/10/09</span></div>
-                            <h2><a href=@Url.Action("Index" , "Shop")>千呼萬喚 艾爾登法環正式上線</a></h2>
-                            <p class="mb-4 d-block">宮崎英高最新力作 壯麗的世界觀正在那黃金樹下等你!!!</p>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 border-start custom-border">
-                        <div class="post-entry-1">
-                            <a href=@Url.Action("Index" , "Shop")><img src="~/HomePageTemImage/Assassin's Creed.jpg" alt="" class="img-fluid"></a>
-                            <div class="post-meta"><span class="date">遊戲商城</span> <span class="mx-1">&bullet;</span> <span>2023/09/15</span></div>
-                            <h2><a href=@Url.Action("Index" , "Shop")>刺客教條 幻影</a></h2>
-                            <p class="mb-4 d-block">刺客系列經典作品上架囉~喜愛刺客主題的朋友千萬不要錯過</p>
-                        </div>
-                        <div class="post-entry-1">
-                            <a href=@Url.Action("Index" , "Shop")><img src="~/HomePageTemImage/Cyberpunk2077.jpg" alt="" class="img-fluid"></a>
-                            <div class="post-meta"><span class="date">遊戲商城</span> <span class="mx-1">&bullet;</span> <span>2023/08/05</span></div>
-                            <h2><a href=@Url.Action("Index" , "Shop")>知名科幻巨作 賽博龐克來了!!!</a></h2>
-                            <p class="mb-4 d-block">喜歡超現代的遊戲風格嗎? 這款賽博龐克就是你的最佳拍檔!</p>
-                        </div>
-                        <div class="post-entry-1">
-                            <a href=@Url.Action("Index" , "Shop")><img src="~/HomePageTemImage/Zelda.jpg" alt="" class="img-fluid"></a>
-                            <div class="post-meta"><span class="date">遊戲商城</span> <span class="mx-1">&bullet;</span> <span>2023/09/13</span></div>
-                            <h2><a href=@Url.Action("Index" , "Shop")>薩爾達傳說又一傳奇新作 王國之淚正式發售!!</a></h2>
-                            <p class="mb-4 d-block">任天堂經典IP 薩爾達傳說來了 快點跟著林克一起在未知的廣大世界裡探險吧!</p>
-                        </div>
-                    </div>
 
                     <!-- Trending Section -->
-                    <div class="col-lg-4">
+                    @* <div class="col-lg-4">
 
-                        <div class="trending">
-                            <h3>熱門商品</h3>
-                            <ul class="trending-post">
-                                <li>
-                                    <a href=@Url.Action("Index" , "Shop")>
-                                        <span class="number">1</span>
-                                        <h3>世紀帝國4</h3>
-                                        <span class="author">Relics</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href=@Url.Action("Index" , "Shop")>
-                                        <span class="number">2</span>
-                                        <h3>白色相簿2．幸福的另一側</h3>
-                                        <span class="author">Leaf社</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href=@Url.Action("Index" , "Shop")>
-                                        <span class="number">3</span>
-                                        <h3>人中之龍7外傳 英雄無名</h3>
-                                        <span class="author">SEGA</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href=@Url.Action("Index" , "Shop")>
-                                        <span class="number">4</span>
-                                        <h3>艾爾登法環</h3>
-                                        <span class="author">FromSoftware</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href=@Url.Action("Index" , "Shop")>
-                                        <span class="number">5</span>
-                                        <h3>薩爾達傳說 王國之淚</h3>
-                                        <span class="author">任天堂</span>
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
+                    <div class="trending">
+                    <h3>熱門商品</h3>
+                    <ul class="trending-post">
+                    <li>
+                    <a href=@Url.Action("Index" , "Shop")>
+                    <span class="number">1</span>
+                    <h3>世紀帝國4</h3>
+                    <span class="author">Relics</span>
+                    </a>
+                    </li>
+                    <li>
+                    <a href=@Url.Action("Index" , "Shop")>
+                    <span class="number">2</span>
+                    <h3>白色相簿2．幸福的另一側</h3>
+                    <span class="author">Leaf社</span>
+                    </a>
+                    </li>
+                    <li>
+                    <a href=@Url.Action("Index" , "Shop")>
+                    <span class="number">3</span>
+                    <h3>人中之龍7外傳 英雄無名</h3>
+                    <span class="author">SEGA</span>
+                    </a>
+                    </li>
+                    <li>
+                    <a href=@Url.Action("Index" , "Shop")>
+                    <span class="number">4</span>
+                    <h3>艾爾登法環</h3>
+                    <span class="author">FromSoftware</span>
+                    </a>
+                    </li>
+                    <li>
+                    <a href=@Url.Action("Index" , "Shop")>
+                    <span class="number">5</span>
+                    <h3>薩爾達傳說 王國之淚</h3>
+                    <span class="author">任天堂</span>
+                    </a>
+                    </li>
+                    </ul>
+                    </div> *@
 
-                    </div> <!-- End Trending Section -->
-                </div>
+                </div> <!-- End Trending Section -->
             </div>
-
-        </div> <!-- End .row -->
-    </div>
+        </div>
+    </div> <!-- End .row -->
+    
 </section> <!-- End Post Grid Section -->
 <!-- ======= Culture Category Section ======= -->
 <section class="category-section">
@@ -380,7 +335,88 @@
             </div>
         </div>
     </div>
-</section><!-- End Business Category Section -->
+</section>
+
+
+
+<!-- End Business Category Section -->
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+@section Scripts
+{
+<script>
+    $(document).ready(function () {
+        fetch('@Url.Content("~/Home/ShopItems")')
+            .then(response => response.json())
+            .then(data => {
+                console.log(data)
+                for (let index = 0; index < 4; index++) {
+                    var DivHtml = `
+
+                                                 <a href= "@Url.Content("~/Shop/Details")?id=${data[index].productId}">
+                                                 <img src="/images/shop/${data[index].fImagePath}" alt="" class="img-fluid">
+                                                      </a>
+                                                      <div class="post-meta">
+                                                      <span class="date">遊戲商城</span>
+                                                      <span class="mx-1">&bullet;</span>
+                                                      <span>${data[index].availableDate}</span>
+                                                      </div>
+                                                      <div class="post-meta">
+                                                      <h4><a href="@Url.Content("~/Shop/Details")?id=${data[index].productId}">${data[index].productName}</a></h4>
+                                                      <p class="mb-4 d-block">${data[index].productContent.split('').slice(0, 10).join('')}....</p>
+                                                      </div>
+                                                                                            `;
+                    $('#ShopItem1').append(DivHtml);
+                }
+            });
+    });
+
+    $(document).ready(function () {
+            fetch('@Url.Content("~/Home/ShopItems")')
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data)
+                    for (let index = 4; index < 7; index++) {
+                        var DivHtml = `
+                        <div class="post-entry-1">
+                        <a href="@Url.Content("~/Shop/Details")?id=${data[index].productId}">
+                        <img src="/images/shop/${data[index].fImagePath}" alt="" class="img-fluid"></a>
+                        <div class="post-meta"><span class="date">遊戲商城</span>
+                        <span class="mx-1">&bullet;</span>
+                        <span>${data[index].availableDate}</span></div>
+                        <h6><a href="@Url.Content("~/Shop/Details")?id=${data[index].productId}">${data[index].productName}</a></h6>
+                        <p class="mb-4 d-block">${data[index].productContent.split('').slice(0, 10).join('')}....</p>
+                        </div>`
+                            ;
+                        $('#ShopItem2').append(DivHtml)
+                    }
+                });
+        });
+
+    $(document).ready(function () {
+            fetch('@Url.Content("~/Home/ShopItems")')
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data)
+                    for (let index = 7; index < 10; index++) {
+                        var DivHtml
+                            = `
+                            <div class="post-entry-1">
+                            <a href="@Url.Content("~/Shop/Details")?id=${data[index].productId}">
+                            <img src="/images/shop/${data[index].fImagePath}" alt="" class="img-fluid"></a>
+                            <div class="post-meta"><span class="date">遊戲商城</span>
+                            <span class="mx-1">&bullet;</span>
+                            <span>${data[index].availableDate}</span></div>
+                            <h6><a href="@Url.Content("~/Shop/Details")?id=${data[index].productId}">${data[index].productName}</a></h6>
+                            <p class="mb-4 d-block">${data[index].productContent.split('').slice(0, 10).join('')}....</p>
+                            </div>`
+                            ;
+                        $('#ShopItem3').append(DivHtml)
+                    }
+                });
+        });
+</script>
+}
 <!-- ======= Lifestyle Category Section ======= -->
 @*<section class="category-section">
     <div class="container" data-aos="fade-up">

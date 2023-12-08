@@ -18,7 +18,6 @@ namespace prjDB_GamingForm_Show.Models
         public static readonly string SK_Logged_User = "SK_Logged_User";
         public static readonly string SK_ReturnUrl = "SK_ReturnUrl";
         public static readonly string SK_Confirmed_MemberID = "SK_Confirmed_MemberID";
-        public static readonly string SK_Validation_Code = "SK_Validation_Code";
         public static readonly string SK_Validation_Guid = "SK_Validation_Guid";
         public static string SK_管理者觀看會員清單頁數使用關鍵字 = "SK_管理者觀看會員清單頁數使用關鍵字";
         public static string SK_管理者觀看商品清單頁數使用關鍵字 = "SK_管理者觀看商品清單頁數使用關鍵字";

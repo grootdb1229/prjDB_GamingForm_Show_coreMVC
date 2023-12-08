@@ -1,4 +1,4 @@
-﻿@model prjDB_GamingForm_Show.Models.Entities.Product
+﻿@model prjDB_GamingForm_Show.ViewModels.CShopPageViewModel
 
 @{
     ViewBag.Title = "Details";
@@ -8,9 +8,17 @@
         <div class="row gx-4 gx-lg-5 align-items-center">
 
             <div class="col-md-6"><img class="card-img-top" src="~/images/shop/@Model.FImagePath" alt="..." /></div>
-            <div class="col-md-6">
-                <div class="small mb-1">SKU: BST-498</div>
+            <div class="col-md-6">               
                 <h1 class="display-5 fw-bolder">@Html.DisplayFor(model => model.ProductName)</h1>
+                <div>
+                    @{
+                        string[] tags = Model.SubTagName.Split('/');
+                        foreach (var t in tags)
+                        {
+                                                                <span class="badge text-bg-light">@t</span>
+                        }
+                    }
+                </div>
                 <div class="fs-5 mb-5">
                     <span class="text-decoration-line-through">@Html.DisplayFor(model => model.Price)</span>
                     <span>@Html.DisplayFor(model => model.Price)</span>
@@ -27,6 +35,28 @@
 
                     <!-- 右側的按鈕和其他內容 -->
                     <div style="margin-left: auto;">
+                        <!-- 收藏按鈕 -->
+                        @if (Context.Session.GetInt32(CDictionary.SK_UserID) == null)
+                        {
+                            <button type="button" class="btn btn-info" id="btnLike" data-bs-toggle="modal" data-bs-target="#staticBackdrop" style="float:right;margin:0 5px">
+                                <img src="~/images/shop/hollowheart.png" width="20px" height="20px" />
+                        </button>
+                        }
+                        else
+                        {
+                            if (Model.favourite == "你收藏過了")
+                            {
+                            <button type="button" class="btn btn-info" id="btnLike" style="float:right;margin:0 5px">
+                                <img src="~/images/shop/heart.png" width="20px" height="20px" id="clicked" />
+                             </button>
+                            }
+                            else if (Model.favourite == "你還沒收藏過")
+                            {
+                                <button type="button" class="btn btn-info" id="btnLike" style="float:right;margin:0 5px">
+                                    <img src="~/images/shop/hollowheart.png" width="20px" height="20px" id="unclicked" />
+                                </button>
+                            }
+                        }
                         <!-- HTML 中的按鈕 -->
                         <button id="copyButton" class="btn btn-info" data-clipboard-target="#urlToCopy" style="float:right;margin:0 5px">分享</button>
                         <!-- 網址藏在這 -->
@@ -99,6 +129,41 @@
 
 
 
+        if (document.getElementById('btnLike') !== null) {
+            const btnlike = document.getElementById('btnLike');
+            if (!btnlike.hasAttribute('data-bs-toggle')) {
+                let isLiked = false;
+
+                async function favourite() {
+                    btnlike.addEventListener('click', async () => {
+                        const response = await fetch(`@Url.Content("~/Shop/favourite")?id=${@Model.ProductId}&isLiked=${isLiked}`);
+                        const data = await response.json();
+
+                        const imgElement = document.getElementById('unclicked');
+
+                        if (data.message === "加入最愛" || data.message === "你加過了" )
+                        {
+                            isLiked = !isLiked; // 切換狀態
+
+                            if (isLiked) {
+                                // 更換為加入最愛時的圖片路徑
+                                imgElement.src = '@Url.Content("~/images/shop/heart.png")';
+                                console.log(data.message + "進來後");
+                            } else {
+                                //變成沒有加入最愛的路徑
+                                imgElement.src = '@Url.Content("~/images/shop/hollowheart.png")';
+                                console.log(data.message + "進來後");
+                            }
+                        }
+                    });
+                }
+                favourite();
+            }
+        }
+
+
+       
+
     </script>
 }
 <!-- Related items section-->
@@ -132,4 +197,25 @@
             }
         </div>
     </div>
-</section>*@
+
+     
+        public IActionResult Like(int? AFId)
+        {
+            int memberId = (int)HttpContext.Session.GetInt32(CDictionary.SK_UserID);
+            var art = _db.ArticleActions.Where(a => a.ArticleId == AFId && a.MemberId == memberId && a.ActionId == 1).Select(a => a).FirstOrDefault();
+            if (art != null)
+            {
+                _db.ArticleActions.Remove(art);
+            }
+            else
+            {
+                ArticleAction x = new ArticleAction();
+                x.ArticleId = (int)AFId;
+                x.MemberId = memberId;
+                x.ActionId = 1;
+                _db.ArticleActions.Add(x);
+            }
+            _db.SaveChanges();
+            var likeCount = _db.ArticleActions.Count(a => a.ArticleId == AFId && a.ActionId == 1);
+            return Content(likeCount.ToString());
+        } *@

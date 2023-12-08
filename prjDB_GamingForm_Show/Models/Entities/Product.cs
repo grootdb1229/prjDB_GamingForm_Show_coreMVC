@@ -19,11 +19,13 @@ public partial class Product
 
     public int StatusId { get; set; }
 
+    public int ViewCount { get; set; }
+
     public int? MemberId { get; set; }
 
-    public int? FirmId { get; set; }
-
     public string? FImagePath { get; set; }
+
+    public int Goods { get; set; }
 
     public virtual Member? Member { get; set; }
 
@@ -35,9 +37,11 @@ public partial class Product
 
     public virtual ICollection<ProductEvaluate> ProductEvaluates { get; set; } = new List<ProductEvaluate>();
 
+    public virtual ICollection<ProductImage> ProductImages { get; set; } = new List<ProductImage>();
+
     public virtual ICollection<ProductTag> ProductTags { get; set; } = new List<ProductTag>();
 
-    public virtual Status? Status { get; set; } = null!;
+    public virtual Status Status { get; set; } = null!;
 
     public virtual ICollection<WishList> WishLists { get; set; } = new List<WishList>();
 }

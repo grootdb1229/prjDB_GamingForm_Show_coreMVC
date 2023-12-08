@@ -29,16 +29,31 @@
         }
     </style>
     }
+<header class="header-section">
+    <div class="nav-options">
+        <div class="container">
+            <div class="nav-menu">
+                <ul>
+                    <li>
+                        @Html.ActionLink(Model.blogs.FirstOrDefault().Title, "ArticleList", "Blog", new { FId = Model.blogs.FirstOrDefault().BlogId }, null)
 
-<h2 style="text-align:center;margin:10px auto;color:whitesmoke">回復發表</h2>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</header>
 
 
-<div>
+
+<div style="margin:20px">
     <div class="row" style="margin:10px auto;width:650px;background-color:#4F4F4F;border-radius:8px;box-shadow:0px 0px 8px 8px #cccccc">
+        <h2 style ="text-align:center;margin:10px auto;color:whitesmoke;border-bottom:dotted">
+            回復發表</h2>
         <div class="col-md-12" style="margin:10px 0">
             <form asp-action="ReplyCreate" method="post">
-                <input type="hidden" name="AFId" value=" @Model.articles.First().ArticleId" />
                 <input type="hidden" name="ArticleId" value=" @Model.articles.First().ArticleId" />
+                <input type="hidden" name="AFId" value=" @Model.articles.First().ArticleId" />
                 <input type="hidden" name="FId" value=" @Model.blogs.FirstOrDefault().BlogId" />                
                 <div>
                     <textarea name="ReplyContents" id="editor" style="resize:none; height:700px;margin:3px">                    
@@ -48,13 +63,17 @@
                     <input type="hidden" name="ModifiedDate" value="@DateTime.Now" />
                     <input type="hidden" name="MemberId" value="@Context.Session.GetInt32(CDictionary.SK_UserID)" />
                 </div>
-                <div class="form-group">
-                    <input type="submit" value="回覆" class="btn btn-default" />
-                    <p style="margin:3px; float:right;text-align:right">
+                <div class="form-group column" style="margin-top:4px;display: flex; justify-content: space-between;">
+                    <span style="margin-top:3px">
                         @Html.ActionLink("回到文章","ArticleContent","Blog",new{AFId= Model.articles.FirstOrDefault().ArticleId,FId=Model.blogs.FirstOrDefault().BlogId},new{
                         @class="btn btn-warning"
                         })
-                    </p>
+                    </span>
+                    <span>
+
+                        <input type="submit" value="回覆" class="btn btn-primary" />
+                    </span>
+                   
                 </div>
             </form>
         </div>
@@ -68,6 +87,9 @@
             ClassicEditor
                 .create(document.querySelector('#editor'), {
                     extraPlugins: [MyCustomUploadAdapterPlugin],
+                    mediaEmbed: {
+                        previewsInData: true
+                    }
                 })
                 .catch(error => {
                     console.log(error);

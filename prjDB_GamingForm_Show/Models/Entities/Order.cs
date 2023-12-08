@@ -9,7 +9,7 @@ public partial class Order
 
     public int? MemberId { get; set; }
 
-    public int? FirmId { get; set; }
+    public int? CouponId { get; set; }
 
     public string ShipName { get; set; } = null!;
 

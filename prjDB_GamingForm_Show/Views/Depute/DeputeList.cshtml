@@ -4,7 +4,36 @@
     Layout = "~/Views/Shared/DeputeLayout2.cshtml";
 }
 <!-- Search Start -->
+<head>
+    <style>
+        .tag_list_wrapper {
+            border: 1px solid red;
+        }
 
+        .tag_list {
+            display: inline-block;
+            vertical-align: top;
+            background: #000000;
+            border-radius: 30px;
+            margin: 5px;
+            padding:10px 25px 10px 10px;
+            /* border: 1px solid #d6d6d6; */
+            position: relative;
+        }
+
+            .tag_list.tag_list_hide {
+                display: none;
+            }
+
+            .tag_list span {
+                position: absolute;
+                right: 8px;
+                top: 10px;
+                cursor: pointer;
+            }
+
+    </style>
+</head>
 
 <div class="container-fluid bg-primary mb-5 wow fadeIn" data-wow-delay="0.1s" style="padding: 35px;">
     <div class="container">
@@ -13,9 +42,6 @@
                 <div class="row g-2">
                     <div class="col-md-15">
                         <input type="text" id="text" name="txtKeyword" class="form-control border-0" placeholder="Keyword" />
-                        <div id="hotkey">
-                            
-                        </div>
                     </div>
                 </div>
             </div>
@@ -24,77 +50,104 @@
             </div>
             <div class="col-md-2">
                 @Html.ActionLink("重設","DeputeList","Depute",null,new{@class ="btn btn-dark border-0 w-100",@id="search",name="txtKeyword"})
-                
             </div>
+            <div style="margin-top:5px" id="hotkey">
+            </div>
+
+
         </div>
     </div>
 </div>
 
 <!-- Search End -->
 <!-- Jobs Start -->
-<div class="container">
-    <div class="row g-4" style="float:right;">
-        <div class="col-md-6">
-            <p>大類別</p>
-            <select id="skillclass" class="form-select border-0"></select>
-        </div>
-        <div class="col-md-6">
-            <p>小類別</p>
-            <select id="skill" class="form-select border-0"></select>
-        </div>
-    </div>
-    <div class="row g-4" style="float:left">
-        <div class="col-md-6">
-            <p>地區</p>
-            <select id="regions" class="form-select border-0"></select>
-        </div>
-        <div class="col-md-6">
-            <p>金額</p>
-            <div class="row g-2">
-                <select id="money" class="form-select border-0">
-                    <option name="txtSalary" selected>請選擇...</option>
-                    <option name="txtSalary" value="1">10000</option>
-                    <option name="txtSalary" value="2">20000</option>
-                    <option name="txtSalary" value="3">30000</option>
-                    <option name="txtSalary" value="4">50000</option>
-                </select>
+
+<div id="popmenu" class="container">
+    <div class="accordion accordion-flush" id="accordionFlushExample">
+        <div class="accordion-item" >
+            <h2 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+                    進階搜尋:
+                </button>
+            </h2>
+            <div id="flush-collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
+                <div  class="accordion-body" >
+                    
+                        <div class="row">
+                        <div class="col-6 col-sm-3">- 大類別</div>
+                        <div class="col-6 col-sm-3">- 小類別</div>
+                        <div class="col-6 col-sm-3">- 懸賞區域</div>
+                        <div class="col-6 col-sm-3">- 懸賞金額</div>
+                        <div class="w-100"></div>
+                        <div class="col-6 col-sm-3" style="height:200px;">
+                                <div id="skillclass"></div>
+                            </div>
+                        <div class="col-6 col-sm-3" style="height:200px;overflow-y:auto">
+                                <div id="skill"></div>
+                            </div>
+                        <div class="col-6 col-sm-3" style="height:200px;overflow-y:auto">
+                                <div id="regions"></div>
+                            </div>
+                        <div class="col-6 col-sm-3">
+                                <select id="money" class="form-select border-0">
+                                    <option name="txtSalary" selected>請選擇...</option>
+                                    <option name="txtSalary" value="1">10000</option>
+                                    <option name="txtSalary" value="2">20000</option>
+                                    <option name="txtSalary" value="3">30000</option>
+                                    <option name="txtSalary" value="4">50000</option>
+                                </select>
+                            </div>
+                        </div>
+                    
+                    
+                </div>
+
             </div>
+
         </div>
     </div>
+
 </div>
 <div class="container-xxl py-5">
-    
+    <h1 id="totalcount" class="text-center mb-5 wow fadeInUp" data-wow-delay="0.1s">懸賞清單</h1>
     <div class="container">
-        <h1 class="text-center mb-5 wow fadeInUp" data-wow-delay="0.1s">懸賞清單</h1>
+        <div id="loadtags" class="tag_list_wrapper">
+        </div>
+    </div>
+    <div class="container">
+
 
         <div class="tab-class text-center wow fadeInUp" data-wow-delay="0.3s">
 
             <div class="tab-content">
                 <div id="tab-1" class="tab-pane fade show p-0 active">
                     <div class="job-item p-4 mb-4">
-                        <div id="list" class="row g-4">
-                            @foreach (var item in Model) {
-                            <div class="col-sm-12 col-md-8 d-flex align-items-center">
+                        <div id="resultlist" class="row g-4">
+                            @foreach (var item in Model)
+                            {
+                                <div class="col-sm-12 col-md-8 d-flex align-items-center">
                                     <img class="flex-shrink-0 img-fluid border rounded" src="~/images/@Html.DisplayFor(modelItem => item.imgfilepath)" alt="" style="width: 80px; height: 80px;">
-                                <div class="text-start ps-4">
+                                    <div class="text-start ps-4">
                                         <h5 class="mb-3">@Html.DisplayFor(modelItem => item.title)</h5>
                                         <span class="text-truncate me-3"><i class="fa fa-map-marker-alt text-primary me-2"></i>@Html.DisplayFor(modelItem => item.region)</span>
-                                        <span class="text-truncate me-3"><i class="fa fa-map-marker-alt text-primary me-2"></i>@Html.DisplayFor(modelItem => item.providername)</span>
+                                        <span class="text-truncate me-3"><i class="fa fa-user-tie text-primary me-2"></i>@Html.DisplayFor(modelItem => item.providername)</span>
                                         <span class="text-truncate me-3"><i class="far fa-clock text-primary me-2"></i>@Html.DisplayFor(modelItem => item.startdate)</span>
-                                        <span class="text-truncate me-0"><i class="far fa-money-bill-alt text-primary me-2"></i>@item.salary.ToString("$###,###,##0.##")</span>
+                                        <span class="text-truncate me-3"><i class="far fa-money-bill-alt text-primary me-2"></i>@item.salary.ToString("$###,###,##0.##")</span>
+                                        <span class="text-truncate me-3"><i class="far fa-solid fa-eye text-primary me-2"></i>@Html.DisplayFor(modelItem => item.viewcount)</span>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="col-sm-12 col-md-4 d-flex flex-column align-items-start align-items-md-end justify-content-center">
-                                <div class="d-flex mb-3">
-                                    <a class="btn btn-light btn-square me-3" href=""><i class="far fa-heart text-primary"></i></a>
+                                <div class="col-sm-12 col-md-4 d-flex flex-column align-items-start align-items-md-end justify-content-center">
+                                    <div class="d-flex mb-3">
+                                        <a class="btn btn-light btn-square me-3" href=""><i class="far fa-heart text-primary"></i></a>
                                         @Html.ActionLink("詳細", "DeputeDetails", "Depute", new { id = item.id },new{@class ="btn btn-primary"})
                                         @Html.ActionLink("我要應徵", "Apply", "Depute", new { id = item.id },new{@class ="btn btn-primary"})
-                                </div>
+                                    </div>
+                                    <small class="text-truncate"><i class="far fa-regular fa-chart-bar text-primary me-2"></i>狀態 : @Html.DisplayFor(modelItem => item.status)</small>
                                     <small class="text-truncate"><i class="far fa-calendar-alt text-primary me-2"></i>Last Update : @Html.DisplayFor(modelItem => item.modifieddate)</small>
-                            </div>
+                                </div>
                             }
                         </div>
-                        
+
                     </div>
                     @Html.ActionLink("回懸賞首頁", "DeputeMain", "Depute", null, new { @class = "btn btn-primary py-3 px-5", @id = "btndp" })
                 </div>
@@ -108,144 +161,414 @@
 @section Scripts {
     <script>
 
-
-        const title = document.querySelector('#list');
+        $('#search').click(() => { loadList() });
         const text = document.querySelector('#text');
-        const search = document.querySelector('#search');
-        const skillclass = document.querySelector('#skillclass');
-        const skill = document.querySelector('#skill');
-        search.addEventListener("click", () => { loadList() })
-        skillclass.addEventListener("change", () => { loadSkill() })
-        skillclass.addEventListener("change", () => { loadList() })
-        skill.addEventListener("change", () => { loadList() })
-
-        const selSkillClasses = document.querySelector('#skillclass');
-        const selectSkills = document.querySelector('#skill');
-        const selectRegions = document.querySelector('#regions');
         const selSalary = document.querySelector('#money');
-
-        //基本搜尋&&進階搜尋///
-        loadHotkey();
-        loadRegion();
-        async function loadList() {
-            const lstFrag = $(document.createDocumentFragment());
-            const response = await fetch
-                (`@Url.Content("~/Depute/Search")?txtKeyword=${text.value}&txtRegion=${selectRegions.options[selectRegions.selectedIndex].text}&txtSalary=${selSalary.options[selSalary.selectedIndex].text}&txtSkillClass=${selSkillClasses.options[selSkillClasses.selectedIndex].text}&txtSkill=${selectSkills.options[selectSkills.selectedIndex].text}`);
-            // console.log(response)
-            const data = await response.json();
-            // console.log(data);
-            const list = data.map(list =>
-                `                           <input type="hidden" name="${list.id}" value=${list.id}/>
-                                                    <div  class="col-sm-12 col-md-8 d-flex align-items-center">
-                                                     <img class="flex-shrink-0 img-fluid border rounded" src="/images/${list.imgfilepath}" alt="" style="width: 80px; height: 80px;">
-                                                     <div class="text-start ps-4">
-                                                     <h5 class="mb-3">${list.title}</h5>
-                                                             <span class="text-truncate me-3"><i class="fa fa-map-marker-alt text-primary me-2"></i>${list.region}</span>
-                                                             <span class="text-truncate me-3"><i class="fa fa-map-marker-alt text-primary me-2"></i>${list.providername}</span>
-                                                             <span class="text-truncate me-3"><i class="far fa-clock text-primary me-2"></i>${list.startdate}</span>
-                                                             <span class="text-truncate me-0"><i class="far fa-money-bill-alt text-primary me-2"></i>${list.salary}</span>
-                                                    </div>
-                                                    </div>
-                                                    <div class="col-sm-12 col-md-4 d-flex flex-column align-items-start align-items-md-end justify-content-center">
-                                                    <div class="d-flex mb-3">
-                                                    <a class="btn btn-light btn-square me-3" href=""><i class="far fa-heart text-primary"></i></a>
-                                                            <a href="/Depute/DeputeDetails/${list.id}" class="btn btn-primary" id=" btndp">詳細...</a>
-                                                                            <a href="/Depute/Apply/${list.id}" class="btn btn-primary"  id=btndp"">我要應徵...</a>
-
-                                                    </div>
-                                                            <small class="text-truncate"><i class="far fa-calendar-alt text-primary me-2"></i>Last Update : ${list.modifieddate}</small>
-                                                    </div>
-
-
-                                            `
-
-
-
-            )
-            lstFrag.append(list);
-            // console.log(lstFrag)
-            $('#list').html(lstFrag);
+        loadSkillClassess();
+        let keyword = [];
+        function loadSkillClassess() {
+            $.ajax('@Url.Content("~/Depute/SkillClassess")', {
+                "type": 'Post', //POST、PUT、DELETE
+                "dataType": "json"
+            })
+                .done((data) => {
+                    const SkillClassessFrag = $(document.createDocumentFragment());
+                    const SkillClassess = data.map(value => 
+                       `<div class="form-check">
+                                         <input class="form-check-input skillclass" type="checkbox" id="${value.name}-1" value="${value.skillClassId}"name="${value.name}">
+                         <label class="form-check-label" for="${value.name}-1">
+                         ${value.name}
+                         </label>
+                         </div>
+                                 ` )
+                    SkillClassessFrag.append(SkillClassess);
+                    $('#skillclass').after(SkillClassessFrag)
+                    loadRegion();
+                    //tag
+                    let checkValue;
+                    $('.form-check-input.skillclass').click(function () {
+                        var isChecked = $(this).is(":checked");
+                        console.log(isChecked)
+                        checkValue = $(this).attr("name");
+                        checkID = $(this).val();
+                        console.log(checkValue); //on
+                        var tag = `<div class="tag_list" onclick="Tags2(event)" id="${checkValue}-2">${checkValue}<span>X</span></div>`
+                        if (isChecked == false) {
+                            checkID = "";
+                            var del = keyword.indexOf(checkValue)
+                            keyword.splice(del,1);
+                            console.log(keyword);
+                            $(`#${checkValue}-2`).remove()
+                        }
+                        else {
+                            keyword.push(checkValue);
+                            console.log(keyword);
+                            $('#loadtags').append(tag)
+                        }
+                        MutiSearch(keyword);
+                        loadSkill(checkID);
+                        
+                        
+                    });
+                })
         }
+        function loadSkill(value) {
+            $.ajax('@Url.Content("~/Depute/Skills")', {
+                "type": 'Post', //POST、PUT、DELETE
+                "data": { "id": value },
+                "dataType": "json"
+            })
+                .done((data) => {
+
+
+                    const SkillFrag = $(document.createDocumentFragment());
+                    const Skills = data.map(Skills => {
+                        if (keyword.find(n=>n==Skills.name))
+                            var hi = 'checked'
+                     return   `<div class="form-check">
+                                  <input class="form-check-input skill" type="checkbox" ${hi} id="${Skills.name}-1" name="${Skills.name}">
+                                  <label class="form-check-label" for="${Skills.name}-1">
+                                  ${Skills.name}
+                                 </label>
+                                 </div>
+                                 `
+                    })
+                    SkillFrag.append(Skills);
+                    $('#skill').html(SkillFrag);
+                    //tag
+                    let checkValue;
+                    $('.form-check-input.skill').click(function (){
+                        var isChecked = $(this).is(":checked");
+                        console.log(isChecked)
+                        checkValue = $(this).attr("name");
+                        checkID = $(this).val();
+                        console.log(checkValue); //on
+                        var tag = `<div class="tag_list" onclick="Tags2(event)" id="${checkValue}-2">${checkValue}<span>X</span></div>`
+                        if (isChecked == false) {
+                            checkID = "";
+                            var del = keyword.indexOf(checkValue)
+                            keyword.splice(del, 1);
+                            console.log(keyword);
+                            $(`#${checkValue}-2`).remove()
+                        }
+                        else {
+                            keyword.push(checkValue);
+                            console.log(keyword);
+                            $('#loadtags').append(tag)
+                        }
+                        MutiSearch(keyword);
+                    })
+                })
+        } 
+        
+        function Tags2(event) {
+            checkValue = event.target.previousSibling.textContent;
+            console.log(checkValue); //on
+
+                var del = keyword.indexOf(checkValue)
+                keyword.splice(del, 1);
+                console.log(keyword);
+            $(`#${checkValue}-2`).remove();
+            console.log($(`#${checkValue}`)[0]);
+            $(`#${checkValue}-1`)[0].checked=false
+            MutiSearch(keyword);
+        }
+
+        function loadRegion() {
+            $.ajax('@Url.Content("~/Depute/Region")', {
+                "type": 'Post', //POST、PUT、DELETE
+                "dataType": "json"
+            })
+                .done((data) => {
+                    const RegionFrag = $(document.createDocumentFragment());
+                    const Regions = data.map(Regions => 
+                        `
+                        <div class="col order-12">
+                        <input class="form-check-input region" type="checkbox" id="${Regions.city}-1" value="${Regions.city}" name="${Regions.city}">
+                        <label class="form-check-label" for="${Regions.city}-1">
+                         ${Regions.city}
+                        </label>
+                        </div>
+                         `
+                    )
+
+                    RegionFrag.append(Regions);
+                    $('#regions').after(RegionFrag)
+                    loadHotkey()
+                    $('.form-check-input.region').click(function () {
+                        var isChecked = $(this).is(":checked");
+                        console.log(isChecked)
+                        checkValue = $(this).attr("name");
+                        checkID = $(this).val();
+                        console.log(checkValue); //on
+                        var tag = `<div class="tag_list" onclick="Tags2(event)" id="${checkValue}-2">${checkValue}<span>X</span></div>`
+                        if (isChecked == false) {
+                            checkID = "";
+                            var del = keyword.indexOf(checkValue)
+                            keyword.splice(del, 1);
+                            console.log(keyword);
+                            $(`#${checkValue}-2`).remove()
+                        }
+                        else {
+                            keyword.push(checkValue);
+                            console.log(keyword);
+                            $('#loadtags').append(tag)
+                        }
+                        MutiSearch(keyword);
+                    });
+
+                })
+        }
+        //基本搜尋&&進階搜尋///
+
+        function MutiSearch(value) {
+            $.ajax('@Url.Content("~/Depute/MutipleSearch")', {
+                "type": 'Post', //POST、PUT、DELETE
+                "data": {
+                        "txtMutiKeywords": value
+                    // "txtRegion": selectRegions.options[selectRegions.selectedIndex]
+                },
+                "dataType": "json"
+            })
+                .done((data) => {
+                    $('#totalcount').html(`相關結果有${data.length}筆`);
+                    const lstFrag = $(document.createDocumentFragment());
+                        const resultlist = data.map(resultlist =>
+                        `
+                                        <div  class="col-sm-12 col-md-8 d-flex align-items-center">
+                                                <img class="flex-shrink-0 img-fluid border rounded" src="/images/${resultlist.imgfilepath}" alt="" style="width: 80px; height: 80px;">
+                                        <div class="text-start ps-4">
+                                                <h5 class="mb-3">${resultlist.title}</h5>
+                                                <span class="text-truncate me-3"><i class="fa fa-map-marker-alt text-primary me-2"></i>${resultlist.region}</span>
+                                                <span class="text-truncate me-3"><i class="fa fa-user-tie text-primary me-2"></i>${resultlist.providername}</span>
+                                                <span class="text-truncate me-3"><i class="far fa-clock text-primary me-2"></i>${resultlist.startdate}</span>
+                                        <span class="text-truncate me-3"><i class="far fa-money-bill-alt text-primary me-2"></i>${resultlist.salary}</span>
+                                                <span class="text-truncate me-3"><i class="far fa-solid fa-eye text-primary me-2"></i>${resultlist.viewcount}</span>
+                                        </div>
+                                        </div>
+                                        <div class="col-sm-12 col-md-4 d-flex flex-column align-items-start align-items-md-end justify-content-center">
+                                        <div class="d-flex mb-3">
+                                        <a class="btn btn-light btn-square me-3" href=""><i class="far fa-heart text-primary"></i></a>
+                                                <a href="/Depute/DeputeDetails/${resultlist.id}" class="btn btn-primary id=" btndp"">詳細...</a>
+                                                <a href="/Depute/Apply/${resultlist.id}" class="btn btn-primary id=" btndp"">我要應徵...</a>
+                                        </div>
+                                                        <small class="text-truncate"><i class="far fa-regular fa-chart-bar text-primary me-2"></i>狀態 : ${resultlist.status}</small>
+                                                        <small class="text-truncate"><i class="far fa-calendar-alt text-primary me-2"></i>Last Update : ${resultlist.modifieddate}</small>
+                                        </div>
+
+                                                `
+                    )
+                        lstFrag.append(resultlist);
+                        $('#resultlist').html(lstFrag);
+
+                })
+        }
+        function loadList(hotkey) {
+            $.ajax('@Url.Content("~/Depute/Search")', {
+                "type": 'Post', //POST、PUT、DELETE
+                "data": {
+                    "txtKeyword": text.value,
+                    "txtHotkey": hotkey,
+                    // "txtRegion": selectRegions.options[selectRegions.selectedIndex]
+                },
+                "dataType": "json"
+            })
+                .done((data) => {
+                    $('#totalcount').html(`相關結果有${data.length}筆`);
+                    const lstFrag = $(document.createDocumentFragment());
+                    const list = data.map(list =>
+                        `
+                                <div  class="col-sm-12 col-md-8 d-flex align-items-center">
+                                <img class="flex-shrink-0 img-fluid border rounded" src="/images/${list.imgfilepath}" alt="" style="width: 80px; height: 80px;">
+                                <div class="text-start ps-4">
+                                <h5 class="mb-3">${list.title}</h5>
+                                <span class="text-truncate me-3"><i class="fa fa-map-marker-alt text-primary me-2"></i>${list.region}</span>
+                                <span class="text-truncate me-3"><i class="fa fa-user-tie text-primary me-2"></i>${list.providername}</span>
+                                <span class="text-truncate me-3"><i class="far fa-clock text-primary me-2"></i>${list.startdate}</span>
+                                <span class="text-truncate me-3"><i class="far fa-money-bill-alt text-primary me-2"></i>${list.salary}</span>
+                                <span class="text-truncate me-3"><i class="far fa-solid fa-eye text-primary me-2"></i>${list.viewcount}</span>
+                                </div>
+                                </div>
+                                <div class="col-sm-12 col-md-4 d-flex flex-column align-items-start align-items-md-end justify-content-center">
+                                <div class="d-flex mb-3">
+                                <a class="btn btn-light btn-square me-3" href=""><i class="far fa-heart text-primary"></i></a>
+                                <a href="/Depute/DeputeDetails/${list.id}" class="btn btn-primary id=" btndp"">詳細...</a>
+                                <a href="/Depute/Apply/${list.id}" class="btn btn-primary id=" btndp"">我要應徵...</a>
+                                </div>
+                                        <small class="text-truncate"><i class="far fa-regular fa-chart-bar text-primary me-2"></i>狀態 : ${list.status}</small>
+                                        <small class="text-truncate"><i class="far fa-calendar-alt text-primary me-2"></i>Last Update : ${list.modifieddate}</small>
+                                </div>
+
+                                        `
+                    )
+                    lstFrag.append(list);
+                    $('#list').html(lstFrag);
+
+                })
+        }
+        function loadHotkey() {
+            var count = 0;
+            $.ajax('@Url.Content("~/Depute/Hotkey")', {
+                "type": 'Post', //POST、PUT、DELETE//
+                "data": { "id": 3 },
+                "dataType": "json"
+            })
+                .done((data) => {
+                    // count++;
+                    const HkFrag = $(document.createDocumentFragment());
+                    const snd = '<span class="text-truncate me-1">熱門關鍵字 :</span>'
+                    HkFrag.append(snd);
+                    const Hotkeys = data.map(Hotkeys => `<a href="#" id="${Hotkeys}" onclick="MutiSearch('${Hotkeys}')">#${Hotkeys} </a>`)
+                    HkFrag.append(Hotkeys);
+                    $('#hotkey').html(HkFrag)
+                })
+            // loadList()
+        }
+
+
+
+     //舊式寫法
 
         //下拉式選單
-        async function loadSkillClassess() {
-            const SkillClasseFrag = $(document.createDocumentFragment());
-            const response = await fetch('@Url.Content("~/Depute/SkillClassess")');
-            // console.log(fst);
-            const data = await response.json();
-            const fst = '<option name="txtSkillClass" value="0">請選擇...</option>'
-            SkillClasseFrag.append(fst);
-            // console.log(data);
-            const SkillClassess = data.map(SkillClassess => `<option name="txtSkillClass" value='${SkillClassess.skillClassId}'>${SkillClassess.name}</option>`)
-            SkillClasseFrag.append(SkillClassess);
-            $('#skillclass').html(SkillClasseFrag)
-            // selSkillClasses.innerHTML = SkillClassesks.join("");
 
-            loadSkill();
+        // const text = document.querySelector('#text');
+        // const selSkillClasses = document.querySelector('#skillclass');
+        // const selectSkills = document.querySelector('#skill');
+        // const selectRegions = document.querySelector('#regions');
+        // const selSalary = document.querySelector('#money');
 
-        }
+        // $('#skillclass').change(() => { loadSkill() });
+        // function loadSkillClassess() {
+        //     $.ajax('@Url.Content("~/Depute/SkillClassess")', {
+        //         "type": 'Post', //POST、PUT、DELETE
+        //         "dataType": "json"
+        //     })
+        //         .done((data) => {
+        //             const SkillClassessFrag = $(document.createDocumentFragment());
+        //             const fst = '<option name="txtSkillClass" value="0">請選擇...</option>'
+        //             SkillClassessFrag.append(fst);
+        //             const SkillClassess = data.map(SkillClassess => `<option name="txtSkillClass" value='${SkillClassess.skillClassId}'>${SkillClassess.name}</option>`)
+        //             SkillClassessFrag.append(SkillClassess);
+        //             $('#skillclass').html(SkillClassessFrag)
+        //             loadSkill();
+        //         })
+        //     // loadSkill();
+        // }
+        // function loadSkill() {
+        //     $.ajax('@Url.Content("~/Depute/Skills")', {
+        //         "type": 'Post', //POST、PUT、DELETE
+        //         "data": { "id": selSkillClasses.value },
+        //         "dataType": "json"
+        //     })
+        //         .done((data) => {
+        //             const SkillFrag = $(document.createDocumentFragment());
+        //             const snd = '<option name="txtSkill" value="null">請選擇...</option>'
+        //             SkillFrag.append(snd);
+        //             const Skills = data.map(Skills => `<option name="txtSkill" value='${Skills.skillId}'>${Skills.name}</option>`)
+        //             SkillFrag.append(Skills);
+        //             $('#skill').html(SkillFrag);
+        //         })
+        //     loadRegion();
+        // }
+        // function loadRegion() {
+        //     $.ajax('@Url.Content("~/Depute/Region")', {
+        //         "type": 'Post', //POST、PUT、DELETE
+        //         "dataType": "json"
+        //     })
+        //         .done((data) => {
+        //             const RegionFrag = $(document.createDocumentFragment());
+        //             const snd = '<option name="txtRegion" value="null">請選擇...</option>'
+        //             RegionFrag.append(snd);
+        //             const Regions = data.map(Regions => `<option name="txtRegion" value='${Regions.regionId}'>${Regions.city}</option>`)
+        //             RegionFrag.append(Regions);
+        //             $('#regions').html(RegionFrag)
+        //         })
+        //     loadHotkey()
+        // }
 
-        async function loadSkill() {
-            const SkillFrag = $(document.createDocumentFragment());
-            const response = await fetch(`@Url.Content("~/Depute/Skills")?id=${selSkillClasses.value}`);
-             // console.log(response);
-            const snd = '<option name="txtSkill" value="null">請選擇...</option>'
-            SkillFrag.append(snd);
-            const data = await response.json();
-             // console.log(data);
-            const Skills = data.map(Skills => `<option name="txtSkill" value='${Skills.skillId}'>${Skills.name}</option>`)
-            SkillFrag.append(Skills);
-            $('#skill').html(SkillFrag)
-            
-            // loadList();
-        }
 
-        async function loadRegion() {
-            const RegionFrag = $(document.createDocumentFragment());
-            const response = await fetch(`@Url.Content("~/Depute/Region")`);
-            // console.log(response);
-            const snd = '<option name="txtRegion" value="null">請選擇...</option>'
-            RegionFrag.append(snd);
-            const data = await response.json();
-            // console.log(data);
-            const Regions = data.map(Regions => `<option name="txtRegion" value='${Regions.regionId}'>${Regions.city}</option>`)
-            RegionFrag.append(Regions);
-            $('#regions').html(RegionFrag)
-            loadSkillClassess();
-        }
-        
-        //熱門關鍵字:
-        async function loadHotkey() {
-            const HkFrag = $(document.createDocumentFragment());
-            const response = await fetch(`@Url.Content("~/Depute/Hotkey/3")`);
-            // console.log(response);
-            const snd = '<span class="text-truncate me-3">熱門關鍵字 :</span>'
-            HkFrag.append(snd);
-            const data = await response.json();
-            console.log(data);
-            // <a href="/Depute/DeputeDetails/${list.id}" class="btn btn-primary" id = " btndp" name="txtKeyword" > 詳細...</a>
-            const Hotkeys = data.map(Hotkeys => `<a href="/Depute/Search?" id="${Hotkeys}">${Hotkeys} </a>`)
-            console.log(Hotkeys);
-            $('#html').click(function () {
-                $.getJSON('@Url.Content("~/Depute/Search")', (datas) => {
-                    const docFrag = $(document.createDocumentFragment());
-                    $.each(datas, (index, data) => { 
-                        console.log(data);
-                        // <li class="list-group-item" > An item < /li>
-                        // const li = $('<li></li>').text(data).addClass('list-group-item');
-                        docFrag.append(li);
-                    })
-                    $('.list-group').html(docFrag);
-                })
-                $('#divAlert').text("JSON")
-            })
-            // const Hotkeys = data.map(Hotkeys => `<span style="flex:content;width:auto;text-align:center" name="txtKeyword">${Hotkeys} </span>`)
-            HkFrag.append(Hotkeys);
-            $('#hotkey').html(HkFrag)
-            
-        }
-        
+             //
 
+                        // const title = document.querySelector('#list');
+                        // const text = document.querySelector('#text');
+                        // const search = document.querySelector('#search');
+                        // const skillclass = document.querySelector('#skillclass');
+                        // const skill = document.querySelector('#skill');
+                        // search.addEventListener("click", () => { loadList() })
+                        // // skillclass.addEventListener("change", () => { loadSkill() })
+                        // skillclass.addEventListener("change", () => { loadList() })
+                        // skill.addEventListener("change", () => { loadList() })
+                        // const selSkillClasses = document.querySelector('#skillclass');
+                        // const selectSkills = document.querySelector('#skill');
+                        // const selectRegions = document.querySelector('#regions');
+                        // const selSalary = document.querySelector('#money');
+
+                        // //基本搜尋&&進階搜尋///
+                        // loadHotkey();
+                        // loadRegion();
+
+
+                        // async function loadSkillClassess() {
+                        //     const SkillClasseFrag = $(document.createDocumentFragment());
+                        //     const response = await fetch('@Url.Content("~/Depute/SkillClassess")');
+                        //     // console.log(fst);
+                        //     const data = await response.json();
+                        //     const fst = '<option name="txtSkillClass" value="0">請選擇...</option>'
+                        //     SkillClasseFrag.append(fst);
+                        //     // console.log(data);
+                        //     const SkillClassess = data.map(SkillClassess => `<option name="txtSkillClass" value='${SkillClassess.skillClassId}'>${SkillClassess.name}</option>`)
+                        //     SkillClasseFrag.append(SkillClassess);
+                        //     $('#skillclass').html(SkillClasseFrag)
+                        //     loadSkill();
+
+                        // }
+
+                        // async function loadSkill() {
+                        //     const SkillFrag = $(document.createDocumentFragment());
+                        //     const response = await fetch(`@Url.Content("~/Depute/Skills")?id=${selSkillClasses.value}`);
+                        //      // console.log(response);
+                        //     const snd = '<option name="txtSkill" value="null">請選擇...</option>'
+                        //     SkillFrag.append(snd);
+                        //     const data = await response.json();
+                        //      // console.log(data);
+                        //     const Skills = data.map(Skills => `<option name="txtSkill" value='${Skills.skillId}'>${Skills.name}</option>`)
+                        //     SkillFrag.append(Skills);
+                        //     $('#skill').html(SkillFrag)
+                        // }
+
+                        // async function loadRegion() {
+                        //     const RegionFrag = $(document.createDocumentFragment());
+                        //     const response = await fetch(`@Url.Content("~/Depute/Region")`);
+                        //     // console.log(response);
+                        //     const snd = '<option name="txtRegion" value="null">請選擇...</option>'
+                        //     RegionFrag.append(snd);
+                        //     const data = await response.json();
+                        //     // console.log(data);
+                        //     const Regions = data.map(Regions => `<option name="txtRegion" value='${Regions.regionId}'>${Regions.city}</option>`)
+                        //     RegionFrag.append(Regions);
+                        //     $('#regions').html(RegionFrag)
+                        //     loadSkillClassess();
+                        // }
+                        // async function loadHotkey() {
+                        //     const HkFrag = $(document.createDocumentFragment());
+                        //     const response = await fetch(`@Url.Content("~/Depute/Hotkey/3")`);
+                        //     // console.log(response);
+                        //     const snd = '<span class="text-truncate me-3">熱門關鍵字 :</span>'
+                        //     HkFrag.append(snd);
+                        //     const data = await response.json();
+                        //     // console.log(data);
+                        //     const Hotkeys = data.map(Hotkeys => `<a href="#" id="${Hotkeys}" onclick="loadList('${Hotkeys}')">${Hotkeys}  </a>`)
+                        //     HkFrag.append(Hotkeys);
+                        //     $('#hotkey').html(HkFrag)
+                        // }
+
+
+                        //舊式寫法
+
+
+
+
+                        //熱門關鍵字:
 
     </script>
 }

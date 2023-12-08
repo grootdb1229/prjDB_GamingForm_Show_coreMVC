@@ -4,9 +4,23 @@
     ViewData["Title"] = "Edit";
     Layout = "~/Views/Shared/_Layout_DBM.cshtml";
 }
+@section styles{
 
-<h2 class="tm-text-primary">委託資訊修改</h2>
-<hr class="mb-5">
+    <style>
+        .custom-popover {
+            --bs-popover-max-width: 200px;
+            /* --bs-popover-border-color: var(--bd-violet-bg);
+          --bs-popover-header-bg: var(--bd-violet-bg); */
+            --bs-popover-header-color: var(--bs-black);
+            --bs-popover-body-padding-x: 1rem;
+            --bs-popover-body-padding-y: .5rem;
+        }
+    </style>
+}
+
+<h2>委託資訊修改</h2>
+<h4>請輸入修改資訊</h4>
+<hr>
 
 <div class="row">
     <div class="col-md-10">
@@ -33,34 +47,51 @@
                 <span asp-validation-for="Modifiedate" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Title" class="control-label"></label>
+                <label class="control-label">標題</label>
                 <input asp-for="Title" class="form-control" />
                 <span asp-validation-for="Title" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="DeputeContent" class="form-label"></label>
+                <label class="form-label">委託內容</label>
                 <textarea asp-for="DeputeContent" class="form-control" style="height:200px"></textarea>
                 <span asp-validation-for="DeputeContent" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Salary" class="control-label"></label>
+                <label class="control-label">提供報酬</label>
                 <input asp-for="Salary" class="form-control" />
                 <span asp-validation-for="Salary" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="StatusId" class="control-label"></label>
-                <input asp-for="StatusId" class="form-control" />
-                <span asp-validation-for="StatusId" class="text-danger"></span>
-                <select name="region" class="form-select" id="selStatus" aria-label="Default select example">
+                <label class="control-label">狀態</label>
+                <select name="status" class="form-select" id="selStatus" aria-label="Default select example">
                 </select>
             </div>
             <div class="form-group">
+                <label class="control-label">地區</label>
                 <select name="region" class="form-select" id="selRegion" aria-label="Default select example">
                 </select>
             </div>
+
+            <span id="skillCount" hidden></span>
+            <a class="btn btn-secondary mb-3" id="aSkillList"
+               tabindex="0"
+               data-bs-toggle="popover" data-bs-placement="right"
+               data-bs-trigger="focus"
+               data-bs-custom-class="custom-popover"
+               data-bs-title="已選技能"
+               data-bs-html="true"
+               data-bs-content=''
+               hidden>
+                檢視所選技能
+            </a>
+
+            <button type="button" class="btn btn-info mb-3" onclick="openSkillBrowser()">編輯所需技能</button>
+            
+            <input name="skilllist" id="select-skills" hidden>
+
             <div class="form-group">
                 <a asp-action="personal" class="btn btn-secondary">取消</a>
-                <input type="submit" value="送出並修改" class="btn btn-success" />
+                <input type="submit" onclick="prepareAndSubmit()" value="送出並修改" class="btn btn-success" />
             </div>
         </form>
     </div>
@@ -71,6 +102,24 @@
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
     <script>
+        const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]');
+        const popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl));
+        const selSkills = [];
+        const divSkillClasses = document.querySelector('#list-tab'),
+            divSkillsGroup = document.querySelector('#nav-tabContent');
+        var selectedCount = 0;
+        var chooseClass;
+
+        async function readOriSkill() {
+            const response = await fetch(`@Url.Content("~/depute/oriSkills")?deputeID=${@Model.DeputeId}`);
+            const datas = await response.json();
+            
+            selSkills.push(...datas);
+            console.log(selSkills);
+            skillsCount();
+        }
+        readOriSkill();
+
         async function loadRegions() {
             const response = await fetch(`@Url.Content("~/depute/regions")`);
             const datas = await response.json();
@@ -80,14 +129,211 @@
         }
         loadRegions();
 
-        async function loadStatuses() {
-            const response = await fetch(`@Url.Content("~/depute/deputeStatuses")`);
+        const deputeid = @Model.DeputeId;
+        async function loadStatuses(deputeID) {
+            const response = await fetch(`@Url.Content("~/depute/editDeputeStatuses")?id=${deputeID}`);
             const datas = await response.json();
             console.log(datas);
-            const statuses = datas.map(status => `<option value="${status.name}">${status.name}</option>`);
+            const statuses = datas.map(status => `<option value="${status.status}">${status.status}</option>`);
             document.querySelector("#selStatus").innerHTML = statuses.join("");
-
         }
-        loadStatuses();
+        loadStatuses(deputeid);
+
+        $('*').click(function (event) {
+            if (event.target.classList.contains('active')) {
+                chooseClass = document.querySelector('.list-group-item.active').firstChild.textContent;
+                chooseClassID = `list-${chooseClass}`;
+
+                loadSkills();
+            }
+        })
+
+        function openSkillBrowser() {
+            Swal.fire({
+                title: selectedCount == 0 ? `請選擇所需技能` : `請選擇所需技能(${selectedCount})`,
+                width: '50rem',
+                html: `<div class="accordion text-start" id="accordionExample" >
+                                   <div class="accordion-item">
+                                       <h2 class="accordion-header">
+                                          <button class="accordion-button collapsed" id="divaccordionbtn" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                                              已選擇技能(${selSkills.length}/5)
+                                          </button>
+                                       </h2>
+                                          <div id="collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionExample" style="">
+                                              <div class="accordion-body"  style="color:black" id="divaccordion">
+
+                                              </div>
+                                          </div>
+                                   </div>
+                               </div>
+                               <div class="row">
+                                    <div class="col-6">
+                                        <div class="list-group" id="list-tab" role="tablist">
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <ul style="overflow-y:auto;height:300px" class="list-group tab-content" id="nav-tabContent">
+                                        </ul>
+                                        <ul class="list-group col-6">
+                                        </ul>
+                                    </div>
+                               </div>
+                                   <div aria-live="polite" aria-atomic="true" class="d-flex justify-content-center align-items-center w-100" style="position:fixed;top: 65%; left: 50%; transform: translate(-50%, -50%);">
+                                   <div class="toast fade hide" role="alert" aria-live="assertive" aria-atomic="true" id="liveToast">
+                                       <div class="toast-body" style="color:black">
+                                           選項已滿，最多選擇5個
+                                       </div>
+                                   </div>
+                               </div>`
+            });
+            loadSkillClasses();
+            refreshAccordion();
+            skillsCount();
+        }
+
+        async function loadSkillClasses() {
+            const divSkillClasses = document.querySelector('#list-tab'),
+                divSkillsGroup = document.querySelector('#nav-tabContent');
+            const response = await fetch('@Url.Content("~/depute/skillclasses")');
+            const datas = await response.json();
+            const skillclasses = datas.skillclasses.map(skillclass => {
+                const count = skillclassesCount(skillclass.name);
+                const spanhidden = count == 0 ? "hidden" : "";
+                return `<a class="list-${skillclass.name}-item-action list-group-item skillclasstab" id="list-${skillclass.name}-list" data-bs-toggle="list" href="#list-${skillclass.name}" role="tab" aria-controls="list-${skillclass.name}">${skillclass.name}<span ${spanhidden}>(${count})</span><ul id=sel${skillclass.name} class="list-group col-6"></ul></a>`
+            });
+            const skillsgroup = datas.skillclasses.map(skillclass => `<div class="tab-pane fade" id="list-${skillclass.name}" role="tabpanel" aria-labelledby="list-${skillclass.name}-list">${skillclass.name}</div>`)
+            divSkillClasses.innerHTML = skillclasses.join("");
+            divSkillsGroup.innerHTML = skillsgroup.join("");
+            if (chooseClassID) {
+                loadSkills();
+            }
+        }
+
+        async function loadSkills() {
+            const response = await fetch(`@Url.Content("~/depute/skillss")?skillClass=${chooseClass}`);
+            const datas = await response.json();
+            const skills = datas.map(skill => {
+                var checked = "";
+                if (selSkills.find(_ => _.skillclass == `${chooseClass}` && _.skill == `${skill.name}`))
+                    checked = "checked";
+                return `<li class="list-group-item"><input class="form-check-input me-1" type="checkbox" value="" id="${skill.name}" ${checked}><label class="form-check-label stretched-link" for="${skill.name}">${skill.name}</label></li>`
+            })
+            document.querySelector(`#${chooseClassID}`).innerHTML = skills.join("");
+
+            const divSkills = document.getElementsByClassName('me-1');
+
+            Array.from(divSkills).forEach(divSkill => {
+                divSkill.addEventListener('change', function (event) {
+                    var selSK = event.target.labels[0].textContent;
+                    if (event.target.checked) {
+                        if (selSkills.length == 5) {
+                            overfive();
+                            event.target.checked = false;
+                            return
+                        }
+                        selSkills.push({ skillclass: chooseClass, skill: selSK });
+                    }
+                    else {
+                        const index = selSkills.findIndex(i => i.skillclass == chooseClass && i.skill == selSK);
+                        selSkills.splice(index, 1);
+                    }
+                    console.log(selSkills);
+                    refreshAccordion();
+                    skillsCount();
+                })
+            })
+        }
+
+        function removeSkill(event) {
+            if (event == undefined) {
+                selSkills.splice(0, selSkills.length);
+                console.log(selSkills);
+            }
+            else {
+                console.log(event.target.previousSibling);
+                const skill = event.target.previousSibling.textContent;
+                const skillteam = skill.split('-');
+                const index = selSkills.findIndex(_ => _.skillclass == skillteam[0] && _.skill == skillteam[1]);
+                selSkills.splice(index, 1);
+            }
+            loadSkills();
+            refreshAccordion();
+            skillsCount();
+        }
+
+        function overfive() {
+            const toastOverFive = document.querySelector('#liveToast');
+            const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastOverFive);
+            toastBootstrap.show();
+            setTimeout(function () {
+                toastBootstrap.hide();
+            }, 2000);
+        }
+
+        function skillclassesCount(SkillClassName) {
+            var count = 0;
+            count = selSkills.filter(_ => _.skillclass == SkillClassName).length;
+            return count;
+        }
+
+
+        function skillsCount() {
+            selectedCount = selSkills.length;
+
+            const divSkillTitle = document.querySelector('#swal2-title');
+            const spanCount = document.querySelector('#skillCount');
+            const aChoiceSkillList = document.querySelector('#aSkillList');
+
+            var boolanyselected = selectedCount == 0;
+            if (divSkillTitle != null)
+                divSkillTitle.innerHTML = boolanyselected ? `請選擇所需技能` : `請選擇所需技能(${selectedCount})<buuton class="btn btn-secondary" onclick="removeSkill()">清除全部</button>`;
+            spanCount.textContent = boolanyselected ? "" : `已選擇${selectedCount}項技能`;
+            spanCount.hidden = boolanyselected;
+            aChoiceSkillList.hidden = boolanyselected;
+
+            refreshSkillClassSpan();
+            refreshChoiceSkillList();
+        }
+
+        function refreshSkillClassSpan() {
+            const allskillclasstab = document.querySelectorAll('.skillclasstab');
+            //因為nodelist只可讀取不可修改，故用Array.from()，轉換成陣列
+            const allskillclasstablist = Array.from(allskillclasstab);
+
+            allskillclasstablist.map(skillclass => {
+                const skillclasscount = selSkills.filter(_ => _.skillclass == skillclass.firstChild.textContent).length,
+                    boolSkillClassCountZero = skillclasscount == 0,
+                    spanSkilClass = skillclass.lastChild.previousSibling;
+                spanSkilClass.textContent = `(${skillclasscount})`;
+                spanSkilClass.hidden = boolSkillClassCountZero;
+            })
+        }
+
+        function refreshChoiceSkillList() {
+            var popover = bootstrap.Popover.getOrCreateInstance('#aSkillList');
+            const choiceskill = selSkills.map((skills, index) => `<li class='list-group-item'>${index + 1}.${skills.skillclass}-${skills.skill}</li>`);
+            var newContent = `<ul class='list-group'>${choiceskill.join('')}</ul>`;
+            popover.setContent({
+                '.popover-header': '已選技能',
+                '.popover-body': newContent
+            });
+        }
+
+        function refreshAccordion() {
+            const divAccordion = document.querySelector('#divaccordion'),
+                divAccordionBnt = document.querySelector('#divaccordionbtn');
+            const skills = selSkills.map(skill => `<span class="badge rounded-pill text-bg-secondary m-1">${skill.skillclass}-${skill.skill}<button type="button" class="btn-close" aria-label="Close" onclick="removeSkill(event)"></button></span>`);
+            var boolSkillCountZero = selSkills.length == 0;
+            divAccordionBnt.disabled = boolSkillCountZero;
+            divAccordion.innerHTML = skills.join('');
+            divAccordionBnt.innerHTML = boolSkillCountZero ? `已選擇技能(0/5)` : `已選擇技能(${selSkills.length}/5)`;
+        }
+
+        const inputSkill = document.getElementById('select-skills');
+        function prepareAndSubmit() {
+            inputSkill.value = JSON.stringify(selSkills);
+            document.forms.submit();
+        }
+        
     </script>
 }

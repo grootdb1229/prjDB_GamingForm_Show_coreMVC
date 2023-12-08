@@ -32,6 +32,7 @@ namespace DB_GamingForm_Show.Job.DeputeClass
         [DisplayName("懸賞金額")]
         public decimal salary { get; set; }
         [DisplayName("懸賞狀態")]
+        public string statusid {  get; set; }
         public string status { get; set; }
         [DisplayName("懸賞區域")]
         public string region { get; set; }
@@ -39,6 +40,7 @@ namespace DB_GamingForm_Show.Job.DeputeClass
         public string skillname { get; set; }
         public int skillid { get; set; }
         [DisplayName("懸賞金主")]
+        public int viewcount { get; set; }
         public string memeberContent { get; set; }
         public string memberName {  get; set; }
         public string imgfilepath { get; set; }
@@ -48,7 +50,7 @@ namespace DB_GamingForm_Show.Job.DeputeClass
         public string? applyerPhone { get; set; }
         public string? applyerBirth { get; set; }
         public string? applyerEmail { get; set; }
-        public string? applyerComment { get; set; }
+        public string? applyerContent { get; set; }
         public string? applyerGender {  get; set; }
 
     }

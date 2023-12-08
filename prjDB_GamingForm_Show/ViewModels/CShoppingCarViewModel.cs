@@ -23,9 +23,11 @@ namespace prjDB_GamingForm_Show.ViewModels
         public int Count { get; set; }
         [DisplayName("合計金額")]
         public decimal total { get { return this.Count * this.Price; } }
+
+        public int payment { get; set; }
         public IEnumerable<Product>  product { get; set; }
 
-        public IEnumerable<Payment> payment { get; set; }
+        //public IEnumerable<Payment> payment { get; set; }
 
         public int CarCount { get; set; }
         

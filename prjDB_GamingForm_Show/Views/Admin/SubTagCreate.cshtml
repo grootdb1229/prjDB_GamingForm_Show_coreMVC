@@ -1,0 +1,37 @@
+﻿@model prjDB_GamingForm_Show.ViewModels.CBlogViewModel
+
+@{
+    ViewData["Title"] = "SubTagCreate";
+}
+
+<h2>SubTagCreate</h2>
+
+<h4>CBlogViewModel</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="SubTagCreate" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" name="TagID" value="4" />
+            <div class="form-group">
+                <label asp-for="subTags.First().Name" class="control-label" style="margin-top:8px">分類名稱</label>
+                <input name="Name" class="form-control" />
+                <span asp-validation-for="subTags.First().Name" class="text-danger"></span>
+
+            </div>
+            <span>
+                <input type="submit" value="新增" class="btn btn-danger" />
+            </span>
+
+        </form>
+
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

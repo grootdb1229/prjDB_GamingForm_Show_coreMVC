@@ -30,6 +30,7 @@ namespace prjDB_GamingForm_Show.Hubs
         {
             public string ConnectionId { get; set; }
             public string UserName { get; set; }
+            public bool IsOnline { get; set; }
         }
         // 用戶連線 ID 列表        
         private static List<UserConnection> ConnectedUsers = new List<UserConnection>();
@@ -46,7 +47,7 @@ namespace prjDB_GamingForm_Show.Hubs
             var userName = Context.GetHttpContext().Session.GetString(CDictionary.SK_管理者名稱);
             var connectionId = Context.ConnectionId;
 
-            var userConnection = new UserConnection { ConnectionId = connectionId, UserName = userName };
+            var userConnection = new UserConnection { ConnectionId = connectionId, UserName = userName, IsOnline = true };
             ConnectedUsers.Add(userConnection);
 
             // 更新連線 ID 列表
@@ -55,6 +56,9 @@ namespace prjDB_GamingForm_Show.Hubs
 
             // 更新個人 ID
             await Clients.Client(Context.ConnectionId).SendAsync("UpdSelfID", userName);
+
+            // 更新管理者線上狀態
+            await UpdateAdminOnlineStatus(userName, true);
 
             // 更新聊天內容
             await Clients.All.SendAsync("UpdContent", "新連線 ID: " + userName);
@@ -78,6 +82,9 @@ namespace prjDB_GamingForm_Show.Hubs
             string jsonString = JsonConvert.SerializeObject(GetUserNames());
             await Clients.All.SendAsync("UpdList", jsonString);
 
+            // 更新管理者線上狀態
+            await UpdateAdminOnlineStatus(disconnectedUser?.UserName, false);
+
             // 更新聊天內容
             await Clients.All.SendAsync("UpdContent", "已離線 ID: " + disconnectedUser?.UserName);
 
@@ -92,40 +99,55 @@ namespace prjDB_GamingForm_Show.Hubs
         /// <param name="id"></param>
         /// <returns></returns>
         public async Task SendMessage(string selfID, string message, string sendToID, string sendToName)
-        {
+        {            
             var senderUserName = ConnectedUsers.FirstOrDefault(u => u.UserName == selfID)?.UserName;
             var selfSid = ConnectedUsers.FirstOrDefault(u => u.UserName == selfID)?.ConnectionId;
-            if (string.IsNullOrEmpty(sendToID))
-            {
-                await Clients.All.SendAsync("UpdContent", senderUserName + " 說: " + message);
-            }
-            else
-            {
-                // 接收人
-                await Clients.Client(sendToID).SendAsync("UpdContent", senderUserName + " 私訊向你說: " + message);
-
-                // 發送人
-                await Clients.Client(selfSid).SendAsync("UpdContent", "你向 " + ConnectedUsers.FirstOrDefault(u => u.ConnectionId == sendToID)?.UserName + " 私訊說: " + message);
-            }
-
             var senderAdminId = _db.Admins.FirstOrDefault(a => a.Name == selfID).AdminId;
             var receiveAdminId = _db.Admins.FirstOrDefault(a => a.Name == sendToName).AdminId;
+            //if (string.IsNullOrEmpty(sendToID))
+            //{
+            //    await Clients.All.SendAsync("UpdContent", senderUserName + " 說: " + message);
+            //}
+
+
+            // 接收人
+            if (sendToID != null)
+            {
+                await Clients.Client(sendToID).SendAsync("ReceiverUpdContent", message);
+                await Clients.Client(sendToID).SendAsync("ReceiverIsOpenChat", selfID);
+                await Clients.Client(sendToID).SendAsync("ReceiverChatWho", senderAdminId);
+            }
+
+            // 發送人
+            await Clients.Client(selfSid).SendAsync("SenderUpdContent", message);
+            
             if (senderAdminId != null && receiveAdminId != null)
             {
                 Chat chat = new Chat();
                 chat.SenderAdmin = senderAdminId;
                 chat.ReceiveAdmin = receiveAdminId;
                 chat.ChatContent = message;
-                chat.ModefiedDate = DateTime.UtcNow.ToLocalTime().ToString("yyyy/MM/dd/HH/mm/ss");
-                
+                chat.ModefiedDate = DateTime.UtcNow.ToLocalTime().ToString("yyyy/MM/dd HH:mm");
+                chat.IsCheck = false;
+
                 _db.Chats.Add(chat);
                 await _db.SaveChangesAsync();
             }
-        }
+        }        
         public string GetConnectionIdByUserName(string userName)
         {
             var user = ConnectedUsers.FirstOrDefault(u => u.UserName == userName);
             return user?.ConnectionId;
+        }
+        public async Task UpdateAdminOnlineStatus(string adminName, bool isOnline)
+        {
+            // 更新管理者在線狀態
+            await Clients.All.SendAsync("UpdAdminOnlineStatus", adminName, isOnline);
+        }
+        public bool GetAdminOnlineStatus(string adminName)
+        {
+            var admin = ConnectedUsers.FirstOrDefault(u => u.UserName == adminName);
+            return admin != null && admin.IsOnline;
         }
     }
 }

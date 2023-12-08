@@ -40,6 +40,7 @@ namespace prjDB_GamingForm_Show.Controllers
                     blogs = _db.Blogs.Where(b => b.SubTagId != 14 && b.Title.Contains(kw.txtKeyWord)).Include(b => b.SubBlogs).ThenInclude(s => s.Articles).Select(p => p),
                     subBlogs = _db.SubBlogs.Include(a => a.Articles).Select(p => p),
                     articles = _db.Articles.Where(a => a.SubBlog.Blog.SubTagId != 14).OrderByDescending(a => a.ModifiedDate).Select(p => p),
+                    
                 };
             }
             else
@@ -67,7 +68,7 @@ namespace prjDB_GamingForm_Show.Controllers
                     };
                 }
             }
-
+            ViewBag.SelectedSubTagId = FId;
             return View(vm);
         }
         public ActionResult ArticleList(CKeyWordViewModel kw, int? FId, int? SFId)
@@ -79,9 +80,11 @@ namespace prjDB_GamingForm_Show.Controllers
                 {
                     blogs = _db.Blogs.Where(b => b.BlogId == FId).Select(p => p),
                     subBlogs = _db.SubBlogs.Where(s => s.BlogId == FId).Select(p => p),
-                    articles = _db.Articles.Include(a => a.Replies).Include(a => a.Member).Where(a => a.SubBlog.BlogId == FId && a.Title.Contains(kw.txtKeyWord)).OrderByDescending(a => a.ModifiedDate).Select(p => p),
+                    articles = _db.Articles.Include(a => a.Replies).Include(a => a.Member).Where(a => a.SubBlog.BlogId == FId && (a.Title.Contains(kw.txtKeyWord) || a.ArticleContent.Contains(kw.txtKeyWord))).OrderByDescending(a => a.ModifiedDate).Select(p => p),
                     tags = _db.Tags.Select(p => p),
                     subTags = _db.SubTags.Where(s => s.TagId == 4 && s.SubTagId != 14).Select(p => p),
+                    replies=_db.Replies.Include(r=>r.Member),
+                    members = _db.Members
                 };
             }
             else
@@ -97,6 +100,8 @@ namespace prjDB_GamingForm_Show.Controllers
                         articles = _db.Articles.Include(a => a.Replies).Include(a => a.Member).Where(a => a.SubBlog.BlogId == FId).OrderByDescending(a => a.ModifiedDate).Select(p => p),
                         tags = _db.Tags.Select(p => p),
                         subTags = _db.SubTags.Where(s => s.TagId == 4 && s.SubTagId != 14).Select(p => p),
+                        replies = _db.Replies.Include(r => r.Member),
+                        members = _db.Members
                     };
                 }
                 else
@@ -107,10 +112,13 @@ namespace prjDB_GamingForm_Show.Controllers
                         subTags = _db.SubTags.Where(s => s.TagId == 4 && s.SubTagId != 14).Select(p => p),
                         blogs = _db.Blogs.Where(b => b.BlogId == FId).Select(p => p),
                         subBlogs = _db.SubBlogs.Where(s => s.BlogId == FId).Select(p => p),
-                        articles = _db.Articles.Include(a => a.Replies).Include(a => a.Member).Include(a => a.Replies).Where(a => a.SubBlogId == SFId).OrderByDescending(a => a.ModifiedDate).Select(p => p),
+                        articles = _db.Articles.Include(a => a.Replies).Include(a => a.Member).Where(a => a.SubBlogId == SFId).OrderByDescending(a => a.ModifiedDate).Select(p => p),
+                        replies = _db.Replies.Include(r => r.Member),
+                        members = _db.Members
                     };
                 }
             }
+            ViewBag.SelectedSubBlogId = SFId;
             return View(vm);
         }
 
@@ -133,9 +141,11 @@ namespace prjDB_GamingForm_Show.Controllers
                 actions = _db.Actions,
                 articleActions = _db.ArticleActions.Where(a => a.ArticleId == AFId).Select(p => p),
                 replies = _db.Replies.Include(a => a.Member).Where(a => a.ArticleId == AFId).ToList(),
-                members = _db.Members
+                members = _db.Members,
+                ComplainssubTags=_db.SubTags.Where(s=>s.TagId==6)
             };
             var artcon = _db.Articles.Where(a => a.ArticleId == AFId).Select(a => a);
+            ViewBag.SelectedSubBlogId = artcon.First().SubBlogId;
 
             return View(vm);
         }
@@ -304,6 +314,30 @@ namespace prjDB_GamingForm_Show.Controllers
             _db.SaveChanges();
             return RedirectToAction("ArticleContent", new { AFId, FId });
         }
+
+
+        //----------partialview---------------
+        public IActionResult shoppartialview()
+        {
+            Random rm = new Random();
+
+            _db.Products.Load();
+            int ram = rm.Next(0, _db.Products.Count());
+            var mo = _db.Products.Select(p => p);
+
+
+            return Json(mo.ToList()[ram]);
+        }
+        //------------------檢舉------------
+        [HttpPost]
+        public IActionResult ArticleComplain(ArticleComplain inCom)
+        {
+            _db.ArticleComplains.Add(inCom);
+            _db.SaveChanges();
+
+            return Content("檢舉成功");
+        }
+
 
     }
 }

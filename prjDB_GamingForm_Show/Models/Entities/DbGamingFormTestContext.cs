@@ -27,6 +27,8 @@ public partial class DbGamingFormTestContext : DbContext
 
     public virtual DbSet<ArticleAction> ArticleActions { get; set; }
 
+    public virtual DbSet<ArticleComplain> ArticleComplains { get; set; }
+
     public virtual DbSet<Blog> Blogs { get; set; }
 
     public virtual DbSet<Chat> Chats { get; set; }
@@ -53,6 +55,8 @@ public partial class DbGamingFormTestContext : DbContext
 
     public virtual DbSet<Member> Members { get; set; }
 
+    public virtual DbSet<MemberCollection> MemberCollections { get; set; }
+
     public virtual DbSet<MemberCoupon> MemberCoupons { get; set; }
 
     public virtual DbSet<MemberStatus> MemberStatuses { get; set; }
@@ -72,6 +76,8 @@ public partial class DbGamingFormTestContext : DbContext
     public virtual DbSet<ProductComplain> ProductComplains { get; set; }
 
     public virtual DbSet<ProductEvaluate> ProductEvaluates { get; set; }
+
+    public virtual DbSet<ProductImage> ProductImages { get; set; }
 
     public virtual DbSet<ProductTag> ProductTags { get; set; }
 
@@ -183,7 +189,6 @@ public partial class DbGamingFormTestContext : DbContext
             entity.Property(e => e.ModifiedDate).HasColumnType("datetime");
             entity.Property(e => e.ReplyArticleId).HasColumnName("ReplyArticleID");
             entity.Property(e => e.SubBlogId).HasColumnName("SubBlogID");
-            entity.Property(e => e.Title).HasMaxLength(50);
 
             entity.HasOne(d => d.Member).WithMany(p => p.Articles)
                 .HasForeignKey(d => d.MemberId)
@@ -225,6 +230,32 @@ public partial class DbGamingFormTestContext : DbContext
                 .HasForeignKey(d => d.MemberId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_ArticleAction_Member");
+        });
+
+        modelBuilder.Entity<ArticleComplain>(entity =>
+        {
+            entity.ToTable("ArticleComplain");
+
+            entity.Property(e => e.Id).HasColumnName("ID");
+            entity.Property(e => e.ArticleId).HasColumnName("ArticleID");
+            entity.Property(e => e.MemberId).HasColumnName("MemberID");
+            entity.Property(e => e.ReportDate).HasColumnType("datetime");
+            entity.Property(e => e.SubTagId).HasColumnName("SubTagID");
+
+            entity.HasOne(d => d.Article).WithMany(p => p.ArticleComplains)
+                .HasForeignKey(d => d.ArticleId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_ArticleComplain_Article");
+
+            entity.HasOne(d => d.Member).WithMany(p => p.ArticleComplains)
+                .HasForeignKey(d => d.MemberId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_ArticleComplain_Member");
+
+            entity.HasOne(d => d.SubTag).WithMany(p => p.ArticleComplains)
+                .HasForeignKey(d => d.SubTagId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_ArticleComplain_SubTag");
         });
 
         modelBuilder.Entity<Blog>(entity =>
@@ -333,7 +364,7 @@ public partial class DbGamingFormTestContext : DbContext
             entity.HasOne(d => d.Action).WithMany(p => p.DeputeActions)
                 .HasForeignKey(d => d.ActionId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_DeputeAction_ArticleAction");
+                .HasConstraintName("FK_DeputeAction_Action");
 
             entity.HasOne(d => d.Depute).WithMany(p => p.DeputeActions)
                 .HasForeignKey(d => d.DeputeId)
@@ -426,10 +457,7 @@ public partial class DbGamingFormTestContext : DbContext
             entity.ToTable("Image");
 
             entity.Property(e => e.ImageId).HasColumnName("ImageID");
-            entity.Property(e => e.Image1).HasColumnName("Image");
-            entity.Property(e => e.Name)
-                .HasMaxLength(50)
-                .HasDefaultValueSql("(N'image')");
+            entity.Property(e => e.FImagePath).HasColumnName("fImagePath");
         });
 
         modelBuilder.Entity<JobAdvertise>(entity =>
@@ -469,6 +497,23 @@ public partial class DbGamingFormTestContext : DbContext
             entity.Property(e => e.Mycomment).HasColumnType("ntext");
             entity.Property(e => e.Name).HasMaxLength(50);
             entity.Property(e => e.Phone).HasMaxLength(24);
+        });
+
+        modelBuilder.Entity<MemberCollection>(entity =>
+        {
+            entity.ToTable("MemberCollection");
+
+            entity.Property(e => e.Id).HasColumnName("ID");
+            entity.Property(e => e.CollectionId).HasColumnName("CollectionID");
+            entity.Property(e => e.FImagePath).HasColumnName("fImagePath");
+            entity.Property(e => e.Intro).HasMaxLength(50);
+            entity.Property(e => e.MemberId).HasColumnName("MemberID");
+            entity.Property(e => e.Title).HasMaxLength(50);
+
+            entity.HasOne(d => d.Member).WithMany(p => p.MemberCollections)
+                .HasForeignKey(d => d.MemberId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_MemberCollection_Member");
         });
 
         modelBuilder.Entity<MemberCoupon>(entity =>
@@ -544,7 +589,7 @@ public partial class DbGamingFormTestContext : DbContext
 
             entity.Property(e => e.OrderId).HasColumnName("OrderID");
             entity.Property(e => e.CompletedDate).HasColumnType("date");
-            entity.Property(e => e.FirmId).HasColumnName("FirmID");
+            entity.Property(e => e.CouponId).HasColumnName("CouponID");
             entity.Property(e => e.MemberId).HasColumnName("MemberID");
             entity.Property(e => e.Note).HasMaxLength(50);
             entity.Property(e => e.OrderDate).HasColumnType("date");
@@ -618,7 +663,6 @@ public partial class DbGamingFormTestContext : DbContext
             entity.Property(e => e.ProductId).HasColumnName("ProductID");
             entity.Property(e => e.AvailableDate).HasColumnType("date");
             entity.Property(e => e.FImagePath).HasColumnName("fImagePath");
-            entity.Property(e => e.FirmId).HasColumnName("FirmID");
             entity.Property(e => e.MemberId)
                 .HasDefaultValueSql("((0))")
                 .HasColumnName("MemberID");
@@ -688,6 +732,25 @@ public partial class DbGamingFormTestContext : DbContext
                 .HasForeignKey(d => d.ProductId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_ProductEvaluate_Product");
+        });
+
+        modelBuilder.Entity<ProductImage>(entity =>
+        {
+            entity.ToTable("ProductImage");
+
+            entity.Property(e => e.Id).HasColumnName("ID");
+            entity.Property(e => e.ImageId).HasColumnName("ImageID");
+            entity.Property(e => e.ProductId).HasColumnName("ProductID");
+
+            entity.HasOne(d => d.Image).WithMany(p => p.ProductImages)
+                .HasForeignKey(d => d.ImageId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_ProductImage_Image");
+
+            entity.HasOne(d => d.Product).WithMany(p => p.ProductImages)
+                .HasForeignKey(d => d.ProductId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_ProductImage_Product");
         });
 
         modelBuilder.Entity<ProductTag>(entity =>
@@ -829,9 +892,6 @@ public partial class DbGamingFormTestContext : DbContext
             entity.Property(e => e.CreateDays)
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("date");
-            entity.Property(e => e.IsMember)
-                .IsRequired()
-                .HasDefaultValueSql("((1))");
         });
 
         modelBuilder.Entity<ShipMethod>(entity =>

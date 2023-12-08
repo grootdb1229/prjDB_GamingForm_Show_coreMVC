@@ -17,7 +17,5 @@ public partial class ArticleAction
 
     public virtual Article Article { get; set; } = null!;
 
-    public virtual ICollection<DeputeAction> DeputeActions { get; set; } = new List<DeputeAction>();
-
     public virtual Member Member { get; set; } = null!;
 }

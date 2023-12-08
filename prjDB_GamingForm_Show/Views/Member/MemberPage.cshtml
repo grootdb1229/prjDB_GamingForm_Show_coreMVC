@@ -2,6 +2,7 @@
 @{
     ViewData["Title"] = "Test";
     Layout = "~/Views/Shared/MemberPageLayout.cshtml";
+    // Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <!-- ======= Hero Section ======= -->
@@ -26,13 +27,13 @@
 
         <div class="row">
           <div class="col-lg-4" data-aos="fade-right">
+                    @*大頭貼*@
             <img src="assets/img/profile-img.jpg" class="img-fluid" alt="">
           </div>
           <div class="col-lg-8 pt-4 pt-lg-0 content" data-aos="fade-left">
             <h3>網頁開發人員</h3>
             <p class="fst-italic">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore
-              magna aliqua.
+              
             </p>
             <div class="row">
               <div class="col-lg-6">
@@ -53,8 +54,6 @@
               </div>
             </div>
             <p>
-              Officiis eligendi itaque labore et dolorum mollitia officiis optio vero. Quisquam sunt adipisci omnis et ut. Nulla accusantium dolor incidunt officia tempore. Et eius omnis.
-              Cupiditate ut dicta maxime officiis quidem quia. Sed et consectetur qui quia repellendus itaque neque. Aliquid amet quidem ut quaerat cupiditate. Ab et eum qui repellendus omnis culpa magni laudantium dolores.
             </p>
           </div>
         </div>
@@ -63,14 +62,76 @@
     </section><!-- End About Section -->
 
     <!-- ======= Facts Section ======= -->
-    <section id="facts" class="facts">
+    <section id="MyArticles" class="facts">
       <div class="container">
-
-        <div class="section-title">
-          <h2>Facts</h2>
-          <p>Magnam dolores commodi suscipit. Necessitatibus eius consequatur ex aliquid fuga eum quidem. Sit sint consectetur velit. Quisquam quos quisquam cupiditate. Et nemo qui impedit suscipit alias ea. Quia fugiat sit in iste officiis commodi quidem hic quas.</p>
+        <h2>我發表的文章</h2>
+        <div class="section-title" style="display:flex" id="div1"></div>
+        <h2>我的訂單</h2>
+        <div class="section-title" style="display:flex" id="div2"></div>
+        @*   <h2>我發表的文章</h2>
+                <div class="card border-success mb-3" style="max-width: 18rem;">
+                    <div class="card-header bg-transparent border-success">Header</div>
+                    <div class="card-body text-success">
+                        <h5 class="card-title">Success card title</h5>
+                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                    </div>
+                    <div class="card-footer bg-transparent border-success">Footer</div>
+                </div> *@
         </div>
-
+        @* 我的文章區塊 *@
+        <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+           <script>
+        $(document).ready(function () 
+            { 
+                fetch('@Url.Content("~/Member/MyArticles")')
+                    .then(response => response.json())
+                    .then(data => 
+                    {   
+                        for (let index = 0; index < data.length; index++) 
+                        {
+                            var Cardhtml =
+                                  `
+                                    <div class= "card border-success mb-3" style = "width: 18rem; margin:4px" >
+                                                    <div class="card-header bg-transparent border-success" >${data[index].subBlog.blog.title} </div>
+                             <div class= "card-body text-success" >
+                                                             <h5 class="card-title" >${data[index].title}</h5>
+                              <p class= "card-text"></p>
+                              </div>
+                             <div class= "card-footer bg-transparent border-success">發表日期:<br/>${data[index].modifiedDate.split('T')[0]}</div>
+                             </div>`
+                                ;
+                            $('#div1').append(Cardhtml)
+                        }
+                    })
+                 })
+        </script>
+        @*我的訂單區塊*@
+        <script>
+               $(document).ready(function()
+               {
+                  fetch('@Url.Content("~/Member/MyOrders")')
+                 .then(response => response.json())
+                 .then(data => 
+                     {
+                         console.log(data)
+                        for (let index=0 ; index < data.length ; index++)
+                        {
+                            var CardHtml = 
+                            `<div class="card" style="width: 18rem;">
+                                        <img src="~/images/shop/${data[index].orderProducts[index].product.fImagePath}" class="card-img-top" alt="...">
+                            <div class="card-body">
+                            <h5 class="card-title">Card title</h5>
+                            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                            <a href="#" class="btn btn-primary">Go somewhere</a>
+                            </div>
+                            </div>`
+                                ;
+                            $('#div2').append(CardHtml)
+                        }
+                     })
+                 
+               })
+        </script>
         <div class="row no-gutters">
 
           <div class="col-lg-3 col-md-6 d-md-flex align-items-md-stretch" data-aos="fade-up">
@@ -557,5 +618,6 @@
 
       </div>
     </section><!-- End Contact Section -->
+    
 
   </main><!-- End #main -->

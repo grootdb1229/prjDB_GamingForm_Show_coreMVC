@@ -11,7 +11,7 @@
 <table class="table table-dark table-striped table-bordered">
 
     <tr>
-        <th class="col-1">
+        <th class="col-auto">
             #
         </th>
         <th class="col-1">
@@ -27,7 +27,7 @@
         <th class="col-1">
             報酬
         </th>
-        <th class="col-1">
+        <th class="col-*">
             應徵人數
         </th>
         <th class="col-3"></th>
@@ -53,7 +53,7 @@
                     @i.Status.Name
                 </td>
                 <td>
-                    @i.Salary.ToString("$###,###,###.00")
+                    @i.Salary.ToString("$###,###,##0")
                 </td>
                 <td>
                     <button id=`detial${@i.DeputeId}` class="btn btn-light" onclick="individualDetials(@i.DeputeId)">@i.DeputeRecords.Count()</button>
@@ -102,19 +102,19 @@
             `<div class="accordion-item">
                 <h2 class="accordion-header">
                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse${applyer.memberName}" aria-expanded="false" aria-controls="collapse${applyer.memberName}">
-                    ${index + 1}-${applyer.memberName}
-                </button>
+                    ${index + 1}-${applyer.memberName}<span class="badge text-bg-info">${applyer.status}</span>
+                    </button>
                 </h2>
-                    <div id="collapse${applyer.memberName}" class="accordion-collapse collapse" data-bs-parent="#accordionExample" style="">
+              <div id="collapse${applyer.memberName}" class="accordion-collapse collapse" data-bs-parent="#accordionExample" style="">
                 <div class="accordion-body">
-                    <table class="table">
-              <thead>
-                <tr>
+                  <table class="table">
+                    <thead>
+                      <tr>
                       <th style="color:black" scope="col-1">性別</th>
                       <th style="color:black" scope="col-1">Email</th>
                       <th style="color:black" scope="col-1">手機</th>
                       <th style="color:black" scope="col-1">生日</th>
-                      <th style="color:black" scope="col-1">會員自我介紹</th>
+                      <th style="color:black" scope="col-1">會員頁面連結</th>
                       <th style="color:black" scope="col-1">狀態</th>
                       <th style="color:black" scope="col-1">狀態管理</th>
                       <th style="color:black" scope="col-1"></th>
@@ -122,37 +122,47 @@
               </thead>
               <tbody>
                 <tr>
-                      <td class="align-middle" style="color:black">${applyer.applyerGender}</td>
-                      <td class="align-middle" style="color:black">${applyer.applyerEmail}</td>
-                      <td class="align-middle" style="color:black">${applyer.applyerPhone}</td>
-                      <td class="align-middle" style="color:black">${applyer.applyerBirth}</td>
-                      <td class="align-middle" style="color:black">${applyer.applyerComment}</td>
-                      <td class="align-middle" style="color:black">${applyer.status}</td>
-                      <td class="align-middle" style="color:black">
-                       <select class="form-select" aria-label="Default select example">
+                  <td class="align-middle" style="color:black">${applyer.applyerGender}</td>
+                  <td class="align-middle" style="color:black">${applyer.applyerEmail}</td>
+                  <td class="align-middle" style="color:black">${applyer.applyerPhone}</td>
+                  <td class="align-middle" style="color:black">${applyer.applyerBirth}</td>
+                  <td class="align-middle" style="color:black"><a href="#">${applyer.memberName}</a></td>
+                  <td class="align-middle" style="color:black">${applyer.status}</td>
+                  <td class="align-middle" style="color:black">
+                     <select class="form-select" aria-label="Default select example">
                         <option selected>請選擇欲修改的狀態</option>
                         <option value="7">審核中</option>
                         <option value="8">拒絕</option>
                         <option value="10">合作中</option>
                         <option value="11">備取</option>
-                       </select>
-                      </td>
-                      <td>
-                       <button class="btn btn-info" onclick="">更改</button>
-                      </td>
+                     </select>
+                  </td>
+                  <td>
+                         <button class="btn btn-info" onclick="changeStatus(${applyer.id},event)">更改</button>
+                  </td>
                 </tr>
               </tbody>
             </table>
                 </div>
+                <ul class="list-group">
+                    <li class="list-group-item text-center">應徵會員補充資訊</li>
+                        <li class="list-group-item text-start" style="white-space: pre-line;">${applyer.applyerContent}</li>
+                </ul>
                 </div>
                 </div>`);
         const titleapplyer = await document.querySelector('#accordionExample');
         titleapplyer.innerHTML = applyers.join("");
     }
 
-    function changeStatus() {
-        // var statuslist[];
-
+    async function changeStatus(deputeRecordID,event) {
+        const applystatusid = event.target.parentNode.previousSibling.previousSibling.childNodes[1].value;
+        const viewstatus = event.target.parentNode.previousSibling.previousSibling.previousSibling.previousSibling;
+        const badgestatus = event.target.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode.previousSibling.previousSibling.childNodes[1].childNodes[1];
+        var deputerecordstatus = JSON.stringify({ id: deputeRecordID, statusid: applystatusid });
+        const response = await fetch(`@Url.Content("~/depute/changeDeputeRecordStatus")?deputerecordstatus=${deputerecordstatus}`);
+        const statusname = await response.text();
+        viewstatus.innerHTML = statusname;
+        badgestatus.innerHTML = statusname;
     }
 
     function deleteDeputeAlert(deputeID) {
@@ -208,6 +218,7 @@
 
         Swal.fire({
             title: `<div class=" bg-dark">詳細資料</div>`,
+            background: "#343a40",
             html: `<div class="text-reset"> <ul class="list-group ">
                         <li class="list-group-item bg-dark d-flex justify-content-between align-items-start">
                         <div class="ms-2 me-auto"  >
@@ -262,8 +273,7 @@
                         <div class="fw-bold" style="text-align:left;">更新日期</div>
                         <div style="text-align:left;">${data.modifieddate}</div>
                         </div>
-                        </ul></div>`,
-            background: "#343a40"
+                        </ul></div>`
         });
     }
 

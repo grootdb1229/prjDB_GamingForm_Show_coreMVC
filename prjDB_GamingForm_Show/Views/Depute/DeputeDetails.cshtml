@@ -63,6 +63,7 @@
                         <div class="d-flex align-items-center mb-5">
                             <img class="flex-shrink-0 img-fluid border rounded" src="~/images/04.jfif" alt="" style="width: 80px; height: 80px;">
                             <div class="text-start ps-4">
+                        <input type="hidden" name="@Html.DisplayFor(model => model.id)" value=@Html.DisplayFor(model => model.title) />
                         <h3 class="mb-3">@Html.DisplayFor(model => model.title)</h3>
                         <span class="text-truncate me-3"><i class="fa fa-map-marker-alt text-primary me-2"></i>@Html.DisplayFor(model => model.region)</span>
                         <span class="text-truncate me-3"><i class="far fa-clock text-primary me-2"></i>@Html.DisplayFor(model => model.modifieddate)</span>
@@ -72,7 +73,7 @@
 
                         <div class="mb-5">
                             <h4 class="mb-3">懸賞內容</h4>
-                    <p>@Html.DisplayFor(model => model.deputeContent)</p>
+                    <p style="white-space: pre-line;">@Html.DisplayFor(model => model.deputeContent)</p>
                             <h4 class="mb-3">懸賞職責</h4>
                         <p></p>
                             <ul class="list-unstyled">
@@ -152,106 +153,5 @@
 <script src="~/layout/jobentry-1.0.0/lib/easing/easing.min.js"></script>
 <script src="~/layout/jobentry-1.0.0/lib/waypoints/waypoints.min.js"></script>
 <script src="~/layout/jobentry-1.0.0/lib/owlcarousel/owl.carousel.min.js"></script>
-<script>
-    const button = document.querySelector('#car');
-
-    button.addEventListener('mouseover', () => {
-        button.style.backgroundColor = '#a81d1d';
-    });
-
-    button.addEventListener('mouseout', () => {
-        button.style.backgroundColor = '';
-    });
-</script>
 
 
-
-<h2>DeputeDetails</h2>
-
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.id)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.title)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.providername)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.startdate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.modifieddate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.deputeContent)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.salary)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.status)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.region)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.skillname)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.count)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => modelItem.id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => modelItem.title)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => modelItem.providername)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => modelItem.startdate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => modelItem.modifieddate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => modelItem.deputeContent)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => modelItem.salary)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => modelItem.status)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => modelItem.region)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => modelItem.skillname)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => modelItem.count)
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
-            </td>
-        </tr>
-
-    </tbody>
-    </table>

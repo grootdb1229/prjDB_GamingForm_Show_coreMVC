@@ -7,6 +7,9 @@ using MailKit;
 using MailKit.Net.Smtp;
 using MimeKit;
 using Microsoft.AspNetCore.Http.Extensions;
+using Microsoft.Identity.Client;
+using Microsoft.CodeAnalysis;
+using Microsoft.EntityFrameworkCore;
 
 namespace prjDB_GamingForm_Show.Controllers
 {
@@ -128,10 +131,12 @@ namespace prjDB_GamingForm_Show.Controllers
                 return RedirectToAction("Login", "Home");
             }
         }
+
         public IActionResult SendEmail()
         {
-            string ValidationGuid = Guid.NewGuid().ToString();
-            HttpContext.Session.SetString(CDictionary.SK_Validation_Guid, ValidationGuid);
+
+            string ValGuid = new Guid().ToString("D");
+            HttpContext.Session.SetString(CDictionary.SK_Validation_Guid, ValGuid);
             var message = new MimeMessage();
             message.From.Add(new MailboxAddress("grootdb1229", "grootdb1229@gmail.com"));
             message.To.Add(new MailboxAddress("alan90306", "alan90306@gmail.com"));
@@ -142,8 +147,8 @@ namespace prjDB_GamingForm_Show.Controllers
                         "<html>" +
                         "<h2> 電子信件已寄送 請至電子信箱進行確認 </h2>" +
                         "<h3> 您的驗證碼 及 會員編號 </h3>" +
-                        "<p> 您的會員編號為:" + HttpContext.Session.GetInt32(CDictionary.SK_Confirmed_MemberID) + "</p>" +
-                        "<p> 您的驗證碼為:" + HttpContext.Session.GetString(CDictionary.SK_Validation_Guid) + "</p>" +
+                        "<p> 您的會員編號為:" + HttpContext.Session.GetInt32(CDictionary.SK_Confirmed_MemberID)+ "</p>" +
+                        "<p> 您的驗證碼為:"   + HttpContext.Session.GetString(CDictionary.SK_Validation_Guid) + "</p>" +
                         "</html>"
             };
 
@@ -163,16 +168,68 @@ namespace prjDB_GamingForm_Show.Controllers
         [HttpPost]
         public IActionResult ValidationPage(CValidationViewModel CV)
         {
-            
-            if (CV.txtVal_MemberID == HttpContext.Session.GetInt32(CDictionary.SK_Confirmed_MemberID) &&
-                CV.txtVal_Guid == HttpContext.Session.GetString(CDictionary.SK_Validation_Guid))
+            Member dbMember = (from m in _db.Members
+                             where m.MemberId == HttpContext.Session.GetInt32(CDictionary.SK_Confirmed_MemberID)
+                             select m).FirstOrDefault();
+            if (dbMember == null) 
             {
-                Member dbmember = (from m in _db.Members
-                                   where m.MemberId == HttpContext.Session.GetInt32(CDictionary.SK_Confirmed_MemberID)
-                                   select m).FirstOrDefault();
-                dbmember.Password = CV.txtVal_Password;
+                return RedirectToAction("ForgetPassword" , "Member");
             }
-            return RedirectToAction("Login" , "Home");
+            if (dbMember != null) 
+            {
+                dbMember.Password = CV.txtVal_Password;
+                _db.SaveChanges();
+                return RedirectToAction("Login", "Home");
+            }
+            return View();
         }
+
+        public IActionResult MyOrders() 
+        {
+            var data = _db.Orders.Include(O => O.OrderProducts).ThenInclude(P => P.Product)
+                      .Where(O => O.MemberId == HttpContext.Session.GetInt32(CDictionary.SK_UserID))
+                      .Select(O => O);
+            return Json(data);
+        }
+
+        public IActionResult MyCollections() 
+        {
+           
+            return View();
+        }
+
+        public IActionResult MyWorks() 
+        {
+            return View();
+        }
+
+        public IActionResult MyBlog() 
+        {
+            return View();
+        }
+
+        public IActionResult MyArticles() 
+        {
+            var data = _db.Articles.Include(a => a.SubBlog).ThenInclude(s => s.Blog)
+                .Where(a => a.MemberId == HttpContext.Session.GetInt32(CDictionary.SK_UserID))
+                .Select(a => a);
+            var datas = from A in _db.Articles
+                        where A.MemberId == HttpContext.Session.GetInt32(CDictionary.SK_UserID)
+                        select A;
+            return Json(data);
+        }
+        public IActionResult MyWishList() 
+        {
+            return View();
+        }
+        public IActionResult MakeAWish() 
+        {
+            return View();
+        }
+        //[HttpPost]
+        //public IActionResult MakeAWish() 
+        //{
+        //    return RedirectToAction("MyWishList", "Member");
+        //}
     }
 }
