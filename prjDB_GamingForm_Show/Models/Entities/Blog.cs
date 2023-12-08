@@ -16,5 +16,4 @@ public partial class Blog
     public virtual ICollection<SubBlog> SubBlogs { get; set; } = new List<SubBlog>();
 
     public virtual SubTag SubTag { get; set; } = null!;
-    
 }

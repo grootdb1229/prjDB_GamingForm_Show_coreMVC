@@ -15,7 +15,5 @@ namespace prjDB_GamingForm_Show.ViewModels
         public string? FImagePath { get; set; }
 
 
-
-
     }
 }
