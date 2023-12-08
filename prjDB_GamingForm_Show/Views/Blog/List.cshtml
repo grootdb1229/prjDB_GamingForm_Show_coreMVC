@@ -16,35 +16,28 @@
 
             <div class="nav-menu">
                 <ul>
-                    <li>
+                    <li class="@(ViewBag.SelectedSubTagId==null ? "selected-item" : "")">
                         <a href="@Url.Action("List", "Blog")"><span>全部</span></a>
                     </li>
                     @{
                         foreach (var item in Model.subTags)
                         {
-                            <li>
-                                <a href="@Url.Action("List", "Blog", new { FId =item.SubTagId})"><span>@item.Name </span></a>
+                            <li class="@(item.SubTagId == ViewBag.SelectedSubTagId ? "selected-item" : "")">
+                                <a href="@Url.Action("List", "Blog", new { FId =item.SubTagId})" ><span>@item.Name </span></a>
                             </li>
                         }
                     }
                 </ul>
             </div>
             <div>
-
                 <div style="margin:3px 30%">
-
                     @using (Html.BeginForm())
                     {
                         @:關鍵字 @Html.TextBox("txtKeyword")
                         <input type="submit" value="查詢" />
                     }
                 </div>
-            </div>
-            @*             @using (Html.BeginForm())
-            {
-            @:關鍵字 @Html.TextBox("txtKeyword")
-            <input type="submit" value="查詢" />
-            } *@
+            </div>        
         </div>
     </div>
 </header>
