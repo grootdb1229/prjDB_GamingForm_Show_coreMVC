@@ -116,79 +116,78 @@ namespace prjDB_GamingForm_Show.Controllers
             return View(datas);
 
         }
+        public IActionResult DetailSkills(int? id)
+        {
+            
+            _db.SkillClasses.Load();
+            IEnumerable<string> skillname = (from n in _db.DeputeSkills
+                                            where n.DeputeId == id
+                                            select n.Skill.Name).Distinct();
+            return Json(skillname);
 
+        }
         //TODO #2 搜尋
-        public IActionResult demoCountBySession()
-        {
-            int count = 0;
-            if (HttpContext.Session.Keys.Contains("COUNT"))
-                count = (int)HttpContext.Session.GetInt32("COUNT");
-            count++;
-            HttpContext.Session.SetInt32("COUNT", count);
-            ViewBag.count = count;
-            return View();
-        }
-        
-        public IActionResult Search(CKeyWord vm)
-         {
-            IEnumerable<CDeputeViewModel> datas = null;
-            if (string.IsNullOrEmpty(vm.txtKeyword) && (!string.IsNullOrEmpty(vm.txtHotkey)))
-                vm.txtKeyword = vm.txtHotkey;
-            
-            if (string.IsNullOrEmpty(vm.txtKeyword))
-            {
-                ListLoad();
-                datas = from n in List
-                        select n;
-            }
-            else
-            {
-                _db.SerachRecords.Add
-                                (new SerachRecord { Name = vm.txtKeyword, CreateDays = (DateTime.Now.Date)});
-                _db.SaveChanges();
-                
-                datas = List.Where(n => (n.deputeContent.Trim().ToLower().Contains(vm.txtKeyword.Trim().ToLower()) ||
-                                          n.providername.Trim().ToLower().Contains(vm.txtKeyword.Trim().ToLower()) ||
-                                          n.title.Trim().ToLower().Contains(vm.txtKeyword.Trim().ToLower()) ||
-                                          n.region.Trim().ToLower().Contains(vm.txtKeyword.Trim().ToLower()))
-                                          )
-                .OrderByDescending(n => n.modifieddate);
 
-            }
-            if (datas == null || datas.Count() == 0)
-            {
-                return Content("No result");
-            }
-            return Json(datas);
-        }
+        //public IActionResult Search(CKeyWord vm)
+        // {
+        //    IEnumerable<CDeputeViewModel> datas = null;
+        //    if (string.IsNullOrEmpty(vm.txtKeyword) && (!string.IsNullOrEmpty(vm.txtHotkey)))
+        //        vm.txtKeyword = vm.txtHotkey;
 
-        public IActionResult SearchById(int? id)
-        {
-            IEnumerable<CDeputeViewModel> datas = null;
-            IEnumerable<string> keyword = from n in _db.SerachRecords
-                          where n.Id == id
-                          select n.Name;
+        //    if (string.IsNullOrEmpty(vm.txtKeyword))
+        //    {
+        //        ListLoad();
+        //        datas = from n in List
+        //                select n;
+        //    }
+        //    else
+        //    {
+        //        _db.SerachRecords.Add
+        //                        (new SerachRecord { Name = vm.txtKeyword, CreateDays = (DateTime.Now.Date)});
+        //        _db.SaveChanges();
 
-            foreach (string item in keyword)
-            {
-                if(string.IsNullOrEmpty(item)) 
-                    continue;
-                datas = List.Where(n => (n.deputeContent.Trim().ToLower().Contains(item.Trim().ToLower()) ||
-                                          n.providername.Trim().ToLower().Contains(item.Trim().ToLower()) ||
-                                          n.title.Trim().ToLower().Contains(item.Trim().ToLower()) ||
-                                          n.region.Trim().ToLower().Contains(item.Trim().ToLower()))
-                                          ).OrderByDescending(n => n.modifieddate);
+        //        datas = List.Where(n => (n.deputeContent.Trim().ToLower().Contains(vm.txtKeyword.Trim().ToLower()) ||
+        //                                  n.providername.Trim().ToLower().Contains(vm.txtKeyword.Trim().ToLower()) ||
+        //                                  n.title.Trim().ToLower().Contains(vm.txtKeyword.Trim().ToLower()) ||
+        //                                  n.region.Trim().ToLower().Contains(vm.txtKeyword.Trim().ToLower()))
+        //                                  )
+        //        .OrderByDescending(n => n.modifieddate);
 
-            }
-            if (datas == null || datas.Count() == 0)
-            {
-                return Content("No result");
-            }
+        //    }
+        //    if (datas == null || datas.Count() == 0)
+        //    {
+        //        return Content("No result");
+        //    }
+        //    return Json(datas);
+        //}
 
-            return Json(datas);
+        //public IActionResult SearchById(int? id)
+        //{
+        //    IEnumerable<CDeputeViewModel> datas = null;
+        //    IEnumerable<string> keyword = from n in _db.SerachRecords
+        //                  where n.Id == id
+        //                  select n.Name;
 
-            
-        }
+        //    foreach (string item in keyword)
+        //    {
+        //        if(string.IsNullOrEmpty(item)) 
+        //            continue;
+        //        datas = List.Where(n => (n.deputeContent.Trim().ToLower().Contains(item.Trim().ToLower()) ||
+        //                                  n.providername.Trim().ToLower().Contains(item.Trim().ToLower()) ||
+        //                                  n.title.Trim().ToLower().Contains(item.Trim().ToLower()) ||
+        //                                  n.region.Trim().ToLower().Contains(item.Trim().ToLower()))
+        //                                  ).OrderByDescending(n => n.modifieddate);
+
+        //    }
+        //    if (datas == null || datas.Count() == 0)
+        //    {
+        //        return Content("No result");
+        //    }
+
+        //    return Json(datas);
+
+
+        //}
         public IActionResult MutipleSearch(CKeyWord vm)
         {
             Temp = List;
@@ -238,6 +237,7 @@ namespace prjDB_GamingForm_Show.Controllers
 
 
                 pln = new CDeputeViewModel();
+                pln.id = pDb.DeputeId;
                 pln.providername = pDb.Provider.Name;
                 pln.title = pDb.Title;
                 pln.startdate = pDb.StartDate.ToString("yyyy/mm/dd HH:mm:ss");
