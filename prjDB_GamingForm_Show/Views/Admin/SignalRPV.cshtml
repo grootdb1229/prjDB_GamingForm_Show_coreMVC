@@ -46,6 +46,7 @@
 
     var connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
     var notCheckMessage = 0;    
+    var isChatOpen = false;
     // 與Server建立連線
     connection.start().then(function () {
         console.log("Hub 連線完成");
@@ -54,16 +55,33 @@
     });
 
     connection.on("ReceiverUpdContent", function () {
-        updateNotificationCount();
+        var div = document.querySelector('#AdminsChat');
+        if (div.style.display == "block") {
+            connection.on("ReceiverIsOpenChat", function (selfID) {
+                var chatWho = $('#rn').text()                
+                if (chatWho == selfID) {
+                    connection.on("ReceiverChatWho", function (senderAdminId) {
+                        $.ajax({
+                            type: 'post',
+                            url: '/Admin/CheckAllMessage',
+                            data: { senderid: senderAdminId }
+                        })
+                    });                    
+                }
+                else {
+                    updateNotificationCount();
+                }
+            })
+        }
+        else {
+            updateNotificationCount();
+        }
     })
     function updateNotificationCount() {
         notCheckMessage = $('#notCheckMessageCount').text()
         notCheckMessage++;
         $('#notCheckMessageCount').text(notCheckMessage)
-    }
-    function isChatOpen(){
-
-    }
+    }    
 
     //更新連線 ID 列表事件
     connection.on("UpdList", function (jsonList) {
@@ -102,15 +120,17 @@
         if (div.style.display === "none") {
             $('#AdminsChat').load(`@Url.Content("~/Admin/ChatPV")?id=${id}`);
             div.style.display = "block"; // 顯示
+            $.ajax({
+                type: 'post',
+                url: '/Admin/CheckAllMessage',
+                data: { senderid: id }
+            });
+            isChatOpen = true;            
         }
         else {
             div.style.display = "none"; // 隱藏
+            isChatOpen = false;            
         }
-        $.ajax({
-            type: 'post',
-            url: '/Admin/CheckAllMessage',
-            data: { senderid: id }
-        });
     }
 
 </script>

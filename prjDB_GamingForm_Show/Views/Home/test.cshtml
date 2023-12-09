@@ -35,7 +35,7 @@
     <!-- Template Stylesheet -->
     <link href="~/Layout/woody-1.0.0/css/style.css" rel="stylesheet">
     <style>
-       *{color:white}
+       *{color:white;}
        h4{color:white}
        a{color:white}
     </style>
@@ -52,50 +52,47 @@
     
     <!-- Carousel Start -->
     <div class="container-fluid p-0 pb-5">
-        <div class="owl-carousel header-carousel position-relative">
+        <div class="owl-carousel header-carousel position-relative" >
             <div class="owl-carousel-item position-relative">
-                <img class="img-fluid" src="~/Layout/woody-1.0.0/img/carousel-1.jpg" alt="">
+                <img class="img-fluid" src="~/HomePageTemImage/Buldur's gate3.jpg" style="width=1222.4px ; height:687.6px" alt="" >
                 <div class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center" style="background: rgba(53, 53, 53, .7);">
                     <div class="container">
                         <div class="row justify-content-center">
                             <div class="col-12 col-lg-8 text-center">
-                                <h5 class="text-white text-uppercase mb-3 animated slideInDown">Welcome To WooDY</h5>
-                                <h1 class="display-3 text-white animated slideInDown mb-4">Best Carpenter & Craftsman Services</h1>
-                                <p class="fs-5 fw-medium text-white mb-4 pb-2">Vero elitr justo clita lorem. Ipsum dolor at sed stet sit diam no. Kasd rebum ipsum et diam justo clita et kasd rebum sea elitr.</p>
-                                <a href="" class="btn btn-primary py-md-3 px-md-5 me-3 animated slideInLeft">Read More</a>
-                                <a href="" class="btn btn-light py-md-3 px-md-5 animated slideInRight">Free Quote</a>
+                                <h5 class="text-white text-uppercase mb-3 animated slideInDown">Groot遊戲平台交流論壇</h5>
+                                <h1 class="display-3 text-white animated slideInDown mb-4">各式遊戲攻略、最新潮流話題都在這裡</h1>
+                                <p class="fs-5 fw-medium text-white mb-4 pb-2"></p>
+                                <a href="@Url.Action("List" , "Blog")" class="btn btn-primary py-md-3 px-md-5 me-3 animated slideInLeft">論壇一覽</a>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="owl-carousel-item position-relative">
-                <img class="img-fluid" src="~/Layout/woody-1.0.0/img/carousel-2.jpg" alt="">
+                <img class="img-fluid" src="~/HomePageTemImage/Buldur's gate3.jpg" style="width=1222.4px ; height:687.6px" alt="">
                 <div class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center" style="background: rgba(53, 53, 53, .7);">
                     <div class="container">
                         <div class="row justify-content-center">
                             <div class="col-12 col-lg-8 text-center">
-                                <h5 class="text-white text-uppercase mb-3 animated slideInDown">Welcome To WooDY</h5>
-                                <h1 class="display-3 text-white animated slideInDown mb-4">Best Carpenter & Craftsman Services</h1>
-                                <p class="fs-5 fw-medium text-white mb-4 pb-2">Vero elitr justo clita lorem. Ipsum dolor at sed stet sit diam no. Kasd rebum ipsum et diam justo clita et kasd rebum sea elitr.</p>
-                                <a href="" class="btn btn-primary py-md-3 px-md-5 me-3 animated slideInLeft">Read More</a>
-                                <a href="" class="btn btn-light py-md-3 px-md-5 animated slideInRight">Free Quote</a>
+                                <h5 class="text-white text-uppercase mb-3 animated slideInDown">Groot遊戲平台商城</h5>
+                                <h1 class="display-3 text-white animated slideInDown mb-4">種類最齊、最能跟上潮流的遊戲商城</h1>
+                                <a href="@Url.Action("Index" , "Shop")" class="btn btn-primary py-md-3 px-md-5 me-3 animated slideInLeft">商城一覽</a>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="owl-carousel-item position-relative">
-                <img class="img-fluid" src="~/Layout/woody-1.0.0/img/carousel-3.jpg" alt="">
+                <img class="img-fluid" src="~/HomePageTemImage/Works.jpg" style="width=1222.4px ; height:687.6px"  alt="">
                 <div class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center" style="background: rgba(53, 53, 53, .7);">
                     <div class="container">
                         <div class="row justify-content-center">
                             <div class="col-12 col-lg-8 text-center">
-                                <h5 class="text-white text-uppercase mb-3 animated slideInDown">Welcome To WooDY</h5>
-                                <h1 class="display-3 text-white animated slideInDown mb-4">Best Carpenter & Craftsman Services</h1>
-                                <p class="fs-5 fw-medium text-white mb-4 pb-2">Vero elitr justo clita lorem. Ipsum dolor at sed stet sit diam no. Kasd rebum ipsum et diam justo clita et kasd rebum sea elitr.</p>
-                                <a href="" class="btn btn-primary py-md-3 px-md-5 me-3 animated slideInLeft">Read More</a>
-                                <a href="" class="btn btn-light py-md-3 px-md-5 animated slideInRight">Free Quote</a>
+                                <h5 class="text-white text-uppercase mb-3 animated slideInDown">Groot遊戲平台工作媒合</h5>
+                                <h1 class="display-3 text-white animated slideInDown mb-4">各種工作委託都在這、不怕沒工作只怕沒能力</h1>
+                                @*<p class="fs-5 fw-medium text-white mb-4 pb-2">Vero elitr justo clita lorem. Ipsum dolor at sed stet sit diam no. Kasd rebum ipsum et diam justo clita et kasd rebum sea elitr.</p>*@
+                                <a href="@Url.Action("DeputeMain" , "Depute")" class="btn btn-primary py-md-3 px-md-5 me-3 animated slideInLeft">委託一覽</a>
+                                @*<a href="" class="btn btn-light py-md-3 px-md-5 animated slideInRight">Free Quote</a>*@
                             </div>
                         </div>
                     </div>
@@ -278,22 +275,9 @@
     <div class="container-xxl py-5">
         <div class="container">
             <div class="section-title text-center">
-                <h1 class="display-5 mb-5" style="color:white">Our Services</h1>
+                <h1 class="display-5 mb-5" style="color:white">熱門文章</h1>
             </div>
-            <div class="row g-4">
-                <div class="col-md-6 col-lg-4 wow fadeInUp" data-wow-delay="0.1s">
-                    <div class="service-item">
-                        <div class="overflow-hidden">
-                            <img class="img-fluid" src="~/Layout/woody-1.0.0/img/service-1.jpg" alt="">
-                        </div>
-                        <div class="p-4 text-center border border-5 border-light border-top-0">
-                            <h4 class="mb-3">General Carpentry</h4>
-                            <p>Stet stet justo dolor sed duo. Ut clita sea sit ipsum diam lorem diam.</p>
-                            <a class="fw-medium" href="">Read More<i class="fa fa-arrow-right ms-2"></i></a>
-                        </div>
-                    </div>
-                </div>
-                
+            <div class="row g-4" id="PopularArticles">                
             </div>
         </div>
     </div>
@@ -369,21 +353,10 @@
     <div class="container-xxl py-5">
         <div class="container">
             <div class="section-title text-center">
-                <h1 class="display-5 mb-5" style="color:white">Our Services</h1>
+                <h1 class="display-5 mb-5" style="color:white">熱門委託</h1>
             </div>
-            <div class="row g-4">
-                <div class="col-md-6 col-lg-4 wow fadeInUp" data-wow-delay="0.1s">
-                    <div class="service-item">
-                        <div class="overflow-hidden">
-                            <img class="img-fluid" src="~/Layout/woody-1.0.0/img/service-1.jpg" alt="">
-                        </div>
-                        <div class="p-4 text-center border border-5 border-light border-top-0">
-                            <h4 class="mb-3">General Carpentry</h4>
-                            <p>Stet stet justo dolor sed duo. Ut clita sea sit ipsum diam lorem diam.</p>
-                            <a class="fw-medium" href="">Read More<i class="fa fa-arrow-right ms-2"></i></a>
-                        </div>
-                    </div>
-                </div>
+            <div class="row g-4" id="PopularDeputes">
+               
                 
             </div>
         </div>
@@ -536,7 +509,7 @@
     </div>      *@   
 <script>
     $(document).ready(function () {
-        fetch('@Url.Content("~/Home/ShopItems")')
+            fetch('@Url.Content("~/Home/PopularShopItems")')
             .then(response => response.json())
             .then(data => {
                 console.log(data)
@@ -546,11 +519,9 @@
                    `<div class="col-md-6 col-lg-4 wow fadeInUp" data-wow-delay="0.1s" >
                     <div class="service-item">
                     <div class="overflow-hidden">
-
-                                    <img src="/images/shop/${data[index].fImagePath}" alt="" class="img-fluid" style="object-fit: cover;height:300px;width:400px">
-                    
+                    <img src="/images/shop/${data[index].fImagePath}" alt="" class="img-fluid" style="object-fit: cover;height:300px;width:400px">
                     </div>
-                            <div class="p-4 text-center border border-5 border-light border-top-0" style="height:200px">
+                    <div class="p-4 text-center border border-5 border-light border-top-0" style="height:200px">
                     <h5 class="mb-3">${data[index].productName}</h5>
                     <p>${data[index].productContent.split('').slice(0, 10).join('')}....</p>
                     <a class="fw-medium" href="@Url.Content("~/Shop/Details")?id=${data[index].productId}">點擊看更多<i class="fa fa-arrow-right ms-2"></i></a>
@@ -562,31 +533,52 @@
             });
     });
 
-</script>
-}
-
-        $(document).ready(function () {
-        fetch('@Url.Content("~/Home/ShopItems")')
+    $(document).ready(function () {
+        fetch('@Url.Content("~/Home/PopularArticles")')
             .then(response => response.json())
-            .then(data => {
-                console.log(data)
-                for (let index = 0; index < 4; index++) {
-                    var DivHtml = `
-
-<a href="@Url.Content("~/Shop/Details")?id=${data[index].productId}">
-    <img src="/images/shop/${data[index].fImagePath}" alt="" class="img-fluid">
-</a>
-<div class="post-meta">
-    <span class="date">遊戲商城</span>
-    <span class="mx-1">&bullet;</span>
-    <span>${data[index].availableDate}</span>
-</div>
-<div class="post-meta">
-    <h4><a href="@Url.Content("~/Shop/Details")?id=${data[index].productId}">${data[index].productName}</a></h4>
-    <p class="mb-4 d-block">${data[index].productContent.split('').slice(0, 10).join('')}....</p>
-</div>
-                                                                                            `;
-                    $('#ShopItem1').append(DivHtml);
+            .then(datas => {
+                console.log(datas)
+                for (let index = 0; index < 6; index++) 
+                {
+                        var DivHtml = `<div class="col-md-6 col-lg-4 wow fadeInUp" data-wow-delay="0.1s" >
+                            <div class="service-item">
+                            <div class="overflow-hidden">
+                            <img src="/images/Blogimages/${datas[index].subBlog.blog.fImagePath}" alt="" class="img-fluid" style="object-fit: cover;height:300px;width:400px">
+                            </div>
+                            <div class="p-4 text-center border border-5 border-light border-top-0" style="height:200px">
+                            <h5 class="mb-3">${datas[index].title}</h5>
+                            <p>${datas[index].articleContent.split('').slice(0, 10).join('')}....</p>
+                                                    <a class="fw-medium" href="@Url.Content("~/Blog/ArticleContent")?FId=${datas[index].subBlog.blog.blogId}&AFId=${datas[index].articleId}">點擊看更多<i class="fa fa-arrow-right ms-2"></i></a>
+                            </div>
+                            </div>
+                            </div>`;
+                            $('#PopularArticles').append(DivHtml)
                 }
             });
     });
+
+         $(document).ready(function () {
+            fetch('@Url.Content("~/Home/PopularDeputes")')
+                .then(response => response.json())
+                .then(datas => {
+                    console.log(datas)
+                    for (let index = 0; index < 6; index++) 
+                    {
+                                var DivHtml = `<div class="col-md-6 col-lg-4 wow fadeInUp" data-wow-delay="0.1s" >
+                                <div class="service-item">
+                                <div class="overflow-hidden">
+                                <img class="img-fluid" src="/Layout/woody-1.0.0/img/service-1.jpg" alt="" class="img-fluid" style="object-fit: cover;height:300px;width:400px">
+                                </div>
+                                <div class="p-4 text-center border border-5 border-light border-top-0" style="height:200px">
+                                <h5 class="mb-3">${datas[index].title}</h5>
+                                <p>${datas[index].deputeContent.split('').slice(0, 30).join('')}</p>
+                                                        <a class="fw-medium" href="@Url.Content("~/Depute/DeputeDetails")?id=${datas[index].deputeId}">點擊看更多<i class="fa fa-arrow-right ms-2"></i></a>
+                                </div>
+                                </div>
+                                </div>`;
+                                $('#PopularDeputes').append(DivHtml)
+                    }
+                });
+             });
+</script>
+}

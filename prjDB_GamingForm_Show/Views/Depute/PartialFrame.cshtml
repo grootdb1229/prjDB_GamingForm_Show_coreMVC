@@ -1,0 +1,81 @@
+﻿<!-- Home section -->
+<div class="tm-section-wrap">
+    <div class="tm-parallax" data-parallax="scroll" data-image-src="../layout/templatemo_555_upright/img/img-01.jpg"></div>
+    <section id="home" class="tm-section">
+        <h2 class="tm-text-primary">委託資訊總覽</h2>
+        <hr class="mb-3">
+        <div id="divOverview"></div>
+        <hr class="tm-hr-short mb-3">
+        <div class="text-right">
+            <a href="#release" class="btn btn-primary tm-btn-next">下一頁</a>
+        </div>
+    </section>
+</div>
+<!-- 發出的委託 section -->
+<div class="tm-section-wrap">
+    <div class="tm-parallax" data-parallax="scroll" data-image-src="../layout/templatemo_555_upright/img/img-02.jpg"></div>
+    <section id="release" class="tm-section">
+        <h2 class="tm-text-primary">管理發出的委託</h2>
+        <hr class="mb-3">
+        <div id="divReleasePart"></div>
+    </section>
+</div>
+<!-- 收到的委託 section -->
+<div class="tm-section-wrap">
+    <div class="tm-parallax" data-parallax="scroll" data-image-src="../layout/templatemo_555_upright/img/img-03.jpg"></div>
+    <section id="receive" class="tm-section">
+        <h2 class="tm-text-primary">管理投遞的應徵</h2>
+        <hr class="mb-3">
+        <div id="divReceivePart"></div>
+    </section>
+</div>
+<!-- Gallery section -->
+<div class="tm-section-wrap">
+    <div class="tm-parallax" data-parallax="scroll" data-image-src="../layout/templatemo_555_upright/img/img-04.jpg"></div>
+    <section id="gallery" class="tm-section">
+        <h2 class="tm-text-primary">從創作中找合作夥伴</h2>
+        <hr class="mb-3">
+        <div id="divGalleryPart"></div>
+    </section>
+</div>
+<!-- Contact section -->
+<div class="tm-section-wrap">
+    <div class="tm-parallax" data-parallax="scroll" data-image-src="../layout/templatemo_555_upright/img/img-04.jpg"></div>
+    <div id="contact" class="tm-section">
+        <h2 class="tm-text-primary">聯繫我們</h2>
+        <hr class="mb-3">
+        <div class="row" id="divContact">
+        </div>
+    </div>
+</div>
+
+<script>
+    console.log('PartialFrame JavaScript is running.');
+    var event = new Event('PartialFrameLoaded', { bubbles: true });
+    document.dispatchEvent(event);
+
+        function loadOverview() {
+            $('#divOverview').load('@Url.Content("~/depute/PartialOverview")');
+        }
+        loadOverview()
+
+        function loadReleaseList() {
+            $('#divReleasePart').load('@Url.Content("~/depute/PartialReleaseList")');
+        }
+        loadReleaseList()
+
+        function loadReceiveList() {
+            $('#divReceivePart').load('@Url.Content("~/depute/PartialReceiveList")');
+        }
+        loadReceiveList()
+
+        function loadGallery() {
+            $('#divGalleryPart').load('@Url.Content("~/depute/PartialGallery")');
+        }
+        loadGallery()
+
+        function loadContact() {
+            $('#divContact').load('@Url.Content("~/depute/Contact")');
+        }
+        loadContact()
+</script>

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using prjDB_GamingForm_Show.Models;
 
 namespace prjDB_GamingForm_Show.Controllers
 {
@@ -17,5 +18,7 @@ namespace prjDB_GamingForm_Show.Controllers
         {
             return View();
         }
+
+        
     }
 }

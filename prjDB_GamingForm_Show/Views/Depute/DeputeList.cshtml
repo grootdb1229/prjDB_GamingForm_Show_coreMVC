@@ -7,7 +7,7 @@
 <head>
     <style>
         .tag_list_wrapper {
-            border: 1px solid red;
+            /* border: 1px solid red; */
         }
 
         .tag_list {
@@ -41,7 +41,7 @@
             <div class="col-md-8">
                 <div class="row g-2">
                     <div class="col-md-15">
-                        <input type="text" id="text" name="txtKeyword" class="form-control border-0" placeholder="Keyword" />
+                        <input type="text" id="text" name="txtKeyword" class="form-control border-0" placeholder="請輸入想尋找的委託..." />
                     </div>
                 </div>
             </div>
@@ -109,7 +109,16 @@
 
 </div>
 <div class="container-xxl py-5">
-    <h1 id="totalcount" class="text-center mb-5 wow fadeInUp" data-wow-delay="0.1s">懸賞清單</h1>
+    @{
+        if (Model.Count()==0)
+        {
+            <h1 id="totalcount" class="text-center mb-5 wow fadeInUp" data-wow-delay="0.1s">懸賞清單</h1>
+        }
+        else
+        {
+            <h1 id="totalcount" class="text-center mb-5 wow fadeInUp" data-wow-delay="0.1s">相關結果共@(Model.Count())筆</h1>
+        }
+    }
     <div class="container">
         <div id="loadtags" class="tag_list_wrapper">
         </div>
@@ -161,11 +170,12 @@
 @section Scripts {
     <script>
 
-        $('#search').click(() => { loadList() });
+        
         const text = document.querySelector('#text');
         const selSalary = document.querySelector('#money');
         loadSkillClassess();
         let keyword = [];
+        $('#search').click(() => { MutiSearch(text.value)});
         function loadSkillClassess() {
             $.ajax('@Url.Content("~/Depute/SkillClassess")', {
                 "type": 'Post', //POST、PUT、DELETE
@@ -260,20 +270,6 @@
                     })
                 })
         } 
-        
-        function Tags2(event) {
-            checkValue = event.target.previousSibling.textContent;
-            console.log(checkValue); //on
-
-                var del = keyword.indexOf(checkValue)
-                keyword.splice(del, 1);
-                console.log(keyword);
-            $(`#${checkValue}-2`).remove();
-            console.log($(`#${checkValue}`)[0]);
-            $(`#${checkValue}-1`)[0].checked=false
-            MutiSearch(keyword);
-        }
-
         function loadRegion() {
             $.ajax('@Url.Content("~/Depute/Region")', {
                 "type": 'Post', //POST、PUT、DELETE
@@ -320,7 +316,18 @@
                 })
         }
         //基本搜尋&&進階搜尋///
+        function Tags2(event) {
+            checkValue = event.target.previousSibling.textContent;
+            console.log(checkValue); //on
 
+            var del = keyword.indexOf(checkValue)
+            keyword.splice(del, 1);
+            console.log(keyword);
+            $(`#${checkValue}-2`).remove();
+            console.log($(`#${checkValue}`)[0]);
+            $(`#${checkValue}-1`)[0].checked = false
+            MutiSearch(keyword);
+        }
         function MutiSearch(value) {
             $.ajax('@Url.Content("~/Depute/MutipleSearch")', {
                 "type": 'Post', //POST、PUT、DELETE
@@ -422,7 +429,6 @@
                     HkFrag.append(Hotkeys);
                     $('#hotkey').html(HkFrag)
                 })
-            // loadList()
         }
 
 
