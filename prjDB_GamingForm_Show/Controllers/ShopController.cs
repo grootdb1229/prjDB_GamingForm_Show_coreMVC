@@ -563,107 +563,143 @@ namespace prjDB_GamingForm_Show.Controllers
                     .ToList();
                 return Json(SelSub);
             }
-            public ActionResult WhenYouEditTags(int? id)
-            {
-                _db.ProductTags.Load();
-                //Trace.WriteLine("BBBBB" + id);
-                var SelSub = _db.ProductTags.Where(p => p.ProductId == id).Select(s => s.SubTagId).ToList();
-                //Trace.WriteLine("AAAAA"+SelSub);
-                return Json(SelSub);
-            }
+          
 
             [HttpPost]
             public ActionResult Create(超酷warp product) 
              //先這樣Warp應該是用於資料驗證，有待看影片確認但目前不這樣寫驗證會一直錯誤
             {//但我其實也想把驗證改寫到前端，這些資料本質並不是重要到要寫後端驗證
-                //Trace.WriteLine("AAAA" + product.GameTagOptions);
-                if (!ModelState.IsValid)
-                {
-                    var errors = ModelState.Values.SelectMany(v => v.Errors); //測試錯誤用程式碼
-                    return View(product);
-                }
-                Product x = new Product();
-				string MulPic = "";
-				if (_db != null)
-                {  
-                    if (product.Photos != null && product.Photos.Count > 0)
-                    {
-                        foreach (var photo in product.Photos)
-                        {
-							if (photo != null)
-							{
-                                string photoName = Guid.NewGuid().ToString() + ".jpg";
-							
-								var photoPath = Path.Combine(_host.WebRootPath, "images", "shop", photoName);
+             //Trace.WriteLine("AAAA" + product.GameTagOptions);
 
-								using (var stream = new FileStream(photoPath, FileMode.Create))
-								{
-									photo.CopyTo(stream);
-								}
-								MulPic += photoName + "/";
-							}
-						}
-						string[] pics = MulPic.Split('/');  ///一長串圖片被我拆分儲存
-                        if (pics.Length > 0)
+                using (var transaction = _db.Database.BeginTransaction())
+                {
+                    try
+                    {
+                        if (!ModelState.IsValid)
                         {
-                            string Mainpic = pics[0];//第一張是主圖存入商品資料行
-                            x.FImagePath = Mainpic; 
+                            var errors = ModelState.Values.SelectMany(v => v.Errors); //測試錯誤用程式碼
+                            return View(product);
                         }
-						x.ProductName = product.ProductName;
-                        x.Price = product.Price;
-                        x.AvailableDate = product.AvailableDate;
-                        x.ProductContent = product.ProductContent;
-                        x.UnitStock = product.UnitStock;
-                        x.StatusId = 7;
-                        x.MemberId = product.MemberID;
-
-                        _db.Products.Add(x);
-                        _db.SaveChanges();
-                    }
-                    if (product.Photos.Count >= 1) ///如果有超過一張圖就執行圖片存取
-                    {
-                        //剩下的圖存入參考表
-                        string[] OtherPic = MulPic.Split("/").Skip(1).ToArray();//沒圖會給空字串
-                        Image ElsePic= new Image();
-                        foreach (string picpath in OtherPic) 
+                        Product x = new Product();
+                        string MulPic = "";
+                        if (_db != null)
                         {
-                            ElsePic.FImagePath= picpath;
-                            _db.Images.Add(ElsePic);
+                            if (product.Photos != null && product.Photos.Count > 0)
+                            {
+                                foreach (var photo in product.Photos)
+                                {
+                                    if (photo != null)
+                                    {
+                                        string photoName = Guid.NewGuid().ToString() + ".jpg";
+
+                                        var photoPath = Path.Combine(_host.WebRootPath, "images", "shop", photoName);
+
+                                        using (var stream = new FileStream(photoPath, FileMode.Create))
+                                        {
+                                            photo.CopyTo(stream);
+                                        }
+                                        MulPic += photoName + "/";
+                                    }
+                                }
+                                string[] pics = MulPic.Split('/');  ///一長串圖片被我拆分儲存
+                                if (pics.Length > 0)
+                                {
+                                    string Mainpic = pics[0];//第一張是主圖存入商品資料行
+                                    x.FImagePath = Mainpic;
+                                }
+                                x.ProductName = product.ProductName;
+                                x.Price = product.Price;
+                                x.AvailableDate = product.AvailableDate;
+                                x.ProductContent = product.ProductContent;
+                                x.UnitStock = product.UnitStock;
+                                x.StatusId = 1;//記得改回7
+                                x.MemberId = product.MemberID;
+
+                                _db.Products.Add(x);
+                                _db.SaveChanges();
+                            }
+                            if (product.Photos.Count >= 1) ///如果有超過一張圖就執行多餘圖片存取
+                            {
+                                //List<int> imageIds = new List<int>(); //裝圖片ID們
+                                //剩下的圖存入參考表
+                                string[] OtherPic = MulPic.Split("/").Skip(1).ToArray();//沒圖會給空字串
+
+                                foreach (string picpath in OtherPic)
+                                {
+                                    if (!string.IsNullOrEmpty(picpath))
+                                    {
+                                        Image ElsePic = new Image();//裡還外?
+                                        ElsePic.FImagePath = picpath;
+                                        _db.Images.Add(ElsePic);
+                                        _db.SaveChanges();
+                                        ProductImage productImage = new ProductImage
+                                        {
+                                            ProductId = x.ProductId,
+                                            ImageId = ElsePic.ImageId
+                                        };
+                                        _db.ProductImages.Add(productImage);
+                                        _db.SaveChanges();
+                                    }
+                                }
+								
+							}
+                        }
+
+
+
+                        if (product.GameTagOptions != null)//確保有選標籤
+                        {
+                            List<int> tagsList = product.GameTagOptions.Split(',').Select(int.Parse).ToList();
+                            Trace.WriteLine("AAAA" + tagsList);
+                            foreach (var tags in tagsList)
+                            {
+                                int tagsID = _db.SubTags.FirstOrDefault(x => x.SubTagId == tags).SubTagId;
+                                ProductTag productTag = new ProductTag
+                                {
+                                    SubTagId = tagsID,
+                                    ProductId = x.ProductId
+                                };
+
+                                _db.ProductTags.Add(productTag);
+                            }
+
                             _db.SaveChanges();
-                         }
+
+                        }
+
+
+						transaction.Commit();
+						return RedirectToAction("Index");				
 					}
-                }
-               
 
-
-				if (product.GameTagOptions != null)//確保有選標籤
-                {
-                    List<int> tagsList = product.GameTagOptions.Split(',').Select(int.Parse).ToList();
-                    Trace.WriteLine("AAAA" + tagsList);
-                    foreach (var tags in tagsList)
-                    {
-                        int tagsID = _db.SubTags.FirstOrDefault(x => x.SubTagId == tags).SubTagId;
-                        ProductTag productTag = new ProductTag
-                        {
-                            SubTagId = tagsID,
-                            ProductId = x.ProductId
-                        };
-
-                        _db.ProductTags.Add(productTag);
-                    }
-
-                    _db.SaveChanges();
-
-                }
-
-               
-
-                return RedirectToAction("Index");
+						
+					catch (Exception ex)
+					{
+						transaction.Rollback();
+					    Trace.WriteLine("圖片上傳的錯誤"+ex.ToString());
+						throw;
+					}
+				}
             }
 
+			public ActionResult WhenYouEditTags(int? id)//修改商品時讀取標籤
+			{
+				_db.ProductTags.Load();
+				
+				var SelSub = _db.ProductTags.Where(p => p.ProductId == id).Select(s => s.SubTagId).ToList();
+				
+				return Json(SelSub);
+			}
+			public ActionResult WhenYouEditPics(int? id)//修改商品時讀取圖片
+			{
+				_db.Images.Load();
+                _db.ProductImages.Load();
+               
+                var MulPic = _db.ProductImages.Where(x => x.ProductId == id).Select(x => new { FImagePath =x.Image.FImagePath}).ToList();
+				return Json(MulPic);
+			}
 
-
-            public ActionResult Edit(int? id)
+			public ActionResult Edit(int? id)
             {
 
                 Product pdb = _db.Products.FirstOrDefault(p => p.ProductId == id);

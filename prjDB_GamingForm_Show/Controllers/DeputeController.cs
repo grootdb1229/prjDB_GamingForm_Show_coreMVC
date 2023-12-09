@@ -647,10 +647,7 @@ namespace prjDB_GamingForm_Show.Controllers
 
         #region PartialView
 
-        public IActionResult PartialFrame()
-        {
-            return PartialView();
-        }
+
         public IActionResult PartialOverview()
         {
             return PartialView();
@@ -683,7 +680,6 @@ namespace prjDB_GamingForm_Show.Controllers
         {
             return PartialView();
         }
-
         #endregion
 
         #endregion

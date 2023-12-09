@@ -7,9 +7,9 @@ https://templatemo.com/tm-555-upright
 
 	Color Codes
 	=============
-	Primary blue: #006699
-	Gray text: #666666
-	Light gray nav button bg: #F2F2F2;
+	Primary blue: #a81d1d
+	Gray text: #D0D0D0
+	Light gray nav button bg: #F2F2F2
 
 	Credit
 	=========
@@ -19,11 +19,11 @@ https://templatemo.com/tm-555-upright
 
 html, body { overflow-x: hidden; }
 body { font-family: 'Kumbh Sans', sans-serif; }
-div, a, p { color: #666666; }
+div, a, p { color: #D0D0D0; }
 p, address { line-height: 1.8; }
 a {	transition: all 0.3s ease; }
 a:hover {
-	color: #006699;
+	color: #a81d1d;
 	text-decoration: none;
 }
 
@@ -32,18 +32,18 @@ a:hover {
 .btn-primary {
 	padding: 12px 50px;
     border-radius: 0;
-    background: #006699;
+    background: #a81d1d;
     font-size: 1.2rem;
     border: 0;
 }
 
-.btn-primary:hover { background: #068ccf; }
-.tm-text-primary { color: #006699; }
-.tm-text-secondary { color: #009999; }
+.btn-primary:hover { background: #E15050; }
+.tm-text-primary { color: #a81d1d; }
+.tm-text-secondary { color: #E15050; }
 hr { border-top: 4px solid #CCC; }
 
 .tm-hr-short {
-	border-top: 1px solid #006699;
+	border-top: 1px solid #a81d1d;
 	width: 238px;
 	margin-left: auto;
 	margin-right: auto;
@@ -61,7 +61,7 @@ hr { border-top: 4px solid #CCC; }
 .tm-mt-100 { margin-top: 100px; }
 
 .tm-sidebar {
-	background-color: #fff;
+	background-color: #272727;
 	position: fixed;
 	top: 0;
 	bottom: 0;
@@ -129,7 +129,7 @@ hr { border-top: 4px solid #CCC; }
 .tm-brand-box {
 	width: 240px;
     height: 180px;
-    background: #006699;
+    background: #a81d1d;
     color: white;
     display: flex;
     align-items: center;
@@ -150,7 +150,7 @@ hr { border-top: 4px solid #CCC; }
 
 .nav-link {
 	position: relative;
-	color: #006699;
+	color: #a81d1d;
 	font-size: 1.4rem;
 	padding-top: 15px;
 	padding-bottom: 15px;
@@ -163,7 +163,7 @@ hr { border-top: 4px solid #CCC; }
 	width: 0;
 	height: 0;
 	border-top: 21px solid transparent;
-	border-left: 20px solid #006699;
+	border-left: 20px solid #a81d1d;
 	border-bottom: 21px solid transparent;
 	opacity: 0;
 	transition: all 0.3s ease;
@@ -172,7 +172,7 @@ hr { border-top: 4px solid #CCC; }
 .nav-item:hover .nav-link,
 .nav-link.current {
 	background-color: #F2F2F2;
-	color: #006699;
+	color: #a81d1d;
 	padding-left: 30px;
 }
 
@@ -187,7 +187,9 @@ hr { border-top: 4px solid #CCC; }
 }
 
 /* Home section */
-#home { min-height: 100vh; }
+#home, #release, #receive, #gallery, #contact {
+    min-height: 100vh;
+}
 .tm-col-home-l { width: calc(100% - 300px); }
 
 .tm-img-home-container {
@@ -226,7 +228,7 @@ hr { border-top: 4px solid #CCC; }
 }
 
 .tm-post-link:hover {
-	color: #068ccf;
+	color: #E15050;
 }
 
 /* Gallery section */
@@ -254,10 +256,10 @@ hr { border-top: 4px solid #CCC; }
 
 .tm-gallery-link {
 	padding: 15px;
-	color: #006699;	
+	color: #a81d1d;	
 }
 
-.tm-gallery-link.active { color: #666666; }
+.tm-gallery-link.active { color: #D0D0D0; }
 .tm-gallery-link-icon { width: 25px; }
 
 .tm-paging {
@@ -275,14 +277,14 @@ hr { border-top: 4px solid #CCC; }
     align-items: center;
     justify-content: center;
     background: white;
-    color: #999;
+    color: #a81d1d;
     margin-right: 15px;
     margin-bottom: 15px;
 }
 
 a.tm-paging-link.active,
 a.tm-paging-link:hover {
-    background: #006699;
+    background: #a81d1d;
     color: white;
 }
 
@@ -312,7 +314,7 @@ a.tm-paging-link:hover {
 	max-width: 270px;
 	max-height: 180px;
 	width: 48%;
-	background: #3085a3;
+	background: #E15050;
 	text-align: center;
 	cursor: pointer;
 }
@@ -327,7 +329,7 @@ a.tm-paging-link:hover {
 
 .tm-gallery figure figcaption {
 	padding: 1em;
-	color: #fff;
+	color: #a81d1d;
 	text-transform: uppercase;
 	font-size: 1em;
 	-webkit-backface-visibility: hidden;
@@ -395,7 +397,7 @@ figure.effect-honey figcaption::before {
 	left: 0;
 	width: 100%;
 	height: 10px;
-	background: #006699;
+	background: #a81d1d;
 	content: '';
 	-webkit-transform: translate3d(0,10px,0);
 	transform: translate3d(0,10px,0);
@@ -503,22 +505,22 @@ figure.effect-honey:hover ul li a {
 
 .slick-dots li button { width: 24px; }
 
-.slick-dots li button:before {
-    font-family: "Font Awesome 5 Free";
-    font-size: 24px;
-    font-weight: 900;
-    content: "\f04d";
-    color: #eee;
-    opacity: 1;
-	width: 24px;
-	height: 24px;
-    transition: all 0.3s ease;
-}
+	.slick-dots li button:before {
+		font-family: "Font Awesome 5 Free";
+		font-size: 24px;
+		font-weight: 900;
+		content: "\f04d";
+		color: #eee;
+		opacity: 1;
+		width: 24px;
+		height: 24px;
+		transition: all 0.3s ease;
+	}
 
 .slick-dots li button:hover:before, 
 .slick-dots li button:focus:before,
 .slick-dots li.slick-active button:before {
-    color: #006699;
+    color: #a81d1d;
 }
 
 .tm-carousel {
@@ -538,7 +540,7 @@ figure.effect-honey:hover ul li a {
 	position: relative;
 	float: left;
 	overflow: hidden;	
-	background: #3085a3;
+	background: #E15050;
 	text-align: center;
 	cursor: pointer;
 	max-width: 270px;
