@@ -141,22 +141,22 @@
 			});
 		</script>
 		<!--圖片呈現-->
-		<script>
-			function previewImage(input) {
-				var preview = document.getElementById('imagePreview');
-				var file = input.files[0];
-				var reader = new FileReader();
+	function previewImage(input) {
+    var preview = document.getElementById('imagePreview');
+    var file = input.files[0];
+    var reader = new FileReader();
 
-				reader.onloadend = function () {
-					preview.src = reader.result;
-				}
+    reader.onloadend = function () {
+        preview.src = reader.result;
+    }
 
-				if (file) {
-					reader.readAsDataURL(file);
-				} else {
-					preview.src = "";
-				}
-			}
+    if (file) {
+        reader.readAsDataURL(file);
+    } else {
+        preview.src = "";
+    }
+}
+
 		</script>
 		<!--放Tag-->
 		<script>

@@ -563,14 +563,7 @@ namespace prjDB_GamingForm_Show.Controllers
                     .ToList();
                 return Json(SelSub);
             }
-            public ActionResult WhenYouEditTags(int? id)
-            {
-                _db.ProductTags.Load();
-                //Trace.WriteLine("BBBBB" + id);
-                var SelSub = _db.ProductTags.Where(p => p.ProductId == id).Select(s => s.SubTagId).ToList();
-                //Trace.WriteLine("AAAAA"+SelSub);
-                return Json(SelSub);
-            }
+          
 
             [HttpPost]
             public ActionResult Create(超酷warp product) 
@@ -633,20 +626,23 @@ namespace prjDB_GamingForm_Show.Controllers
 
                                 foreach (string picpath in OtherPic)
                                 {
-                                    Image ElsePic = new Image();//裡還外?
-                                    ElsePic.FImagePath = picpath;
-                                    _db.Images.Add(ElsePic);
-                                    _db.SaveChanges();
-                                    ProductImage productImage = new ProductImage
+                                    if (!string.IsNullOrEmpty(picpath))
                                     {
-                                        ProductId = x.ProductId,
-                                        ImageId = ElsePic.ImageId
-                                    };
-                                    _db.ProductImages.Add(productImage);
-                                    _db.SaveChanges();
+                                        Image ElsePic = new Image();//裡還外?
+                                        ElsePic.FImagePath = picpath;
+                                        _db.Images.Add(ElsePic);
+                                        _db.SaveChanges();
+                                        ProductImage productImage = new ProductImage
+                                        {
+                                            ProductId = x.ProductId,
+                                            ImageId = ElsePic.ImageId
+                                        };
+                                        _db.ProductImages.Add(productImage);
+                                        _db.SaveChanges();
+                                    }
                                 }
-
-                            }
+								
+							}
                         }
 
 
@@ -673,8 +669,10 @@ namespace prjDB_GamingForm_Show.Controllers
 
 
 						transaction.Commit();
-						return RedirectToAction("Index");
+						return RedirectToAction("Index");				
 					}
+
+						
 					catch (Exception ex)
 					{
 						transaction.Rollback();
@@ -684,9 +682,24 @@ namespace prjDB_GamingForm_Show.Controllers
 				}
             }
 
+			public ActionResult WhenYouEditTags(int? id)//修改商品時讀取標籤
+			{
+				_db.ProductTags.Load();
+				
+				var SelSub = _db.ProductTags.Where(p => p.ProductId == id).Select(s => s.SubTagId).ToList();
+				
+				return Json(SelSub);
+			}
+			public ActionResult WhenYouEditPics(int? id)//修改商品時讀取圖片
+			{
+				_db.Images.Load();
+                _db.ProductImages.Load();
+               
+                var MulPic = _db.ProductImages.Where(x => x.ProductId == id).Select(x => new { FImagePath =x.Image.FImagePath}).ToList();
+				return Json(MulPic);
+			}
 
-
-            public ActionResult Edit(int? id)
+			public ActionResult Edit(int? id)
             {
 
                 Product pdb = _db.Products.FirstOrDefault(p => p.ProductId == id);
