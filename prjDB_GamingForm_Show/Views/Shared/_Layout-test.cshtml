@@ -1,0 +1,168 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <title>Shop Homepage - Start Bootstrap Template</title>
+
+    <!-- Bootstrap icons-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
+    <!-- Core theme CSS (includes Bootstrap)-->
+    <link href="~/css/styles.css" rel="stylesheet" />
+
+    <!--阿嘎-->
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,500,600,700,800,900&display=swap"
+          rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Cinzel:400,700,900&display=swap" rel="stylesheet">
+    <!-- Css Styles -->
+    <link rel="stylesheet" href="~/css/bootstrap.min.css" type="text/css">
+    <link rel="stylesheet" href="~/css/font-awesome.min.css" type="text/css">
+    <link rel="stylesheet" href="~/css/elegant-icons.css" type="text/css">
+    <link rel="stylesheet" href="~/css/owl.carousel.min.css" type="text/css">
+    <link rel="stylesheet" href="~/css/barfiller.css" type="text/css">
+    <link rel="stylesheet" href="~/css/magnific-popup.css" type="text/css">
+    <link rel="stylesheet" href="~/css/slicknav.min.css" type="text/css">
+    @*<link rel="stylesheet" href="~/css/blogstyle.css" type="text/css"> *@
+
+
+
+    <!--阿嘎測試-->
+    @RenderSection("Styles", required: false)
+</head>
+<body>
+    <!-- Navigation-->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light" style="background-color:black;">
+        <div class="container px-4 px-lg-5">
+            <a class="navbar-brand" href="~/Home/HomePage"><img src="~/images/grootlogotexticon.png" width="80px" height="80px" /></a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
+                    <li class="nav-item"> @Html.ActionLink("遊戲論壇", "List", "Blog", null, new { @class = "nav-link" })</li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">遊戲委託</a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li>@Html.ActionLink("遊戲委託", "DeputeMain", "Depute", null, new { @class = "dropdown-item" })</li>
+                            <li><hr class="dropdown-divider" /></li>
+                            <li>@Html.ActionLink("委託管理", "Personal", "Depute", null, new { @class = "dropdown-item" })</li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">遊戲商城</a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li>
+                                @Html.ActionLink("全部商品", "Index", "Shop", null, new { @class = "dropdown-item" })
+                            </li>
+                            <li><hr class="dropdown-divider" /></li>
+                            <li><a class="dropdown-item" href="#!">Popular Items</a></li>
+                            <li><a class="dropdown-item" href="#!">New Arrivals</a></li>
+                        </ul>
+                    </li>
+                </ul>
+                <div>
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
+
+                        @{
+                            if (Context.Session.GetInt32(CDictionary.SK_UserID) == null)
+                            {
+                                <li class="nav-item "> @Html.ActionLink("登入", "Login", "Home", null, new { @class = "nav-link" ,id="lilogin"})</li>
+                                <li class="nav-item"> @Html.ActionLink("註冊", "Create", "Member", null, new { @class = "nav-link" })</li>
+                            }
+                            else
+                            {
+                                <li class="nav-item" style=" padding: var(--bs-nav-link-padding-y) var(--bs-nav-link-padding-x)">歡迎回來 @Context.Session.GetString(CDictionary.SK_UserName) ID=@Context.Session.GetInt32(CDictionary.SK_UserID)</li>
+                                <li class="nav-item">@Html.ActionLink("登出", "Logout", "Home", null, new { @class = "nav-link" })</li>
+                                <li class="nav-item">@Html.ActionLink("會員頁面", "MemberPage", "Member", new {id = Context.Session.GetInt32(CDictionary.SK_UserID) }, new { @class = "nav-link" })</li>
+                            }
+                        }
+
+                    </ul>
+                </div>
+
+                @{
+
+
+                    <form class="d-flex">
+                        <a href="~/Shop/CarView" class="btn mt-auto btn-outline-dark bi-cart-fill me-1" id="car">
+                            <span class="badge bg-dark text-white ms-1 rounded-pill" id="carcount">@ViewBag.Car</span>
+                        </a>
+                    </form>
+                }
+            </div>
+        </div>
+    </nav>
+
+    @RenderBody()
+    <!-- Modal   沒登入專用彈窗 -->
+    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="staticBackdropLabel">訊息</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" style="color:black">
+                    是否要登入?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">關閉</button>
+                    <button type="button" class="btn btn-primary" , id="btnlogin">登入</button>
+                   @*  @Html.ActionLink("登入", "Login", "Home", null, new { @class = "btn btn-primary", id = "btnlogin" }) *@
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Footer-->
+    <footer class="py-5 bg-dark" style="position:relative;bottom:0;width:100%;z-index:-1 ">
+        @*z-index:-1 不蓋過其他圖片，position:fixed維持在視窗底部*@
+
+        <div class="container"><p class="m-0 text-center text-white ">Copyright &copy; Your Website 2023</p></div>
+    </footer>
+    <!-- Bootstrap core JS-->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Core theme JS-->
+    <script src="~/js/scripts.js"></script>
+    <script src="~/js/sweetalert2.all.js"></script>
+
+
+    <!--有問題找我，阿嘎-->
+    <script src="~/js/jquery-3.3.1.min.js"></script>
+    <script src="~/js/bootstrap.min.js"></script>
+    @*<script src="~/js/jquery.magnific-popup.min.js"></script>
+    <script src="~/js/circle-progress.min.js"></script>
+    <script src="~/js/jquery.barfiller.js"></script>
+    <script src="~/js/jquery.slicknav.js"></script>
+    <script src="~/js/owl.carousel.min.js"></script>
+    <script src="~/js/blogmain.js"></script>*@
+
+    <script>
+        const button = document.querySelector('#car');
+        button.addEventListener('mouseover', () => {
+            button.style.backgroundColor = '#a81d1d';
+        });
+
+        button.addEventListener('mouseout', () => {
+            button.style.backgroundColor = '';
+        });
+        const btnlogin = document.querySelector("#btnlogin")
+        const lilogin = document.querySelector("#lilogin")
+        btnlogin.addEventListener('click', () => {
+            // event.preventDefault();
+            document.cookie = "returnUrl=" + window.location.href + ";  path=/";
+            const loginUrl = '@Url.Action("Login", "Home")'
+            window.location.href = loginUrl
+        })
+        lilogin.addEventListener('click', () => {
+            // event.preventDefault();
+            document.cookie = "returnUrl=" + window.location.href + ";  path=/";
+            const loginUrl = '@Url.Action("Login", "Home")'
+            window.location.href = loginUrl
+        })
+    </script>
+
+    <!--圈圈加進來測試用-->
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
