@@ -18,6 +18,7 @@ using System.Linq;
 using System.Reflection.PortableExecutable;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography.Xml;
+using System.Text;
 using System.Text.Json;
 using System.Transactions;
 
@@ -340,8 +341,8 @@ namespace prjDB_GamingForm_Show.Controllers
                     //myModels.product = List2; 
                     //myModels.customerdetail = tags;
                     string jsonResult = JsonSerializer.Serialize(List2);
-                    Trace.WriteLine("檢查裝什麼1" + jsonResult);
-                    Trace.WriteLine("檢查裝什麼2" + List2);
+                    //Trace.WriteLine("檢查裝什麼1" + jsonResult);
+                    //Trace.WriteLine("檢查裝什麼2" + List2);
                     return View(List2);
                 }
             }
@@ -572,7 +573,8 @@ namespace prjDB_GamingForm_Show.Controllers
             }
 
             [HttpPost]
-            public ActionResult Create(超酷warp product) //先這樣Warp應該是用於資料驗證，有待看影片確認但目前不這樣寫驗證會一直錯誤
+            public ActionResult Create(超酷warp product) 
+             //先這樣Warp應該是用於資料驗證，有待看影片確認但目前不這樣寫驗證會一直錯誤
             {//但我其實也想把驗證改寫到前端，這些資料本質並不是重要到要寫後端驗證
                 //Trace.WriteLine("AAAA" + product.GameTagOptions);
                 if (!ModelState.IsValid)
@@ -580,28 +582,61 @@ namespace prjDB_GamingForm_Show.Controllers
                     var errors = ModelState.Values.SelectMany(v => v.Errors); //測試錯誤用程式碼
                     return View(product);
                 }
-
                 Product x = new Product();
-                if (_db != null)
-                {
-                    if (product.photo != null)
+				string MulPic = "";
+				if (_db != null)
+                {  
+                    if (product.Photos != null && product.Photos.Count > 0)
                     {
-                        string photoName = Guid.NewGuid().ToString() + ".jpg";
-                        x.FImagePath = photoName;
-                        product.photo.CopyTo(new FileStream(_host.WebRootPath + "/images/shop/" + photoName, FileMode.Create));
-                    }
-                    x.ProductName = product.ProductName;
-                    x.Price = product.Price;
-                    x.AvailableDate = product.AvailableDate;
-                    x.ProductContent = product.ProductContent;
-                    x.UnitStock = product.UnitStock;
-                    x.StatusId = 7;
-                    x.MemberId = product.MemberID;
+                        foreach (var photo in product.Photos)
+                        {
+							if (photo != null)
+							{
+                                string photoName = Guid.NewGuid().ToString() + ".jpg";
+							
+								var photoPath = Path.Combine(_host.WebRootPath, "images", "shop", photoName);
 
-                    _db.Products.Add(x);
-                    _db.SaveChanges();
+								using (var stream = new FileStream(photoPath, FileMode.Create))
+								{
+									photo.CopyTo(stream);
+								}
+								MulPic += photoName + "/";
+							}
+						}
+						string[] pics = MulPic.Split('/');  ///一長串圖片被我拆分儲存
+                        if (pics.Length > 0)
+                        {
+                            string Mainpic = pics[0];//第一張是主圖存入商品資料行
+                            x.FImagePath = Mainpic; 
+                        }
+						x.ProductName = product.ProductName;
+                        x.Price = product.Price;
+                        x.AvailableDate = product.AvailableDate;
+                        x.ProductContent = product.ProductContent;
+                        x.UnitStock = product.UnitStock;
+                        x.StatusId = 7;
+                        x.MemberId = product.MemberID;
+
+                        _db.Products.Add(x);
+                        _db.SaveChanges();
+                    }
+                    if (product.Photos.Count >= 1) ///如果有超過一張圖就執行圖片存取
+                    {
+                        //剩下的圖存入參考表
+                        string[] OtherPic = MulPic.Split("/").Skip(1).ToArray();//沒圖會給空字串
+                        Image ElsePic= new Image();
+                        foreach (string picpath in OtherPic) 
+                        {
+                            ElsePic.Image1= picpath;
+                            _db.Images.Add(ElsePic);
+                            _db.SaveChanges();
+                         }
+					}
                 }
-                if (product.GameTagOptions != null)//確保有選標籤
+               
+
+
+				if (product.GameTagOptions != null)//確保有選標籤
                 {
                     List<int> tagsList = product.GameTagOptions.Split(',').Select(int.Parse).ToList();
                     Trace.WriteLine("AAAA" + tagsList);
@@ -619,7 +654,10 @@ namespace prjDB_GamingForm_Show.Controllers
 
                     _db.SaveChanges();
 
-                }//Thread.Sleep(3000);
+                }
+
+               
+
                 return RedirectToAction("Index");
             }
 
