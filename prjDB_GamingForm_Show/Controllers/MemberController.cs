@@ -46,6 +46,10 @@ namespace prjDB_GamingForm_Show.Controllers
             return View(datas);
         }
 
+        public IActionResult MemberPageTest() 
+        {
+            return View();
+        }
 
         public IActionResult Test(int? id)
         {

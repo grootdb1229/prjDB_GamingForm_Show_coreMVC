@@ -7,7 +7,7 @@ public partial class Image
 {
     public int ImageId { get; set; }
 
-    public string? Name { get; set; }
+    public string FImagePath { get; set; } = null!;
 
-    public string Image1 { get; set; } = null!;
+    public virtual ICollection<ProductImage> ProductImages { get; set; } = new List<ProductImage>();
 }

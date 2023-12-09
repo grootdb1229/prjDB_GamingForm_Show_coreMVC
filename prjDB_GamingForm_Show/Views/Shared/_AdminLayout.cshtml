@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <title>Groot管理系統</title>
-    
+
     <!-- Bootstrap -->
     <link href="~/vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome -->
@@ -29,7 +29,7 @@
         <div class="main_container">
             <div class="col-md-3 left_col">
                 <div class="left_col scroll-view">
-                    
+
                     <div class="navbar nav_title" style="border: 0;">
                         <a @*href="~/index.html"*@ class="site_title">@*<i class="fa fa-paw"></i>*@<img src="~/logo/imgicon.png" /> <span>Groot管理系統</span></a>
                     </div>
@@ -43,7 +43,7 @@
                         </div>
                         <div class="profile_info">
                             <span style="font-size:20px">管理者,您好</span>
-                            <h2 style="font-size:20px">@Context.Request.HttpContext.Session.GetString(CDictionary.SK_管理者名稱)</h2>
+                            <h2 style="font-size:20px" id="AdminNameInSession">@Context.Request.HttpContext.Session.GetString(CDictionary.SK_管理者名稱)</h2>
                         </div>
                     </div>
                     <!-- /menu profile quick info -->
@@ -60,7 +60,7 @@
                                         <i class="fa fa-home" style="color:#a81d1d"></i> 會員管理 <span class="fa fa-chevron-down"></span>
                                     </a>
                                     <ul class="nav child_menu">
-                                        <li>@Html.ActionLink("會員清單","MemberList","Admin",null,new{@style = "font-size:15px"})</li>
+                                        <li>@Html.ActionLink("會員清單", "MemberList", "Admin", null, new { @style = "font-size:15px" })</li>
                                         @* <li><a href="~/index2.html">Dashboard2</a></li>
                                         <li><a href="~/index3.html">Dashboard3</a></li> *@
                                     </ul>
@@ -70,9 +70,9 @@
                                         @*<i class="fa fa-edit"></i>*@<i class="fa fa-table" style="color:#a81d1d"></i> 商城管理 <span class="fa fa-chevron-down"></span>
                                     </a>
                                     <ul class="nav child_menu">
-                                        <li>@Html.ActionLink("商品清單","ProductList","Admin",null,new{@style = "font-size:15px"})</li>
+                                        <li>@Html.ActionLink("商品清單", "ProductList", "Admin", null, new { @style = "font-size:15px" })</li>
                                         <li><a href="~/form_advanced.html" style="font-size:15px">申訴處理</a></li>
-                                        <li>@Html.ActionLink("新品審核","ProductReview","Admin",null,new{@style = "font-size:15px"})</li>
+                                        <li>@Html.ActionLink("新品審核", "ProductReview", "Admin", null, new { @style = "font-size:15px" })</li>
                                         <li><a href="~/form_wizards.html" style="font-size:15px">廣告上架</a></li>
                                         <li><a href="~/form_upload.html" style="font-size:15px">優惠券設定</a></li>
                                         @*<li><a href="~/form_buttons.html">Form Buttons</a></li>*@
@@ -83,8 +83,10 @@
                                         @*<i class="fa fa-desktop"></i>*@<i class="fa fa-edit" style="color:#a81d1d"></i> 論壇管理 <span class="fa fa-chevron-down"></span>
                                     </a>
                                     <ul class="nav child_menu">
-                                        <li>@Html.ActionLink("分類清單","BlogCategoryList","Admin",null,new{@style = "font-size:15px"})</li>
-                                        <li>@Html.ActionLink("版面清單","BlogList","Admin",null,new{@style = "font-size:15px"})</li>
+                                        <li>@Html.ActionLink("分類清單", "BlogCategoryList", "Admin", null, new { @style = "font-size:15px" })</li>
+                                        <li>@Html.ActionLink("版面清單", "BlogList", "Admin", null, new { @style = "font-size:15px" })</li>
+                                        <li>123</li>
+                                        <li>456</li>
                                         @*<li><a href="~/typography.html">Typography</a></li>
                                         <li><a href="~/icons.html">Icons</a></li>
                                         <li><a href="~/glyphicons.html">Glyphicons</a></li>
@@ -108,11 +110,11 @@
                                         <i class="fa fa-bar-chart-o" style="color:#a81d1d"></i> 報表檢視 @*<span class="fa fa-chevron-down"></span>*@
                                     </a>
                                     @*<ul class="nav child_menu">
-                                        <li><a href="~/chartjs.html">Chart JS</a></li>
-                                        <li><a href="~/chartjs2.html">Chart JS2</a></li>
-                                        <li><a href="~/morisjs.html">Moris JS</a></li>
-                                        <li><a href="~/echarts.html">ECharts</a></li>
-                                        <li><a href="~/other_charts.html">Other Charts</a></li>
+                                    <li><a href="~/chartjs.html">Chart JS</a></li>
+                                    <li><a href="~/chartjs2.html">Chart JS2</a></li>
+                                    <li><a href="~/morisjs.html">Moris JS</a></li>
+                                    <li><a href="~/echarts.html">ECharts</a></li>
+                                    <li><a href="~/other_charts.html">Other Charts</a></li>
                                     </ul>*@
                                 </li>
                                 <li>
@@ -121,84 +123,84 @@
                                     </a>
                                 </li>
                                 @*<li>
-                                    <a><i class="fa fa-clone"></i>Layouts <span class="fa fa-chevron-down"></span></a>
-                                    <ul class="nav child_menu">
-                                        <li><a href="~/fixed_sidebar.html">Fixed Sidebar</a></li>
-                                        <li><a href="~/fixed_footer.html">Fixed Footer</a></li>
-                                    </ul>
+                                <a><i class="fa fa-clone"></i>Layouts <span class="fa fa-chevron-down"></span></a>
+                                <ul class="nav child_menu">
+                                <li><a href="~/fixed_sidebar.html">Fixed Sidebar</a></li>
+                                <li><a href="~/fixed_footer.html">Fixed Footer</a></li>
+                                </ul>
                                 </li>*@
                             </ul>
                         </div>
                         @* <div class="menu_section"> *@
-                            @* <h3>Live On</h3> *@
-                            @* <ul class="nav side-menu"> *@
-                               @*  <li>
-                                    <a><i class="fa fa-bug"></i> Additional Pages <span class="fa fa-chevron-down"></span></a>
-                                    <ul class="nav child_menu">
-                                        <li><a href="~/e_commerce.html">E-commerce</a></li>
-                                        <li><a href="~/projects.html">Projects</a></li>
-                                        <li><a href="~/project_detail.html">Project Detail</a></li>
-                                        <li><a href="~/contacts.html">Contacts</a></li>
-                                        <li><a href="~/profile.html">Profile</a></li>
-                                    </ul>
-                                </li> *@
-                               @* <li>
-                                    <a><i class="fa fa-windows"></i> Extras <span class="fa fa-chevron-down"></span></a>
-                                    <ul class="nav child_menu">
-                                        <li><a href="~/page_403.html">403 Error</a></li>
-                                        <li><a href="~/page_404.html">404 Error</a></li>
-                                        <li><a href="~/page_500.html">500 Error</a></li>
-                                        <li><a href="~/plain_page.html">Plain Page</a></li>
-                                        <li><a href="~/login.html">Login Page</a></li>
-                                        <li><a href="~/pricing_tables.html">Pricing Tables</a></li>
-                                    </ul>
-                                </li> *@
-                               @*  <li>
-                                    <a><i class="fa fa-sitemap"></i> Multilevel Menu <span class="fa fa-chevron-down"></span></a>
-                                    <ul class="nav child_menu">
-                                        <li><a href="~/#level1_1">Level One</a>
-                                        <li>
-                                            <a>Level One<span class="fa fa-chevron-down"></span></a>
-                                            <ul class="nav child_menu">
-                                                <li class="sub_menu">
-                                                    <a href="~/level2.html">Level Two</a>
-                                                </li>
-                                                <li>
-                                                    <a href="~/#level2_1">Level Two</a>
-                                                </li>
-                                                <li>
-                                                    <a href="~/#level2_2">Level Two</a>
-                                                </li>
-                                            </ul>
-                                        </li>
-                                        <li>
-                                            <a href="~/#level1_2">Level One</a>
-                                        </li>
-                                    </ul>
-                                </li> *@
-                                @* <li><a href="~/javascript:void(0)"><i class="fa fa-laptop"></i> Landing Page <span class="label label-success pull-right">Coming Soon</span></a></li> *@
-                            @* </ul> *@
+                        @* <h3>Live On</h3> *@
+                        @* <ul class="nav side-menu"> *@
+                        @*  <li>
+                        <a><i class="fa fa-bug"></i> Additional Pages <span class="fa fa-chevron-down"></span></a>
+                        <ul class="nav child_menu">
+                        <li><a href="~/e_commerce.html">E-commerce</a></li>
+                        <li><a href="~/projects.html">Projects</a></li>
+                        <li><a href="~/project_detail.html">Project Detail</a></li>
+                        <li><a href="~/contacts.html">Contacts</a></li>
+                        <li><a href="~/profile.html">Profile</a></li>
+                        </ul>
+                        </li> *@
+                        @* <li>
+                        <a><i class="fa fa-windows"></i> Extras <span class="fa fa-chevron-down"></span></a>
+                        <ul class="nav child_menu">
+                        <li><a href="~/page_403.html">403 Error</a></li>
+                        <li><a href="~/page_404.html">404 Error</a></li>
+                        <li><a href="~/page_500.html">500 Error</a></li>
+                        <li><a href="~/plain_page.html">Plain Page</a></li>
+                        <li><a href="~/login.html">Login Page</a></li>
+                        <li><a href="~/pricing_tables.html">Pricing Tables</a></li>
+                        </ul>
+                        </li> *@
+                        @*  <li>
+                        <a><i class="fa fa-sitemap"></i> Multilevel Menu <span class="fa fa-chevron-down"></span></a>
+                        <ul class="nav child_menu">
+                        <li><a href="~/#level1_1">Level One</a>
+                        <li>
+                        <a>Level One<span class="fa fa-chevron-down"></span></a>
+                        <ul class="nav child_menu">
+                        <li class="sub_menu">
+                        <a href="~/level2.html">Level Two</a>
+                        </li>
+                        <li>
+                        <a href="~/#level2_1">Level Two</a>
+                        </li>
+                        <li>
+                        <a href="~/#level2_2">Level Two</a>
+                        </li>
+                        </ul>
+                        </li>
+                        <li>
+                        <a href="~/#level1_2">Level One</a>
+                        </li>
+                        </ul>
+                        </li> *@
+                        @* <li><a href="~/javascript:void(0)"><i class="fa fa-laptop"></i> Landing Page <span class="label label-success pull-right">Coming Soon</span></a></li> *@
+                        @* </ul> *@
                         @* </div> *@
 
                     </div>
                     <!-- /sidebar menu -->
                     <!-- /menu footer buttons -->
                     @* <div class="sidebar-footer hidden-small">
-                        <a data-toggle="tooltip" data-placement="top" title="Settings">
-                            <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
-                        </a>
-                        <a data-toggle="tooltip" data-placement="top" title="FullScreen">
-                            <span class="glyphicon glyphicon-fullscreen" aria-hidden="true"></span>
-                        </a>
-                        <a data-toggle="tooltip" data-placement="top" title="Lock">
-                            <span class="glyphicon glyphicon-eye-close" aria-hidden="true"></span>
-                        </a>
-                        <a data-toggle="tooltip" data-placement="top" title="Logout" href="~/login.html">
-                            <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
-                        </a>
+                    <a data-toggle="tooltip" data-placement="top" title="Settings">
+                    <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
+                    </a>
+                    <a data-toggle="tooltip" data-placement="top" title="FullScreen">
+                    <span class="glyphicon glyphicon-fullscreen" aria-hidden="true"></span>
+                    </a>
+                    <a data-toggle="tooltip" data-placement="top" title="Lock">
+                    <span class="glyphicon glyphicon-eye-close" aria-hidden="true"></span>
+                    </a>
+                    <a data-toggle="tooltip" data-placement="top" title="Logout" href="~/login.html">
+                    <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
+                    </a>
                     </div> *@
                     <!-- /menu footer buttons -->
-                    
+
                 </div>
             </div>
 
@@ -226,9 +228,9 @@
                             </li>
 
                             <li role="presentation" class="nav-item dropdown open">
-                                <a href="~/javascript:;" class="dropdown-toggle info-number" id="navbarDropdown1" data-toggle="dropdown" aria-expanded="false">
+                                <a onclick="checkMessage()" href="~/javascript:;" class="dropdown-toggle info-number" id="navbarDropdown1" data-toggle="dropdown" aria-expanded="false">
                                     <i class="fa fa-envelope-o"></i>
-                                    <span class="badge bg-green">6</span>
+                                    <span class="badge bg-green" id="notCheckMessageCount"></span>
                                 </a>
                                 <ul class="dropdown-menu list-unstyled msg_list" role="menu" aria-labelledby="navbarDropdown1">
                                     <li class="nav-item">
@@ -291,45 +293,45 @@
                             </li>
                         </ul>
                     </nav>
-                    
+
                 </div>
                 <!-- /top navigation -->
                 @RenderBody()
             </div>
         </div>
     </div>
-   
+
     <!-- footer content -->
     <footer>
-        <button onclick="showPV()">SignalR</button>        
+        <button onclick="showPV()">SignalR</button>
         <div id="test" style="display:none;position: absolute; bottom: 10px; right: 10px; z-index: 999;background-color:#6C6C6C ; opacity:0.95; border: 3px groove #000;border-radius:15px;color:#FFFFF4;text-align:center">
-           @* <h1>即時聊天範例</h1>
+            @* <h1>即時聊天範例</h1>
 
             <div class="row">
-                <div class="col-8">
-                    <h4>個人 ID: <span id="SelfID"></span></h4>
-                    <div class="mb-3">
-                        <label for="message" class="form-label">發送訊息</label>
-                        <input type="text" class="form-control" id="message">
-                    </div>
-                    <div class="mb-3">
-                        <label for="sendToID" class="form-label">指定 ID</label>
-                        <input type="text" class="form-control" id="sendToID">
-                    </div>
-                    <button type="button" class="btn btn-primary" id="sendButton">傳送訊息</button>
-                </div>
-                <div class="col-4">
-                    <h4>連線 ID 列表</h4>
-                    <ul class="list-group" id="IDList">
-                    </ul>
-                </div>
+            <div class="col-8">
+            <h4>個人 ID: <span id="SelfID"></span></h4>
+            <div class="mb-3">
+            <label for="message" class="form-label">發送訊息</label>
+            <input type="text" class="form-control" id="message">
+            </div>
+            <div class="mb-3">
+            <label for="sendToID" class="form-label">指定 ID</label>
+            <input type="text" class="form-control" id="sendToID">
+            </div>
+            <button type="button" class="btn btn-primary" id="sendButton">傳送訊息</button>
+            </div>
+            <div class="col-4">
+            <h4>連線 ID 列表</h4>
+            <ul class="list-group" id="IDList">
+            </ul>
+            </div>
             </div>
             <div class="row mt-3">
-                <div class="col-12">
-                    <h3>聊天內容</h3>                    
-                    <div id="Content" style="height:150px ;max-height: 150px; overflow-y: auto;">
-                    </div>
-                </div>
+            <div class="col-12">
+            <h3>聊天內容</h3>
+            <div id="Content" style="height:150px ;max-height: 150px; overflow-y: auto;">
+            </div>
+            </div>
             </div>*@
         </div>
         <div id="AdminsChat" style="display:none;position: absolute; bottom: 10px; right: 300px; z-index: 999;background-color:#6C6C6C ; opacity:0.95; border: 3px groove #000;border-radius:15px;color:#FFFFF4"></div>
@@ -369,9 +371,10 @@
 
     <!-- Custom Theme Scripts -->
     <script src="~/js/custom.min.js"></script>
-    @await RenderSectionAsync("Scripts", required:false)
+    @await RenderSectionAsync("Scripts", required: false)
     <script src="~/js/signalr/dist/browser/signalr.js"></script>
     <script>
+        var name = $('#AdminNameInSession').text();
         $('#test').load('@Url.Content("~/Admin/SignalRPV")');
         function showPV() {
             var div = document.querySelector('#test');
@@ -380,7 +383,28 @@
             }
             else {
                 div.style.display = "none"; // 隱藏
-            }    
+            }
+        }
+        $(document).ready(function () {            
+            $.ajax({
+                type:'post',
+                url: '/Admin/HowMuchMessageNotCheck',     
+                success: function (result) {
+                    if (result != 0) {
+                        $('#notCheckMessageCount').text(result)
+                    }
+                    else {
+                        $('#notCheckMessageCount').text("")
+                    }
+                },
+                error: function (error) {
+                    // 處理錯誤
+                    console.error(error);
+                }
+            });
+        });
+        function checkMessage() {
+            $('#notCheckMessageCount').text("")
         }
         // var connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
 

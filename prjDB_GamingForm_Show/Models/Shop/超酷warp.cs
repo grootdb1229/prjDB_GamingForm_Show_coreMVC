@@ -102,17 +102,12 @@ namespace prjDB_GamingForm_Show.Models.Shop
 		}
 
 
-		[DisplayName("圖片ID")]//
+		
 		public int ImageID { get; set; }
 
 
-		public string? FImagePath
-		{
-			//get;
-			//set;
-			get { return _product.FImagePath; }
-			set { _product.FImagePath = value; }
-		}
+	
+
 		//public string? LanguageOptions { get; set; 
 
 		public string? GameTagOptions { get; set; }
@@ -128,8 +123,18 @@ namespace prjDB_GamingForm_Show.Models.Shop
 		public virtual IEnumerable<SubTag> SubTag { get; set; } = new List<SubTag>();
 
 		public virtual IEnumerable<ProductTag> ProductTags { get; set; } = new List<ProductTag>();
+
+
 		public IFormFile? photo { get; set; }
 
+        public List<IFormFile>? Photos { get; set; }
+
+		public string? FImagePath
+		{
+
+			get { return _product.FImagePath; }
+			set { _product.FImagePath = value; }
+		}
 
 	}
 

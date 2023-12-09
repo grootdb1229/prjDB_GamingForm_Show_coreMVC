@@ -1,5 +1,7 @@
 ﻿//using AspNetCore;
+using MailKit.Search;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query.Internal;
 using Newtonsoft.Json;
 using prjDB_GamingForm_Show.Models;
@@ -46,7 +48,10 @@ namespace prjDB_GamingForm_Show.Controllers
         {
             return View();
         }
-
+        public IActionResult test()
+        {
+            return View();
+        }
         public IActionResult Logout() 
         {
             if (HttpContext.Session.GetInt32(CDictionary.SK_UserID) != null)
@@ -95,11 +100,29 @@ namespace prjDB_GamingForm_Show.Controllers
             return RedirectToAction("Create", "Member");
         }
 
-        public IActionResult ShopItems() 
+        public IActionResult PopularShopItems() 
         {
-            var data = from P in _db.Products
+            var datas = from P in _db.Products
+                       orderby P.ViewCount descending 
                        select new { P.ProductName, P.AvailableDate, P.ProductContent , P.FImagePath , P.ProductId };
-            return Json(data);
+            return Json(datas);
+        }
+
+        public IActionResult PopularArticles() 
+        {
+            var datas = _db.Articles.Include(a => a.SubBlog).ThenInclude(b => b.Blog)
+                        .OrderBy(a => a.ViewCount).Take(6).
+                        Select(a => a);
+            return Json(datas);          
+        }
+
+        public IActionResult PopularDeputes()
+        {
+            var datas = from D in _db.Deputes
+                        orderby D.ViewCount descending
+                        select new { D.Title, D.DeputeContent , D.DeputeId };
+
+            return Json(datas);
         }
 
 

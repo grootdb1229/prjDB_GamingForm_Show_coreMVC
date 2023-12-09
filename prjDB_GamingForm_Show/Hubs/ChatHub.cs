@@ -99,9 +99,11 @@ namespace prjDB_GamingForm_Show.Hubs
         /// <param name="id"></param>
         /// <returns></returns>
         public async Task SendMessage(string selfID, string message, string sendToID, string sendToName)
-        {
+        {            
             var senderUserName = ConnectedUsers.FirstOrDefault(u => u.UserName == selfID)?.UserName;
             var selfSid = ConnectedUsers.FirstOrDefault(u => u.UserName == selfID)?.ConnectionId;
+            var senderAdminId = _db.Admins.FirstOrDefault(a => a.Name == selfID).AdminId;
+            var receiveAdminId = _db.Admins.FirstOrDefault(a => a.Name == sendToName).AdminId;
             //if (string.IsNullOrEmpty(sendToID))
             //{
             //    await Clients.All.SendAsync("UpdContent", senderUserName + " 說: " + message);
@@ -112,15 +114,13 @@ namespace prjDB_GamingForm_Show.Hubs
             if (sendToID != null)
             {
                 await Clients.Client(sendToID).SendAsync("ReceiverUpdContent", message);
+                await Clients.Client(sendToID).SendAsync("ReceiverIsOpenChat", selfID);
+                await Clients.Client(sendToID).SendAsync("ReceiverChatWho", senderAdminId);
             }
-            
 
             // 發送人
             await Clients.Client(selfSid).SendAsync("SenderUpdContent", message);
-
-
-            var senderAdminId = _db.Admins.FirstOrDefault(a => a.Name == selfID).AdminId;
-            var receiveAdminId = _db.Admins.FirstOrDefault(a => a.Name == sendToName).AdminId;
+            
             if (senderAdminId != null && receiveAdminId != null)
             {
                 Chat chat = new Chat();
@@ -128,11 +128,12 @@ namespace prjDB_GamingForm_Show.Hubs
                 chat.ReceiveAdmin = receiveAdminId;
                 chat.ChatContent = message;
                 chat.ModefiedDate = DateTime.UtcNow.ToLocalTime().ToString("yyyy/MM/dd HH:mm");
+                chat.IsCheck = false;
 
                 _db.Chats.Add(chat);
                 await _db.SaveChangesAsync();
             }
-        }
+        }        
         public string GetConnectionIdByUserName(string userName)
         {
             var user = ConnectedUsers.FirstOrDefault(u => u.UserName == userName);

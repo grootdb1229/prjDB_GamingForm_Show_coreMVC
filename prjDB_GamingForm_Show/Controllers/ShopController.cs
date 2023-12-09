@@ -10,6 +10,7 @@ using prjDB_GamingForm_Show.Models.Entities;
 using prjDB_GamingForm_Show.Models.Shop;
 using prjDB_GamingForm_Show.ViewModels;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Dynamic;
@@ -17,6 +18,7 @@ using System.Linq;
 using System.Reflection.PortableExecutable;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography.Xml;
+using System.Text;
 using System.Text.Json;
 using System.Transactions;
 
@@ -136,8 +138,8 @@ namespace prjDB_GamingForm_Show.Controllers
             //    List = List.Distinct().ToList();
             //    return View(List2);
             //}
-            public IActionResult Carousel()
-            {  
+            public IActionResult Carousel()//大廣告牆
+            {
                 return PartialView();
             }
 
@@ -145,31 +147,44 @@ namespace prjDB_GamingForm_Show.Controllers
             {
                 return PartialView();
             }
-			public IActionResult HotProduct()
-			{
-				return PartialView();
-			}
+            public IActionResult HotProduct()
+            {
+                return PartialView();
+            }
             public IActionResult SeenProduct()
             {
                 return PartialView();
             }
             public IActionResult HotTopFive() //取熱門商品
             {
-                var TopFive=_db.Products.Select(x=>new { x.FImagePath,x.ViewCount,x.ProductName,x.ProductId}).OrderByDescending(x=>x.ViewCount).Take(5).ToList();
+                var TopFive = _db.Products.Select(x => new { x.FImagePath, x.ViewCount, x.ProductName, x.ProductId }).OrderByDescending(x => x.ViewCount).Take(5).ToList();
                 return Json(TopFive);
             }
-
-
+            public IActionResult YourFavorite() 
+            {
+                return PartialView();
+            }
+            public IActionResult FavoriteTop5() 
+            {
+                
+                int userId = 0;//檢測有沒有登入
+                if (HttpContext.Session.GetInt32(CDictionary.SK_UserID) != null) //利用Session確認登入狀況
+                { userId = (int)HttpContext.Session.GetInt32(CDictionary.SK_UserID); }//有登入複寫Userid，反之維持0。
+                else { return Json(new { message = "請先登入" }); }
+                var top5 =_db.WishLists.Where(x=>x.MemberId== userId).Select(x=>x.Product).Take(5).ToList();     
+                //Trace.WriteLine("檢查TOP5"+top5);
+                return Json(top5);
+            }
             public void Cookie(int? id)  //Cookies設定
             {
                 int userId = 0;//檢測有沒有登入
-                if(HttpContext.Session.GetInt32(CDictionary.SK_UserID)!=null) //利用Session確認登入狀況
-                    userId=(int)HttpContext.Session.GetInt32(CDictionary.SK_UserID); //有登入複寫Userid，反之維持0。
-             
+                if (HttpContext.Session.GetInt32(CDictionary.SK_UserID) != null) //利用Session確認登入狀況
+                    userId = (int)HttpContext.Session.GetInt32(CDictionary.SK_UserID); //有登入複寫Userid，反之維持0。
+
                 string record = "";
-                if (HttpContext.Request.Cookies[userId.ToString()]!=null) //此用戶沒有Cookies讓他的紀錄=""，有的畫幫他調閱。
+                if (HttpContext.Request.Cookies[userId.ToString()] != null) //此用戶沒有Cookies讓他的紀錄=""，有的畫幫他調閱。
                     record = HttpContext.Request.Cookies[userId.ToString()];
-            
+
                 CookieOptions options = new CookieOptions();
                 options.Expires = DateTime.Now.AddDays(30);//餅乾效期設定
                 record += $"{id},";//紀錄id 用，逗號分隔，待會以逗號切割Split。
@@ -178,7 +193,7 @@ namespace prjDB_GamingForm_Show.Controllers
 
             public IActionResult GetCookie() ///Cookie存取客人看過的商品
             {
-              
+
                 List<Product> CookieList = new List<Product>();
                 int userId = 0;
                 if (HttpContext.Session.GetInt32(CDictionary.SK_UserID) != null)
@@ -186,9 +201,9 @@ namespace prjDB_GamingForm_Show.Controllers
                 string record = "";
                 if (HttpContext.Request.Cookies[userId.ToString()] != null)
                     record = HttpContext.Request.Cookies[userId.ToString()];
-                if (userId == 0) 
+                if (userId == 0)
                 {
-                    return  Json (new { message = "請先登入" });       
+                    return Json(new { message = "請先登入" });
                 }
                 string[] strResult = record.Split(',');
                 strResult = strResult.Reverse().Distinct().ToArray();
@@ -213,7 +228,7 @@ namespace prjDB_GamingForm_Show.Controllers
 
 
 
-                public IActionResult Index(CKeyWord ck)
+            public IActionResult Index(CKeyWord ck)
             {
 
                 String CK = ck.txtKeyword;
@@ -256,15 +271,15 @@ namespace prjDB_GamingForm_Show.Controllers
                 else
                 {
                     var data = (from n in _db.ProductTags
-                               where n.Product.ProductName.Contains(CK) && n.Product.StatusId == 1
-                               select new
-                               {
-                                   n.Product.ProductId,
-                                   n.Product.ProductName,
-                                   n.Product.Price,
-                                   n.Product.FImagePath,
-                                   SubTagName = n.SubTag.Name
-                               }).ToList();
+                                where n.Product.ProductName.Contains(CK) && n.Product.StatusId == 1
+                                select new
+                                {
+                                    n.Product.ProductId,
+                                    n.Product.ProductName,
+                                    n.Product.Price,
+                                    n.Product.FImagePath,
+                                    SubTagName = n.SubTag.Name
+                                }).ToList();
                     foreach (var item in data)
                     {
                         string s = "";
@@ -284,11 +299,11 @@ namespace prjDB_GamingForm_Show.Controllers
                         List.Add(Pdb);
                     };
                 }
-                if (List.Count==0)//////"查無資料"邏輯 
+                if (List.Count == 0)//////"查無資料"邏輯 
                 {
                     //return RedirectToAction("Index");
-                    ViewBag.Message = "查無資料，請確認輸入內容"; 
-                    return View(); 
+                    ViewBag.Message = "查無資料，請確認輸入內容";
+                    return View();
                 }
                 else
                 {
@@ -326,12 +341,12 @@ namespace prjDB_GamingForm_Show.Controllers
                     //myModels.product = List2; 
                     //myModels.customerdetail = tags;
                     string jsonResult = JsonSerializer.Serialize(List2);
-                    Trace.WriteLine("檢查裝什麼1" + jsonResult);
-                    Trace.WriteLine("檢查裝什麼2" + List2);
+                    //Trace.WriteLine("檢查裝什麼1" + jsonResult);
+                    //Trace.WriteLine("檢查裝什麼2" + List2);
                     return View(List2);
                 }
             }
-     
+
             public IActionResult IndexbyAjax(string CK)
             {
                 _db.ProductTags.Load();
@@ -348,7 +363,7 @@ namespace prjDB_GamingForm_Show.Controllers
                         n.Product.Price,
                         n.Product.FImagePath,
                         SubTagName = n.SubTag.Name
-                    })           
+                    })
                     .ToList();
 
                 List<CShopPageViewModel> List = data.Select(item =>
@@ -369,7 +384,7 @@ namespace prjDB_GamingForm_Show.Controllers
                                                      .ToList();
 
                 if (List2.Count == 0)//如果沒有任何搜尋結果
-                {              
+                {
                     return Json(new { message = "查無資料，請確認輸入內容" });
                 }
 
@@ -507,7 +522,7 @@ namespace prjDB_GamingForm_Show.Controllers
                         SubTagName = s
                     };
                 }).ToList();
-                    ///篩掉重複資料 GroupBy把一樣的ID篩一起，.First取一個。
+                ///篩掉重複資料 GroupBy把一樣的ID篩一起，.First取一個。
                 List<CShopPageViewModel> List2 = List.GroupBy(p => p.ProductId)
                                                      .Select(group => group.First())
                                                      .ToList();
@@ -522,7 +537,7 @@ namespace prjDB_GamingForm_Show.Controllers
                 //Trace.WriteLine("BBB" + List2);
                 return Content(jsonResult, "application/json");
             }
-     
+
             public ActionResult Create()
             {
                 _db.Products.Load();
@@ -536,19 +551,19 @@ namespace prjDB_GamingForm_Show.Controllers
                 return Json(Lang);
             }
             public ActionResult GameTag()
-                {		
-				var SelSub = _db.SubTags
-					.Where(p => p.TagId == 1)
-					.Select(s => new
-					{
-						s.SubTagId,
-					    s.Name,
-						ProductTagCount = s.ProductTags.Count()
-					})
-					.ToList();
-				return Json(SelSub);
-			}
-			public ActionResult WhenYouEditTags(int? id)
+            {
+                var SelSub = _db.SubTags
+                    .Where(p => p.TagId == 1)
+                    .Select(s => new
+                    {
+                        s.SubTagId,
+                        s.Name,
+                        ProductTagCount = s.ProductTags.Count()
+                    })
+                    .ToList();
+                return Json(SelSub);
+            }
+            public ActionResult WhenYouEditTags(int? id)
             {
                 _db.ProductTags.Load();
                 //Trace.WriteLine("BBBBB" + id);
@@ -558,55 +573,115 @@ namespace prjDB_GamingForm_Show.Controllers
             }
 
             [HttpPost]
-            public ActionResult Create(超酷warp product) //先這樣Warp應該是用於資料驗證，有待看影片確認但目前不這樣寫驗證會一直錯誤
+            public ActionResult Create(超酷warp product) 
+             //先這樣Warp應該是用於資料驗證，有待看影片確認但目前不這樣寫驗證會一直錯誤
             {//但我其實也想把驗證改寫到前端，這些資料本質並不是重要到要寫後端驗證
-                //Trace.WriteLine("AAAA" + product.GameTagOptions);
-                if (!ModelState.IsValid)
-                {
-                    var errors = ModelState.Values.SelectMany(v => v.Errors); //測試錯誤用程式碼
-                    return View(product);
-                }
+             //Trace.WriteLine("AAAA" + product.GameTagOptions);
 
-                Product x = new Product();
-                if (_db != null)
+                using (var transaction = _db.Database.BeginTransaction())
                 {
-                    if (product.photo != null)
+                    try
                     {
-                        string photoName = Guid.NewGuid().ToString() + ".jpg";
-                        x.FImagePath = photoName;
-                        product.photo.CopyTo(new FileStream(_host.WebRootPath + "/images/shop/" + photoName, FileMode.Create));
-                    }
-                    x.ProductName = product.ProductName;
-                    x.Price = product.Price;
-                    x.AvailableDate = product.AvailableDate;
-                    x.ProductContent = product.ProductContent;
-                    x.UnitStock = product.UnitStock;
-                    x.StatusId = 7;
-                    x.MemberId = product.MemberID;
-
-                    _db.Products.Add(x);
-                    _db.SaveChanges();
-                }
-                if (product.GameTagOptions != null)//確保有選標籤
-                {
-                    List<int> tagsList = product.GameTagOptions.Split(',').Select(int.Parse).ToList();
-                    Trace.WriteLine("AAAA" + tagsList);
-                    foreach (var tags in tagsList)
-                    {
-                        int tagsID = _db.SubTags.FirstOrDefault(x => x.SubTagId == tags).SubTagId;
-                        ProductTag productTag = new ProductTag
+                        if (!ModelState.IsValid)
                         {
-                            SubTagId = tagsID,
-                            ProductId = x.ProductId
-                        };
+                            var errors = ModelState.Values.SelectMany(v => v.Errors); //測試錯誤用程式碼
+                            return View(product);
+                        }
+                        Product x = new Product();
+                        string MulPic = "";
+                        if (_db != null)
+                        {
+                            if (product.Photos != null && product.Photos.Count > 0)
+                            {
+                                foreach (var photo in product.Photos)
+                                {
+                                    if (photo != null)
+                                    {
+                                        string photoName = Guid.NewGuid().ToString() + ".jpg";
 
-                        _db.ProductTags.Add(productTag);
-                    }
+                                        var photoPath = Path.Combine(_host.WebRootPath, "images", "shop", photoName);
 
-                    _db.SaveChanges();
+                                        using (var stream = new FileStream(photoPath, FileMode.Create))
+                                        {
+                                            photo.CopyTo(stream);
+                                        }
+                                        MulPic += photoName + "/";
+                                    }
+                                }
+                                string[] pics = MulPic.Split('/');  ///一長串圖片被我拆分儲存
+                                if (pics.Length > 0)
+                                {
+                                    string Mainpic = pics[0];//第一張是主圖存入商品資料行
+                                    x.FImagePath = Mainpic;
+                                }
+                                x.ProductName = product.ProductName;
+                                x.Price = product.Price;
+                                x.AvailableDate = product.AvailableDate;
+                                x.ProductContent = product.ProductContent;
+                                x.UnitStock = product.UnitStock;
+                                x.StatusId = 1;//記得改回7
+                                x.MemberId = product.MemberID;
 
-                }//Thread.Sleep(3000);
-                return RedirectToAction("Index");
+                                _db.Products.Add(x);
+                                _db.SaveChanges();
+                            }
+                            if (product.Photos.Count >= 1) ///如果有超過一張圖就執行多餘圖片存取
+                            {
+                                //List<int> imageIds = new List<int>(); //裝圖片ID們
+                                //剩下的圖存入參考表
+                                string[] OtherPic = MulPic.Split("/").Skip(1).ToArray();//沒圖會給空字串
+
+                                foreach (string picpath in OtherPic)
+                                {
+                                    Image ElsePic = new Image();//裡還外?
+                                    ElsePic.FImagePath = picpath;
+                                    _db.Images.Add(ElsePic);
+                                    _db.SaveChanges();
+                                    ProductImage productImage = new ProductImage
+                                    {
+                                        ProductId = x.ProductId,
+                                        ImageId = ElsePic.ImageId
+                                    };
+                                    _db.ProductImages.Add(productImage);
+                                    _db.SaveChanges();
+                                }
+
+                            }
+                        }
+
+
+
+                        if (product.GameTagOptions != null)//確保有選標籤
+                        {
+                            List<int> tagsList = product.GameTagOptions.Split(',').Select(int.Parse).ToList();
+                            Trace.WriteLine("AAAA" + tagsList);
+                            foreach (var tags in tagsList)
+                            {
+                                int tagsID = _db.SubTags.FirstOrDefault(x => x.SubTagId == tags).SubTagId;
+                                ProductTag productTag = new ProductTag
+                                {
+                                    SubTagId = tagsID,
+                                    ProductId = x.ProductId
+                                };
+
+                                _db.ProductTags.Add(productTag);
+                            }
+
+                            _db.SaveChanges();
+
+                        }
+
+
+						transaction.Commit();
+						return RedirectToAction("Index");
+					}
+					catch (Exception ex)
+					{
+						transaction.Rollback();
+					    Trace.WriteLine("圖片上傳的錯誤"+ex.ToString());
+						throw;
+					}
+				}
             }
 
 
@@ -696,18 +771,33 @@ namespace prjDB_GamingForm_Show.Controllers
             }
 
             public ActionResult Details(int id)
-            {
+            {   
+                string Likestatus=null ;
+                int memberID = 0;//測登入沒
+                if ((HttpContext.Session.GetInt32(CDictionary.SK_UserID) != null))
+                {
+                   memberID = (int)HttpContext.Session.GetInt32(CDictionary.SK_UserID); 
+                   var HaveProduct = _db.WishLists.Any(x => x.ProductId == id && x.MemberId == memberID);//檢查你有沒有置入願望清單
+                   if (!HaveProduct) { Likestatus = "你還沒收藏過"; } 
+                   else{ Likestatus = "你收藏過了"; }
+                }
+
+                //存近期看過
                 Cookie(id);
+
+
                 _db.Products.Load();
                 Product x = _db.Products.FirstOrDefault(p => p.ProductId == id);
-               
+
                 var tagNames = _db.ProductTags
                  .Where(x => x.ProductId == id)
                  .Select(x => x.SubTag.Name)
                  .ToList();
-
                 string s = string.Join("/", tagNames);
-                //Trace.WriteLine("僅作查看"+s);
+
+               
+                
+                    //Trace.WriteLine("僅作查看"+s);
                 List<CShopPageViewModel> aa = new List<CShopPageViewModel>();
                 CShopPageViewModel ProductInfo = new CShopPageViewModel()
                 {
@@ -716,14 +806,50 @@ namespace prjDB_GamingForm_Show.Controllers
                     FImagePath = x.FImagePath,
                     Price = x.Price,
                     ProductContent = x.ProductContent,
-                    SubTagName=s
-                    
+                    SubTagName = s,
+                    favourite= Likestatus,
                 };
                 x.ViewCount++;
                 _db.SaveChanges();
-
+                Trace.WriteLine(ProductInfo.favourite);
                 return View(ProductInfo);
             }
+
+
+
+            public ActionResult favourite(int? id , bool isLiked)
+            {
+                int productID = (int)id;
+                int memberID = 0;
+                if ((HttpContext.Session.GetInt32(CDictionary.SK_UserID) != null))  //看看登入沒
+                {
+                    memberID = (int)HttpContext.Session.GetInt32(CDictionary.SK_UserID); //取會員ID
+                }
+
+                var HaveProduct = _db.WishLists.Any(x => x.ProductId == productID && x.MemberId == memberID); //檢查有沒有過了
+             
+                if (!HaveProduct)//沒加過幫他加進去
+                {
+                    WishList wishList = new WishList();
+                    {
+                        wishList.MemberId = memberID;
+                        wishList.ProductId = productID;
+                    };
+                    _db.WishLists.Add(wishList);
+                    _db.SaveChanges();
+                    return Json(new { message = "加入最愛" });
+                }
+                else
+                {
+                    WishList removeProduct = _db.WishLists.FirstOrDefault(x => x.ProductId == id && x.MemberId == memberID);
+                    _db.WishLists.Remove(removeProduct);
+                    _db.SaveChanges();
+                    return Json(new { message = "你加過了" });
+                }
+
+
+            }
+
             public IActionResult AddToCar(int? id)
             {
                 if (id == null)

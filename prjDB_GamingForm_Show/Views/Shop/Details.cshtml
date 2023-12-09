@@ -15,7 +15,7 @@
                         string[] tags = Model.SubTagName.Split('/');
                         foreach (var t in tags)
                         {
-                            <span class="badge text-bg-light">@t</span>
+                                                                <span class="badge text-bg-light">@t</span>
                         }
                     }
                 </div>
@@ -39,14 +39,23 @@
                         @if (Context.Session.GetInt32(CDictionary.SK_UserID) == null)
                         {
                             <button type="button" class="btn btn-info" id="btnLike" data-bs-toggle="modal" data-bs-target="#staticBackdrop" style="float:right;margin:0 5px">
-                                <img src="~/images/shop/heart.png"  width="20px" height="20px" />
+                                <img src="~/images/shop/hollowheart.png" width="20px" height="20px" />
                         </button>
                         }
                         else
                         {
+                            if (Model.favourite == "你收藏過了")
+                            {
                             <button type="button" class="btn btn-info" id="btnLike" style="float:right;margin:0 5px">
-                                <img src="~/images/shop/heart.png"  width="20px" height="20px" />
-                        </button>
+                                <img src="~/images/shop/heart.png" width="20px" height="20px" id="clicked" />
+                             </button>
+                            }
+                            else if (Model.favourite == "你還沒收藏過")
+                            {
+                                <button type="button" class="btn btn-info" id="btnLike" style="float:right;margin:0 5px">
+                                    <img src="~/images/shop/hollowheart.png" width="20px" height="20px" id="unclicked" />
+                                </button>
+                            }
                         }
                         <!-- HTML 中的按鈕 -->
                         <button id="copyButton" class="btn btn-info" data-clipboard-target="#urlToCopy" style="float:right;margin:0 5px">分享</button>
@@ -120,6 +129,41 @@
 
 
 
+        if (document.getElementById('btnLike') !== null) {
+            const btnlike = document.getElementById('btnLike');
+            if (!btnlike.hasAttribute('data-bs-toggle')) {
+                let isLiked = false;
+
+                async function favourite() {
+                    btnlike.addEventListener('click', async () => {
+                        const response = await fetch(`@Url.Content("~/Shop/favourite")?id=${@Model.ProductId}&isLiked=${isLiked}`);
+                        const data = await response.json();
+
+                        const imgElement = document.getElementById('unclicked');
+
+                        if (data.message === "加入最愛" || data.message === "你加過了" )
+                        {
+                            isLiked = !isLiked; // 切換狀態
+
+                            if (isLiked) {
+                                // 更換為加入最愛時的圖片路徑
+                                imgElement.src = '@Url.Content("~/images/shop/heart.png")';
+                                console.log(data.message + "進來後");
+                            } else {
+                                //變成沒有加入最愛的路徑
+                                imgElement.src = '@Url.Content("~/images/shop/hollowheart.png")';
+                                console.log(data.message + "進來後");
+                            }
+                        }
+                    });
+                }
+                favourite();
+            }
+        }
+
+
+       
+
     </script>
 }
 <!-- Related items section-->
@@ -154,21 +198,7 @@
         </div>
     </div>
 
-         //彈出MODAL
-        const btnlike = document.getElementById("btnLike");
-        var splike = document.getElementById("spLike")
-
-        if (!btnlike.hasAttribute('data-bs-toggle')) {
-            btnlike.addEventListener('click', () => {
-                fetch('@Url.Content("~/Blog/Like")?AFId=@Model.articles.FirstOrDefault().ArticleId')
-                    .then(response => response.text())
-                    .then(data => {
-                        console.log(data)
-                        splike.innerHTML = data
-                    })
-            })
-        }
-
+     
         public IActionResult Like(int? AFId)
         {
             int memberId = (int)HttpContext.Session.GetInt32(CDictionary.SK_UserID);

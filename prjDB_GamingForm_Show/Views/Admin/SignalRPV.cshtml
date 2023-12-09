@@ -35,7 +35,7 @@
                     <!-- 在線狀態將在此處更新 -->離線
                 </td>
                 <td>
-                    <button id="@($"sendMessage_{item.AdminName}")" onclick="openChat(@item.AdminId)" class="btn btn-outline-light">開啟</button>
+                    <button id="@($"sendMessage_{item.AdminName}")" onclick="openChat(@item.AdminId)" class="btn btn-outline-light">開/關</button>
                 </td>
             </tr>
         }
@@ -45,13 +45,43 @@
  <script>
 
     var connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
-
+    var notCheckMessage = 0;    
+    var isChatOpen = false;
     // 與Server建立連線
     connection.start().then(function () {
         console.log("Hub 連線完成");
     }).catch(function (err) {
         alert('連線錯誤: ' + err.toString());
     });
+
+    connection.on("ReceiverUpdContent", function () {
+        var div = document.querySelector('#AdminsChat');
+        if (div.style.display == "block") {
+            connection.on("ReceiverIsOpenChat", function (selfID) {
+                var chatWho = $('#rn').text()                
+                if (chatWho == selfID) {
+                    connection.on("ReceiverChatWho", function (senderAdminId) {
+                        $.ajax({
+                            type: 'post',
+                            url: '/Admin/CheckAllMessage',
+                            data: { senderid: senderAdminId }
+                        })
+                    });                    
+                }
+                else {
+                    updateNotificationCount();
+                }
+            })
+        }
+        else {
+            updateNotificationCount();
+        }
+    })
+    function updateNotificationCount() {
+        notCheckMessage = $('#notCheckMessageCount').text()
+        notCheckMessage++;
+        $('#notCheckMessageCount').text(notCheckMessage)
+    }    
 
     //更新連線 ID 列表事件
     connection.on("UpdList", function (jsonList) {
@@ -85,16 +115,22 @@
         $(statusId).html(isOnline ? "在線" : "離線");
     });
 
-    function openChat(id){        
+    function openChat(id) {
         var div = document.querySelector('#AdminsChat');
         if (div.style.display === "none") {
+            $('#AdminsChat').load(`@Url.Content("~/Admin/ChatPV")?id=${id}`);
             div.style.display = "block"; // 顯示
+            $.ajax({
+                type: 'post',
+                url: '/Admin/CheckAllMessage',
+                data: { senderid: id }
+            });
+            isChatOpen = true;            
         }
         else {
             div.style.display = "none"; // 隱藏
+            isChatOpen = false;            
         }
-
-        $('#AdminsChat').load(`@Url.Content("~/Admin/ChatPV")?id=${id}`);
     }
 
 </script>

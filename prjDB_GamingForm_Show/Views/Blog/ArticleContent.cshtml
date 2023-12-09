@@ -32,7 +32,7 @@
                     @{
                         foreach (var item in Model.subBlogs.GroupBy(p => p.Title))
                         {
-                            <li>
+                            <li class="@(item.First().SubBlogId == ViewBag.SelectedSubBlogId ? "selected-item" : "")">
                                 <a href="@Url.Action("ArticleList", "Blog", new {FId=item.First().BlogId ,SFId = item.FirstOrDefault().SubBlogId})">@item.Key</a>
                             </li>
                         }
@@ -56,7 +56,7 @@
         </div>
     </div>
 </header>
-@*-----------------------------------<!-- ArticleContent -->---------------------------------------------------*@
+@*-----------------------------------<!-- ArticleContent -->----------------------------------------1-----------*@
 <div style="margin-top:8px">
     <div style="margin: 0 auto; width: 940px">
         <div style="border: 2px solid red; padding: 3px; margin: 5px; border-radius: 5px; display:flex;background-color:#4F4F4F">
