@@ -1,0 +1,41 @@
+﻿<div id="carouselExampleFadeForFav" class="carousel slide carousel-fade" style="height:188px;margin-bottom:20px;">
+
+    <div class="carousel-inner" style="border:solid 2px black;background-color:#474747;margin-bottom:20px; ">
+        <div><label style="margin:3px;">在您願望清單上的商品</label></div>
+        <div id="Love5">
+        </div>
+    </div>
+
+</div>
+
+<script>
+    async function LoadSeenProduct() {
+        const response = await fetch(`@Url.Content("~/Shop/FavoriteTop5")`);
+        const data = await response.json();
+        // const data = await response.text();
+        console.log('我是收藏中前五名' +data);
+        if (data.message) {
+            document.querySelector('#carouselExampleFadeForFav').style.display = "none";
+        } else {
+            document.querySelector('#carouselExampleFadeForFav').style.display = "block";
+        }
+        if (data != "") {
+            const MapPic = data.map(x => `
+                                 <div style="margin: 5px; position: relative;width:234px; height:131px; ">
+                                          <a href="@Url.Content("~/Shop/Details")?id=${x.productId}">
+                        <img src="/images/shop/${x.fImagePath}" style="width: 100%; height: 100%;" />
+                           <div style="position: absolute; bottom: 0; left: 0; width: 100%; height: 20%; text-align: center; background-color: black;">
+                        <p style="position: absolute; top: 50%; transform: translateY(-50%); color: white;font-size: 12px;">${x.productName}</p>
+                </div>
+                </a>
+                    </div>
+
+                `).join('');
+            document.querySelector('#Love5').style.display = 'flex';
+            document.querySelector('#Love5').innerHTML = MapPic;
+        } else { document.querySelector('#Love5').innerHTML = '<p> 您尚添加商品到願望清單 </p>' }
+    }
+
+    LoadSeenProduct();
+
+</script>
