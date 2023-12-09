@@ -627,7 +627,7 @@ namespace prjDB_GamingForm_Show.Controllers
                         Image ElsePic= new Image();
                         foreach (string picpath in OtherPic) 
                         {
-                            ElsePic.Image1= picpath;
+                            ElsePic.FImagePath= picpath;
                             _db.Images.Add(ElsePic);
                             _db.SaveChanges();
                          }
