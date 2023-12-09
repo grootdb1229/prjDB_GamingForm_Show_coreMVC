@@ -68,7 +68,7 @@ namespace prjDB_GamingForm_Show.Controllers
                     };
                 }
             }
-
+            ViewBag.SelectedSubTagId = FId;
             return View(vm);
         }
         public ActionResult ArticleList(CKeyWordViewModel kw, int? FId, int? SFId)
@@ -118,6 +118,7 @@ namespace prjDB_GamingForm_Show.Controllers
                     };
                 }
             }
+            ViewBag.SelectedSubBlogId = SFId;
             return View(vm);
         }
 
@@ -144,6 +145,7 @@ namespace prjDB_GamingForm_Show.Controllers
                 ComplainssubTags=_db.SubTags.Where(s=>s.TagId==6)
             };
             var artcon = _db.Articles.Where(a => a.ArticleId == AFId).Select(a => a);
+            ViewBag.SelectedSubBlogId = artcon.First().SubBlogId;
 
             return View(vm);
         }

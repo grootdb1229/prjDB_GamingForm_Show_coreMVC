@@ -1,81 +1,88 @@
 ﻿@{
     ViewData["Title"] = "Personal";
-    // Layout = "~/Views/Shared/_Layout_DB.cshtml";
+    Layout = "~/Views/Shared/_Layout_DB.cshtml";
 }
-<div id="divShadow">
 
+<!-- Home section -->
+<div class="tm-section-wrap">
+    <div class="tm-parallax" data-parallax="scroll" data-image-src="../layout/templatemo_555_upright/img/img-01.jpg"></div>
+    <section id="home" class="tm-section">
+        <h2 class="tm-text-primary">委託資訊總覽</h2>
+        <hr class="mb-3">
+        <div id="divOverview"></div>
+        <hr class="tm-hr-short mb-3">
+        <div class="text-right">
+            <a href="#release" class="btn btn-primary tm-btn-next">下一頁</a>
+        </div>
+    </section>
 </div>
-<div id="host"></div>
-<span>I'm not in the shadow DOM</span>
-<br />
-
-<button id="upper" type="button">将 span 元素转换为大写</button>
-<button id="reload" type="button">重新加载</button>
+<!-- 發出的委託 section -->
+<div class="tm-section-wrap">
+    <div class="tm-parallax" data-parallax="scroll" data-image-src="../layout/templatemo_555_upright/img/img-02.jpg"></div>
+    <section id="release" class="tm-section">
+        <h2 class="tm-text-primary">管理發出的委託</h2>
+        <hr class="mb-3">
+        <div id="divReleasePart"></div>
+    </section>
+</div>
+<!-- 收到的委託 section -->
+<div class="tm-section-wrap">
+    <div class="tm-parallax" data-parallax="scroll" data-image-src="../layout/templatemo_555_upright/img/img-03.jpg"></div>
+    <section id="receive" class="tm-section">
+        <h2 class="tm-text-primary">管理投遞的應徵</h2>
+        <hr class="mb-3">
+        <div id="divReceivePart"></div>
+    </section>
+</div>
+<!-- Gallery section -->
+<div class="tm-section-wrap">
+    <div class="tm-parallax" data-parallax="scroll" data-image-src="../layout/templatemo_555_upright/img/img-04.jpg"></div>
+    <section id="gallery" class="tm-section">
+        <h2 class="tm-text-primary">從創作中找合作夥伴</h2>
+        <hr class="mb-3">
+        <div id="divGalleryPart"></div>
+    </section>
+</div>
+<!-- Contact section -->
+<div class="tm-section-wrap">
+    <div class="tm-parallax" data-parallax="scroll" data-image-src="../layout/templatemo_555_upright/img/img-04.jpg"></div>
+    <div id="contact" class="tm-section">
+        <h2 class="tm-text-primary">聯繫我們</h2>
+        <hr class="mb-3">
+        <div class="row" id="divContact">
+        </div>
+    </div>
+</div>
 
 
 @section scripts{
     <script>
-        const host = document.querySelector("#host");
-        const shadow = host.attachShadow({ mode: "open" });
-        const span = document.createElement("span");
-        span.textContent = "I'm in the shadow DOM";
-        shadow.appendChild(span);
-
-        const upper = document.querySelector("button#upper");
-        upper.addEventListener("click", () => {
-            const spans = Array.from(document.querySelectorAll("span"));
-            for (const span of spans) {
-                span.textContent = span.textContent.toUpperCase();
-            }
-        });
-
-        const reload = document.querySelector("#reload");
-        reload.addEventListener("click", () => document.location.reload());
-        // const divShadow = document.querySelector('#divShadow');
-        // const shadowRoot = divShadow.attachShadow({ mode: 'open' });
-
-        // const bootstrap5link = document.createElement('link');
-        // bootstrap5link.rel = "stylesheet";
-        // bootstrap5link.href = "https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css";
-        // bootstrap5link.integrity = "sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN";
-        // bootstrap5link.crossorigin = "anonymous";
-        // shadowRoot.append(bootstrap5link);
-
-        // $(document).ready(function(){
-        //     $.when(loadFrame()).then(function () {
-        //         loadOverview(), loadReleaseList(), loadReceiveList(), loadGallery(), loadContact();
-        //     })
-        // })
+       
 
 
-        // function loadFrame() {
-        //     $('#divShadow').load('@Url.Content("~/depute/PartialFrame")');
-        // }
-        // loadFrame()
+        function loadOverview() {
+            $('#divOverview').load('@Url.Content("~/depute/PartialOverview")');
+        }
+        loadOverview()
 
-        // function loadOverview() {
-        //     $('#divOverview').load('@Url.Content("~/depute/PartialOverview")');
-        // }
-        // loadOverview()
+        function loadReleaseList() {
+            $('#divReleasePart').load('@Url.Content("~/depute/PartialReleaseList")');
+        }
+        loadReleaseList()
 
-        // function loadReleaseList() {
-        //     $('#divReleasePart').load('@Url.Content("~/depute/PartialReleaseList")');
-        // }
-        // loadReleaseList()
+        function loadReceiveList() {
+            $('#divReceivePart').load('@Url.Content("~/depute/PartialReceiveList")');
+        }
+        loadReceiveList()
 
-        // function loadReceiveList() {
-        //     $('#divReceivePart').load('@Url.Content("~/depute/PartialReceiveList")');
-        // }
-        // loadReceiveList()
+        function loadGallery() {
+            $('#divGalleryPart').load('@Url.Content("~/depute/PartialGallery")');
+        }
+        loadGallery()
 
-        // function loadGallery() {
-        //     $('#divGalleryPart').load('@Url.Content("~/depute/PartialGallery")');
-        // }
-        // loadGallery()
-
-        // function loadContact() {
-        //     $('#divContact').load('@Url.Content("~/depute/Contact")');
-        // }
-        // loadContact()
+        function loadContact() {
+            $('#divContact').load('@Url.Content("~/depute/Contact")');
+        }
+        loadContact()
     </script>
 }

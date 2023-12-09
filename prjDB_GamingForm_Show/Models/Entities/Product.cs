@@ -37,6 +37,8 @@ public partial class Product
 
     public virtual ICollection<ProductEvaluate> ProductEvaluates { get; set; } = new List<ProductEvaluate>();
 
+    public virtual ICollection<ProductImage> ProductImages { get; set; } = new List<ProductImage>();
+
     public virtual ICollection<ProductTag> ProductTags { get; set; } = new List<ProductTag>();
 
     public virtual Status? Status { get; set; } = null!;

@@ -25,9 +25,10 @@
             @*圖片*@
             <div class="form-group">
                 <label class="control-label">上傳圖片</label>
-                <input type="file" name="Photo" class="form-control" />
+                <input type="file" name="Photo" class="form-control" onchange="previewImage(this)" />
+                <img id="imagePreview" src="#" alt="Preview" style="display:none;width:360px;height:108px;" />
             </div>
-
+            
             <span>
                 <input type="submit" value="修改" class="btn btn-info" />
             </span>
@@ -39,6 +40,23 @@
         </form>
     </div>
 </div>
+
+<script>
+    function previewImage(input) {
+        var imagePreview = document.getElementById('imagePreview');
+
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+                imagePreview.src = e.target.result;
+                imagePreview.style.display = 'block';
+            };
+
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+</script>
 
 
 @section Scripts {
