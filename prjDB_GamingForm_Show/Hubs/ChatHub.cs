@@ -113,9 +113,7 @@ namespace prjDB_GamingForm_Show.Hubs
             // 接收人
             if (sendToID != null)
             {
-                await Clients.Client(sendToID).SendAsync("ReceiverUpdContent", message);
-                await Clients.Client(sendToID).SendAsync("ReceiverIsOpenChat", selfID);
-                await Clients.Client(sendToID).SendAsync("ReceiverChatWho", senderAdminId);
+                await Clients.Client(sendToID).SendAsync("ReceiverUpdContent", message, selfID, senderAdminId);                
             }
 
             // 發送人

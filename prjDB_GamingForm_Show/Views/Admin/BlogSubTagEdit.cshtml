@@ -4,7 +4,7 @@
     ViewData["Title"] = "BlogSubTagEdit";
 }
 
-<h2>BlogSubTagEdit</h2>
+<h2>修改論壇分類</h2>
 
 <hr />
 <div class="row">
@@ -21,11 +21,8 @@
             </div>
 
             <span>
-                <input type="submit" value="修改" class="btn btn-info" />
-            </span>
-
-            <span>
-                @Html.ActionLink("回到列表", "BlogCategoryList", "Admin", new{ @class = "btn btn-warning" })
+                <input type="submit" value="修改" class="btn btn-danger" />
+                <a asp-action="BlogCategoryList" class="btn btn-info" style="margin:3px">返回</a>
             </span>
 
         </form>

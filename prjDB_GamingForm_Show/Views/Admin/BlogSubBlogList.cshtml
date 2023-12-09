@@ -1,0 +1,61 @@
+﻿@model prjDB_GamingForm_Show.ViewModels.CBlogViewModel
+
+@{
+    ViewData["Title"] = "BlogSubBlogList";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h2 style="margin-left:5px ; font-size:45px">論壇子版面清單</h2>
+
+@using (Html.BeginForm())
+{
+    <p style="display:inline;font-size:30px;margin-left:5px;margin-right:10px">名稱關鍵字查詢 : </p> @Html.TextBox("txtKeyWord",null,new{@class = "col-form-label"})
+    <input type="submit" value="查詢" class="btn btn-dark" />
+}
+
+<p style="margin-left:5px">
+    @Html.ActionLink("上一頁", "BlogSubBlogListPrevious", "Admin", null, new  { @class = "btn btn-dark" })
+    @Html.ActionLink("下一頁", "BlogSubBlogListNext", "Admin", null, new  { @class = "btn btn-dark" })
+    @Html.ActionLink("新增子板", "BlogSubBlogCreate", "Admin", null, new { @class = "btn btn-info" })
+</p>
+
+
+<table class="table table-dark table-hover" style="color:white ; font-size:20px">
+    <thead>
+        <tr>
+            <th>
+                編號
+            </th>
+            <th>
+                名稱
+            </th>
+            <th>
+                所屬主版
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            foreach (var item in Model.subBlogs)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.SubBlogId)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Title)                        
+                    </td>
+                    <td>
+                    @Html.DisplayFor(modelItem => item.Blog.Title)                        
+                    </td>
+                    <td>
+                        @Html.ActionLink("修改名稱", "BlogSubBlogEdit","Admin", new { SBId = item.SubBlogId},new  { @class = "btn btn-dark"}) |
+                        @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                        @Html.ActionLink("刪除", "BlogSubBlogDelete","Admin", new { SBId = item.SubBlogId},new  { @class = "btn btn-dark" , onclick = "return confirm('確定要刪除嗎?')" })
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
