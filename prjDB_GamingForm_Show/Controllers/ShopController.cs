@@ -672,8 +672,8 @@ namespace prjDB_GamingForm_Show.Controllers
                         }
 
 
-
-                        return RedirectToAction("Index");
+						transaction.Commit();
+						return RedirectToAction("Index");
 					}
 					catch (Exception ex)
 					{
