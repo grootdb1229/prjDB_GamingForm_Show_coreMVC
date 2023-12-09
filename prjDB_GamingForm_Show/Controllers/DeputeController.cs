@@ -89,6 +89,7 @@ namespace prjDB_GamingForm_Show.Controllers
 
         public IActionResult DeputeList(int? id)
         {
+
             IEnumerable<CDeputeViewModel> datas = null;
             if (id ==null)
             {
@@ -112,7 +113,6 @@ namespace prjDB_GamingForm_Show.Controllers
                 
                
             }
-
             return View(datas);
 
         }
@@ -193,7 +193,15 @@ namespace prjDB_GamingForm_Show.Controllers
             Temp = List;
             IEnumerable<CDeputeViewModel> datas = null;
             if (vm.txtMutiKeywords == null)
-                return Json(List);
+            {
+                datas = Temp.Where(n =>
+                (DateTime.Now - DateTime.Parse(n.modifieddate)).Days <= vm.txtDate &&
+                n.viewcount >= vm.txtView &&
+                n.salary >= vm.txtSalary);
+                Temp = datas.ToList();
+                return Json(Temp);
+            }
+                
             foreach (var item in vm.txtMutiKeywords)
             {
                 if (string.IsNullOrEmpty(item))
@@ -202,22 +210,29 @@ namespace prjDB_GamingForm_Show.Controllers
                datas = Temp.Where(n => (n.deputeContent.Trim().ToLower().Contains(item.Trim().ToLower()) ||
                                           n.title.Trim().ToLower().Contains(item.Trim().ToLower()) ||
                                           n.providername.Trim().ToLower().Contains(item.Trim().ToLower()) ||
-                                          n.region.Trim().ToLower().Contains(item.Trim().ToLower())
+                                          n.region.Trim().ToLower().Contains(item.Trim().ToLower())||
+                                          n.status.Trim().ToLower().Contains(item.Trim().ToLower())
                                           ))
                                           .OrderByDescending(n => n.modifieddate);
                 Temp = datas.ToList();
 
             }
-            if (Temp.Count==0)
-            {
-                return Json(Temp);
-            }
-            else
-            {
-                return Json(Temp);
-            }
-        }
 
+            datas = Temp.Where(n =>
+            (DateTime.Now.Date- Convert.ToDateTime(n.modifieddate)).Days <= vm.txtDate &&
+            n.viewcount >= vm.txtView &&
+            n.salary >= vm.txtSalary);
+            Temp = datas.ToList();
+
+            return Json(Temp);
+            
+           
+        }
+        public void MutipleSearch2(CKeyWord vm)
+        {
+            
+
+        }
 
         //TODO #3 委託詳細
         public IActionResult DeputeDetails(int? id)
@@ -317,16 +332,22 @@ namespace prjDB_GamingForm_Show.Controllers
 
         }
 
+        //測試網頁樣板用
         public IActionResult Index()
         {
-            //測試網頁樣板用
+            
             return View();
         }
-        //下拉
+        //多選載入
         public IActionResult SkillClassess()
         {
             var datas = from n in _db.SkillClasses
                         select n;
+            return Json(datas);
+        } 
+        public IActionResult Skills(int? id)
+        {
+            var datas = _db.Skills.Where(a => a.SkillClassId == id);
             return Json(datas);
         }
         public IActionResult Region()
@@ -335,11 +356,14 @@ namespace prjDB_GamingForm_Show.Controllers
                         select n;
             return Json(datas);
         }
-        public IActionResult Skills(int? id)
+        public IActionResult Status()
         {
-            var datas = _db.Skills.Where(a => a.SkillClassId == id);
-            return Json(datas);
+            var datas = from n in List
+                        select n.status;
+            return Json(datas.Distinct());
         }
+
+        //首頁類別跟數量
         public IActionResult DeputeCount()
         {
             var SkillClasses = _db.SkillClasses;
@@ -365,7 +389,7 @@ namespace prjDB_GamingForm_Show.Controllers
             return Json(slist);
         }
 
-        //首頁
+        //熱門5最新5
         public IActionResult GetFive(int? id)
         {
             if (id == 1)
