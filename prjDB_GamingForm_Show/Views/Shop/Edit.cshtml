@@ -20,10 +20,12 @@
 				@Html.LabelFor(model => model.ImageID, htmlAttributes: new { @class = "control-label col-md-2" })
 				<div class="col-md-10">
 					<label class="btn btn-info">
-						<input id="upload_img" name="photo" style="display:none;" onchange="previewImage(this)" type="file">
+						<input id="upload_img" name="Photos" style="display:none;" multiple="multiple" onchange="previewImages(this)" type="file">
 						<i class="fa-solid fa-file"></i>上傳圖片
 					</label>
-					<img id="imagePreview" style="max-width: 300px; max-height: 300px; margin-top: 10px;" src="~/images/shop/@Model.FImagePath" />
+					<div id="imagePreviewContainer" style="width:100%">
+						<img id="imagePreview" style="max-width: 300px; max-height: 300px; margin-top: 10px;" src="~/images/shop/@Model.FImagePath" />
+					</div>
 				</div>
 			</div>
 
@@ -91,21 +93,7 @@
 	@section Scripts
 		{
 		<script>
-			function previewImage(input) {
-				var preview = document.getElementById('imagePreview');
-				var file = input.files[0];
-				var reader = new FileReader();
-
-				reader.onloadend = function () {
-					preview.src = reader.result;
-				}
-
-				if (file) {
-					reader.readAsDataURL(file);
-				} else {
-					preview.src = "";
-				}
-			}
+			
 
 			const btn = document.querySelector('#btnsubmit');
 
@@ -141,19 +129,31 @@
 		</script>
 		<!--圖片呈現-->
 		<script>
-			function previewImage(input) {
-				var preview = document.getElementById('imagePreview');
-				var file = input.files[0];
-				var reader = new FileReader();
+			function previewImages(input) {
+				var previewContainer = document.getElementById('imagePreviewContainer');
+				previewContainer.innerHTML = '';
 
-				reader.onloadend = function () {
-					preview.src = reader.result;
-				}
+				var files = input.files;
+				for (var i = 0; i < files.length; i++) {
+					var file = files[i];
+					var reader = new FileReader();
 
-				if (file) {
-					reader.readAsDataURL(file);
-				} else {
-					preview.src = "";
+					reader.onloadend = (function (currentReader) {
+						return function () {
+							var img = document.createElement('img');
+							img.src = currentReader.result;
+
+							img.style.width = '220px';
+							img.style.height = '180px';
+							img.style.objectFit = 'cover'; // 'contain'會保持比例。
+
+							previewContainer.appendChild(img);
+						};
+					})(reader);
+
+					if (file) {
+						reader.readAsDataURL(file);
+					}
 				}
 			}
 		</script>
