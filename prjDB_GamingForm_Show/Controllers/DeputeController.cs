@@ -403,27 +403,7 @@ namespace prjDB_GamingForm_Show.Controllers
             var statusName = _db.Statuses.FirstOrDefault(_ => _.StatusId == statusID).Name;
             return Content(statusName);
         }
-        public IActionResult individualDetials(int id)
-        {
-            var o = _db.DeputeRecords.Where(_ => _.DeputeId == id).Select(_ => _).Include(_ => _.Depute).ToList();
-            List<CDeputeViewModel> list = new List<CDeputeViewModel>();
-            foreach (var item in o)
-            {
-                CDeputeViewModel n = new CDeputeViewModel();
-                n.id = item.Id;
-                n.title = item.Depute.Title;
-                n.count = o.Count();
-                n.status = item.ApplyStatus.Name;
-                n.memberName = item.Member.Name;
-                n.applyerGender = item.Member.Gender == 1 ? "男性" : "女性";
-                n.applyerEmail = item.Member.Email;
-                n.applyerBirth = item.Member.Birth.ToString("yyyy/MM/dd");
-                n.applyerContent = item.RecordContent == null ? "該會員無提供補充資訊" : item.RecordContent;
-                n.applyerPhone = item.Member.Phone;
-                list.Add(n);
-            }
-            return Json(list);
-        }
+        
         public IActionResult Apply(int id)
         {
             ViewBag.memberid = _memberIdtest;
@@ -482,71 +462,7 @@ namespace prjDB_GamingForm_Show.Controllers
             }
             return RedirectToAction("HomeFrame");
         }
-        public IActionResult SkillClasses()
-        {
-            var datas = new
-            {
-                skillclasses = _db.SkillClasses.Select(_ => _),
-                skills = _db.Skills.Select(_ => _)
-            };
-            return Json(datas);
-        }
-        public IActionResult editDeputeStatuses(int id)
-        {
-            List<CDeputeViewModel> statusList = new List<CDeputeViewModel>();
-            int oriStatusID = _db.Deputes.FirstOrDefault(_ => _.DeputeId == id).StatusId;
-
-            CDeputeViewModel oriStatus = new CDeputeViewModel()
-            {
-                id = oriStatusID,
-                status =_db.Statuses.FirstOrDefault(_=>_.StatusId== oriStatusID).Name,
-            };
-            statusList.Add(oriStatus);
-            
-            var datas = _db.Statuses.Where(_ => (_.StatusId == 16 ||
-            _.StatusId == 18 ||
-            _.StatusId == 19 )&&
-            _.StatusId != oriStatusID).Select(_ => _);
-
-            foreach(var item in datas)
-            {
-                CDeputeViewModel lastStatuses = new CDeputeViewModel()
-                {
-                    id = item.StatusId,
-                    status= item.Name,
-                };
-                statusList.Add(lastStatuses);
-            };
-            return Json(statusList);
-        }
-        public IActionResult Regions()
-        {
-            var datas = _db.Regions.Select(_ => _);
-            return Json(datas);
-        }
         
-        public IActionResult Skillss(string skillClass)
-        {
-            if (_db.SkillClasses.Where(_ => _.Name == skillClass).FirstOrDefault() == null)
-                return Content("");
-            int skillclassid = Convert.ToInt32(_db.SkillClasses.Where(_ => _.Name == skillClass).FirstOrDefault().SkillClassId);
-            var datas = _db.Skills.Where(_ => _.SkillClassId == skillclassid).Select(_ => _);
-            return Json(datas);
-        }
-        public IActionResult oriSkills(int deputeID)
-        {
-            var datas = _db.DeputeSkills
-                .Where(_ => _.DeputeId == deputeID)
-                .Select(_ => _)
-                .Include(_ => _.Skill)
-                .ThenInclude(_ => _.SkillClass)
-                .Select(item => new CDeputeSkillViewModel
-                {
-                    skill = item.Skill.Name,
-                    skillclass = item.Skill.SkillClass.Name
-                });
-            return Json(datas);
-        }
 
         public IActionResult Create()
         {
@@ -615,8 +531,32 @@ namespace prjDB_GamingForm_Show.Controllers
             _db.SaveChanges();
             return RedirectToAction("HomeFrame");
         }
+        #region API
+        public IActionResult individualDetials(int id)
+        {
+            //發出的委託詳細資料
+            var o = _db.DeputeRecords.Where(_ => _.DeputeId == id).Select(_ => _).Include(_ => _.Depute).ToList();
+            List<CDeputeViewModel> list = new List<CDeputeViewModel>();
+            foreach (var item in o)
+            {
+                CDeputeViewModel n = new CDeputeViewModel();
+                n.id = item.Id;
+                n.title = item.Depute.Title;
+                n.count = o.Count();
+                n.status = item.ApplyStatus.Name;
+                n.memberName = item.Member.Name;
+                n.applyerGender = item.Member.Gender == 1 ? "男性" : "女性";
+                n.applyerEmail = item.Member.Email;
+                n.applyerBirth = item.Member.Birth.ToString("yyyy/MM/dd");
+                n.applyerContent = item.RecordContent == null ? "該會員無提供補充資訊" : item.RecordContent;
+                n.applyerPhone = item.Member.Phone;
+                list.Add(n);
+            }
+            return Json(list);
+        }
         public IActionResult DeputeDetial(int? id)
         {
+            //收到委託詳細資料
             _db.DeputeRecords.Load();
             Depute o = _db.Deputes.FirstOrDefault(_ => _.DeputeId == id);
             if (o == null)
@@ -637,7 +577,79 @@ namespace prjDB_GamingForm_Show.Controllers
             return Json(n);
         }
 
+        public IActionResult oriSkills(int deputeID)
+        {
+            //該委託資料庫技能
+            var datas = _db.DeputeSkills
+                .Where(_ => _.DeputeId == deputeID)
+                .Select(_ => _)
+                .Include(_ => _.Skill)
+                .ThenInclude(_ => _.SkillClass)
+                .Select(item => new CDeputeSkillViewModel
+                {
+                    skill = item.Skill.Name,
+                    skillclass = item.Skill.SkillClass.Name
+                });
+            return Json(datas);
+        }
+
+        public IActionResult SkillClasses()
+        {
+            //資料庫技能類別
+            var datas = new
+            {
+                skillclasses = _db.SkillClasses.Select(_ => _),
+                skills = _db.Skills.Select(_ => _)
+            };
+            return Json(datas);
+        }
+        public IActionResult editDeputeStatuses(int id)
+        {
+            List<CDeputeViewModel> statusList = new List<CDeputeViewModel>();
+            int oriStatusID = _db.Deputes.FirstOrDefault(_ => _.DeputeId == id).StatusId;
+
+            CDeputeViewModel oriStatus = new CDeputeViewModel()
+            {
+                id = oriStatusID,
+                status = _db.Statuses.FirstOrDefault(_ => _.StatusId == oriStatusID).Name,
+            };
+            statusList.Add(oriStatus);
+
+            var datas = _db.Statuses.Where(_ => (_.StatusId == 16 ||
+            _.StatusId == 18 ||
+            _.StatusId == 19) &&
+            _.StatusId != oriStatusID).Select(_ => _);
+
+            foreach (var item in datas)
+            {
+                CDeputeViewModel lastStatuses = new CDeputeViewModel()
+                {
+                    id = item.StatusId,
+                    status = item.Name,
+                };
+                statusList.Add(lastStatuses);
+            };
+            return Json(statusList);
+        }
+        public IActionResult Regions()
+        {
+            //資料庫區域
+            var datas = _db.Regions.Select(_ => _);
+            return Json(datas);
+        }
+
+        public IActionResult Skillss(string skillClass)
+        {
+            if (_db.SkillClasses.Where(_ => _.Name == skillClass).FirstOrDefault() == null)
+                return Content("");
+            int skillclassid = Convert.ToInt32(_db.SkillClasses.Where(_ => _.Name == skillClass).FirstOrDefault().SkillClassId);
+            var datas = _db.Skills.Where(_ => _.SkillClassId == skillclassid).Select(_ => _);
+            return Json(datas);
+        }
+        #endregion
+
         #region MainView
+        //主頁框架，load各個partialview
         public IActionResult HomeFrame()
         {
             ViewBag.memberid = _memberIdtest;
