@@ -680,7 +680,6 @@ namespace prjDB_GamingForm_Show.Controllers
         {
             return PartialView();
         }
-
         #endregion
 
         #endregion
