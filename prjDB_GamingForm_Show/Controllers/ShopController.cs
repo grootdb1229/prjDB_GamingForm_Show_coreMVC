@@ -619,7 +619,7 @@ namespace prjDB_GamingForm_Show.Controllers
                                 x.AvailableDate = product.AvailableDate;
                                 x.ProductContent = product.ProductContent;
                                 x.UnitStock = product.UnitStock;
-                                x.StatusId = 7;
+                                x.StatusId = 1;//記得改回7
                                 x.MemberId = product.MemberID;
 
                                 _db.Products.Add(x);
