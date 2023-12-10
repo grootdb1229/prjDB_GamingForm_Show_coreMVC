@@ -21,13 +21,20 @@ html, body { overflow-x: hidden; }
 body { font-family: 'Kumbh Sans', sans-serif; }
 div, a, p { color: #D0D0D0; }
 p, address { line-height: 1.8; }
-a {	transition: all 0.3s ease; }
+a {
+	transition: all 0.3s ease !important;/*套layout會被蓋掉*/
+}
 a:hover {
 	color: #a81d1d;
 	text-decoration: none;
 }
+.navbar.navbar-expand-lg.navbar-light.bg-light{
+	margin-left:280px;
+}
 
-.container-fluid { margin-left: 0; }
+.container-fluid {
+	margin-left: 0;
+}
 
 .btn-primary {
 	padding: 12px 50px;
@@ -70,6 +77,7 @@ hr { border-top: 4px solid #CCC; }
 	padding-left: 40px;
 	padding-top: 40px;
 	width: 280px;
+	padding-right:0;/*套layout會變15*/
 }
 
 .tm-section-wrap {
