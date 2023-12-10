@@ -226,9 +226,14 @@ namespace prjDB_GamingForm_Show.Controllers
 			}
 
 
+            public IActionResult LoveList()
+            {
+			var aa=	_db.WishLists.Where(x => x.MemberId == HttpContext.Session.GetInt32(CDictionary.SK_UserID));
+			
+			return View(aa);
+            }
 
-
-			public IActionResult Index(CKeyWord ck)
+            public IActionResult Index(CKeyWord ck)
 			{
 
 				String CK = ck.txtKeyword;
@@ -935,10 +940,15 @@ namespace prjDB_GamingForm_Show.Controllers
 				 .Select(x => x.SubTag.Name)
 				 .ToList();
 				string s = string.Join("/", tagNames);
-
-
-
-				//Trace.WriteLine("僅作查看"+s);
+				
+                string MulPicString = "";
+                var MulPicsID = _db.ProductImages.Where(x => x.ProductId == id).Select(a=>a.Image.FImagePath).ToList();
+                if (MulPicsID != null)
+                {    
+                    MulPicString = string.Join("/", MulPicsID); 				
+                }
+               
+                Trace.WriteLine("僅作查看"+MulPicString);
 				List<CShopPageViewModel> aa = new List<CShopPageViewModel>();
 				CShopPageViewModel ProductInfo = new CShopPageViewModel()
 				{
@@ -949,6 +959,7 @@ namespace prjDB_GamingForm_Show.Controllers
 					ProductContent = x.ProductContent,
 					SubTagName = s,
 					favourite = Likestatus,
+					MulPic= MulPicString
 				};
 				x.ViewCount++;
 				_db.SaveChanges();

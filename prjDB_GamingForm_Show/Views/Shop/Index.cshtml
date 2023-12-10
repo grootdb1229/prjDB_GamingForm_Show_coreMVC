@@ -15,6 +15,11 @@
     </div> *@
 </header>
 <body>
+ @*    <div class="container px-4 px-lg-5 mt-5"> //不一定要放這裡
+    <div class="" id="Hotproduct"></div>
+    <div class="" id="Seenproduct"></div>
+    <div class="" id="YourTop5"></div>
+    </div> *@
 <p>
     @using (Html.BeginForm())
     {
@@ -37,6 +42,19 @@
                             <div class="col-md-3">
                                 @Html.ActionLink("我要上架", "Create", "Shop",null, new { @class = "btn btn-outline-dark mt-auto" })
                             </div>
+
+                                @if (Context.Session.GetInt32(CDictionary.SK_UserID) == null)
+                                { <div class="text-center">
+                                        @Html.ActionLink("願望清單", "LoveList", "Shop", new { id = Context.Session.GetInt32(CDictionary.SK_UserID) }, new { @class = "btn btn-outline-dark mt-auto", id = "myLink", data_bs_toggle = "modal", data_bs_target = "#staticBackdrop" })
+                                    </div>
+                                }else
+                                {
+                                    <div class="text-center">
+                                        @Html.ActionLink("願望清單", "LoveList", "Shop", new { id = Context.Session.GetInt32(CDictionary.SK_UserID) }, new { @class = "btn btn-outline-dark mt-auto" })
+                                    </div>
+                                }
+
+                               
                         </div>
                     </div>
                     
@@ -54,7 +72,7 @@
                             </li>
                         </ul>
                         <!-- 類別標籤 -->
-                        <ul class="nav-item dropdown" style="list-style-type: none" id="tags">
+                   @*      <ul class="nav-item dropdown" style="list-style-type: none" id="tags">
                             
                             <li style="list-style-type: none; float:left;padding-left:10px;padding-top:7px" id="tags">
                                 <option class="nav-link dropdown-toggle tagclick" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="width:100px">遊戲商城</option>
@@ -63,7 +81,7 @@
                                 </ul>
                             </li>
 
-                        </ul>
+                        </ul> *@
                     </div>
                     <!-- 類別標籤END -->
                 </div>
@@ -77,7 +95,7 @@
 <div id="Eroor"></div>
 
 <div class="container px-4 px-lg-5 mt-5">
- <div class ="" id="BodySelSub"></div>
+         <div class ="" id="BodySelSub"></div>
         <div class=""  id="Hotproduct"></div>
         <div class="" id="Seenproduct"></div>
         <div class="" id="YourTop5"></div>
@@ -156,10 +174,13 @@
         max-width: 3rem;
         justify-content: center
     }
+
+   
 </style>
 @section  Scripts
     {
     <script>
+
         //PartialView
         function loadCarousel() {
             $('#headerCarousel').load('@Url.Content("~/shop/Carousel")');
