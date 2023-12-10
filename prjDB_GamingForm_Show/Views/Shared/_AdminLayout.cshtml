@@ -232,7 +232,7 @@
                                     <i class="fa fa-envelope-o"></i>
                                     <span class="badge bg-green" id="notCheckMessageCount"></span>
                                 </a>
-                                <ul class="dropdown-menu list-unstyled msg_list" role="menu" aria-labelledby="navbarDropdown1">
+                                <ul id="messageBox" class="dropdown-menu list-unstyled msg_list" role="menu" aria-labelledby="navbarDropdown1">
                                     <li class="nav-item">
                                         <a class="dropdown-item">
                                             <span class="image"><img src="~/production/images/s__92446730_0.jpg" /></span>
@@ -406,6 +406,7 @@
         function checkMessage() {
             $('#notCheckMessageCount').text("")
         }
+        
         // var connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
 
         // //與Server建立連線
