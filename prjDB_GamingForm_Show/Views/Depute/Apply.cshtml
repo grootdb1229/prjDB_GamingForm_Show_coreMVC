@@ -14,15 +14,15 @@
         <form asp-action="Apply">
             <input type="text" name="Id" hidden>
             <div class="form-group">
-                <label class="control-label">委託主題</label>
+                <label class="control-label">委託主題：</label>
                 <input class="form-control" type="text" value="@Model.Title" disabled />
             </div>
             <div class="form-group">
-                <label class="control-label">委託內容</label>
+                <label class="control-label">委託內容：</label>
                 <textarea class="form-control" type="text" rows="6" disabled>@Model.DeputeContent</textarea>
             </div>
             <div class="form-group">
-                <label class="control-label">提供報酬</label>
+                <label class="control-label">提供報酬：</label>
                 <input class="form-control" type="text" value="@Model.Salary.ToString("$###,###,##0.00")" disabled />
             </div>
             <div class="form-group" hidden>
@@ -38,7 +38,9 @@
                 <input name="ApplyStatusId" value="5" class="form-control"/>
             </div>
             <div>
-                <label  class="control-label">應徵補充資訊</label>
+                <label  class="control-label">自我推薦(選填)：</label>
+                <br />
+                <label class="control-label">寫下工作相關經驗，個人特質或專長，提升錄取率吧</label>
                 <textarea class="form-control" name="RecordContent" rows="4" cols="50" placeholder="在這裡輸入您的應徵補充資訊..."></textarea>
             </div>
             <div class="form-group mt-3">

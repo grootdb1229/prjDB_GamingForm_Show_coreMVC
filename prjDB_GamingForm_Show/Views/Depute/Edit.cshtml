@@ -197,7 +197,7 @@
             const response = await fetch('@Url.Content("~/depute/skillclasses")');
             const datas = await response.json();
             const skillclasses = datas.skillclasses.map(skillclass => {
-                const count = skillclassesCount(skillclass.name);
+                const count = skillClassesCount(skillclass.name);
                 const spanhidden = count == 0 ? "hidden" : "";
                 return `<a class="list-${skillclass.name}-item-action list-group-item skillclasstab" id="list-${skillclass.name}-list" data-bs-toggle="list" href="#list-${skillclass.name}" role="tab" aria-controls="list-${skillclass.name}">${skillclass.name}<span ${spanhidden}>(${count})</span><ul id=sel${skillclass.name} class="list-group col-6"></ul></a>`
             });
@@ -227,7 +227,7 @@
                     var selSK = event.target.labels[0].textContent;
                     if (event.target.checked) {
                         if (selSkills.length == 5) {
-                            overfive();
+                            overFive();
                             event.target.checked = false;
                             return
                         }
@@ -261,7 +261,7 @@
             skillsCount();
         }
 
-        function overfive() {
+        function overFive() {
             const toastOverFive = document.querySelector('#liveToast');
             const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastOverFive);
             toastBootstrap.show();
@@ -270,7 +270,7 @@
             }, 2000);
         }
 
-        function skillclassesCount(SkillClassName) {
+        function skillClassesCount(SkillClassName) {
             var count = 0;
             count = selSkills.filter(_ => _.skillclass == SkillClassName).length;
             return count;
