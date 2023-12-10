@@ -417,17 +417,18 @@ namespace prjDB_GamingForm_Show.Controllers
         public int _memberIdtest = 38;
         public IActionResult changeDeputeRecordStatus(string deputerecordstatus)
         {
-            CDeputeViewModel n = JsonSerializer.Deserialize<CDeputeViewModel>(deputerecordstatus);
-            var o = _db.DeputeRecords.FirstOrDefault(_ => _.Id == n.id);
-            int statusID = Convert.ToInt32(n.statusid);
-            if (_db.Statuses.Any(_ => _.StatusId == statusID))
-                o.ApplyStatusId = Convert.ToInt32(statusID);
-            _db.SaveChanges();
+            CDeputeViewModel vm = JsonSerializer.Deserialize<CDeputeViewModel>(deputerecordstatus);
+            var deputeRecord = _db.DeputeRecords.FirstOrDefault(_ => _.Id == vm.id);
 
+            if (!(int.TryParse(vm.statusid, out int statusID) && _db.Statuses.Any(_ => _.StatusId == statusID)))
+                return Content($"{deputeRecord.ApplyStatus.Name}");
+
+            deputeRecord.ApplyStatusId = statusID;
+            _db.SaveChanges();
             var statusName = _db.Statuses.FirstOrDefault(_ => _.StatusId == statusID).Name;
             return Content(statusName);
         }
-        
+
         public IActionResult Apply(int id)
         {
             ViewBag.memberid = _memberIdtest;
