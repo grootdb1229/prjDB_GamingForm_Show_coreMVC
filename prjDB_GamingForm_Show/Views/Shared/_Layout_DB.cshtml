@@ -1,5 +1,13 @@
 ﻿@{
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    if (ViewBag.HomeFrame != null)
+    {
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }
+    else
+    {
+        Layout = null;
+    }
+    bool isLoggedIn = Context.Session.GetInt32(CDictionary.SK_UserID) != null;
 }
 <!DOCTYPE html>
 <html lang="en">
@@ -9,98 +17,284 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <title>@ViewData["Title"] - Groot遊戲論壇</title>
     <!-- 首頁-->
-
-    @section styles {
-        <link href="https://fonts.googleapis.com/css2?family=Kumbh+Sans&display=swap" rel="stylesheet"> <!-- https://fonts.google.com/specimen/Kumbh+Sans -->
-        <link rel="stylesheet" href="~/layout/templatemo_555_upright/fontawesome/css/all.min.css">  <!-- https://fontawesome.com/-->
-        <link rel="stylesheet" href="~/layout/templatemo_555_upright/css/magnific-popup.css">       <!-- https://dimsemenov.com/plugins/magnific-popup/ -->
-        @* <link rel="stylesheet" href="~/layout/templatemo_555_upright/css/bootstrap.min.css">        <!-- https://getbootstrap.com/ --> *@
-        @* <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous"> *@
-        <link rel="stylesheet" href="~/layout/templatemo_555_upright/slick/slick.min.css">          <!-- https://kenwheeler.github.io/slick/ -->
-        <link rel="stylesheet" href="~/layout/templatemo_555_upright/slick/slick-theme.css">
-        <link rel="stylesheet" href="~/layout/templatemo_555_upright/css/templatemo-upright.css">
+    @{
+        if (ViewBag.HomeFrame != null)
+        {
+            @section styles {
+            <link href="https://fonts.googleapis.com/css2?family=Kumbh+Sans&display=swap" rel="stylesheet"> <!-- https://fonts.google.com/specimen/Kumbh+Sans -->
+            <link rel="stylesheet" href="~/layout/templatemo_555_upright/fontawesome/css/all.min.css">  <!-- https://fontawesome.com/-->
+            <link rel="stylesheet" href="~/layout/templatemo_555_upright/css/magnific-popup.css">       <!-- https://dimsemenov.com/plugins/magnific-popup/ -->
+                    @* <link rel="stylesheet" href="~/layout/templatemo_555_upright/css/bootstrap.min.css">        <!-- https://getbootstrap.com/ --> *@
+                    @* <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous"> *@
+            <link rel="stylesheet" href="~/layout/templatemo_555_upright/slick/slick.min.css">          <!-- https://kenwheeler.github.io/slick/ -->
+            <link rel="stylesheet" href="~/layout/templatemo_555_upright/slick/slick-theme.css">
+            <link rel="stylesheet" href="~/layout/templatemo_555_upright/css/templatemo-upright.css">
+                                @await RenderSectionAsync("Styles", required: false)
+            }
+        }
+        else
+        {
+            <link href="https://fonts.googleapis.com/css2?family=Kumbh+Sans&display=swap" rel="stylesheet"> <!-- https://fonts.google.com/specimen/Kumbh+Sans -->
+            <link rel="stylesheet" href="~/layout/templatemo_555_upright/fontawesome/css/all.min.css">  <!-- https://fontawesome.com/-->
+            <link rel="stylesheet" href="~/layout/templatemo_555_upright/css/magnific-popup.css">       <!-- https://dimsemenov.com/plugins/magnific-popup/ -->
+            @* <link rel="stylesheet" href="~/layout/templatemo_555_upright/css/bootstrap.min.css">        <!-- https://getbootstrap.com/ --> *@
+            <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+            <link rel="stylesheet" href="~/layout/templatemo_555_upright/slick/slick.min.css">          <!-- https://kenwheeler.github.io/slick/ -->
+            <link rel="stylesheet" href="~/layout/templatemo_555_upright/slick/slick-theme.css">
+            <link rel="stylesheet" href="~/layout/templatemo_555_upright/css/templatemo-upright.css">
+            @await RenderSectionAsync("Styles", required: false)
+        }
     }
 
-    @await RenderSectionAsync("Styles", required: false)
 </head>
 <body style="background-color:#272727">
     <!-- container-fluid -->
     <div class="container-fluid">
         <!-- row -->
         <div class="row">
-            <!-- Leftside bar -->
-            <div id="tm-sidebar" class="tm-sidebar">
-                <nav class="tm-nav">
-                    <button class="navbar-toggler" type="button" aria-label="Toggle navigation">
-                        <i class="fas fa-bars"></i>
-                    </button>
-                    <div>
-                        <div class="tm-brand-box">
-                            <h1 class="tm-brand">Groot<br />委託管理</h1>
-                        </div>
-                        <ul id="tm-main-nav">
-                            <li class="nav-item">
-                                <a href="#home" class="nav-link current">
-                                    <div class="triangle-right"></div>
-                                    <i class="fas fa-home nav-icon"></i>
-                                    主頁
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="#release" class="nav-link">
-                                    <div class="triangle-right"></div>
-                                    <i class="fas fa-envelope nav-icon"></i>
-                                    發出的委託
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="#receive" class="nav-link">
-                                    <div class="triangle-right"></div>
-                                    <i class="fas fa-envelope nav-icon"></i>
-                                    投遞的應徵
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="#gallery" class="nav-link">
-                                    <div class="triangle-right"></div>
-                                    <i class="fas fa-images nav-icon"></i>
-                                    更多創作
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="#contact" class="nav-link">
-                                    <div class="triangle-right"></div>
-                                    <i class="fas fa-envelope nav-icon"></i>
-                                    Contact
-                                </a>
-                            </li>
-                        </ul>
+            @{
+                if (ViewBag.HomeFrame != null)
+                {
+                    <!-- Leftside bar -->
+                    <div id="tm-sidebar" class="tm-sidebar">
+                        <nav class="tm-nav">
+                            <button class="navbar-toggler" type="button" aria-label="Toggle navigation">
+                                <i class="fas fa-bars"></i>
+                            </button>
+                            <div>
+                                <div class="tm-brand-box">
+                                    <h1 class="tm-brand">Groot<br />委託管理</h1>
+                                </div>
+                                <ul id="tm-main-nav">
+                                    <li class="nav-item">
+                                        <a href="#home" class="nav-link current">
+                                            <div class="triangle-right"></div>
+                                            <i class="fas fa-home nav-icon"></i>
+                                            主頁
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="#release" class="nav-link">
+                                            <div class="triangle-right"></div>
+                                            <i class="fas fa-envelope nav-icon"></i>
+                                            發出的委託
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="#receive" class="nav-link">
+                                            <div class="triangle-right"></div>
+                                            <i class="fas fa-envelope nav-icon"></i>
+                                            投遞的應徵
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="#gallery" class="nav-link">
+                                            <div class="triangle-right"></div>
+                                            <i class="fas fa-images nav-icon"></i>
+                                            更多創作
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="#contact" class="nav-link">
+                                            <div class="triangle-right"></div>
+                                            <i class="fas fa-envelope nav-icon"></i>
+                                            Contact
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </nav>
                     </div>
-                </nav>
-            </div><!-- .Leftside bar -->
-            <!-- tm-main -->
-            <div class="tm-main">
-                @RenderBody()
-            </div> <!-- .tm-main -->
+
+                    <!-- .Leftside bar -->
+                    <!-- tm-main -->
+                    <div class="tm-main">
+                        @RenderBody()
+                    </div> <!-- .tm-main -->
+                }
+                else
+                {
+                    <!-- Leftside bar -->
+                    <div id="tm-sidebar" class="tm-sidebar">
+                        <nav class="tm-nav">
+                            <button class="navbar-toggler" type="button" aria-label="Toggle navigation">
+                                <i class="fas fa-bars"></i>
+                            </button>
+                            <div>
+                                <div class="tm-brand-box">
+                                    <h1 class="tm-brand">Groot<br />委託管理</h1>
+                                </div>
+                                <ul id="tm-main-nav">
+                                    <li class="nav-item">
+                                        <a href="@Url.Action("homeframe","depute")#home" onclick="changeLocation(event)" class="nav-link">
+                                            <div class="triangle-right"></div>
+                                            <i class="fas fa-home nav-icon"></i>
+                                            主頁
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="@Url.Action("homeframe","depute")#release" onclick="changeLocation(event)" class="nav-link">
+                                            <div class="triangle-right"></div>
+                                            <i class="fas fa-envelope nav-icon"></i>
+                                            發出的委託
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="@Url.Action("homeframe","depute")#receive" onclick="changeLocation(event)" class="nav-link">
+                                            <div class="triangle-right"></div>
+                                            <i class="fas fa-envelope nav-icon"></i>
+                                            投遞的應徵
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="@Url.Action("homeframe","depute")#gallery" onclick="changeLocation(event)" class="nav-link">
+                                            <div class="triangle-right"></div>
+                                            <i class="fas fa-images nav-icon"></i>
+                                            更多創作
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="@Url.Action("homeframe","depute")#contact" onclick="changeLocation(event)" class="nav-link">
+                                            <div class="triangle-right"></div>
+                                            <i class="fas fa-envelope nav-icon"></i>
+                                            Contact
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </nav>
+                    </div>
+
+                    <!-- .Leftside bar -->
+                    <!-- tm-main -->
+                    <div class="tm-main">
+                        <div class="tm-section-wrap">
+                            @RenderBody()
+                        </div>
+                    </div> <!-- .tm-main -->
+                }
+            }
         </div> <!-- .row -->
     </div> <!-- .container-fluid -->
-    @section scripts {
-        <!-- Bootstrap core JS-->
-        @* <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script> *@
-        @* <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script> *@
-        <!-- Core theme JS-->
-        <script src="~/js/scripts.js"></script>
+    @{
+        if (ViewBag.HomeFrame != null)
+        {
 
-        <script src="~/layout/templatemo_555_upright/js/jquery-3.4.1.min.js"></script>          <!-- https://jquery.com/ -->
-        <script src="~/layout/templatemo_555_upright/js/jquery.singlePageNav.min.js"></script>  <!-- https://github.com/ChrisWojcik/single-page-nav -->
-        <script src="~/layout/templatemo_555_upright/js/parallax/parallax.min.js"></script>     <!-- https://pixelcog.github.io/parallax.js/ -->
-        <script src="~/layout/templatemo_555_upright/js/imagesloaded.pkgd.min.js"></script>     <!-- https://imagesloaded.desandro.com/ -->
-        <script src="~/layout/templatemo_555_upright/js/isotope.pkgd.min.js"></script>          <!-- https://isotope.metafizzy.co/ -->
-        <script src="~/layout/templatemo_555_upright/js/jquery.magnific-popup.min.js"></script> <!-- https://dimsemenov.com/plugins/magnific-popup/ -->
-        <script src="~/layout/templatemo_555_upright/slick/slick.min.js"></script>              <!-- https://kenwheeler.github.io/slick/ -->
-        <script src="~/layout/templatemo_555_upright/js/templatemo-script.js"></script>
-        <script src="~/js/sweetalert2.all.js"></script>
-        @await RenderSectionAsync("scripts", required: false)
+            @section scripts {
+            <!-- Bootstrap core JS-->
+            @* <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script> *@
+            @* <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script> *@
+            <!-- Core theme JS-->
+            <script src="~/js/scripts.js"></script>
+
+            <script src="~/layout/templatemo_555_upright/js/jquery-3.4.1.min.js"></script>          <!-- https://jquery.com/ -->
+            <script src="~/layout/templatemo_555_upright/js/jquery.singlePageNav.min.js"></script>  <!-- https://github.com/ChrisWojcik/single-page-nav -->
+            <script src="~/layout/templatemo_555_upright/js/parallax/parallax.min.js"></script>     <!-- https://pixelcog.github.io/parallax.js/ -->
+            <script src="~/layout/templatemo_555_upright/js/imagesloaded.pkgd.min.js"></script>     <!-- https://imagesloaded.desandro.com/ -->
+            <script src="~/layout/templatemo_555_upright/js/isotope.pkgd.min.js"></script>          <!-- https://isotope.metafizzy.co/ -->
+            <script src="~/layout/templatemo_555_upright/js/jquery.magnific-popup.min.js"></script> <!-- https://dimsemenov.com/plugins/magnific-popup/ -->
+            <script src="~/layout/templatemo_555_upright/slick/slick.min.js"></script>              <!-- https://kenwheeler.github.io/slick/ -->
+            <script src="~/layout/templatemo_555_upright/js/templatemo-script.js"></script>
+            <script src="~/js/sweetalert2.all.js"></script>
+            @await RenderSectionAsync("scripts", required: false)
+            }
+        }
+        else
+        {
+            <!-- Bootstrap core JS-->
+            @* <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script> *@
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+            <!-- Core theme JS-->
+            <script src="~/js/scripts.js"></script>
+
+            <script src="~/layout/templatemo_555_upright/js/jquery-3.4.1.min.js"></script>          <!-- https://jquery.com/ -->
+            <script src="~/layout/templatemo_555_upright/js/jquery.singlePageNav.min.js"></script>  <!-- https://github.com/ChrisWojcik/single-page-nav -->
+            <script src="~/layout/templatemo_555_upright/js/parallax/parallax.min.js"></script>     <!-- https://pixelcog.github.io/parallax.js/ -->
+            <script src="~/layout/templatemo_555_upright/js/imagesloaded.pkgd.min.js"></script>     <!-- https://imagesloaded.desandro.com/ -->
+            <script src="~/layout/templatemo_555_upright/js/isotope.pkgd.min.js"></script>          <!-- https://isotope.metafizzy.co/ -->
+            <script src="~/layout/templatemo_555_upright/js/jquery.magnific-popup.min.js"></script> <!-- https://dimsemenov.com/plugins/magnific-popup/ -->
+            <script src="~/layout/templatemo_555_upright/slick/slick.min.js"></script>              <!-- https://kenwheeler.github.io/slick/ -->
+            <script src="~/layout/templatemo_555_upright/js/templatemo-script.js"></script>
+            <script src="~/js/sweetalert2.all.js"></script>
+            <script>
+                function changeLocation(event) {
+                    console.log(event);
+                    location.href = `${event.target.href}`;
+                }
+
+            </script>
+            @await RenderSectionAsync("scripts", required: false)
+        }
     }
+    <script src="~/js/sweetalert2.all.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', checkLogin());
+        function checkLogin() {
+            if (@isLoggedIn.ToString().ToLower()) {
+                return;
+            }
+            const swalWithBootstrapButtons = Swal.mixin({
+                customClass: {
+                    confirmButton: "btn btn-success",
+                    cancelButton: "btn btn-danger"
+                },
+                buttonsStyling: false
+            });
+            swalWithBootstrapButtons.fire({
+                color: "#D0D0D0",
+                background: "#343a40",
+                title: "請先登入",
+                text: "此動作需先登入會員!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonText: "登入",
+                cancelButtonText: "取消",
+                reverseButtons: true,
+                allowOutsideClick: false,
+                allowEscapeKey: false,
+                allowEscapeKey: false
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // swalWithBootstrapButtons.fire({
+                    //     color: "#D0D0D0",
+                    //     background: "#343a40",
+                    //     title: "已刪除!",
+                    //     text: "該筆資料已刪除",
+                    //     icon: "success"
+                    // });
+                    login();
+                } else if (
+                    /* Read more about handling dismissals below */
+                    result.dismiss === Swal.DismissReason.cancel
+                ) {
+                    swalWithBootstrapButtons.fire({
+                        timer: 3000,
+                        timerProgressBar: true,
+                        color: "#D0D0D0",
+                        background: "#343a40",
+                        title: "已取消",
+                        text: "將於2秒後跳轉回首頁",
+                        icon: "error",
+                        didOpen: (toast) => {
+                            toast.onmouseenter = Swal.stopTimer;
+                            toast.onmouseleave = Swal.resumeTimer;
+                        }
+                    }).then(() => {
+                        back();
+                    });
+
+                }
+            });
+        }
+
+        function login() {
+            document.cookie = "returnUrl=" + window.location.href + ";  path=/";
+            const loginUrl = '@Url.Action("Login", "Home")';
+            window.location.href = loginUrl;
+        }
+        function back() {
+            window.location.href = '@Url.Action("homepage", "home")';
+        }
+    </script>
 </body>
 </html>

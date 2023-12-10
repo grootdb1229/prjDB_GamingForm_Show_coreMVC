@@ -81,8 +81,8 @@ hr { border-top: 4px solid #CCC; }
 }
 
 .tm-section-wrap {
-	width: calc(100% - 750px);
-	margin-left: 750px;
+	width: calc(100% - 450px);
+	margin-left: 450px;
 	margin-right: 0;
 	position: relative;
 }
@@ -96,14 +96,13 @@ hr { border-top: 4px solid #CCC; }
 }
 
 .tm-parallax {
-	width: 400px;	
 	min-height: 100%;
 	height: auto;
 	background: transparent;
 	position: absolute;
-    width: 400px;
-    left: -470px;
-    top: 0;
+	width: 460px; /*原400px,為增加內容顯示寬度*/
+	left: -470px;
+	top: 0;
 }
 
 /* Hide scrollbar */
