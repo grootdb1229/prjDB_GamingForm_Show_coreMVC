@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.Identity.Client;
 using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 
 namespace prjDB_GamingForm_Show.Controllers
 {
@@ -50,7 +51,6 @@ namespace prjDB_GamingForm_Show.Controllers
         {
             return View();
         }
-
         public IActionResult Test(int? id)
         {
             IEnumerable<Member> datas = null;
@@ -59,7 +59,6 @@ namespace prjDB_GamingForm_Show.Controllers
                     select m;
             return View(datas);
         }
-
         public IActionResult Create()
         {
             return View();
@@ -73,6 +72,7 @@ namespace prjDB_GamingForm_Show.Controllers
             member.Birth = memberWrap.Birth;
             member.Email = memberWrap.Email;
             member.Password = memberWrap.Password;
+            member.Mycomment = memberWrap.MyComment;
             member.Gender = memberWrap.Gender;
             string photoName = Guid.NewGuid().ToString() + ".jpg";
             member.FImagePath = photoName;
@@ -198,10 +198,39 @@ namespace prjDB_GamingForm_Show.Controllers
 
         public IActionResult MyCollections() 
         {
-           
             return View();
         }
-
+        public IActionResult CreateCollection() 
+        {
+            return View();
+        }
+        [HttpPost]
+        public IActionResult CreateCollection(CMemberCollectionWrap CW) 
+        {
+            Member dbMember = (from m in _db.Members
+                               where m.MemberId == HttpContext.Session.GetInt32(CDictionary.SK_UserID)
+                               select m).FirstOrDefault();
+            if (dbMember == null)
+            {
+                return RedirectToAction("Login", "Home");
+            }
+            else 
+            {
+                string photoName = Guid.NewGuid().ToString() + ".jpg";
+                MemberCollection MC = new MemberCollection();
+                MC.MemberId = (int)HttpContext.Session.GetInt32(CDictionary.SK_UserID);
+                MC.Title = CW.Title;
+                MC.Intro = CW.Intro;
+                MC.FImagePath = photoName;
+                MC.MyCollection = CW.MyCollection;
+                MC.ModifiedDate = CW.ModifeidDate;
+                CW.photo.CopyTo(new FileStream(_host.WebRootPath + "/images/MemberCollectionPreView/" + photoName, FileMode.Create));
+                _db.Add(MC);
+                _db.SaveChanges();
+                return RedirectToAction("MyCollections", "Member");
+            }
+            
+        }
         public IActionResult MyWorks() 
         {
             return View();
@@ -226,10 +255,10 @@ namespace prjDB_GamingForm_Show.Controllers
         {
             return View();
         }
-        public IActionResult MakeAWish() 
-        {
-            return View();
-        }
+        //public IActionResult MakeAWish() 
+        //{
+        //    return View();
+        //}
         //[HttpPost]
         //public IActionResult MakeAWish() 
         //{
