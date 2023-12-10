@@ -701,9 +701,11 @@ namespace prjDB_GamingForm_Show.Controllers
 
         #region PartialView
 
-
         public IActionResult PartialOverview()
         {
+            //todo 123123
+            int memberid = (int)HttpContext.Session.GetInt32(CDictionary.SK_UserID);
+            //_db.DeputeRecords.Where()
             return PartialView();
         }
         public IActionResult PartialReleaseList()
