@@ -25,6 +25,15 @@
 					</label>
 					<div id="imagePreviewContainer" style="width:100%">
 						<img id="imagePreview" style="max-width: 300px; max-height: 300px; margin-top: 10px;" src="~/images/shop/@Model.FImagePath" />
+						@{
+							string[] pics = @Model.MulPic.Split('/');
+						foreach (var item in pics)
+							{
+								if (item!=""){
+					             	          <img id="imagePreview" style="max-width: 300px; max-height: 300px; margin-top: 10px;" src="~/images/shop/@item" />
+											}	
+							}
+						}
 					</div>
 				</div>
 			</div>
