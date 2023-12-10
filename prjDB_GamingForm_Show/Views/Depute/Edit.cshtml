@@ -2,15 +2,15 @@
 
 @{
     ViewData["Title"] = "Edit";
-    Layout = "~/Views/Shared/_Layout_DBM.cshtml";
+    Layout = "~/Views/Shared/_Layout_DB.cshtml";
 }
-@section styles{
+@section styles {
 
     <style>
         .custom-popover {
             --bs-popover-max-width: 200px;
             /* --bs-popover-border-color: var(--bd-violet-bg);
-          --bs-popover-header-bg: var(--bd-violet-bg); */
+                  --bs-popover-header-bg: var(--bd-violet-bg); */
             --bs-popover-header-color: var(--bs-black);
             --bs-popover-body-padding-x: 1rem;
             --bs-popover-body-padding-y: .5rem;
@@ -90,7 +90,7 @@
             <input name="skilllist" id="select-skills" hidden>
 
             <div class="form-group">
-                <a asp-action="personal" class="btn btn-secondary">取消</a>
+                <a asp-action="homeframe" class="btn btn-secondary">取消</a>
                 <input type="submit" onclick="prepareAndSubmit()" value="送出並修改" class="btn btn-success" />
             </div>
         </form>

@@ -63,7 +63,7 @@
         alert('連線錯誤: ' + err.toString());
     });
     
-    connection.on("ReceiverUpdContent", function (message, selfID, senderAdminId) {
+    connection.on("ReceiverUpdContent", function (message, selfID, senderAdminId, senderimg, sendTime) {
         var div = document.querySelector('#AdminsChat');
         if (div.style.display == "block") {
             var chatWho = $('#rn').text()
@@ -81,6 +81,49 @@
         else {
             updateNotificationCount();
         }
+        var messageBox = document.querySelector('#messageBox')
+
+        // 最外層li
+        var li = document.createElement("li")
+        li.classList.add("nav-item")
+        messageBox.appendChild(li)
+
+        // 第二層a
+        var a = document.createElement("a")
+        a.classList.add("dropdown-item")
+        li.appendChild(a)
+
+        // 第三層照片span
+        var spanforimg = document.createElement("span")
+        spanforimg.classList.add("image")
+        a.appendChild(spanforimg)
+
+        // 第三層名字、時間span
+        var spanforname = document.createElement("span")
+        a.appendChild(spanforname)
+
+        // 第三層訊息span
+        var spanformessage = document.createElement("span")
+        spanformessage.classList.add("message")
+        spanformessage.innerHTML = `${message}`
+        a.appendChild(spanformessage)
+
+        // 第四層照片img
+        var img = document.createElement("img")
+        img.src = `/production/images/${senderimg}`
+        spanforimg.appendChild(img)
+
+        //第四層名字span
+        var name = document.createElement("span")
+        name.innerHTML = `${selfID}`
+        spanforname.appendChild(name)
+
+        //第四層時間span
+        var time = document.createElement("span")
+        time.classList.add("time")
+        time.innerHTML = `${sendTime}`
+        spanforname.appendChild(time)
+
     })
     function updateNotificationCount() {
         notCheckMessage = $('#notCheckMessageCount').text()
@@ -137,6 +180,8 @@
             isChatOpen = false;
         }
     }
+
+    connection.on
 
 </script>
 

@@ -414,7 +414,7 @@ namespace prjDB_GamingForm_Show.Controllers
 
         #region 老邊
 
-        public int _memberIdtest = 38;
+        
         public IActionResult changeDeputeRecordStatus(string deputerecordstatus)
         {
             CDeputeViewModel vm = JsonSerializer.Deserialize<CDeputeViewModel>(deputerecordstatus);
@@ -431,7 +431,7 @@ namespace prjDB_GamingForm_Show.Controllers
 
         public IActionResult Apply(int id)
         {
-            ViewBag.memberid = _memberIdtest;
+            ViewBag.memberid = HttpContext.Session.GetInt32(CDictionary.SK_UserID);
             Depute o = _db.Deputes.FirstOrDefault(_ => _.DeputeId == id);
             if (o == null)
                 return RedirectToAction("deputemain");
@@ -458,7 +458,7 @@ namespace prjDB_GamingForm_Show.Controllers
             Depute o = _db.Deputes.Where(_ => _.DeputeId == vm.id).FirstOrDefault();
             if (o != null)
             {
-                o.ProviderId = _memberIdtest;
+                o.ProviderId = (int)HttpContext.Session.GetInt32(CDictionary.SK_UserID);
                 o.StartDate = Convert.ToDateTime(vm.startdate);
                 o.Modifiedate = DateTime.Now;
                 o.DeputeContent = vm.deputeContent;
@@ -498,7 +498,7 @@ namespace prjDB_GamingForm_Show.Controllers
         {
             Depute n = new Depute()
             {
-                ProviderId = _memberIdtest,
+                ProviderId = (int)HttpContext.Session.GetInt32(CDictionary.SK_UserID),
                 StartDate = DateTime.Now,
                 Modifiedate = DateTime.Now,
                 DeputeContent = vm.deputeContent,
@@ -677,7 +677,8 @@ namespace prjDB_GamingForm_Show.Controllers
         //主頁框架，load各個partialview
         public IActionResult HomeFrame()
         {
-            ViewBag.memberid = _memberIdtest;
+            ViewBag.memberid = HttpContext.Session.GetInt32(CDictionary.SK_UserID);
+            ViewBag.HomeFrame = "HomeFrame";
             return View();
         }
         #endregion
@@ -697,7 +698,7 @@ namespace prjDB_GamingForm_Show.Controllers
             _db.Skills.Load();
             _db.DeputeRecords.Load();
             //使用include:為計算該筆委託被應徵的次數(出現在deputerecord的次數)
-            var q = _db.Deputes.Where(_ => _.ProviderId == _memberIdtest).Select(_ => _).Include(_ => _.DeputeRecords);
+            var q = _db.Deputes.Where(_ => _.ProviderId == HttpContext.Session.GetInt32(CDictionary.SK_UserID)).Select(_ => _).Include(_ => _.DeputeRecords);
             return PartialView(q);
         }
         public IActionResult PartialReceiveList()
@@ -706,7 +707,7 @@ namespace prjDB_GamingForm_Show.Controllers
             _db.DeputeRecords.Load();
             _db.Regions.Load();
             _db.Statuses.Load();
-            var q = _db.DeputeRecords.Where(_ => _.MemberId == _memberIdtest).Select(_ => _);
+            var q = _db.DeputeRecords.Where(_ => _.MemberId == HttpContext.Session.GetInt32(CDictionary.SK_UserID)).Select(_ => _);
             return PartialView(q);
         }
         public IActionResult PartialGallery()

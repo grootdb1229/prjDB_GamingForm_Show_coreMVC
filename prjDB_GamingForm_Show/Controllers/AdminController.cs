@@ -325,7 +325,13 @@ namespace prjDB_GamingForm_Show.Controllers
                 }
             }
             _db.SaveChanges();
-        }        
+        }       
+        public List<Chat> MessageList(int reid)
+        {
+            List<Chat> messageList = _db.Chats.Where(a => a.ReceiveAdmin == reid).OrderByDescending(a => a.Id).Take(4).ToList();
+
+            return messageList;      
+        }
         //public IActionResult MemberListNexttest()
         //{
         //    if (HttpContext.Session.Keys.Contains(CDictionary.SK_管理者觀看會員清單頁數使用關鍵字))
