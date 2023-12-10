@@ -135,7 +135,7 @@ namespace prjDB_GamingForm_Show.Models.Shop
 			get { return _product.FImagePath; }
 			set { _product.FImagePath = value; }
 		}
-
+		public string? MulPic { get; set; }
 	}
 
 

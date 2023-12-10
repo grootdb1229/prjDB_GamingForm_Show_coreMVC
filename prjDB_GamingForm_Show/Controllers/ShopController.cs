@@ -226,9 +226,14 @@ namespace prjDB_GamingForm_Show.Controllers
 			}
 
 
+            public IActionResult LoveList()
+            {
+			var aa=	_db.WishLists.Where(x => x.MemberId == HttpContext.Session.GetInt32(CDictionary.SK_UserID));
+			
+			return View(aa);
+            }
 
-
-			public IActionResult Index(CKeyWord ck)
+            public IActionResult Index(CKeyWord ck)
 			{
 
 				String CK = ck.txtKeyword;
@@ -690,23 +695,32 @@ namespace prjDB_GamingForm_Show.Controllers
 
 				return Json(SelSub);
 			}
-			public ActionResult WhenYouEditPics(int? id)//修改商品時讀取圖片
-			{
-				_db.Images.Load();
-				_db.ProductImages.Load();
+			//public ActionResult WhenYouEditPics(int? id)//修改商品時讀取圖片
+			//{
+			//	_db.Images.Load();
+			//	_db.ProductImages.Load();
 
-				var MulPic = _db.ProductImages.Where(x => x.ProductId == id).Select(x => new { FImagePath = x.Image.FImagePath }).ToList();
-				return Json(MulPic);
-			}
+			//	var MulPic = _db.ProductImages.Where(x => x.ProductId == id).Select(x => new { FImagePath = x.Image.FImagePath }).ToList();
+			//	return Json(MulPic);
+			//}
 
 			public ActionResult Edit(int? id)
 			{
-
+				string PicString="";
 				Product pdb = _db.Products.FirstOrDefault(p => p.ProductId == id);
+				var mulpic=_db.ProductImages.Where(x => x.ProductId == id).Select(s => s).ToList();
+				foreach (var imgid in mulpic)
+				{
+					var MulpicTostring = _db.Images.FirstOrDefault(x => x.ImageId == imgid.ImageId);
+					if (MulpicTostring != null) 
+					{
+						PicString += MulpicTostring.FImagePath.ToString() + "/";
+					}
+				}
 				if (pdb == null)
 				{ return RedirectToAction("Index"); }
 				超酷warp cProductWarp = new 超酷warp();
-
+				cProductWarp.MulPic = PicString;
 				cProductWarp.FImagePath = pdb.FImagePath;
 				cProductWarp.ProductId = pdb.ProductId;
 				cProductWarp.ProductName = pdb.ProductName;
@@ -825,7 +839,7 @@ namespace prjDB_GamingForm_Show.Controllers
 								var removedImageIds = _db.ProductImages
 									.Where(p => p.ProductId == x.ProductId)
 									.Select(p => p.ImageId)
-									.ToList();						
+									.ToList(); 						
 								foreach (var imageId in removedImageIds)
 								{
 									var imageToRemove = _db.Images.FirstOrDefault(i => i.ImageId == imageId);
@@ -926,10 +940,15 @@ namespace prjDB_GamingForm_Show.Controllers
 				 .Select(x => x.SubTag.Name)
 				 .ToList();
 				string s = string.Join("/", tagNames);
-
-
-
-				//Trace.WriteLine("僅作查看"+s);
+				
+                string MulPicString = "";
+                var MulPicsID = _db.ProductImages.Where(x => x.ProductId == id).Select(a=>a.Image.FImagePath).ToList();
+                if (MulPicsID != null)
+                {    
+                    MulPicString = string.Join("/", MulPicsID); 				
+                }
+               
+                Trace.WriteLine("僅作查看"+MulPicString);
 				List<CShopPageViewModel> aa = new List<CShopPageViewModel>();
 				CShopPageViewModel ProductInfo = new CShopPageViewModel()
 				{
@@ -940,6 +959,7 @@ namespace prjDB_GamingForm_Show.Controllers
 					ProductContent = x.ProductContent,
 					SubTagName = s,
 					favourite = Likestatus,
+					MulPic= MulPicString
 				};
 				x.ViewCount++;
 				_db.SaveChanges();
