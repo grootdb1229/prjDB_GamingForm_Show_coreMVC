@@ -192,48 +192,64 @@ namespace prjDB_GamingForm_Show.Controllers
         {
             Temp = List;
             IEnumerable<CDeputeViewModel> datas = null;
-            if (vm.txtMutiKeywords == null)
+            if (vm.txtMutiKeywords != null)
             {
-                datas = Temp.Where(n =>
-                (DateTime.Now - DateTime.Parse(n.modifieddate)).Days <= vm.txtDate &&
-                n.viewcount >= vm.txtView &&
-                n.salary >= vm.txtSalary);
-                Temp = datas.ToList();
-                return Json(Temp);
+
+                foreach (var item in vm.txtMutiKeywords)
+                {
+                    if (string.IsNullOrEmpty(item))
+                        return Content("沒有符合的條件");
+
+                    datas = Temp.Where(n => (n.deputeContent.Trim().ToLower().Contains(item.Trim().ToLower()) ||
+                                               n.title.Trim().ToLower().Contains(item.Trim().ToLower()) ||
+                                               n.providername.Trim().ToLower().Contains(item.Trim().ToLower()) ||
+                                               n.region.Trim().ToLower().Contains(item.Trim().ToLower()) ||
+                                               n.status.Trim().ToLower().Contains(item.Trim().ToLower())
+                                               ))
+                                               .OrderByDescending(n => n.modifieddate);
+                    Temp = datas.ToList();
+
+                }
             }
-                
-            foreach (var item in vm.txtMutiKeywords)
-            {
-                if (string.IsNullOrEmpty(item))
-                 return Content("沒有符合的條件");
-
-               datas = Temp.Where(n => (n.deputeContent.Trim().ToLower().Contains(item.Trim().ToLower()) ||
-                                          n.title.Trim().ToLower().Contains(item.Trim().ToLower()) ||
-                                          n.providername.Trim().ToLower().Contains(item.Trim().ToLower()) ||
-                                          n.region.Trim().ToLower().Contains(item.Trim().ToLower())||
-                                          n.status.Trim().ToLower().Contains(item.Trim().ToLower())
-                                          ))
-                                          .OrderByDescending(n => n.modifieddate);
-                Temp = datas.ToList();
-
-            }
-
-            datas = Temp.Where(n =>
-            (DateTime.Now.Date- Convert.ToDateTime(n.modifieddate)).Days <= vm.txtDate &&
-            n.viewcount >= vm.txtView &&
-            n.salary >= vm.txtSalary);
-            Temp = datas.ToList();
-
+            SelectedSearch(vm);
+            Orderby(vm);
             return Json(Temp);
-            
-           
+
+
         }
-        public void MutipleSearch2(CKeyWord vm)
+
+        private void SelectedSearch(CKeyWord vm)
         {
-            
-
+            IEnumerable<CDeputeViewModel> datas = Temp.Where(n =>
+                            (DateTime.Now.Date - Convert.ToDateTime(n.modifieddate)).Days <= vm.txtDate &&
+                            n.viewcount >= vm.txtView &&
+                            n.salary >= vm.txtSalary);
+            Temp = datas.ToList();
         }
 
+        public void Orderby(CKeyWord vm)
+        {
+            IEnumerable<CDeputeViewModel> datas = null;
+            switch (vm.txtOrderby)
+            {
+                case 1:
+                    datas = Temp.OrderByDescending(n =>n.salary);
+                    break;
+                case 2:
+                    datas = Temp.OrderByDescending(n => n.modifieddate);
+                    break;
+                case 3:
+                    datas = Temp.OrderByDescending(n => n.viewcount);
+                    break;
+                default:
+                    datas = Temp;
+                    break;
+            }
+            if(vm.txtEsc)
+                datas = datas.Reverse();
+            Temp = datas.ToList();
+        }
+        
         //TODO #3 委託詳細
         public IActionResult DeputeDetails(int? id)
         {

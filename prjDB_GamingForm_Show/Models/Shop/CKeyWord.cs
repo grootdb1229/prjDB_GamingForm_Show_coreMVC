@@ -11,7 +11,8 @@ namespace prjDB_GamingForm_Show.Models.Shop
         public string txtKeyword { get; set; }
         public List<string> txtMutiKeywords { get; set; }
         public string txtHotkey { get; set; }
-        //public string txtSkill { get; set; }
+        public int txtOrderby { get; set; }
+        public bool txtEsc { get; set; }
         public int txtDate { get; set; }
         public int txtView { get; set; }
         public int txtSalary { get; set; }
