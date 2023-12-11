@@ -36,6 +36,7 @@
   <ItemGroup>
     <Folder Include="Models\Entities\" />
     <Folder Include="wwwroot\images\MemberCollectionPreView\" />
+    <Folder Include="wwwroot\images\depute\" />
     <Folder Include="wwwroot\images\shop\" />
     <Folder Include="wwwroot\MemberPhoto\" />
   </ItemGroup>

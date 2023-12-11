@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Identity.Client;
 using Microsoft.IdentityModel.Tokens;
 using Org.BouncyCastle.Bcpg;
 using prjDB_GamingForm_Show.Models;
@@ -430,21 +431,43 @@ namespace prjDB_GamingForm_Show.Controllers
 
         #region 老邊
 
-        
-        public IActionResult changeDeputeRecordStatus(string deputerecordstatus)
+        public IActionResult Create()
         {
-            CDeputeViewModel vm = JsonSerializer.Deserialize<CDeputeViewModel>(deputerecordstatus);
-            var deputeRecord = _db.DeputeRecords.FirstOrDefault(_ => _.Id == vm.id);
-
-            if (!(int.TryParse(vm.statusid, out int statusID) && _db.Statuses.Any(_ => _.StatusId == statusID)))
-                return Content($"{deputeRecord.ApplyStatus.Name}");
-
-            deputeRecord.ApplyStatusId = statusID;
-            _db.SaveChanges();
-            var statusName = _db.Statuses.FirstOrDefault(_ => _.StatusId == statusID).Name;
-            return Content(statusName);
+            return View();
         }
+        [HttpPost]
+        public IActionResult Create(CDeputeViewModel vm)
+        {
+            Depute n = new Depute()
+            {
+                ProviderId = (int)HttpContext.Session.GetInt32(CDictionary.SK_UserID),
+                StartDate = DateTime.Now,
+                Modifiedate = DateTime.Now,
+                DeputeContent = vm.deputeContent,
+                Salary = vm.salary,
+                StatusId = 18,//懸賞中
+                RegionId = _db.Regions.FirstOrDefault(_ => _.City == vm.region).RegionId,
+                Title = vm.title,
+            };
+            _db.Deputes.Add(n);
+            _db.SaveChanges();
 
+            //存該委託所需的技能(多類別)
+            List<CDeputeSkillViewModel> list = JsonSerializer.Deserialize<List<CDeputeSkillViewModel>>(vm.skilllist);
+
+            DeputeSkill ndsk = new DeputeSkill();
+            foreach (var item in list)
+            {
+                int skillclassID = _db.SkillClasses.FirstOrDefault(_ => _.Name == item.skillclass).SkillClassId;
+                int skillID = _db.Skills.FirstOrDefault(_ => _.SkillClassId == skillclassID && _.Name == item.skill).SkillId;
+                ndsk.Id = 0;
+                ndsk.DeputeId = n.DeputeId;
+                ndsk.SkillId = skillID;
+                _db.DeputeSkills.Add(ndsk);
+                _db.SaveChanges();
+            }
+            return RedirectToAction("HomeFrame");
+        }
         public IActionResult Apply(int id)
         {
             ViewBag.memberid = HttpContext.Session.GetInt32(CDictionary.SK_UserID);
@@ -456,14 +479,22 @@ namespace prjDB_GamingForm_Show.Controllers
         [HttpPost]
         public IActionResult Apply(DeputeRecord vm)
         {
+            try
+            {
             _db.DeputeRecords.Add(vm);
             _db.SaveChanges();
-            return RedirectToAction("DeputeMain");
+                return Json(new { success = true, message = "應徵成功" });
+            }
+            catch(Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message });
+            }
         }
         public IActionResult Edit(int id)
         {
             _db.Deputes.Load();
             Depute n = _db.Deputes.FirstOrDefault(_ => _.DeputeId == id);
+            
             if (n == null)
                 return RedirectToAction("HomeFrame");
             return View(n);
@@ -503,52 +534,6 @@ namespace prjDB_GamingForm_Show.Controllers
             }
             return RedirectToAction("HomeFrame");
         }
-        
-
-        public IActionResult Create()
-        {
-            return View();
-        }
-        [HttpPost]
-        public IActionResult Create(CDeputeViewModel vm)
-        {
-            Depute n = new Depute()
-            {
-                ProviderId = (int)HttpContext.Session.GetInt32(CDictionary.SK_UserID),
-                StartDate = DateTime.Now,
-                Modifiedate = DateTime.Now,
-                DeputeContent = vm.deputeContent,
-                Salary = vm.salary,
-                StatusId = 18,//懸賞中
-                RegionId = _db.Regions.FirstOrDefault(_ => _.City == vm.region).RegionId,
-                Title = vm.title,
-            };
-            _db.Deputes.Add(n);
-            _db.SaveChanges();
-
-            //存該委託所需的技能(多類別)
-            List<CDeputeSkillViewModel> list = JsonSerializer.Deserialize<List<CDeputeSkillViewModel>>(vm.skilllist);
-
-            DeputeSkill ndsk = new DeputeSkill();
-            foreach (var item in list)
-            {
-                int skillclassID = _db.SkillClasses.FirstOrDefault(_ => _.Name == item.skillclass).SkillClassId;
-                int skillID = _db.Skills.FirstOrDefault(_ => _.SkillClassId == skillclassID && _.Name == item.skill).SkillId;
-                ndsk.Id = 0;
-                ndsk.DeputeId = n.DeputeId;
-                ndsk.SkillId = skillID;
-                _db.DeputeSkills.Add(ndsk);
-                _db.SaveChanges();
-            }
-            return RedirectToAction("HomeFrame");
-        }
-        public IActionResult DeleteDeputeRecord(int id)
-        {
-            DeputeRecord o = _db.DeputeRecords.FirstOrDefault(_ => _.Id == id);
-            _db.DeputeRecords.Remove(o);
-            _db.SaveChanges();
-            return RedirectToAction("HomeFrame");
-        }
         public IActionResult DeleteDepute(int id)
         {
             Depute o = _db.Deputes.Where(_ => _.DeputeId == id).Select(_ => _).FirstOrDefault();
@@ -572,7 +557,48 @@ namespace prjDB_GamingForm_Show.Controllers
             _db.SaveChanges();
             return RedirectToAction("HomeFrame");
         }
+        public IActionResult DeleteDeputeRecord(int id)
+        {
+            DeputeRecord o = _db.DeputeRecords.FirstOrDefault(_ => _.Id == id);
+            _db.DeputeRecords.Remove(o);
+            _db.SaveChanges();
+            return RedirectToAction("HomeFrame");
+        }
+        public IActionResult ReplyDepute(int id)
+        {
+            var data = _db.DeputeRecords.FirstOrDefault(_ => _.Id == id);
+            return View(data);
+        }
+        [HttpPost]
+        public IActionResult ReplyDepute(CDeputeViewModel vm,IFormFile formFile)
+        {
+            var ori = _db.DeputeRecords.FirstOrDefault(_ => _.DeputeId == vm.id);
+            //ori.ReplyContent= JsonSerializer.Serialize(new { content = $"{vm.replyContent}", filepath = $"{vm.replyContent}" });
+
+            string strPath = Path.Combine(_host.WebRootPath, "images\\depute", formFile.FileName);
+            using (var fileStream = new FileStream(strPath, FileMode.Create))
+            {
+                formFile.CopyTo(fileStream);
+            }
+
+            return RedirectToAction("homeframe");
+        }
+
         #region API
+
+        public IActionResult changeDeputeRecordStatus(string deputerecordstatus)
+        {
+            CDeputeViewModel vm = JsonSerializer.Deserialize<CDeputeViewModel>(deputerecordstatus);
+            var deputeRecord = _db.DeputeRecords.FirstOrDefault(_ => _.Id == vm.id);
+
+            if (!(int.TryParse(vm.statusid, out int statusID) && _db.Statuses.Any(_ => _.StatusId == statusID)))
+                return Content($"{deputeRecord.ApplyStatus.Name}");
+
+            deputeRecord.ApplyStatusId = statusID;
+            _db.SaveChanges();
+            var statusName = _db.Statuses.FirstOrDefault(_ => _.StatusId == statusID).Name;
+            return Content(statusName);
+        }
         public IActionResult individualDetials(int id)
         {
             //發出的委託詳細資料
@@ -703,8 +729,7 @@ namespace prjDB_GamingForm_Show.Controllers
 
         public IActionResult PartialOverview()
         {
-            //todo 123123
-            int memberid = (int)HttpContext.Session.GetInt32(CDictionary.SK_UserID);
+            //int memberid = (int)HttpContext.Session.GetInt32(CDictionary.SK_UserID);
             //_db.DeputeRecords.Where()
             return PartialView();
         }
