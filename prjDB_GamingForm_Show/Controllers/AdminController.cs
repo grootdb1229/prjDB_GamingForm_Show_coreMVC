@@ -941,7 +941,7 @@ namespace prjDB_GamingForm_Show.Controllers
 
         public IActionResult BlogArticleComplainList()
         {
-            var ab = from a in _db.ArticleComplains.Include(a => a.ArticleId)
+            var ab = from a in _db.ArticleComplains
                      select a;
             return View(ab);
             //var bc = from b in _db.SubTags.Include(p => p.Tag).Where(tid => tid.TagId == 4)
