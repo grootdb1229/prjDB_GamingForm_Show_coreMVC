@@ -1,0 +1,41 @@
+﻿@model prjDB_GamingForm_Show.Models.Entities.DeputeRecord
+@{
+    ViewData["Title"] = "完成委託";
+    Layout = "~/Views/Shared/_Layout_DB.cshtml";
+}
+
+<h2 class="mt-5">完成委託</h2>
+<h4>請輸入資訊</h4>
+<hr class="col-10"/>
+<div class="row">
+    <div class="col-md-10">
+        <form asp-action="ReplyDepute" id="formElement">
+            <input name="id" value="@Model.Id" hidden/>
+            <div class="mb-3">
+                <label for="exampleFormControlTextarea1" class="form-label">完成內容說明</label>
+                <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" name="ReplyContent"></textarea>
+            </div>
+
+            <div class="mb-3">
+                <label for="formFileMultiple" class="form-label">上傳檔案</label>
+                <input class="form-control" type="file" id="formFileMultiple" name="formFile">
+            </div>
+
+            @Html.ActionLink("取消","homeframe","depute",null,new{@class="btn btn-secondary"})
+            <input type="submit" class="btn btn-success" value="完成" id="buttonSubmit" />
+        </form>
+    </div>
+</div>
+<script>
+    const btn = document.querySelector('#buttonSubmit');
+    btn.addEventListener('click', (event) => {
+        event.preventDefault();
+        const formElement = document.querySelector('#formElement');
+        const formData = new FormData(formElement);
+        fetch('@Url.Content("~/depute/replydepute")', {
+            method: 'POST',
+            body: formData
+        });
+    })
+    
+</script>
