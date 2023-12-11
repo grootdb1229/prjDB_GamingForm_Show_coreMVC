@@ -32,24 +32,34 @@ namespace prjDB_GamingForm_Show.Controllers
         //{
         //    return View();
         //}
-        public IActionResult MemberPage(int? id)
+        //public IActionResult MemberPage(int? id)
+        //{
+        //    //if (id == null)
+        //    //    return RedirectToAction("Create");
+        //    if (id == null)
+        //    {
+        //        return RedirectToAction("Login", "Home");
+        //    }
+        //    _db.Members.Load();
+        //    IEnumerable<Member> datas = null;
+        //    var data = from m in _db.Members
+        //               where m.MemberId == id
+        //               select m;
+        //    return View(data);
+        //}
+
+        public IActionResult MemberPageTest(int? id) 
         {
-            //if (id == null)
-            //    return RedirectToAction("Create");
             if (id == null)
             {
                 return RedirectToAction("Login", "Home");
             }
+            _db.Members.Load();
             IEnumerable<Member> datas = null;
-            datas = from m in _db.Members
-                    where m.MemberId == id
-                    select m;
-            return View(datas);
-        }
-
-        public IActionResult MemberPageTest() 
-        {
-            return View();
+            var data = from m in _db.Members
+                       where m.MemberId == id
+                       select m;
+            return View(data);
         }
         public IActionResult Test(int? id)
         {
@@ -61,6 +71,7 @@ namespace prjDB_GamingForm_Show.Controllers
         }
         public IActionResult Create()
         {
+           
             return View();
         }
         [HttpPost]
@@ -73,7 +84,7 @@ namespace prjDB_GamingForm_Show.Controllers
             member.Email = memberWrap.Email;
             member.Password = memberWrap.Password;
             member.Mycomment = memberWrap.MyComment;
-            member.Gender = memberWrap.Gender;
+            member.Gender =memberWrap.Gender;
             string photoName = Guid.NewGuid().ToString() + ".jpg";
             member.FImagePath = photoName;
             memberWrap.photo.CopyTo(new FileStream(_host.WebRootPath + "/MemberPhoto/" + photoName, FileMode.Create));
