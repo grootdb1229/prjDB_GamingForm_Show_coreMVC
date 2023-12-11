@@ -549,6 +549,7 @@ namespace prjDB_GamingForm_Show.Controllers
         }
         public IActionResult DeleteDepute(int id)
         {
+            //partialrelease-刪除
             Depute o = _db.Deputes.Where(_ => _.DeputeId == id).Select(_ => _).FirstOrDefault();
             var dro = _db.DeputeRecords.Where(_ => _.DeputeId == id).Select(_ => _);
             var dso = _db.DeputeSkills.Where(_ => _.DeputeId == id).Select(_ => _);
@@ -572,6 +573,7 @@ namespace prjDB_GamingForm_Show.Controllers
         }
         public IActionResult DeleteDeputeRecord(int id)
         {
+            //partialreceive-撤回
             DeputeRecord o = _db.DeputeRecords.FirstOrDefault(_ => _.Id == id);
             _db.DeputeRecords.Remove(o);
             _db.SaveChanges();
@@ -585,29 +587,60 @@ namespace prjDB_GamingForm_Show.Controllers
         [HttpPost]
         public IActionResult ReplyDepute(CDeputeViewModel vm,IFormFile formFile)
         {
-            var ori = _db.DeputeRecords.FirstOrDefault(_ => _.DeputeId == vm.id);
-            //ori.ReplyContent= JsonSerializer.Serialize(new { content = $"{vm.replyContent}", filepath = $"{vm.replyContent}" });
-
-            string strPath = Path.Combine(_host.WebRootPath, "images\\depute", formFile.FileName);
-            using (var fileStream = new FileStream(strPath, FileMode.Create))
+            try
             {
-                formFile.CopyTo(fileStream);
-            }
+                string fileType = formFile.FileName.Split('.')[1];
+                string fileName = Guid.NewGuid().ToString() + "." + fileType;
+                string filePath = Path.Combine(_host.WebRootPath, "files\\depute", fileName);
 
-            return RedirectToAction("homeframe");
+                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                {
+                    formFile.CopyTo(fileStream);
+                }
+                var oriDeputRecord = _db.DeputeRecords.FirstOrDefault(_ => _.Id == vm.id);
+                oriDeputRecord.ReplyContent = JsonSerializer.Serialize(new
+                {
+                    content = $"{vm.replyContent}",
+                    filepath = $"{filePath}",
+                });
+                oriDeputRecord.ApplyStatusId = 25;//狀態改為已完成(待確認)
+                _db.SaveChanges();
+                return Json(new { success = true, message = "應徵成功" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message });
+            }
         }
 
         #region API
 
+        public IActionResult confirmApply(int id)
+        {
+            var data = _db.DeputeRecords.FirstOrDefault(_ => _.DeputeId == id && _.ApplyStatusId == 25);
+            return Json(data);
+        }
+
         public IActionResult changeDeputeRecordStatus(string deputerecordstatus)
         {
             CDeputeViewModel vm = JsonSerializer.Deserialize<CDeputeViewModel>(deputerecordstatus);
-            var deputeRecord = _db.DeputeRecords.FirstOrDefault(_ => _.Id == vm.id);
 
+            var deputeRecord = _db.DeputeRecords.FirstOrDefault(_ => _.Id == vm.id);
+            var depute = _db.Deputes.FirstOrDefault(_ => _.DeputeId == deputeRecord.DeputeId);
+
+            //確保使用者有選擇選項
             if (!(int.TryParse(vm.statusid, out int statusID) && _db.Statuses.Any(_ => _.StatusId == statusID)))
                 return Content($"{deputeRecord.ApplyStatus.Name}");
 
+            //修改該會員應徵狀態
             deputeRecord.ApplyStatusId = statusID;
+
+            //若與該會員合作，則此委託狀態一併改為合作中
+            if (statusID == 10)
+                depute.StatusId = 10;
+            if (statusID == 10)
+                depute.StatusId = 10;
+
             _db.SaveChanges();
             var statusName = _db.Statuses.FirstOrDefault(_ => _.StatusId == statusID).Name;
             return Content(statusName);

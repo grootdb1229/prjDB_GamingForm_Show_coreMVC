@@ -4,15 +4,18 @@
     For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 *@
 
-<table class="table table-dark table-striped table-bordered">
+<table class="table table-dark table-striped table-bordered align-middle">
 
-    <tr>
+    <tr class="text-center">
         <th hidden></th>
         <th class="col-1">
             #
         </th>
-        <th class="col-4">
-            內容
+        <th class="col-2">
+            標題
+        </th>
+        <th class="col-2">
+            自介內容
         </th>
         <th class="col-1">
             狀態
@@ -35,24 +38,36 @@
             <tr>
             <td hidden>@i.Id</td>
                 <td hidden>@i.DeputeId</td>
-                <td class="col-1">
+                <td class="text-center">
                     @count
                 </td>
-                <td class="col-3">
-                    @i.Depute.DeputeContent
+                <td class="text-center">
+                    @i.Depute.Title
                 </td>
-                <td class="col-1">
+                <td class="">
+                    @{
+                        if (i.RecordContent == null)
+                        {
+                            @i.RecordContent
+                        }
+                        else
+                        {
+                            @:未提供自介內容
+                        }
+                    }
+                </td>
+                <td class="text-center">
                     @i.ApplyStatus.Name
                 </td>
-                <td class="col-1">
+                <td class="text-center">
                     @i.Depute.Salary.ToString("$###,###,##0")
                 </td>
-                <td class="col-1">
+                <td class="text-center">
                     @i.Depute.Modifiedate.ToString("yyyy/MM/dd HH:mm")
                 </td>
-                <td class="col-3">
+                <td class="text-center">
                     @{
-                        if (@i.ApplyStatus.Name == "合作中")
+                        if (@i.ApplyStatus.Name.Contains("合作中"))
                         {
                             @Html.ActionLink("完成", "ReplyDepute", new { id = i.Id }, new { @class = "btn btn-success" })
                         }

@@ -326,6 +326,7 @@
     <script src="~/js/custom.min.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
     <script src="~/js/signalr/dist/browser/signalr.js"></script>
+    <script src="~/js/sweetalert2.all.js"></script>
     <script>
         var name = $('#AdminNameInSession').text();
         $('#test').load('@Url.Content("~/Admin/SignalRPV")');

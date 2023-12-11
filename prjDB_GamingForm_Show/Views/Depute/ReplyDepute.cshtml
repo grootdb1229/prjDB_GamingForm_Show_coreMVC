@@ -12,7 +12,7 @@
         <form asp-action="ReplyDepute" id="formElement">
             <input name="id" value="@Model.Id" hidden/>
             <div class="mb-3">
-                <label for="exampleFormControlTextarea1" class="form-label">完成內容說明</label>
+                <label for="exampleFormControlTextarea1" class="form-label">完成作品說明</label>
                 <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" name="ReplyContent"></textarea>
             </div>
 
@@ -28,14 +28,27 @@
 </div>
 <script>
     const btn = document.querySelector('#buttonSubmit');
-    btn.addEventListener('click', (event) => {
+    btn.addEventListener('click',async (event) => {
         event.preventDefault();
         const formElement = document.querySelector('#formElement');
         const formData = new FormData(formElement);
-        fetch('@Url.Content("~/depute/replydepute")', {
+        const response = await fetch('@Url.Content("~/depute/replydepute")', {
             method: 'POST',
             body: formData
         });
+        const result = await response.json();
+        const icon = result.success ? "success" : "error";
+        if (result.success) {
+            Swal.fire({
+                timer: 3000,
+                timerProgressBar: true,
+                title: `${result.message}`,
+                text: "2秒後轉回委託頁面",
+                icon: `${icon}`
+            }).then(() => {
+                window.location.href = '@Url.Action("homeframe","depute")';
+            })
+        };
     })
     
 </script>
