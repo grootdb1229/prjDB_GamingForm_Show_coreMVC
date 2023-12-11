@@ -36,7 +36,15 @@ namespace prjDB_GamingForm_Show.Hubs
         private static List<UserConnection> ConnectedUsers = new List<UserConnection>();
         private List<string> GetUserNames()
         {
-            return ConnectedUsers.Select(u => u.UserName).ToList();
+            try
+            {
+                return ConnectedUsers.Select(u => u.UserName).ToList();
+            }
+            catch
+            {
+                return new List<string>();
+            }
+
         }
         /// <summary>
         /// 連線事件

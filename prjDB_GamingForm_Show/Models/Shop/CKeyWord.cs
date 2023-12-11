@@ -16,5 +16,8 @@ namespace prjDB_GamingForm_Show.Models.Shop
         public int txtDate { get; set; }
         public int txtView { get; set; }
         public int txtSalary { get; set; }
+        public string txtEmail { get; set; }
+        public string txtPhone{ get; set; }
+        public string txtPassword { get; set; }
     }
 }

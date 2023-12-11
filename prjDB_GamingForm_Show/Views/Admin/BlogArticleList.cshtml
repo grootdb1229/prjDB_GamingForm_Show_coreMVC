@@ -1,0 +1,59 @@
+﻿@*@model IEnumerable<prjDB_GamingForm_Show.ViewModels.CBlogViewModel>*@
+@model prjDB_GamingForm_Show.ViewModels.CBlogViewModel
+
+@{
+    ViewData["Title"] = "BlogSubBlogList";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h2 style="margin-left:5px ; font-size:45px">文章清單</h2>
+
+@using (Html.BeginForm())
+{
+    <p style="display:inline;font-size:30px;margin-left:5px;margin-right:10px">名稱關鍵字查詢 : </p> @Html.TextBox("txtKeyWord",null,new{@class = "col-form-label"})
+    <input type="submit" value="查詢" class="btn btn-dark" />
+}
+
+<p style="margin-left:5px">
+    @Html.ActionLink("上一頁", "BlogArticleListPrevious", "Admin", null, new  { @class = "btn btn-dark" })
+    @Html.ActionLink("下一頁", "BlogArticleListNext", "Admin", null, new  { @class = "btn btn-dark" })
+</p>
+
+<table class="table table-dark table-hover" style="color:white ; font-size:20px">
+    <thead>
+        <tr>
+            <th>
+                編號
+            </th>
+            <th>
+                標題
+            </th>
+            <th>
+                所屬主版
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.articles)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ArticleId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Title)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SubBlog.Blog.Title)
+                </td>
+
+                <td>
+                    @Html.ActionLink("查看文章內容", "ArticleContent", "Blog", new { FId = item.SubBlog.Blog.BlogId , AFId = item.ArticleId}, new { @class = "btn btn-dark" , target = "_blank"})
+                </td>
+                <td>
+                    @Html.ActionLink("刪除", "BlogArticleDelete", "Admin", new { AFId = item.ArticleId}, new { @class = "btn btn-danger" })
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
