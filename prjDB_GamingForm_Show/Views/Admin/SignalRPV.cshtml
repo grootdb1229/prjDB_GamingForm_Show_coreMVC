@@ -1,9 +1,15 @@
 ﻿@model IEnumerable<prjDB_GamingForm_Show.ViewModels.CSignalRUseAdminList>
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+</head>
 
 <p>
     <h2 style="font-size:30px">管理者列表</h2>
 </p>
 <div id="an" hidden>@Context.Session.GetString(CDictionary.SK_管理者名稱)</div>
+<button type="button" class="btn btn-primary" style="position: absolute; top: 5px; right: 5px; font-size: 20px; background: none; border: none;" onclick="closeList()">
+    <i class="fa-solid fa-xmark"></i>
+</button>
 
 <table class="table table-dark table-hover" style="color:cornsilk;font-size:20px;border-radius:5px">
     <thead>
@@ -86,7 +92,8 @@
         // 最外層li
         var li = document.createElement("li")
         li.classList.add("nav-item")
-        messageBox.appendChild(li)
+        li.setAttribute("data-li-name", "uniqueName");
+        messageBox.insertBefore(li,messageBox.firstChild)
 
         // 第二層a
         var a = document.createElement("a")
@@ -181,7 +188,11 @@
         }
     }
 
-    connection.on
+    function closeList() {
+        var div = document.querySelector('#test');
+        div.style.display = "none"; // 隱藏
+
+    }
 
 </script>
 

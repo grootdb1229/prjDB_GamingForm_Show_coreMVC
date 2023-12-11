@@ -4,5 +4,73 @@
     Layout = "~/Views/Shared/DeputeLayout2.cshtml";
 }
 
-<h1>Index</h1>
+<!--採用 Bootstrap 4.0 -->
+<nav aria-label="Page navigation">
+    <ul class="pagination justify-content-center" id="pagination">
+        <li class="page-item">
+            <a class="page-link" href="#">1</a>
+        </li>
+    </ul>
+</nav>
+
+<script>
+    pagination.addEventListener('click', event => {
+        event.preventDefault()
+        if (event.target.tagName === 'A') {
+            getPageData(event.target.dataset.page)
+        }
+    })
+
+    //計算總共頁數
+    function getTotalPages(choiceMovies) {
+        let totalPages = Math.ceil(choiceMovies.length / 5) || 1
+        let pageItemContent = ''
+        for (let i = 0; i < totalPages; i++) {
+            pageItemContent += `
+            <li class="page-item">
+              <a class="page-link" href="javascript:;" data-page="${i + 1}">${i + 1}</a>
+            </li>
+          `
+        }
+        pagination.innerHTML = pageItemContent
+    }
+
+    //篩選出指定頁面的資料並顯示
+    function getPageData(pageNum, choiceMovies) {
+        dataPanel.innerHTML = '' //記得先清空現有內容
+        paginationData = choiceMovies || paginationData
+        let offset = (pageNum - 1) * ITEM_PER_PAGE
+        let pageData = paginationData.slice(offset, offset + ITEM_PER_PAGE)
+        let htmlContent = ''
+        //console.log(paginationData)
+        if (paginationData.length === 0) {
+            dataPanel.innerHTML = `
+          <h3>此類別無資料，請點選其他選項。</h3>
+        `
+        }
+
+        for (let i = 0; i < pageData.length; i++) {
+            htmlContent += `
+          <div class="col-sm-4">
+            <div class="card mb-1">
+            <img class="card-img-top " src="${posterBASE_URL}${pageData[i].image}" alt="Card image cap">
+            <div class="card-body movie-item-body">
+            <h5 class="card-title">${pageData[i].title}</h5>
+          `
+
+            for (let j = 0; j < pageData[i].genres.length; j++) {
+                htmlContent += `
+          <h6><span class="badge badge-secondary">${genresList[pageData[i].genres[j]]}</span></h6>
+          `
+            }
+            htmlContent += `
+            </div>
+          </div>
+        </div>
+        `
+            //console.log(htmlContent)
+        }
+        dataPanel.innerHTML += htmlContent
+    }
+</script>
 
