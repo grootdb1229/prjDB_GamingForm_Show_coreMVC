@@ -43,9 +43,11 @@ public partial class DbGamingFormTestContext : DbContext
 
     public virtual DbSet<DeputeSkill> DeputeSkills { get; set; }
 
+    public virtual DbSet<EcpayOrder> EcpayOrders { get; set; }
+
     public virtual DbSet<Education> Educations { get; set; }
 
-    public virtual DbSet<Firm> Firms { get; set; }
+    public virtual DbSet<Gender> Genders { get; set; }
 
     public virtual DbSet<Image> Images { get; set; }
 
@@ -425,6 +427,22 @@ public partial class DbGamingFormTestContext : DbContext
                 .HasConstraintName("FK_DeputeSkill_Skill");
         });
 
+        modelBuilder.Entity<EcpayOrder>(entity =>
+        {
+            entity.HasKey(e => e.MerchantTradeNo);
+
+            entity.Property(e => e.MerchantTradeNo).HasMaxLength(50);
+            entity.Property(e => e.MemberId)
+                .HasMaxLength(50)
+                .HasColumnName("MemberID");
+            entity.Property(e => e.PaymentDate).HasColumnType("datetime");
+            entity.Property(e => e.PaymentType).HasMaxLength(50);
+            entity.Property(e => e.PaymentTypeChargeFee).HasMaxLength(50);
+            entity.Property(e => e.RtnMsg).HasMaxLength(50);
+            entity.Property(e => e.TradeDate).HasMaxLength(50);
+            entity.Property(e => e.TradeNo).HasMaxLength(50);
+        });
+
         modelBuilder.Entity<Education>(entity =>
         {
             entity.HasKey(e => e.Edid);
@@ -435,21 +453,14 @@ public partial class DbGamingFormTestContext : DbContext
             entity.Property(e => e.Name).HasMaxLength(50);
         });
 
-        modelBuilder.Entity<Firm>(entity =>
+        modelBuilder.Entity<Gender>(entity =>
         {
-            entity.ToTable("Firm");
+            entity.HasKey(e => e.GenderId).HasName("PK_Firm");
 
-            entity.Property(e => e.FirmId).HasColumnName("FirmID");
-            entity.Property(e => e.Email).HasMaxLength(50);
-            entity.Property(e => e.FirmAddress).HasMaxLength(50);
-            entity.Property(e => e.FirmIntro)
-                .HasMaxLength(50)
-                .HasDefaultValueSql("(N'尚未提供')");
-            entity.Property(e => e.FirmName).HasMaxLength(50);
-            entity.Property(e => e.FirmScale).HasMaxLength(50);
-            entity.Property(e => e.ImageId).HasColumnName("ImageID");
-            entity.Property(e => e.StatusId).HasColumnName("StatusID");
-            entity.Property(e => e.TaxId).HasColumnName("TaxID");
+            entity.ToTable("Gender");
+
+            entity.Property(e => e.GenderId).HasColumnName("GenderID");
+            entity.Property(e => e.Name).HasMaxLength(50);
         });
 
         modelBuilder.Entity<Image>(entity =>

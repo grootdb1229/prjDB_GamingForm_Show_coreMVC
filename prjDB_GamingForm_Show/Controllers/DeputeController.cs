@@ -249,7 +249,13 @@ namespace prjDB_GamingForm_Show.Controllers
                 datas = datas.Reverse();
             Temp = datas.ToList();
         }
-        
+        public void Move(CKeyWord vm)
+        {
+            IEnumerable<CDeputeViewModel> datas = null;
+           
+           datas = Temp.Skip(10).Take(10);
+           Temp = datas.ToList();
+        }
         //TODO #3 委託詳細
         public IActionResult DeputeDetails(int? id)
         {
@@ -352,6 +358,12 @@ namespace prjDB_GamingForm_Show.Controllers
         public IActionResult Index()
         {
             
+            return View();
+        }
+
+        public IActionResult Index2()
+        {
+
             return View();
         }
         //多選載入
