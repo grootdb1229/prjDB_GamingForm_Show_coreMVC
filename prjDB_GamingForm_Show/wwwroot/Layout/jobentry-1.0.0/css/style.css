@@ -41,7 +41,7 @@
     .btn.btn-secondary {
         color: #FFFFFF;
         background-color: #000000;
-        border-color: #000000;
+        border-color: #FFFFFF;
     }
 
 .btn-square {
@@ -278,9 +278,10 @@
 
 .job-item {
     border: 1px solid transparent;
-    border-radius: 2px;
-    box-shadow: 0 0 45px rgba(0, 0, 0, .08);
+    border-radius: 20px;
+    box-shadow: 0 0 45px rgba(12 7 7);
     transition: .5s;
+    background-color:black;
 }
 
 .job-item:hover {

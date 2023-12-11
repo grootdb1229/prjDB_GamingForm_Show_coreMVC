@@ -11,6 +11,8 @@ using Microsoft.Identity.Client;
 using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using MailKit.Search;
+using prjDB_GamingForm_Show.Models.Shop;
 
 namespace prjDB_GamingForm_Show.Controllers
 {
@@ -32,24 +34,34 @@ namespace prjDB_GamingForm_Show.Controllers
         //{
         //    return View();
         //}
-        public IActionResult MemberPage(int? id)
+        //public IActionResult MemberPage(int? id)
+        //{
+        //    //if (id == null)
+        //    //    return RedirectToAction("Create");
+        //    if (id == null)
+        //    {
+        //        return RedirectToAction("Login", "Home");
+        //    }
+        //    _db.Members.Load();
+        //    IEnumerable<Member> datas = null;
+        //    var data = from m in _db.Members
+        //               where m.MemberId == id
+        //               select m;
+        //    return View(data);
+        //}
+
+        public IActionResult MemberPageTest(int? id) 
         {
-            //if (id == null)
-            //    return RedirectToAction("Create");
             if (id == null)
             {
                 return RedirectToAction("Login", "Home");
             }
+            _db.Members.Load();
             IEnumerable<Member> datas = null;
-            datas = from m in _db.Members
-                    where m.MemberId == id
-                    select m;
-            return View(datas);
-        }
-
-        public IActionResult MemberPageTest() 
-        {
-            return View();
+            var data = from m in _db.Members
+                       where m.MemberId == id
+                       select m;
+            return View(data);
         }
         public IActionResult Test(int? id)
         {
@@ -61,26 +73,92 @@ namespace prjDB_GamingForm_Show.Controllers
         }
         public IActionResult Create()
         {
+           
             return View();
         }
         [HttpPost]
         public IActionResult Create(CMemberWrap memberWrap)
         {
             Member member = new Member();
+            if (memberWrap.photo != null)
+            {
+                string photoName = Guid.NewGuid().ToString() + ".jpg";
+                member.FImagePath = photoName;
+                memberWrap.photo.CopyTo(new FileStream(_host.WebRootPath + "/MemberPhoto/" + photoName, FileMode.Create));
+            }
+            else 
+            { 
+                 member.FImagePath ="MemberDefault.jpg";
+            }
             member.Name = memberWrap.Name;
             member.Phone = memberWrap.Phone;
             member.Birth = memberWrap.Birth;
             member.Email = memberWrap.Email;
             member.Password = memberWrap.Password;
             member.Mycomment = memberWrap.MyComment;
-            member.Gender = memberWrap.Gender;
-            string photoName = Guid.NewGuid().ToString() + ".jpg";
-            member.FImagePath = photoName;
-            memberWrap.photo.CopyTo(new FileStream(_host.WebRootPath + "/MemberPhoto/" + photoName, FileMode.Create));
+            member.Gender =memberWrap.Gender;
             _db.Members.Add(member);
             _db.SaveChanges();
             ViewBag.ID = member.MemberId;
             return RedirectToAction("HomePage", "Home");
+        }
+        public bool EmailVal {  get; set; }
+        public bool PhoneVal { get; set; }
+        public bool PasswordVal { get; set; }
+        public IActionResult CreateValidation(CKeyWord vm) 
+        {
+            CMemberWrap datas = new CMemberWrap();
+            IEnumerable<string> Email = (from m in _db.Members.AsEnumerable()
+                       where m.Email.Equals(vm.txtEmail)
+                       select m.Email).ToList();
+            
+
+            if (Email.Count()==0)
+            {
+                EmailVal = true;
+                datas.EmailValMsg = "該信箱可註冊";
+            }
+            else
+            {
+                EmailVal = false;
+                datas.EmailValMsg = "該信箱已被註冊";
+            }
+
+            
+            IEnumerable<string> Phone = (from m in _db.Members.AsEnumerable()
+                                         where m.Email.Equals(vm.txtEmail)
+                                         select m.Email).ToList();
+            if (Phone.Count() == 0)
+            {
+                PhoneVal = true;
+                datas.PhoneValMsg = "該信箱可註冊";
+            }
+            else
+            {
+                PhoneVal = false;
+                datas.PhoneValMsg = "該信箱已被註冊";
+
+            }
+
+            IEnumerable<string> password = (from m in _db.Members.AsEnumerable()
+                                         where m.Email.Equals(vm.txtEmail)
+                                         select m.Email).ToList();
+            if (password.Count() == 0)
+            {
+                PasswordVal = true;
+                datas.PasswordValMsg = "該密碼可註冊";
+            }
+            else
+            {
+                PasswordVal = false;
+                datas.PasswordValMsg = "該密碼已被註冊";
+
+            }
+
+            //if (EmailVal == true && PhoneVal == true && PasswordVal == true)
+            //    //塞session
+            //    //CDictionary.SK_Create_Validation = "true";
+           return View(datas);
         }
 
         public IActionResult Edit(int? id)

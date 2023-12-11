@@ -5,14 +5,14 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>會員註冊</h2>
+<h2>Create</h2>
 
-<h4>請輸入基本資料</h4>
+<h4>CMemberWrap</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <form asp-action="Create" enctype="multipart/form-data" method="post" id="ValidationForm">
+            <div asp-validation-summary="ModelOnly" class="text-danger" ></div>
             <div class="form-group">
                 <label asp-for="Name" class="control-label"></label>
                 <input asp-for="Name" class="form-control" />
@@ -20,22 +20,22 @@
             </div>
             <div class="form-group">
                 <label asp-for="Phone" class="control-label"></label>
-                <input asp-for="Phone" class="form-control" />
+                <input asp-for="Phone" class="form-control" id="phone" />
                 <span asp-validation-for="Phone" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Birth" class="control-label"></label>
-                <input asp-for="Birth" class="form-control" />
+                <input asp-for="Birth" class="form-control" type="date" max="@DateTime.Now.ToString("yyyy-MM-dd")"/>
                 <span asp-validation-for="Birth" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Email" class="control-label"></label>
-                <input asp-for="Email" class="form-control" />
-                <span asp-validation-for="Email" class="text-danger"></span>
+                <input asp-for="Email" class="form-control" id="email" />
+                <span asp-validation-for="Email" class="text-danger" id="EmailError"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Password" class="control-label"></label>
-                <input asp-for="Password" class="form-control" />
+                <input asp-for="Password" class="form-control" id="password" />
                 <span asp-validation-for="Password" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -49,13 +49,85 @@
                 <span asp-validation-for="Gender" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-default" />
+                <label class="control-label">上傳圖片</label>
+                <input type="file" name="photo" class="form-control" onchange="previewImage(this)" />
+                <img id="imagePreview" src="#" alt="Preview" style="display:none;width:360px;height:108px;" />
+            </div>
+            <div class="form-group">
+                <input type="submit" value="驗證並註冊" class="btn btn-default" />
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="@Url.Action("HomePage" , "Home")">回首頁</a>
+    <a asp-action="Index">回首頁</a>
 </div>
 
+
+<script>
+    function previewImage(input) 
+    {
+        var imagePreview = document.getElementById('imagePreview');
+
+        if (input.files[0]) {
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+                imagePreview.src = e.target.result;
+                imagePreview.style.display = 'block';
+            };
+
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    function validateEmail(email) 
+    {
+        var emailRegex = /^[^\s@@]+@@[^\s@@]+\.[^\s@@]+$/;
+        return emailRegex.test(email);
+    }
+
+    function validatePhone(phone) 
+    { 
+        var phoneRegex = /^\d{10}$/;
+        return phoneRegex.test(phone);
+    }
+
+        var Email = document.querySelector('#email');
+        Email.addEventListener('blur', function () 
+        {
+            fetch(`@Url.Content("~/Member/CreateValidation")?email=${Email.value}`)
+            .then (response => response.text())
+                .then(data => 
+                {
+                   document.querySelector('#EmailError').innerHTML = data
+                })
+        })
+    function FormValidation() 
+    { 
+    }
+
+    function loadHotkey() {
+        var count = 0;
+        $.ajax('@Url.Content("~/Member/CreateValidation")', {
+            "type": 'Post', //POST、PUT、DELETE//
+            "data": { 
+                "txtEmail": $('#email').val(),
+                "txtPhone": $('#phone').val(),
+                "txtPassword": $('#password').val(),
+            },
+            "dataType": "json"
+        })
+            .done((data) => {
+                // count++;
+                const HkFrag = $(document.createDocumentFragment());
+                const snd = '<span class="text-truncate me-1">熱門關鍵字 :</span>'
+                HkFrag.append(snd);
+                const Hotkeys = data.map(Hotkeys => `<a href="#" id="${Hotkeys}" onclick="MutiSearch('${Hotkeys}')">#${Hotkeys} </a>`)
+                HkFrag.append(Hotkeys);
+                $('#hotkey').html(HkFrag)
+            })
+    }
+    
+</script>

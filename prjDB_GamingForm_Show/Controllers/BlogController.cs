@@ -122,7 +122,8 @@ namespace prjDB_GamingForm_Show.Controllers
             return View(vm);
         }
 
-        public ActionResult ArticleContent(int? FId, int? AFId)
+        public ActionResult 
+            ArticleContent(int? FId, int? AFId)
         {
             Article art = _db.Articles.FirstOrDefault(a => a.ArticleId == AFId);
             if (art != null)
@@ -158,7 +159,7 @@ namespace prjDB_GamingForm_Show.Controllers
             if (art != null)
             {
                 // 修改 Article 的 SubBlogID
-                art.SubBlogId = 42;  // 新的 SubBlogID
+                art.SubBlogId = 191;  // 新的 SubBlogID
                 _db.SaveChanges();
             }
             return RedirectToAction("ArticleList", new { FId });
@@ -199,6 +200,9 @@ namespace prjDB_GamingForm_Show.Controllers
         public IActionResult ArticleCreate(Article Inart, int? FId)
         {
             _db.Articles.Add(Inart);
+            _db.SaveChanges();
+            Member member =_db.Members.FirstOrDefault(m=>m.MemberId==Inart.MemberId);
+            member.BonusPoint += 50;
             _db.SaveChanges();
             return RedirectToAction("ArticleList", new { FId });
         }
@@ -282,19 +286,7 @@ namespace prjDB_GamingForm_Show.Controllers
 
 
         public IActionResult ReplyCreate(int? AFId, int? FId)
-        {
-            //if (HttpContext.Session.GetInt32("user_id") == null)
-            //    return RedirectToAction("Login", "Home");
-            //int memberId = (int)HttpContext.Session.GetInt32("user_id");
-
-            //if (HttpContext.Session.GetInt32("user_id") == null)
-            //{
-            //    // 如果未登入，將原始頁面的 URL 存儲在 Session 中
-            //    HttpContext.Session.SetString("returnUrl", Url.Action("ReplyCreate", "Blog", new { AFId, FId }));
-            //    return RedirectToAction("Login", "Home");
-            //}
-
-            //ViewBag.KK = HttpContext.Session.GetInt32("user_id");
+        {            
             CBlogViewModel vm = null;
             if (AFId == null)
                 return RedirectToAction("ArticleList");
@@ -312,6 +304,9 @@ namespace prjDB_GamingForm_Show.Controllers
         {
             _db.Replies.Add(Inart);
             _db.SaveChanges();
+            Member member = _db.Members.FirstOrDefault(m=>m.MemberId==Inart.MemberId);
+            member.BonusPoint += 10;
+            _db.SaveChanges();
             return RedirectToAction("ArticleContent", new { AFId, FId });
         }
 
@@ -322,8 +317,8 @@ namespace prjDB_GamingForm_Show.Controllers
             Random rm = new Random();
 
             _db.Products.Load();
-            int ram = rm.Next(0, _db.Products.Count());
-            var mo = _db.Products.Select(p => p);
+            var mo = _db.Products.OrderByDescending(p=>p.ViewCount).Select(p => p).Take(5);
+            int ram = rm.Next(0, mo.Count());
 
 
             return Json(mo.ToList()[ram]);

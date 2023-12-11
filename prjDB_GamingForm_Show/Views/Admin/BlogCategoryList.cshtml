@@ -40,8 +40,8 @@
                     @Html.DisplayFor(modelItem => item.Name)
                 </td>
                 <td>
-                    @Html.ActionLink("此分類的主版", "BlogList","Admin", new { txtKeyWord = item.Name},  new { @class = "btn btn-info" }) |
-                    @Html.ActionLink("修改分類名稱", "BlogSubTagEdit","Admin", new { SId = item.SubTagId },new  { @class = "btn btn-warning" }) |
+                    @Html.ActionLink("查看此分類主版", "BlogList","Admin", new { txtKeyWord = item.Name},  new { @class = "btn btn-dark" }) |
+                    @Html.ActionLink("修改分類名稱", "BlogSubTagEdit","Admin", new { SId = item.SubTagId },new  { @class = "btn btn-dark" }) |
                     @Html.ActionLink("刪除此分類", "BlogSubTagDelete","Admin", new { SId = item.SubTagId },new  { @class = "btn btn-danger" , onclick = "return confirm('確定要刪除嗎?')" })
                 </td>
             </tr>

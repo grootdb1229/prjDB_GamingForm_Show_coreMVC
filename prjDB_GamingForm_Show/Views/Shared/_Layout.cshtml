@@ -74,7 +74,7 @@
                             {
                                 <li class="nav-item" style=" padding: var(--bs-nav-link-padding-y) var(--bs-nav-link-padding-x)">歡迎回來 @Context.Session.GetString(CDictionary.SK_UserName) ID=@Context.Session.GetInt32(CDictionary.SK_UserID)</li>
                                 <li class="nav-item">@Html.ActionLink("登出", "Logout", "Home", null, new { @class = "nav-link" })</li>
-                                <li class="nav-item">@Html.ActionLink("會員頁面", "MemberPage", "Member", new {id = Context.Session.GetInt32(CDictionary.SK_UserID) }, new { @class = "nav-link" })</li>
+                                <li class="nav-item">@Html.ActionLink("會員頁面", "MemberPageTest", "Member", new {id = Context.Session.GetInt32(CDictionary.SK_UserID) }, new { @class = "nav-link" })</li>
                             }
                         }
 
@@ -82,6 +82,12 @@
                 </div>
 
                 @{
+                    <form class="d-flex">
+                    <a href="~/Shop/LoveList" class="btn mt-auto btn-outline-dark  me-1">
+                        <img src="~/images/shop/blackheart.png" width="16" height="15">
+                        <span class="badge bg-dark text-white ms-1 rounded-pill" id="carcount">@ViewBag.LList</span>
+                        </a>
+                    </form>
 
 
                     <form class="d-flex">
