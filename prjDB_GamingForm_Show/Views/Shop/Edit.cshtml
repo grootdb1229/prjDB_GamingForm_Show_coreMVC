@@ -20,7 +20,7 @@
 				@Html.LabelFor(model => model.ImageID, htmlAttributes: new { @class = "control-label col-md-2" })
 				<div class="col-md-10">
 					<label class="btn btn-info">
-						<input id="upload_img" name="photo" style="display:none;" onchange="previewImage(this)" type="file">
+						<input id="upload_img" name="photo" style="display:none;"  onchange="previewImage(this)" type="file">
 						<i class="fa-solid fa-file"></i>上傳圖片
 					</label>
 					<img id="imagePreview" style="max-width: 300px; max-height: 300px; margin-top: 10px;" src="~/images/shop/@Model.FImagePath" />
