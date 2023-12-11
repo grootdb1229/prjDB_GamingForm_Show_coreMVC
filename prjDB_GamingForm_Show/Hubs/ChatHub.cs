@@ -104,18 +104,13 @@ namespace prjDB_GamingForm_Show.Hubs
             var selfSid = ConnectedUsers.FirstOrDefault(u => u.UserName == selfID)?.ConnectionId;
             var senderAdminId = _db.Admins.FirstOrDefault(a => a.Name == selfID).AdminId;
             var receiveAdminId = _db.Admins.FirstOrDefault(a => a.Name == sendToName).AdminId;
-            //if (string.IsNullOrEmpty(sendToID))
-            //{
-            //    await Clients.All.SendAsync("UpdContent", senderUserName + " 說: " + message);
-            //}
-
+            var senderimg = _db.Admins.FirstOrDefault(a => a.Name == selfID).ImgPath;
+            var sendTime = DateTime.UtcNow.ToLocalTime().ToString("yyyy/MM/dd HH:mm");
 
             // 接收人
             if (sendToID != null)
             {
-                await Clients.Client(sendToID).SendAsync("ReceiverUpdContent", message);
-                await Clients.Client(sendToID).SendAsync("ReceiverIsOpenChat", selfID);
-                await Clients.Client(sendToID).SendAsync("ReceiverChatWho", senderAdminId);
+                await Clients.Client(sendToID).SendAsync("ReceiverUpdContent", message, selfID, senderAdminId, senderimg, sendTime);                
             }
 
             // 發送人

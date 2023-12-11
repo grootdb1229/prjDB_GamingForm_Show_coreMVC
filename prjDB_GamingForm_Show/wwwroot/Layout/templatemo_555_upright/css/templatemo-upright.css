@@ -21,13 +21,20 @@ html, body { overflow-x: hidden; }
 body { font-family: 'Kumbh Sans', sans-serif; }
 div, a, p { color: #D0D0D0; }
 p, address { line-height: 1.8; }
-a {	transition: all 0.3s ease; }
+a {
+	transition: all 0.3s ease !important;/*套layout會被蓋掉*/
+}
 a:hover {
 	color: #a81d1d;
 	text-decoration: none;
 }
+.navbar.navbar-expand-lg.navbar-light.bg-light{
+	margin-left:280px;
+}
 
-.container-fluid { margin-left: 0; }
+.container-fluid {
+	margin-left: 0;
+}
 
 .btn-primary {
 	padding: 12px 50px;
@@ -70,11 +77,12 @@ hr { border-top: 4px solid #CCC; }
 	padding-left: 40px;
 	padding-top: 40px;
 	width: 280px;
+	padding-right:0;/*套layout會變15*/
 }
 
 .tm-section-wrap {
-	width: calc(100% - 750px);
-	margin-left: 750px;
+	width: calc(100% - 450px);
+	margin-left: 450px;
 	margin-right: 0;
 	position: relative;
 }
@@ -88,14 +96,13 @@ hr { border-top: 4px solid #CCC; }
 }
 
 .tm-parallax {
-	width: 400px;	
 	min-height: 100%;
 	height: auto;
 	background: transparent;
 	position: absolute;
-    width: 400px;
-    left: -470px;
-    top: 0;
+	width: 460px; /*原400px,為增加內容顯示寬度*/
+	left: -470px;
+	top: 0;
 }
 
 /* Hide scrollbar */

@@ -15,8 +15,8 @@
 <p style="margin-left:5px">
     @*<input type="button" id="last" value="上一頁" class="btn btn-dark" />
     <input type="button" id="next" value="下一頁" class="btn btn-dark" />*@
-    @Html.ActionLink("上一頁", "BlogListPrevious", "Admin", null, new  { @class = "btn btn-dark" })
-    @Html.ActionLink("下一頁", "BlogListNext", "Admin", null, new  { @class = "btn btn-dark" })
+    @Html.ActionLink("上一頁", "BlogListPrevious", "Admin", null, new  { @class = "btn btn-dark" }) |
+    @Html.ActionLink("下一頁", "BlogListNext", "Admin", null, new  { @class = "btn btn-dark" }) |
     @Html.ActionLink("新增主板", "BlogCreate", "Admin", null, new { @class = "btn btn-info" })
 </p>
 <table class="table table-dark table-hover" style="color:white ; font-size:20px">
@@ -26,7 +26,7 @@
                 編號
             </th>
             <th>
-                名稱
+                前往主版
             </th>
             <th>
                 所屬分類
@@ -38,22 +38,22 @@
         @{
             string category = "";
 
-            foreach (var item in Model.blogs)
+            foreach (var item in Model.blogs.Where(b => b.SubTagId != 14))
             {
                 <tr>
                     <td id="bid">
                         @Html.DisplayFor(modelItem => item.BlogId)
-                    </td>
+                    </td>                    
                     <td>
-                        @Html.DisplayFor(modelItem => item.Title)
+                        <a style="color:white;" href="@Url.Action("ArticleList", "Blog", new { FId =item.BlogId})">@item.Title</a>
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.SubTag.Name)
                     </td>
                     <td>
-                        @Html.ActionLink("修改", "BlogEdit", "Admin", new { BId = item.BlogId}, new { @class = "btn btn-dark" })
-                        @Html.ActionLink("詳細", "Details","Admin", new { /* id=item.PrimaryKey */ },new  { @class = "btn btn-dark" })
-                        @Html.ActionLink("刪除", "BlogDelete", "Admin", new { BId = item.BlogId }, new { @class = "btn btn-dark", onclick = "return confirm('確定要刪除嗎?')" })
+                        @Html.ActionLink("此主版的子版", "BlogSubBlogList","Admin", new { txtKeyWord = item.Title },new  { @class = "btn btn-info" }) |
+                        @Html.ActionLink("修改主版名稱", "BlogEdit", "Admin", new { BId = item.BlogId}, new { @class = "btn btn-warning" }) |
+                        @Html.ActionLink("刪除此主版", "BlogDelete", "Admin", new { BId = item.BlogId }, new { @class = "btn btn-danger", onclick = "return confirm('確定要刪除嗎?')" })
                     </td>
                 </tr>
             }

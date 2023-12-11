@@ -89,6 +89,7 @@ namespace prjDB_GamingForm_Show.Controllers
 
         public IActionResult DeputeList(int? id)
         {
+
             IEnumerable<CDeputeViewModel> datas = null;
             if (id ==null)
             {
@@ -112,7 +113,6 @@ namespace prjDB_GamingForm_Show.Controllers
                 
                
             }
-
             return View(datas);
 
         }
@@ -192,33 +192,64 @@ namespace prjDB_GamingForm_Show.Controllers
         {
             Temp = List;
             IEnumerable<CDeputeViewModel> datas = null;
-            if (vm.txtMutiKeywords == null)
-                return Json(List);
-            foreach (var item in vm.txtMutiKeywords)
+            if (vm.txtMutiKeywords != null)
             {
-                if (string.IsNullOrEmpty(item))
-                 return Content("沒有符合的條件");
 
-               datas = Temp.Where(n => (n.deputeContent.Trim().ToLower().Contains(item.Trim().ToLower()) ||
-                                          n.title.Trim().ToLower().Contains(item.Trim().ToLower()) ||
-                                          n.providername.Trim().ToLower().Contains(item.Trim().ToLower()) ||
-                                          n.region.Trim().ToLower().Contains(item.Trim().ToLower())
-                                          ))
-                                          .OrderByDescending(n => n.modifieddate);
-                Temp = datas.ToList();
+                foreach (var item in vm.txtMutiKeywords)
+                {
+                    if (string.IsNullOrEmpty(item))
+                        return Content("沒有符合的條件");
 
+                    datas = Temp.Where(n => (n.deputeContent.Trim().ToLower().Contains(item.Trim().ToLower()) ||
+                                               n.title.Trim().ToLower().Contains(item.Trim().ToLower()) ||
+                                               n.providername.Trim().ToLower().Contains(item.Trim().ToLower()) ||
+                                               n.region.Trim().ToLower().Contains(item.Trim().ToLower()) ||
+                                               n.status.Trim().ToLower().Contains(item.Trim().ToLower())
+                                               ))
+                                               .OrderByDescending(n => n.modifieddate);
+                    Temp = datas.ToList();
+
+                }
             }
-            if (Temp.Count==0)
-            {
-                return Json(Temp);
-            }
-            else
-            {
-                return Json(Temp);
-            }
+            SelectedSearch(vm);
+            Orderby(vm);
+            return Json(Temp);
+
+
         }
 
+        private void SelectedSearch(CKeyWord vm)
+        {
+            IEnumerable<CDeputeViewModel> datas = Temp.Where(n =>
+                            (DateTime.Now.Date - Convert.ToDateTime(n.modifieddate)).Days <= vm.txtDate &&
+                            n.viewcount >= vm.txtView &&
+                            n.salary >= vm.txtSalary);
+            Temp = datas.ToList();
+        }
 
+        public void Orderby(CKeyWord vm)
+        {
+            IEnumerable<CDeputeViewModel> datas = null;
+            switch (vm.txtOrderby)
+            {
+                case 1:
+                    datas = Temp.OrderByDescending(n =>n.salary);
+                    break;
+                case 2:
+                    datas = Temp.OrderByDescending(n => n.modifieddate);
+                    break;
+                case 3:
+                    datas = Temp.OrderByDescending(n => n.viewcount);
+                    break;
+                default:
+                    datas = Temp;
+                    break;
+            }
+            if(vm.txtEsc)
+                datas = datas.Reverse();
+            Temp = datas.ToList();
+        }
+        
         //TODO #3 委託詳細
         public IActionResult DeputeDetails(int? id)
         {
@@ -317,16 +348,22 @@ namespace prjDB_GamingForm_Show.Controllers
 
         }
 
+        //測試網頁樣板用
         public IActionResult Index()
         {
-            //測試網頁樣板用
+            
             return View();
         }
-        //下拉
+        //多選載入
         public IActionResult SkillClassess()
         {
             var datas = from n in _db.SkillClasses
                         select n;
+            return Json(datas);
+        } 
+        public IActionResult Skills(int? id)
+        {
+            var datas = _db.Skills.Where(a => a.SkillClassId == id);
             return Json(datas);
         }
         public IActionResult Region()
@@ -335,11 +372,14 @@ namespace prjDB_GamingForm_Show.Controllers
                         select n;
             return Json(datas);
         }
-        public IActionResult Skills(int? id)
+        public IActionResult Status()
         {
-            var datas = _db.Skills.Where(a => a.SkillClassId == id);
-            return Json(datas);
+            var datas = from n in List
+                        select n.status;
+            return Json(datas.Distinct());
         }
+
+        //首頁類別跟數量
         public IActionResult DeputeCount()
         {
             var SkillClasses = _db.SkillClasses;
@@ -365,7 +405,7 @@ namespace prjDB_GamingForm_Show.Controllers
             return Json(slist);
         }
 
-        //首頁
+        //熱門5最新5
         public IActionResult GetFive(int? id)
         {
             if (id == 1)
@@ -390,43 +430,24 @@ namespace prjDB_GamingForm_Show.Controllers
 
         #region 老邊
 
-        public int _memberIdtest = 38;
+        
         public IActionResult changeDeputeRecordStatus(string deputerecordstatus)
         {
-            CDeputeViewModel n = JsonSerializer.Deserialize<CDeputeViewModel>(deputerecordstatus);
-            var o = _db.DeputeRecords.FirstOrDefault(_ => _.Id == n.id);
-            int statusID = Convert.ToInt32(n.statusid);
-            if (_db.Statuses.Any(_ => _.StatusId == statusID))
-                o.ApplyStatusId = Convert.ToInt32(statusID);
-            _db.SaveChanges();
+            CDeputeViewModel vm = JsonSerializer.Deserialize<CDeputeViewModel>(deputerecordstatus);
+            var deputeRecord = _db.DeputeRecords.FirstOrDefault(_ => _.Id == vm.id);
 
+            if (!(int.TryParse(vm.statusid, out int statusID) && _db.Statuses.Any(_ => _.StatusId == statusID)))
+                return Content($"{deputeRecord.ApplyStatus.Name}");
+
+            deputeRecord.ApplyStatusId = statusID;
+            _db.SaveChanges();
             var statusName = _db.Statuses.FirstOrDefault(_ => _.StatusId == statusID).Name;
             return Content(statusName);
         }
-        public IActionResult individualDetials(int id)
-        {
-            var o = _db.DeputeRecords.Where(_ => _.DeputeId == id).Select(_ => _).Include(_ => _.Depute).ToList();
-            List<CDeputeViewModel> list = new List<CDeputeViewModel>();
-            foreach (var item in o)
-            {
-                CDeputeViewModel n = new CDeputeViewModel();
-                n.id = item.Id;
-                n.title = item.Depute.Title;
-                n.count = o.Count();
-                n.status = item.ApplyStatus.Name;
-                n.memberName = item.Member.Name;
-                n.applyerGender = item.Member.Gender == 1 ? "男性" : "女性";
-                n.applyerEmail = item.Member.Email;
-                n.applyerBirth = item.Member.Birth.ToString("yyyy/MM/dd");
-                n.applyerContent = item.RecordContent == null ? "該會員無提供補充資訊" : item.RecordContent;
-                n.applyerPhone = item.Member.Phone;
-                list.Add(n);
-            }
-            return Json(list);
-        }
+
         public IActionResult Apply(int id)
         {
-            ViewBag.memberid = _memberIdtest;
+            ViewBag.memberid = HttpContext.Session.GetInt32(CDictionary.SK_UserID);
             Depute o = _db.Deputes.FirstOrDefault(_ => _.DeputeId == id);
             if (o == null)
                 return RedirectToAction("deputemain");
@@ -453,7 +474,7 @@ namespace prjDB_GamingForm_Show.Controllers
             Depute o = _db.Deputes.Where(_ => _.DeputeId == vm.id).FirstOrDefault();
             if (o != null)
             {
-                o.ProviderId = _memberIdtest;
+                o.ProviderId = (int)HttpContext.Session.GetInt32(CDictionary.SK_UserID);
                 o.StartDate = Convert.ToDateTime(vm.startdate);
                 o.Modifiedate = DateTime.Now;
                 o.DeputeContent = vm.deputeContent;
@@ -482,71 +503,7 @@ namespace prjDB_GamingForm_Show.Controllers
             }
             return RedirectToAction("HomeFrame");
         }
-        public IActionResult SkillClasses()
-        {
-            var datas = new
-            {
-                skillclasses = _db.SkillClasses.Select(_ => _),
-                skills = _db.Skills.Select(_ => _)
-            };
-            return Json(datas);
-        }
-        public IActionResult editDeputeStatuses(int id)
-        {
-            List<CDeputeViewModel> statusList = new List<CDeputeViewModel>();
-            int oriStatusID = _db.Deputes.FirstOrDefault(_ => _.DeputeId == id).StatusId;
-
-            CDeputeViewModel oriStatus = new CDeputeViewModel()
-            {
-                id = oriStatusID,
-                status =_db.Statuses.FirstOrDefault(_=>_.StatusId== oriStatusID).Name,
-            };
-            statusList.Add(oriStatus);
-            
-            var datas = _db.Statuses.Where(_ => (_.StatusId == 16 ||
-            _.StatusId == 18 ||
-            _.StatusId == 19 )&&
-            _.StatusId != oriStatusID).Select(_ => _);
-
-            foreach(var item in datas)
-            {
-                CDeputeViewModel lastStatuses = new CDeputeViewModel()
-                {
-                    id = item.StatusId,
-                    status= item.Name,
-                };
-                statusList.Add(lastStatuses);
-            };
-            return Json(statusList);
-        }
-        public IActionResult Regions()
-        {
-            var datas = _db.Regions.Select(_ => _);
-            return Json(datas);
-        }
         
-        public IActionResult Skillss(string skillClass)
-        {
-            if (_db.SkillClasses.Where(_ => _.Name == skillClass).FirstOrDefault() == null)
-                return Content("");
-            int skillclassid = Convert.ToInt32(_db.SkillClasses.Where(_ => _.Name == skillClass).FirstOrDefault().SkillClassId);
-            var datas = _db.Skills.Where(_ => _.SkillClassId == skillclassid).Select(_ => _);
-            return Json(datas);
-        }
-        public IActionResult oriSkills(int deputeID)
-        {
-            var datas = _db.DeputeSkills
-                .Where(_ => _.DeputeId == deputeID)
-                .Select(_ => _)
-                .Include(_ => _.Skill)
-                .ThenInclude(_ => _.SkillClass)
-                .Select(item => new CDeputeSkillViewModel
-                {
-                    skill = item.Skill.Name,
-                    skillclass = item.Skill.SkillClass.Name
-                });
-            return Json(datas);
-        }
 
         public IActionResult Create()
         {
@@ -557,7 +514,7 @@ namespace prjDB_GamingForm_Show.Controllers
         {
             Depute n = new Depute()
             {
-                ProviderId = _memberIdtest,
+                ProviderId = (int)HttpContext.Session.GetInt32(CDictionary.SK_UserID),
                 StartDate = DateTime.Now,
                 Modifiedate = DateTime.Now,
                 DeputeContent = vm.deputeContent,
@@ -615,8 +572,32 @@ namespace prjDB_GamingForm_Show.Controllers
             _db.SaveChanges();
             return RedirectToAction("HomeFrame");
         }
+        #region API
+        public IActionResult individualDetials(int id)
+        {
+            //發出的委託詳細資料
+            var o = _db.DeputeRecords.Where(_ => _.DeputeId == id).Select(_ => _).Include(_ => _.Depute).ToList();
+            List<CDeputeViewModel> list = new List<CDeputeViewModel>();
+            foreach (var item in o)
+            {
+                CDeputeViewModel n = new CDeputeViewModel();
+                n.id = item.Id;
+                n.title = item.Depute.Title;
+                n.count = o.Count();
+                n.status = item.ApplyStatus.Name;
+                n.memberName = item.Member.Name;
+                n.applyerGender = item.Member.Gender == 1 ? "男性" : "女性";
+                n.applyerEmail = item.Member.Email;
+                n.applyerBirth = item.Member.Birth.ToString("yyyy/MM/dd");
+                n.applyerContent = item.RecordContent == null ? "該會員無提供補充資訊" : item.RecordContent;
+                n.applyerPhone = item.Member.Phone;
+                list.Add(n);
+            }
+            return Json(list);
+        }
         public IActionResult DeputeDetial(int? id)
         {
+            //收到委託詳細資料
             _db.DeputeRecords.Load();
             Depute o = _db.Deputes.FirstOrDefault(_ => _.DeputeId == id);
             if (o == null)
@@ -637,19 +618,94 @@ namespace prjDB_GamingForm_Show.Controllers
             return Json(n);
         }
 
+        public IActionResult oriSkills(int deputeID)
+        {
+            //該委託資料庫技能
+            var datas = _db.DeputeSkills
+                .Where(_ => _.DeputeId == deputeID)
+                .Select(_ => _)
+                .Include(_ => _.Skill)
+                .ThenInclude(_ => _.SkillClass)
+                .Select(item => new CDeputeSkillViewModel
+                {
+                    skill = item.Skill.Name,
+                    skillclass = item.Skill.SkillClass.Name
+                });
+            return Json(datas);
+        }
+
+        public IActionResult SkillClasses()
+        {
+            //資料庫技能類別
+            var datas = new
+            {
+                skillclasses = _db.SkillClasses.Select(_ => _),
+                skills = _db.Skills.Select(_ => _)
+            };
+            return Json(datas);
+        }
+        public IActionResult editDeputeStatuses(int id)
+        {
+            List<CDeputeViewModel> statusList = new List<CDeputeViewModel>();
+            int oriStatusID = _db.Deputes.FirstOrDefault(_ => _.DeputeId == id).StatusId;
+
+            CDeputeViewModel oriStatus = new CDeputeViewModel()
+            {
+                id = oriStatusID,
+                status = _db.Statuses.FirstOrDefault(_ => _.StatusId == oriStatusID).Name,
+            };
+            statusList.Add(oriStatus);
+
+            var datas = _db.Statuses.Where(_ => (_.StatusId == 16 ||
+            _.StatusId == 18 ||
+            _.StatusId == 19) &&
+            _.StatusId != oriStatusID).Select(_ => _);
+
+            foreach (var item in datas)
+            {
+                CDeputeViewModel lastStatuses = new CDeputeViewModel()
+                {
+                    id = item.StatusId,
+                    status = item.Name,
+                };
+                statusList.Add(lastStatuses);
+            };
+            return Json(statusList);
+        }
+        public IActionResult Regions()
+        {
+            //資料庫區域
+            var datas = _db.Regions.Select(_ => _);
+            return Json(datas);
+        }
+
+        public IActionResult Skillss(string skillClass)
+        {
+            if (_db.SkillClasses.Where(_ => _.Name == skillClass).FirstOrDefault() == null)
+                return Content("");
+            int skillclassid = Convert.ToInt32(_db.SkillClasses.Where(_ => _.Name == skillClass).FirstOrDefault().SkillClassId);
+            var datas = _db.Skills.Where(_ => _.SkillClassId == skillclassid).Select(_ => _);
+            return Json(datas);
+        }
+        #endregion
+
         #region MainView
+        //主頁框架，load各個partialview
         public IActionResult HomeFrame()
         {
-            ViewBag.memberid = _memberIdtest;
+            ViewBag.memberid = HttpContext.Session.GetInt32(CDictionary.SK_UserID);
+            ViewBag.HomeFrame = "HomeFrame";
             return View();
         }
         #endregion
 
         #region PartialView
 
-
         public IActionResult PartialOverview()
         {
+            //todo 123123
+            int memberid = (int)HttpContext.Session.GetInt32(CDictionary.SK_UserID);
+            //_db.DeputeRecords.Where()
             return PartialView();
         }
         public IActionResult PartialReleaseList()
@@ -660,7 +716,7 @@ namespace prjDB_GamingForm_Show.Controllers
             _db.Skills.Load();
             _db.DeputeRecords.Load();
             //使用include:為計算該筆委託被應徵的次數(出現在deputerecord的次數)
-            var q = _db.Deputes.Where(_ => _.ProviderId == _memberIdtest).Select(_ => _).Include(_ => _.DeputeRecords);
+            var q = _db.Deputes.Where(_ => _.ProviderId == HttpContext.Session.GetInt32(CDictionary.SK_UserID)).Select(_ => _).Include(_ => _.DeputeRecords);
             return PartialView(q);
         }
         public IActionResult PartialReceiveList()
@@ -669,7 +725,7 @@ namespace prjDB_GamingForm_Show.Controllers
             _db.DeputeRecords.Load();
             _db.Regions.Load();
             _db.Statuses.Load();
-            var q = _db.DeputeRecords.Where(_ => _.MemberId == _memberIdtest).Select(_ => _);
+            var q = _db.DeputeRecords.Where(_ => _.MemberId == HttpContext.Session.GetInt32(CDictionary.SK_UserID)).Select(_ => _);
             return PartialView(q);
         }
         public IActionResult PartialGallery()

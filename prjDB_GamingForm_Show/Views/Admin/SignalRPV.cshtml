@@ -3,6 +3,7 @@
 <p>
     <h2 style="font-size:30px">管理者列表</h2>
 </p>
+<div id="an" hidden>@Context.Session.GetString(CDictionary.SK_管理者名稱)</div>
 
 <table class="table table-dark table-hover" style="color:cornsilk;font-size:20px;border-radius:5px">
     <thead>
@@ -34,8 +35,8 @@
                 <td id="@($"onlineStatus_{item.AdminName}")">
                     <!-- 在線狀態將在此處更新 -->離線
                 </td>
-                <td>
-                    <button id="@($"sendMessage_{item.AdminName}")" onclick="openChat(@item.AdminId)" class="btn btn-outline-light">開/關</button>
+                <td id="@($"td_{item.AdminName}")">
+                    <button style="display:block" id="@($"sendMessage_{item.AdminName}")" onclick="openChat(@item.AdminId)" class="btn btn-outline-light">開/關</button>
                 </td>
             </tr>
         }
@@ -43,9 +44,17 @@
 </table>
 
  <script>
+     $(document).ready(function () {
+        var name = $('#an').text()      
+        var text = document.createElement("span")
+        text.innerText = "使用者"
+        document.querySelector(`#sendMessage_${name}`).style.display = "none"
+        document.querySelector(`#td_${name}`).appendChild(text)
+         
+     })
 
     var connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
-    var notCheckMessage = 0;    
+    var notCheckMessage = 0;
     var isChatOpen = false;
     // 與Server建立連線
     connection.start().then(function () {
@@ -53,35 +62,74 @@
     }).catch(function (err) {
         alert('連線錯誤: ' + err.toString());
     });
-
-    connection.on("ReceiverUpdContent", function () {
+    
+    connection.on("ReceiverUpdContent", function (message, selfID, senderAdminId, senderimg, sendTime) {
         var div = document.querySelector('#AdminsChat');
         if (div.style.display == "block") {
-            connection.on("ReceiverIsOpenChat", function (selfID) {
-                var chatWho = $('#rn').text()                
-                if (chatWho == selfID) {
-                    connection.on("ReceiverChatWho", function (senderAdminId) {
-                        $.ajax({
-                            type: 'post',
-                            url: '/Admin/CheckAllMessage',
-                            data: { senderid: senderAdminId }
-                        })
-                    });                    
-                }
-                else {
-                    updateNotificationCount();
-                }
-            })
+            var chatWho = $('#rn').text()
+            if (chatWho == selfID) {
+                $.ajax({
+                    type: 'post',
+                    url: '/Admin/CheckAllMessage',
+                    data: { senderid: senderAdminId }
+                })
+            }
+            else {
+                updateNotificationCount();
+            }
         }
         else {
             updateNotificationCount();
         }
+        var messageBox = document.querySelector('#messageBox')
+
+        // 最外層li
+        var li = document.createElement("li")
+        li.classList.add("nav-item")
+        messageBox.appendChild(li)
+
+        // 第二層a
+        var a = document.createElement("a")
+        a.classList.add("dropdown-item")
+        li.appendChild(a)
+
+        // 第三層照片span
+        var spanforimg = document.createElement("span")
+        spanforimg.classList.add("image")
+        a.appendChild(spanforimg)
+
+        // 第三層名字、時間span
+        var spanforname = document.createElement("span")
+        a.appendChild(spanforname)
+
+        // 第三層訊息span
+        var spanformessage = document.createElement("span")
+        spanformessage.classList.add("message")
+        spanformessage.innerHTML = `${message}`
+        a.appendChild(spanformessage)
+
+        // 第四層照片img
+        var img = document.createElement("img")
+        img.src = `/production/images/${senderimg}`
+        spanforimg.appendChild(img)
+
+        //第四層名字span
+        var name = document.createElement("span")
+        name.innerHTML = `${selfID}`
+        spanforname.appendChild(name)
+
+        //第四層時間span
+        var time = document.createElement("span")
+        time.classList.add("time")
+        time.innerHTML = `${sendTime}`
+        spanforname.appendChild(time)
+
     })
     function updateNotificationCount() {
         notCheckMessage = $('#notCheckMessageCount').text()
         notCheckMessage++;
         $('#notCheckMessageCount').text(notCheckMessage)
-    }    
+    }
 
     //更新連線 ID 列表事件
     connection.on("UpdList", function (jsonList) {
@@ -125,13 +173,15 @@
                 url: '/Admin/CheckAllMessage',
                 data: { senderid: id }
             });
-            isChatOpen = true;            
+            isChatOpen = true;
         }
         else {
             div.style.display = "none"; // 隱藏
-            isChatOpen = false;            
+            isChatOpen = false;
         }
     }
+
+    connection.on
 
 </script>
 

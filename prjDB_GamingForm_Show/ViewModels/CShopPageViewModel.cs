@@ -46,5 +46,6 @@ namespace prjDB_GamingForm_Show.ViewModels
 
         public virtual IEnumerable<WishList> WishLists { get; set; } = new List<WishList>();
         public string? favourite { get; set; }
-    }
+		public string? MulPic { get; set; }
+	}
 }
