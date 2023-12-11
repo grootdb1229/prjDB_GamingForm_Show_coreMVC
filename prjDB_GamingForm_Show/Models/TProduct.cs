@@ -16,4 +16,6 @@ public partial class TProduct
     public decimal? FPrice { get; set; }
 
     public string? FImagePath { get; set; }
+
+    public int? LListCount { get; set; }
 }
