@@ -56,8 +56,8 @@
                             <h3 style="font-size:30px">功能列表</h3>
                             <ul class="nav side-menu">
                                 <li>
-                                    <a>
-                                        <i class="fa fa-home" style="color:#a81d1d"></i> 會員管理 <span class="fa fa-chevron-down"></span>
+                                    <a>                                        
+                                        <i class="fa fa-solid fa-users" style="color:#a81d1d"></i> 會員管理 <span class="fa fa-chevron-down"></span>
                                     </a>
                                     <ul class="nav child_menu">
                                         <li>@Html.ActionLink("會員清單", "MemberList", "Admin", null, new { @style = "font-size:15px" })</li>
@@ -66,21 +66,21 @@
                                     </ul>
                                 </li>
                                 <li>
-                                    <a>
-                                        @*<i class="fa fa-edit"></i>*@<i class="fa fa-table" style="color:#a81d1d"></i> 商城管理 <span class="fa fa-chevron-down"></span>
+                                    <a>                                        
+                                        @*<i class="fa fa-edit"></i>*@<i class="fa fa-solid fa-shop" style="color:#a81d1d"></i> 商城管理 <span class="fa fa-chevron-down"></span>
                                     </a>
                                     <ul class="nav child_menu">
                                         <li>@Html.ActionLink("商品清單", "ProductList", "Admin", null, new { @style = "font-size:15px" })</li>
                                         <li><a href="~/form_advanced.html" style="font-size:15px">申訴處理</a></li>
                                         <li>@Html.ActionLink("新品審核", "ProductReview", "Admin", null, new { @style = "font-size:15px" })</li>
                                         <li><a href="~/form_wizards.html" style="font-size:15px">廣告上架</a></li>
-                                        <li><a href="~/form_upload.html" style="font-size:15px">優惠券設定</a></li>
+                                        <li>@Html.ActionLink("優惠券設定", "CouponList", "Admin", null, new { @style = "font-size:15px" })</li>
                                         @*<li><a href="~/form_buttons.html">Form Buttons</a></li>*@
                                     </ul>
                                 </li>
                                 <li>
-                                    <a>
-                                        @*<i class="fa fa-desktop"></i>*@<i class="fa fa-edit" style="color:#a81d1d"></i> 論壇管理 <span class="fa fa-chevron-down"></span>
+                                    <a>                                        
+                                        @*<i class="fa fa-desktop"></i>*@<i class="fa fa-solid fa-pen-nib" style="color:#a81d1d"></i> 論壇管理 <span class="fa fa-chevron-down"></span>
                                     </a>
                                     <ul class="nav child_menu">
                                         <li>@Html.ActionLink("分類清單", "BlogCategoryList", "Admin", null, new { @style = "font-size:15px" })</li>
@@ -118,8 +118,8 @@
                                     </ul>*@
                                 </li>
                                 <li>
-                                    <a href="../Admin/SignalRTest">
-                                        <i class="fa-solid fa-comments"></i>聊天測
+                                    <a onclick="showPV()">
+                                        <i class="fa fa-solid fa-comments" style="color:#a81d1d"></i> 訊息系統
                                     </a>
                                 </li>
                                 @*<li>

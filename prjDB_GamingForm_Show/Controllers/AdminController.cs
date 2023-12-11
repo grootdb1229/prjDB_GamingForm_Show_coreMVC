@@ -207,16 +207,12 @@ namespace prjDB_GamingForm_Show.Controllers
                 _db.SaveChanges();
             }
             return RedirectToAction("ProductList");
-        }
-        public IActionResult SignalRTest()
-        {
-            return View();
-        }
+        }        
         public IActionResult ProductReview()
         {
             CAdminCheckProductViewModel vm = new CAdminCheckProductViewModel
             {
-                Products = _db.Products.Include(m => m.Member).Where(p => p.StatusId == 4),
+                Products = _db.Products.Include(m => m.Member).Where(p => p.StatusId == 7),
                 Members = _db.Members
             };
             return View(vm);
@@ -326,11 +322,37 @@ namespace prjDB_GamingForm_Show.Controllers
             }
             _db.SaveChanges();
         }       
-        public List<Chat> MessageList(int reid)
+        
+        public IActionResult CouponList()
         {
-            List<Chat> messageList = _db.Chats.Where(a => a.ReceiveAdmin == reid).OrderByDescending(a => a.Id).Take(4).ToList();
-
-            return messageList;      
+            List<CAdminCouponViewModel> viewModel = new List<CAdminCouponViewModel>();
+            CAdminCouponViewModel c = null;
+            foreach (var m in _db.Coupons)
+            {
+                c = new CAdminCouponViewModel()
+                {
+                    Title = m.Title,
+                    Discount = m.Discount,
+                    Reduce = m.Reduce,
+                    StartDate = m.StartDate,
+                    EndDate = m.EndDate,
+                    Type = m.StatusId.ToString(),
+                };
+                viewModel.Add(c);
+            }
+            return View(viewModel);
+        }
+        public IActionResult CouponCreat()
+        {
+            Coupon coupon = new Coupon();
+            return View(coupon);
+        }
+        [HttpPost]
+        public IActionResult CouponCreat(Coupon coupon)
+        {
+            _db.Coupons.Add(coupon);
+            _db.SaveChanges();
+            return RedirectToAction("");
         }
         //public IActionResult MemberListNexttest()
         //{
