@@ -601,7 +601,7 @@ namespace prjDB_GamingForm_Show.Controllers
                 oriDeputRecord.ReplyContent = JsonSerializer.Serialize(new
                 {
                     content = $"{vm.replyContent}",
-                    filepath = $"{filePath}",
+                    filename = $"{fileName}",
                 });
                 oriDeputRecord.ApplyStatusId = 25;//狀態改為已完成(待確認)
                 _db.SaveChanges();
@@ -614,6 +614,11 @@ namespace prjDB_GamingForm_Show.Controllers
         }
 
         #region API
+        public IActionResult downloadFile(string fileName)
+        {
+            string fullFilePath= Path.Combine(_host.WebRootPath, "files\\depute", fileName);
+            return PhysicalFile(fullFilePath, "application/octet-stream");
+        }
 
         public IActionResult confirmApply(int id)
         {
@@ -621,28 +626,36 @@ namespace prjDB_GamingForm_Show.Controllers
             return Json(data);
         }
 
-        public IActionResult changeDeputeRecordStatus(string deputerecordstatus)
+        public IActionResult changeDeputeRecordStatus(string jsonString)
         {
-            CDeputeViewModel vm = JsonSerializer.Deserialize<CDeputeViewModel>(deputerecordstatus);
+            CDeputeViewModel vm = JsonSerializer.Deserialize<CDeputeViewModel>(jsonString);
 
             var deputeRecord = _db.DeputeRecords.FirstOrDefault(_ => _.Id == vm.id);
             var depute = _db.Deputes.FirstOrDefault(_ => _.DeputeId == deputeRecord.DeputeId);
-
-            //確保使用者有選擇選項
-            if (!(int.TryParse(vm.statusid, out int statusID) && _db.Statuses.Any(_ => _.StatusId == statusID)))
-                return Content($"{deputeRecord.ApplyStatus.Name}");
+            var otherRecords = _db.DeputeRecords.Where(_ => _.DeputeId == depute.DeputeId && _.Id != vm.id).Select(_ => _);
 
             //修改該會員應徵狀態
-            deputeRecord.ApplyStatusId = statusID;
+            deputeRecord.ApplyStatusId = vm.statusid;
 
-            //若與該會員合作，則此委託狀態一併改為合作中
-            if (statusID == 10)
+            //若與該會員合作，則此委託狀態一併改為合作中，且其他會員的應徵狀態改為備選
+            if (vm.statusid == 10)
+            {
                 depute.StatusId = 10;
-            if (statusID == 10)
-                depute.StatusId = 10;
+                deputeRecord.ApplyStatusId = 10;
+                foreach (var item in otherRecords)
+                {
+                    item.ApplyStatusId = 11;
+                }
+            }
+            //完成委託、委託紀錄
+            if (vm.statusid == 16)
+            {
+                depute.StatusId = 16;
+                deputeRecord.ApplyStatusId = 16;
+            }
 
             _db.SaveChanges();
-            var statusName = _db.Statuses.FirstOrDefault(_ => _.StatusId == statusID).Name;
+            var statusName = _db.Statuses.FirstOrDefault(_ => _.StatusId == vm.statusid).Name;
             return Content(statusName);
         }
         public IActionResult individualDetials(int id)
@@ -772,12 +785,41 @@ namespace prjDB_GamingForm_Show.Controllers
         #endregion
 
         #region PartialView
-
+        public IActionResult PartialReleaseOverview()
+        {
+            return PartialView();
+        }
         public IActionResult PartialOverview()
         {
-            //int memberid = (int)HttpContext.Session.GetInt32(CDictionary.SK_UserID);
-            //_db.DeputeRecords.Where()
-            return PartialView();
+            var release = _db.Deputes
+                .Where(_ => _.ProviderId == HttpContext.Session.GetInt32(CDictionary.SK_UserID))
+                .Select(depute => new
+                {
+                    ApplyCount = depute.DeputeRecords.Count(_ => _.ApplyStatusId == 5),
+                    ReplyCount = depute.DeputeRecords.Count(_ => _.ApplyStatusId == 25),
+                    ComCount = depute.DeputeRecords.Count(_ => _.ApplyStatusId == 16),
+                }).ToList();
+
+            var receive = _db.DeputeRecords
+                .Where(_ => _.MemberId == HttpContext.Session.GetInt32(CDictionary.SK_UserID))
+                .Select(_ => _);
+               
+            if (release == null && receive.Count() == 0)
+                return Content("尚無資料");
+
+            var datas = new CDeputeOverViewModel();
+            foreach (var item in release)
+            {
+                datas.ApplyCount += item.ApplyCount;
+                datas.ReplyCount += item.ReplyCount;
+                datas.ComCount += item.ComCount;
+            }
+            datas.NewCount = receive.Count(_ => _.ApplyStatusId == 9);
+            datas.RunCount = receive.Count(_ => _.ApplyStatusId == 10 || _.ApplyStatusId == 20);
+            datas.CofirmCount = receive.Count(_ => _.ApplyStatusId == 25);
+            datas.MemberComCount = receive.Count(_ => _.ApplyStatusId == 16);
+
+            return PartialView(datas);
         }
         public IActionResult PartialReleaseList()
         {

@@ -28,7 +28,7 @@ namespace DB_GamingForm_Show.Job.DeputeClass
         public string deputeContent { get; set; }
         
         public decimal salary { get; set; }
-        public string statusid {  get; set; }
+        public int statusid {  get; set; }
         [DisplayName("懸賞狀態")]
         public string status { get; set; }
         

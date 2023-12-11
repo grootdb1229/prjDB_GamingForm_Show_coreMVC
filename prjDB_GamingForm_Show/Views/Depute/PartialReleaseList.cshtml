@@ -84,6 +84,7 @@
         const data = await response.json();
         const replyContent = JSON.parse(data.replyContent);
         console.log(data);
+        const hasFile = replyContent.fileName == null ? "disabled" : "";
 
         const swalWithBootstrapButtons = Swal.mixin({
             customClass: {
@@ -101,31 +102,42 @@
             html: `<ul class="list-group">
                       <li class="list-group-item text-reset bg-dark">主題：${data.depute.title}</li>
                       <li class="list-group-item text-reset bg-dark">檔案簡介：${replyContent.content}</li>
-                      <li hidden>${data.deputeId}</li>
-                      <li class="list-group-item text-reset bg-dark"><a type="button" id="download" class="btn btn-info">檔案下載</a></li>
+                      <li class="list-group-item text-reset bg-dark"><button type="button" id="download" class="btn btn-info" ${hasFile}>檔案下載</button></li>
                    </ul>`,
             icon: "info",
             showCancelButton: true,
             confirmButtonText: "確認完成!",
             cancelButtonText: "取消",
-            reverseButtons: true
-        })
-            .then(() => {
-                const downloadbtn = document.querySelector('#download');
-                downloadbtn.href = replyContent.filepath;
-                downloadbtn.download;
-                downloadbtn.click();
-            })
-        .then((result) => {
+            reverseButtons: true,
+            didOpen: (modalElement) => {
+                const downloadbtn = modalElement.querySelector('#download');
+                downloadbtn.download = `${replyContent.fileName}`;
+                downloadbtn.href = `@Url.Content("~/depute/downloadFile")?fileName=${replyContent.fileName}`;
+            }
+        }).then((result) => {
             if (result.isConfirmed) {
+                var deputerecordstatus = JSON.stringify({ id: data.id, statusid: 16 });
+                console.log(deputerecordstatus);
+                fetch(`@Url.Content("~/depute/changeDeputeRecordStatus")?jsonString=${deputerecordstatus}`);
                 swalWithBootstrapButtons.fire({
                     color: "#D0D0D0",
                     background: "#343a40",
-                    title: "已刪除!",
-                    text: "該筆資料已刪除",
-                    icon: "success"
+                    title: "恭喜!",
+                    html: "委託已完成<br/>視窗將於<b></b>秒關閉",
+                    icon: "success",
+                    timer: 5000,
+                    timerProgressBar: true,
+                    didOpen: () => {
+                        Swal.showLoading();
+                        const timer = Swal.getPopup().querySelector("b");
+                        timerInterval = setInterval(() => {
+                            timer.textContent = `${(Swal.getTimerLeft()/1000).toFixed(0)}`;
+                        }, 100);
+                    },
+                    willClose: () => {
+                        clearInterval(timerInterval);
+                    }
                 });
-                fetch(`@Url.Content("~/depute/deletedepute")?id=${deputeID}`);
                 setTimeout(function () {
                     reloadPartial();
                 }, 500);
@@ -137,19 +149,11 @@
                     color: "#D0D0D0",
                     background: "#343a40",
                     title: "已取消",
-                    text: "資料尚未刪除",
-                    icon: "error"
+                    text: "委託尚未完成",
+                    icon: "warning"
                 });
             }
         });
-    }
-
-    function download() {
-        console.log("123");
-        
-        // link.href = replyContent.filePath;
-        // link.download = 'filename.txt';
-        // link.click();
     }
 
     function reloadPartial() {
@@ -176,15 +180,18 @@
         Swal.fire({
             color: "#D0D0D0",
             background: "#343a40",
+            scrollbarPadding: false,
             title: `${datas[0].title}-應徵會員資料`,
             width: '100rem',
             html: `<div class="accordion" id="accordionExample"></div>`
         });
 
-        const applyers = await datas.map((applyer, index) =>
-            `<div class="accordion-item">
+        const applyers = await datas.map((applyer, index) =>{
+            const isCooperating = applyer.status.includes("合作中") || applyer.status.includes("已完成");
+            const canChangeStatus = isCooperating ? "disabled" : "";
+            return `<div class="accordion-item">
                         <h2 class="accordion-header">
-                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse${applyer.memberName}" aria-expanded="false" aria-controls="collapse${applyer.memberName}">
+                            <button class="accordion-button collapsed" onclick="readed(${applyer.id},event)" type="button" data-bs-toggle="collapse" data-bs-target="#collapse${applyer.memberName}" aria-expanded="false" aria-controls="collapse${applyer.memberName}">
                             ${index + 1}-${applyer.memberName}<span class="badge text-bg-info">${applyer.status}</span>
                             </button>
                         </h2>
@@ -210,18 +217,17 @@
                           <td class="align-middle" style="color:black">${applyer.applyerPhone}</td>
                           <td class="align-middle" style="color:black">${applyer.applyerBirth}</td>
                           <td class="align-middle" style="color:black"><a href="#">${applyer.memberName}</a></td>
-                          <td class="align-middle" style="color:black">${applyer.status}</td>
+                          <td class="align-middle" style="color:black" id="currentStatus">${applyer.status}</td>
                           <td class="align-middle" style="color:black">
-                             <select class="form-select" aria-label="Default select example">
+                             <select class="form-select" aria-label="Default select example" ${canChangeStatus}>
                                 <option selected>請選擇欲修改的狀態</option>
                                 <option value="7">審核中</option>
-                                <option value="8">拒絕</option>
                                 <option value="10">合作中</option>
                                 <option value="11">備取</option>
                              </select>
                           </td>
                           <td>
-                                 <button class="btn btn-info" onclick="changeStatus(${applyer.id},event)">更改</button>
+                             <button class="btn btn-info" onclick="changeStatus(${applyer.id},event)" ${canChangeStatus}>更改</button>
                           </td>
                         </tr>
                       </tbody>
@@ -229,20 +235,34 @@
                         </div>
                         <ul class="list-group">
                             <li class="list-group-item text-center">應徵會員補充資訊</li>
-                                <li class="list-group-item text-start" style="white-space: pre-line;">${applyer.applyerContent}</li>
+                            <li class="list-group-item text-start" style="white-space: pre-line;">${applyer.applyerContent}</li>
                         </ul>
                         </div>
-                        </div>`);
+                 </div>`});
         const titleapplyer = await document.querySelector('#accordionExample');
         titleapplyer.innerHTML = applyers.join("");
     }
 
+    async function readed(deputeRecordID,event) {
+        if (event.target.lastElementChild.innerHTML != "已投遞")
+            return;
+        var deputerecordstatus = JSON.stringify({ id: deputeRecordID, statusid: 7 });
+        console.log(deputerecordstatus);
+        const response = await fetch(`@Url.Content("~/depute/changeDeputeRecordStatus")?jsonString=${deputerecordstatus}`);
+        const statusname = await response.text();
+        event.target.lastElementChild.innerHTML = statusname;
+        event.target.parentNode.nextElementSibling.querySelector('#currentStatus').innerHTML = statusname;
+    }
+
     async function changeStatus(deputeRecordID, event) {
-        const applystatusid = event.target.parentNode.previousSibling.previousSibling.childNodes[1].value;
+        const applystatus = event.target.parentNode.previousSibling.previousSibling.childNodes[1].value;
+        if (applystatus == "請選擇欲修改的狀態")
+            return;
+        const applystatusid = parseInt(applystatus);
         const viewstatus = event.target.parentNode.previousSibling.previousSibling.previousSibling.previousSibling;
         const badgestatus = event.target.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode.previousSibling.previousSibling.childNodes[1].childNodes[1];
         var deputerecordstatus = JSON.stringify({ id: deputeRecordID, statusid: applystatusid });
-        const response = await fetch(`@Url.Content("~/depute/changeDeputeRecordStatus")?deputerecordstatus=${deputerecordstatus}`);
+        const response = await fetch(`@Url.Content("~/depute/changeDeputeRecordStatus")?jsonString=${deputerecordstatus}`);
         const statusname = await response.text();
         viewstatus.innerHTML = statusname;
         badgestatus.innerHTML = statusname;
