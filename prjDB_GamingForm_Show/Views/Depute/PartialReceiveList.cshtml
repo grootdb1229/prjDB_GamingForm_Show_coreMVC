@@ -51,6 +51,12 @@
                     @i.Depute.Modifiedate.ToString("yyyy/MM/dd HH:mm")
                 </td>
                 <td class="col-3">
+                    @{
+                        if (@i.ApplyStatus.Name == "合作中")
+                        {
+                            @Html.ActionLink("完成", "ReplyDepute", new { id = i.Id }, new { @class = "btn btn-success" })
+                        }
+                    }
                     @Html.ActionLink("詳細資料", "Details", new { id = i.Id }, new { @class = "btn btn-secondary" }) 
                     @Html.ActionLink("撤回", "DeleteDeputeRecord", "Depute", new { id = i.Id }, new { @class = "btn btn-danger" })
                 </td>
@@ -58,4 +64,6 @@
         }
     }
 </table>
-
+<script>
+    
+</script>
