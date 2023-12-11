@@ -227,11 +227,45 @@ namespace prjDB_GamingForm_Show.Controllers
 
 
             public IActionResult LoveList()
-            {
-			var aa=	_db.WishLists.Where(x => x.MemberId == HttpContext.Session.GetInt32(CDictionary.SK_UserID));
+            {//寫VM 裝名稱價錢圖片  套語喬的結帳按鈕跟我的移除最愛 
+			var aa=	_db.WishLists.Where(x => x.MemberId == HttpContext.Session.GetInt32(CDictionary.SK_UserID)).Select(a => a.Product).ToList();
+				List < CLoveListViewModel> LL= new List<CLoveListViewModel>();
+                
+				foreach (var x in aa)
+				{
+					CLoveListViewModel CLVM =new CLoveListViewModel();
+					CLVM.ProductId=x.ProductId;
+					CLVM.FImagePath = x.FImagePath;
+					CLVM.ProductName = x.ProductName;
+					CLVM.Price= x.Price;
+					LL.Add(CLVM);
+				}
+
 			
-			return View(aa);
+				return View(LL);
             }
+            public IActionResult RemoveProduct(int? id) //Ajax刷新最愛
+            {
+                int memberID = (int)HttpContext.Session.GetInt32(CDictionary.SK_UserID);
+                WishList removeProduct = _db.WishLists.FirstOrDefault(x => x.ProductId == id && x.MemberId == memberID);
+                _db.WishLists.Remove(removeProduct);
+                _db.SaveChanges();
+
+                var aa = _db.WishLists.Where(x => x.MemberId == HttpContext.Session.GetInt32(CDictionary.SK_UserID)).Select(a => a.Product).ToList();
+                List<CLoveListViewModel> LL = new List<CLoveListViewModel>();
+
+                foreach (var x in aa)
+                {  
+                    CLoveListViewModel CLVM = new CLoveListViewModel();
+					CLVM.ProductId=x.ProductId;
+                    CLVM.FImagePath = x.FImagePath;
+                    CLVM.ProductName = x.ProductName;
+                    CLVM.Price = x.Price;
+                    LL.Add(CLVM);
+                }
+                return Json(LL);
+            }
+
 
             public IActionResult Index(CKeyWord ck)
 			{
@@ -963,7 +997,7 @@ namespace prjDB_GamingForm_Show.Controllers
 				};
 				x.ViewCount++;
 				_db.SaveChanges();
-				Trace.WriteLine(ProductInfo.favourite);
+				//Trace.WriteLine(ProductInfo.favourite);
 				return View(ProductInfo);
 			}
 
@@ -1001,8 +1035,10 @@ namespace prjDB_GamingForm_Show.Controllers
 
 
 			}
+		
 
-			public IActionResult AddToCar(int? id)
+
+            public IActionResult AddToCar(int? id)
 			{
 				if (id == null)
 				{
@@ -1053,7 +1089,41 @@ namespace prjDB_GamingForm_Show.Controllers
 				return RedirectToAction("Index");
 			}
 
-			public IActionResult CarView()
+            public IActionResult AddToCar2(int? id)
+            {
+
+                Product product = _db.Products.FirstOrDefault(x => x.ProductId == id);
+                if (product != null)
+                {
+                    string json = "";
+                    List<CShoppingCarViewModel> car = null;
+                    if (HttpContext.Session.Keys.Contains(CDictionary.SK_PURCHASED_PRODUCES_LIST))
+                    {
+                        json = HttpContext.Session.GetString(CDictionary.SK_PURCHASED_PRODUCES_LIST);
+                        car = JsonSerializer.Deserialize<List<CShoppingCarViewModel>>(json);
+                    }
+                    else
+                    {
+                        car = new List<CShoppingCarViewModel>();
+                    }
+                    CShoppingCarViewModel x = new CShoppingCarViewModel();
+                    x.Price = (decimal)product.Price;
+                    x.ProductName = product.ProductName;
+                    x.FImagePath = product.FImagePath;
+                    x.Count = 1;
+                    x.ProductID = product.ProductId;
+
+
+                    car.Add(x);
+                    json = JsonSerializer.Serialize(car);
+                    HttpContext.Session.SetString(CDictionary.SK_PURCHASED_PRODUCES_LIST, json);
+                    ViewBag.Car = car.Count();
+                }
+
+                return RedirectToAction("Index");
+            }
+
+            public IActionResult CarView()
 			{
 				if (!HttpContext.Session.Keys.Contains(CDictionary.SK_PURCHASED_PRODUCES_LIST))
 				{
