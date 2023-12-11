@@ -6,6 +6,18 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+@section Styles{
+    <style>
+        .ip-item:hover {
+            background-color: #272727; /* 設定你想要的自定義顏色 */
+        }
+
+        .table-hover tbody tr:hover {
+            background-color: #272727; /* 設定你想要的自定義顏色 */
+        }
+    </style>
+}
+
 <link rel="stylesheet" href="~/css/blogstyle.css" type="text/css">
 
 <header class="header-section">
@@ -48,7 +60,7 @@
 box-shadow: #FFF 0 -1px 4px, #ff0 0 -2px 10px, #ff8000 0 -10px 20px, red 0 -18px 40px, 5px 5px 15px 5px rgba(0,0,0,0)">
         <div style="padding:10px;margin-right:5%">
             <div >
-                <table class="table" style="color:antiquewhite; ">
+                <table class="table table-hover" style="color:antiquewhite; ">
                     <tr style="text-align:center;font-size:24px">
                         <th>熱門看板</th>
                     </tr>
