@@ -32,7 +32,7 @@ app.MapControllerRoute(
 //pattern: "{controller=depute}/{action=deputemain}/{id?}");
 //pattern: "{controller=Blog}/{action=List}/{id?}");
 //pattern: "{controller=Shop}/{action=Index}/{id?}");
-pattern: "{controller=Depute}/{action=DeputeList}/{id?}");
-//pattern: "{controller=Admin}/{action=Index}/{id?}");
+//pattern: "{controller=Depute}/{action=DeputeList}/{id?}");
+pattern: "{controller=Admin}/{action=Index}/{id?}");
 
 app.Run();
