@@ -667,8 +667,23 @@ namespace prjDB_GamingForm_Show.Controllers
 				return Json(SelSub);
 			}
 
+            public IActionResult Coupon()
+            {
+                var Coupon = _db.Coupons
+                    .Where(p => p.StatusId == 23)
+                    .Select(s => new
+                    {
+						s.CouponId,
+                        s.Title,
+                        s.Discount,
+						s.Reduce
+                    })
+                    .ToList();
+                return Json(Coupon);
+            }
 
-			[HttpPost]
+
+            [HttpPost]
 			public ActionResult Create(超酷warp product)
 			//先這樣Warp應該是用於資料驗證，有待看影片確認但目前不這樣寫驗證會一直錯誤
 			{//但我其實也想把驗證改寫到前端，這些資料本質並不是重要到要寫後端驗證

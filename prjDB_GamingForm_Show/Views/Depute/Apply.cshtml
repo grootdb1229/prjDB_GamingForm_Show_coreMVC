@@ -5,14 +5,13 @@
     Layout = "~/Views/Shared/_Layout_DB.cshtml";
 }
 
-<h2>應徵</h2>
+<h2 class="mt-5">應徵</h2>
 
 <h4>請輸入您的應徵資訊</h4>
-<hr />
+<hr class="col-10" />
 <div class="row">
     <div class="col-md-10">
-        <form asp-action="Apply">
-            <input type="text" name="Id" hidden>
+        <form asp-action="Apply" id="formElement">
             <div class="form-group">
                 <label class="control-label">委託主題：</label>
                 <input class="form-control" type="text" value="@Model.Title" disabled />
@@ -30,27 +29,53 @@
                 <input name="DeputeId" value="@Model.DeputeId" class="form-control" />
             </div>
             <div class="form-group" hidden>
-                <label  class="control-label">會員編號</label>
-                <input name="MemberId" value="@ViewBag.memberid"class="form-control"/>
+                <label class="control-label">會員編號</label>
+                <input name="MemberId" value="@ViewBag.memberid" class="form-control" />
             </div>
             <div class="form-group" hidden>
                 <label class="control-label">ApplyStatusId</label>
-                <input name="ApplyStatusId" value="5" class="form-control"/>
+                <input name="ApplyStatusId" value="5" class="form-control" />
             </div>
             <div>
-                <label  class="control-label">自我推薦(選填)：</label>
+                <label class="control-label">自我推薦(選填)：</label>
                 <br />
                 <label class="control-label">寫下工作相關經驗，個人特質或專長，提升錄取率吧</label>
                 <textarea class="form-control" name="RecordContent" rows="4" cols="50" placeholder="在這裡輸入您的應徵補充資訊..."></textarea>
             </div>
             <div class="form-group mt-3">
                 <a asp-action="DeputeMain" class="btn btn-secondary">返回</a>
-                <input type="submit" value="送出並應徵" class="btn btn-success" />
+                <input type="button" value="送出並應徵" onclick="prepareAndSubmit()" class="btn btn-success" />
             </div>
         </form>
     </div>
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        async function prepareAndSubmit() {
+            const formElement = document.querySelector('#formElement');
+            const formdata = new FormData(formElement);
+            const response = await fetch('@Url.Content("~/depute/Apply")', {
+                method: 'POST',
+                body: formdata
+            });
+            const result = await response.json();
+            const icon = result.success ? "success" : "error";
+            if (result.success) {
+                Swal.fire({
+                    timer: 3000,
+                    timerProgressBar: true,
+                    title: `${result.message}`,
+                    text: "2秒後轉回委託頁面",
+                    icon: `${icon}`
+                }).then(() => {
+                    window.location.href = '@Url.Action("homeframe","depute")';
+                })
+            };
+        }
+    </script>
 }

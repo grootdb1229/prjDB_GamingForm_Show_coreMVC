@@ -36,6 +36,7 @@
   <ItemGroup>
     <Folder Include="Models\Entities\" />
     <Folder Include="wwwroot\images\MemberCollectionPreView\" />
+    <Folder Include="wwwroot\images\depute\" />
     <Folder Include="wwwroot\images\shop\" />
     <Folder Include="wwwroot\MemberPhoto\" />
   </ItemGroup>
@@ -269,6 +270,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="7.0.11" />
+    <PackageReference Include="System.Runtime.Caching" Version="8.0.0" />
   </ItemGroup>
 
 </Project>
