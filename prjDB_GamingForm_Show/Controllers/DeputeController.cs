@@ -236,7 +236,7 @@ namespace prjDB_GamingForm_Show.Controllers
                     datas = Temp.OrderByDescending(n =>n.salary);
                     break;
                 case 2:
-                    datas = Temp.OrderByDescending(n => n.modifieddate);
+                    datas = Temp.OrderByDescending(n => Convert.ToDateTime(n.modifieddate));
                     break;
                 case 3:
                     datas = Temp.OrderByDescending(n => n.viewcount);
@@ -408,16 +408,17 @@ namespace prjDB_GamingForm_Show.Controllers
         //熱門5最新5
         public IActionResult GetFive(int? id)
         {
+            IEnumerable<CDeputeViewModel> datas = null;
             if (id == 1)
-            { 
-            var datas = List.OrderByDescending(n => n.modifieddate).Take(5);
-            return Json(datas);
+            {
+                datas = List.OrderByDescending(n => Convert.ToDateTime(n.startdate)).Take(5);
             }
             else
             {
-                var datas = List.OrderByDescending(n => n.viewcount).Take(5);
-                return Json(datas);
+                datas = List.OrderByDescending(n => n.viewcount).Take(5);
+                
             }
+            return Json(datas);
         }
 
         public IActionResult DeputeMain()
