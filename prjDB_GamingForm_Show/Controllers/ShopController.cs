@@ -36,6 +36,69 @@ namespace prjDB_GamingForm_Show.Controllers
 				_host = host;
 				_db = db;
 			}
+
+            public List<CShopPageViewModel> Listx { get; set; }
+            public List<CShopPageViewModel> Temp { get; set; }
+			public void listLoad()   // 這是讓DB只要執行一次查詢結果的方法。 
+			{
+			 Listx = new List<CShopPageViewModel>();
+                Temp =new List<CShopPageViewModel>();		
+                _db.ProductTags.Load();
+                _db.Products.Load();
+                _db.SubTags.Load();
+
+                var data = _db.ProductTags
+                    .Where(n =>n.Product.StatusId == 1)
+                    .Select(n => new
+                    {
+                        n.Product.AvailableDate,
+                        n.Product.ProductId,
+                        n.Product.ProductName,
+                        n.Product.Price,
+                        n.Product.FImagePath,
+                        SubTagName = n.SubTag.Name
+                    })
+                    .OrderByDescending(x => x.Price)
+                    .ToList();
+
+                List<CShopPageViewModel> List2 = data.Select(item =>
+                {   //將每個字以/串再一起。
+                    string s = string.Join("/", _db.ProductTags.Where(x => x.ProductId == item.ProductId).Select(x => x.SubTag.Name));
+                    return new CShopPageViewModel //返還這個物件 Lambda多行表達需要加return，不然將會返還錯誤的東西，部分程式碼將不被視為返還值之一
+                    {
+                        ProductId = item.ProductId,
+                        ProductName = item.ProductName,
+                        Price = item.Price,
+                        FImagePath = item.FImagePath,
+                        SubTagName = s
+                    };
+                }).ToList();
+                ///篩掉重複資料 GroupBy把一樣的ID篩一起，.First取一個。
+                 Listx = List2.GroupBy(p => p.ProductId).Select(group => group.First()).ToList();
+                Temp = Listx;
+
+            }
+
+			public IActionResult MutipleSearch(CKeyWord vm)
+			{
+				Temp = Listx;
+				IEnumerable<CShopPageViewModel> datas = null;
+				if (vm.txtMutiKeywords != null)//你的一堆標籤字串
+                {
+
+					foreach (var item in vm.txtMutiKeywords)//你的一堆標籤字串
+                    {
+						if (string.IsNullOrEmpty(item))
+							return Content("沒有符合的條件");
+
+						datas = Temp.Where(n => (n.SubTagName.Trim().ToLower().Contains(item.Trim().ToLower()))).OrderByDescending(x => x.ProductId);
+                        Temp = datas.ToList();
+					}
+				}				
+				return Json(Temp);
+			}
+
+
 			//public List<CShopPageViewModel> List { get; set; }
 			//public IActionResult test(CKeyWord ck)
 			//{
@@ -228,10 +291,45 @@ namespace prjDB_GamingForm_Show.Controllers
 
             public IActionResult LoveList()
             {
-			var aa=	_db.WishLists.Where(x => x.MemberId == HttpContext.Session.GetInt32(CDictionary.SK_UserID));
-			
-			return View(aa);
+			var aa=	_db.WishLists.Where(x => x.MemberId == HttpContext.Session.GetInt32(CDictionary.SK_UserID)).Select(a => a.Product).ToList();
+				List < CLoveListViewModel> LL= new List<CLoveListViewModel>();
+                
+				foreach (var x in aa)
+				{
+					CLoveListViewModel CLVM =new CLoveListViewModel();
+					CLVM.ProductId=x.ProductId;
+					CLVM.FImagePath = x.FImagePath;
+					CLVM.ProductName = x.ProductName;
+					CLVM.Price= x.Price;
+					LL.Add(CLVM);
+				}
+
+				ViewBag.LList = LL.Count();
+				//TP.LListCount=LL.Count();
+				return View(LL);
             }
+            public IActionResult RemoveProduct(int? id) //Ajax刷新最愛
+            {
+                int memberID = (int)HttpContext.Session.GetInt32(CDictionary.SK_UserID);
+                WishList removeProduct = _db.WishLists.FirstOrDefault(x => x.ProductId == id && x.MemberId == memberID);
+                _db.WishLists.Remove(removeProduct);
+                _db.SaveChanges();
+
+                var aa = _db.WishLists.Where(x => x.MemberId == HttpContext.Session.GetInt32(CDictionary.SK_UserID)).Select(a => a.Product).ToList();
+                List<CLoveListViewModel> LL = new List<CLoveListViewModel>();
+
+                foreach (var x in aa)
+                {  
+                    CLoveListViewModel CLVM = new CLoveListViewModel();
+					CLVM.ProductId=x.ProductId;
+                    CLVM.FImagePath = x.FImagePath;
+                    CLVM.ProductName = x.ProductName;
+                    CLVM.Price = x.Price;
+                    LL.Add(CLVM);
+                }
+                return Json(LL);
+            }
+
 
             public IActionResult Index(CKeyWord ck)
 			{
@@ -569,8 +667,23 @@ namespace prjDB_GamingForm_Show.Controllers
 				return Json(SelSub);
 			}
 
+            public IActionResult Coupon()
+            {
+                var Coupon = _db.Coupons
+                    .Where(p => p.StatusId == 23)
+                    .Select(s => new
+                    {
+						s.CouponId,
+                        s.Title,
+                        s.Discount,
+						s.Reduce
+                    })
+                    .ToList();
+                return Json(Coupon);
+            }
 
-			[HttpPost]
+
+            [HttpPost]
 			public ActionResult Create(超酷warp product)
 			//先這樣Warp應該是用於資料驗證，有待看影片確認但目前不這樣寫驗證會一直錯誤
 			{//但我其實也想把驗證改寫到前端，這些資料本質並不是重要到要寫後端驗證
@@ -617,7 +730,7 @@ namespace prjDB_GamingForm_Show.Controllers
 								x.AvailableDate = product.AvailableDate;
 								x.ProductContent = product.ProductContent;
 								x.UnitStock = product.UnitStock;
-								x.StatusId = 1;//記得改回7
+								x.StatusId = 7;//記得改回7
 								x.MemberId = product.MemberID;
 
 								_db.Products.Add(x);
@@ -963,7 +1076,7 @@ namespace prjDB_GamingForm_Show.Controllers
 				};
 				x.ViewCount++;
 				_db.SaveChanges();
-				Trace.WriteLine(ProductInfo.favourite);
+				//Trace.WriteLine(ProductInfo.favourite);
 				return View(ProductInfo);
 			}
 
@@ -1001,8 +1114,10 @@ namespace prjDB_GamingForm_Show.Controllers
 
 
 			}
+		
 
-			public IActionResult AddToCar(int? id)
+
+            public IActionResult AddToCar(int? id)
 			{
 				if (id == null)
 				{
@@ -1053,7 +1168,41 @@ namespace prjDB_GamingForm_Show.Controllers
 				return RedirectToAction("Index");
 			}
 
-			public IActionResult CarView()
+            public IActionResult AddToCar2(int? id)
+            {
+
+                Product product = _db.Products.FirstOrDefault(x => x.ProductId == id);
+                if (product != null)
+                {
+                    string json = "";
+                    List<CShoppingCarViewModel> car = null;
+                    if (HttpContext.Session.Keys.Contains(CDictionary.SK_PURCHASED_PRODUCES_LIST))
+                    {
+                        json = HttpContext.Session.GetString(CDictionary.SK_PURCHASED_PRODUCES_LIST);
+                        car = JsonSerializer.Deserialize<List<CShoppingCarViewModel>>(json);
+                    }
+                    else
+                    {
+                        car = new List<CShoppingCarViewModel>();
+                    }
+                    CShoppingCarViewModel x = new CShoppingCarViewModel();
+                    x.Price = (decimal)product.Price;
+                    x.ProductName = product.ProductName;
+                    x.FImagePath = product.FImagePath;
+                    x.Count = 1;
+                    x.ProductID = product.ProductId;
+
+
+                    car.Add(x);
+                    json = JsonSerializer.Serialize(car);
+                    HttpContext.Session.SetString(CDictionary.SK_PURCHASED_PRODUCES_LIST, json);
+                    ViewBag.Car = car.Count();
+                }
+
+                return RedirectToAction("Index");
+            }
+
+            public IActionResult CarView()
 			{
 				if (!HttpContext.Session.Keys.Contains(CDictionary.SK_PURCHASED_PRODUCES_LIST))
 				{

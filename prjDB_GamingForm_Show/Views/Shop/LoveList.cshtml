@@ -1,37 +1,98 @@
-﻿@model IEnumerable<prjDB_GamingForm_Show.Models.Entities.WishList>
+﻿@model IEnumerable<prjDB_GamingForm_Show.ViewModels.CLoveListViewModel>
 
 @{
     ViewData["Title"] = "LoveList";
 }
 
-<h2>LoveList</h2>
-<table class="table">
+<h2 id="mapAll">願望清單</h2>
+<table class="table table-hover" id="wishlistTable">
     <thead>
         <tr>
+            <th>@Html.DisplayNameFor(model => model.ProductName)</th>
             <th>
-                @Html.DisplayNameFor(model => model.Id)
+                <p></p>
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ProductId)
-            </th>
-            <th></th>
+            <th>@Html.DisplayNameFor(model => model.Price)</th>
+            <th>Actions</th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ProductId)
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td class="table-secondary">
+                    @Html.DisplayFor(modelItem => item.ProductName)
+                </td>
+                <td class="table-secondary">
+                    <a href='@Url.Content("~/Shop/Details")?id=@item.ProductId'>
+                    <img src="~/images/shop/@item.FImagePath" alt="Image" width="300" height="170">
+                    </a>
+                </td>
+                <td class="table-secondary">
+                    @Html.DisplayFor(modelItem => item.Price)
+                </td>
+                <td class="table-secondary">
+                    <button class="AddtoCar" data-product-id="@item.ProductId">加入購物車</button> |
+                    <button class="removeButton" data-product-id="@item.ProductId">移除最愛</button>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
+
+<style>
+    th, td {
+        color: white;
+        font-weight: bold;
+    }
+
+
+</style>
+@section Scripts {
+
+    <script>
+
+        $(document).ready(function () {
+            $("#wishlistTable").on("click", ".removeButton", async function () {
+                var productId = $(this).data("product-id");
+
+                const response = await fetch(`@Url.Content("~/Shop/RemoveProduct")?id=${productId}`);
+                const data = await response.json();
+                console.log(data);
+                const refresh = data.map(item => `
+                    <tr>
+                        <td class="table-secondary">
+                            ${item.productName}
+                        </td>
+                        <td class="table-secondary">
+                                         <a href='@Url.Content("~/Shop/Details")?id=${item.productId}'>
+                            <img src="/images/shop/${item.fImagePath}" alt="Image" width="300" height="170">
+                            </a>
+                        </td>
+                        <td class="table-secondary">
+                            ${item.price}
+                        </td>
+                        <td class="table-secondary">
+                                    <button class="AddtoCar" data-product-id="${item.productId}">加入購物車</button> |
+                                    <button class="removeButton" data-product-id="${item.productId}">移除最愛</button>
+                        </td>
+                    </tr>
+                `);
+
+                // 更新表格內容
+                $("#wishlistTable tbody").html(refresh.join(""));
+            });
+        });
+        ///加入購物車
+        $(document).ready(function () {
+            $("#wishlistTable").on("click", ".AddtoCar", async function () {
+                var productId = $(this).data("product-id");
+
+                const response =  fetch(`@Url.Content("~/Shop/AddToCar2")?id=${productId}` );
+
+            });
+        });
+
+
+    </script>
+}

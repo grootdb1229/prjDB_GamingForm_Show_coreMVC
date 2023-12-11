@@ -123,7 +123,7 @@
                                 </li>
                                 <li>
                                     <a href="../Admin/SignalRTest">
-                                        聊天測試
+                                        <i class="fa-solid fa-comments"></i>聊天測
                                     </a>
                                 </li>
                                 @*<li>
@@ -237,58 +237,11 @@
                                     <span class="badge bg-green" id="notCheckMessageCount"></span>
                                 </a>
                                 <ul id="messageBox" class="dropdown-menu list-unstyled msg_list" role="menu" aria-labelledby="navbarDropdown1">
-                                    <li class="nav-item">
-                                        <a class="dropdown-item">
-                                            <span class="image"><img src="~/production/images/s__92446730_0.jpg" /></span>
-                                            <span>
-                                                <span>囝囡</span>
-                                                <span class="time">幾 秒鐘 前</span>
-                                            </span>
-                                            <span class="message">
-                                                喵喵喵，喵嗚喵，咪
-                                            </span>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="dropdown-item">
-                                            <span class="image"><img src="~/production/images/s__92446730_0.jpg" /></span>
-                                            <span>
-                                                <span>囝囡</span>
-                                                <span class="time">三 分鐘 前</span>
-                                            </span>
-                                            <span class="message">
-                                                喵嗚嗚喵嗚嗚，嗚嗚喵嗚喵，咪咪咪喵喵嗚，咪咪咪喵喵嗚
-                                            </span>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="dropdown-item">
-                                            <span class="image"><img src="~/production/images/s__92446730_0.jpg" /></span>
-                                            <span>
-                                                <span>囝囡</span>
-                                                <span class="time">二十 分鐘 前</span>
-                                            </span>
-                                            <span class="message">
-                                                喵嗚喵喵嗚喵，喵咪咪喵，咪嗚
-                                            </span>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="dropdown-item">
-                                            <span class="image"><img src="~/production/images/s__92446730_0.jpg" /></span>
-                                            <span>
-                                                <span>囝囡</span>
-                                                <span class="time">三 小時 前</span>
-                                            </span>
-                                            <span class="message">
-                                                咪嗚喵喵，喵喵，咪喵喵喵
-                                            </span>
-                                        </a>
-                                    </li>
+                                    
                                     <li class="nav-item">
                                         <div class="text-center">
-                                            <a class="dropdown-item">
-                                                <strong>查看所有訊息</strong>
+                                            <a class="dropdown-item" onclick="showPV()">
+                                                <strong>開啟列表</strong>
                                                 <i class="fa fa-angle-right"></i>
                                             </a>
                                         </div>
@@ -307,7 +260,7 @@
 
     <!-- footer content -->
     <footer>
-        <button onclick="showPV()">SignalR</button>
+        @* <button onclick="showPV()">SignalR</button> *@
         <div id="test" style="display:none;position: absolute; bottom: 10px; right: 10px; z-index: 999;background-color:#6C6C6C ; opacity:0.95; border: 3px groove #000;border-radius:15px;color:#FFFFF4;text-align:center">
             @* <h1>即時聊天範例</h1>
 
@@ -388,6 +341,10 @@
             else {
                 div.style.display = "none"; // 隱藏
             }
+            var liToDelete = document.querySelectorAll('[data-li-name="uniqueName"]');
+            liToDelete.forEach(function (li) {
+                li.remove();
+            });
         }
         $(document).ready(function () {            
             $.ajax({
@@ -407,6 +364,7 @@
                 }
             });
         });
+
         function checkMessage() {
             $('#notCheckMessageCount').text("")
         }
