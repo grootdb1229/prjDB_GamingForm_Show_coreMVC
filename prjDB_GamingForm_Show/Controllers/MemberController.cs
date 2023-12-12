@@ -29,28 +29,8 @@ namespace prjDB_GamingForm_Show.Controllers
         {
             return View();
         }
-
-        //public IActionResult Test() 
-        //{
-        //    return View();
-        //}
-        //public IActionResult MemberPage(int? id)
-        //{
-        //    //if (id == null)
-        //    //    return RedirectToAction("Create");
-        //    if (id == null)
-        //    {
-        //        return RedirectToAction("Login", "Home");
-        //    }
-        //    _db.Members.Load();
-        //    IEnumerable<Member> datas = null;
-        //    var data = from m in _db.Members
-        //               where m.MemberId == id
-        //               select m;
-        //    return View(data);
-        //}
-
-        public IActionResult MemberPageTest() 
+        #region MemberCreate&MemberPage 
+        public IActionResult MemberPageTest()
         {
             int id = (int)HttpContext.Session.GetInt32(CDictionary.SK_UserID);
             if (id == null)
@@ -63,14 +43,6 @@ namespace prjDB_GamingForm_Show.Controllers
                        where m.MemberId == id
                        select m;
             return View(data);
-        }
-        public IActionResult Test(int? id)
-        {
-            IEnumerable<Member> datas = null;
-            datas = from m in _db.Members
-                    where m.MemberId == id
-                    select m;
-            return View(datas);
         }
         public IActionResult Create()
         {
@@ -103,64 +75,6 @@ namespace prjDB_GamingForm_Show.Controllers
             ViewBag.ID = member.MemberId;
             return RedirectToAction("HomePage", "Home");
         }
-        public bool EmailVal {  get; set; }
-        public bool PhoneVal { get; set; }
-        public bool PasswordVal { get; set; }
-        //public IActionResult CreateValidation(CKeyWord vm) 
-        //{
-           // CMemberWrap datas = new CMemberWrap();
-           // IEnumerable<string> Email = (from m in _db.Members.AsEnumerable()
-           //            where m.Email.Equals(vm.txtEmail)
-           //            select m.Email).ToList();
-            
-
-           // if (Email.Count()==0)
-           // {
-           //     EmailVal = true;
-           //     datas.EmailValMsg = "該信箱可註冊";
-           // }
-           // else
-           // {
-           //     EmailVal = false;
-           //     datas.EmailValMsg = "該信箱已被註冊";
-           // }
-
-            
-           // IEnumerable<string> Phone = (from m in _db.Members.AsEnumerable()
-           //                              where m.Email.Equals(vm.txtEmail)
-           //                              select m.Email).ToList();
-           // if (Phone.Count() == 0)
-           // {
-           //     PhoneVal = true;
-           //     datas.PhoneValMsg = "該信箱可註冊";
-           // }
-           // else
-           // {
-           //     PhoneVal = false;
-           //     datas.PhoneValMsg = "該信箱已被註冊";
-
-           // }
-
-           // IEnumerable<string> password = (from m in _db.Members.AsEnumerable()
-           //                              where m.Email.Equals(vm.txtEmail)
-           //                              select m.Email).ToList();
-           // if (password.Count() == 0)
-           // {
-           //     PasswordVal = true;
-           //     datas.PasswordValMsg = "該密碼可註冊";
-           // }
-           // else
-           // {
-           //     PasswordVal = false;
-           //     datas.PasswordValMsg = "該密碼已被註冊";
-
-           // }
-
-          //if (EmailVal == true && PhoneVal == true && PasswordVal == true)
-                //塞session
-                //CDictionary.SK_Create_Validation = "true";
-           //return View(datas);
-        //}
 
         public IActionResult Edit()
         {
@@ -190,7 +104,66 @@ namespace prjDB_GamingForm_Show.Controllers
             }
             return RedirectToAction("MemberPageTest", "Member");
         }
-        //會員忘記密碼流程
+        #endregion
+        #region SendEmails
+        public IActionResult SendEmail()
+        {
+
+            string ValGuid = new Guid().ToString("D");
+            HttpContext.Session.SetString(CDictionary.SK_Validation_Guid, ValGuid);
+            var message = new MimeMessage();
+            message.From.Add(new MailboxAddress("grootdb1229", "grootdb1229@gmail.com"));
+            message.To.Add(new MailboxAddress("alan90306", "alan90306@gmail.com"));
+            message.Subject = "Test mail of asp.net Core";
+            message.Body = new TextPart("html")
+            {
+                Text = "<!DOCTYPE html>" +
+                        "<html>" +
+                        "<h2> 您的驗證碼 及 會員編號 </h3>" +
+                        "<p> 您的會員編號為:" + HttpContext.Session.GetInt32(CDictionary.SK_Confirmed_MemberID)+ "</p>" +
+                        "<p> 您的驗證碼為:"   + HttpContext.Session.GetString(CDictionary.SK_Validation_Guid) + "</p>" +
+                        "</html>"
+            };
+
+            using (var client = new SmtpClient())
+            {
+                client.Connect("smtp.gmail.com", 587, false);
+                client.Authenticate("grootdb1229@gmail.com", "fmgx uucs lgkv vqxm");
+                client.Send(message);
+                client.Disconnect(true);
+            }
+            return RedirectToAction("ValidationPage", "Member");
+        }
+        //public IActionResult SendOrderEmail(OrederProductViewModel VM)
+        //{
+        //    var message = new MimeMessage();
+        //    message.From.Add(new MailboxAddress("grootdb1229", "grootdb1229@gmail.com"));
+        //    message.To.Add(new MailboxAddress("alan90306", "alan90306@gmail.com"));
+        //    message.Subject = "Your Order from GrootShopping";
+        //    message.Body = new TextPart("html")
+        //    {
+        //        Text = "<!DOCTYPE html>" 
+        //        +
+        //                "<html>" +
+        //                "<h2>  您的訂單資訊 </h2>" +
+        //                "<p>   您的訂單編號編號為:" + VM.OrderID + "</p>" +
+        //                "<p>   價格為:" + VM.Discount + "</p>" +
+        //                "<p>   下單日期為:" + VM.ModifiedDate + "</p>" +
+        //                "<p>   商品名稱為:" +VM.ProductNames  + "</p>" +
+        //                "</html>"
+        //    };
+        //    用迴圈抓商品名稱 可能要抓折扣後的價格(折扣) 可能要抓(訂單編號) 下單時間
+        //    using (var client = new SmtpClient())
+        //    {
+        //        client.Connect("smtp.gmail.com", 587, false);
+        //        client.Authenticate("grootdb1229@gmail.com", "fmgx uucs lgkv vqxm");
+        //        client.Send(message);
+        //        client.Disconnect(true);
+        //    }
+        //    return RedirectToAction("Index", "Shop");
+        //}
+        #endregion
+        #region PasswordValidation
         public IActionResult ForgetPassword()
         {
             return View();
@@ -214,36 +187,6 @@ namespace prjDB_GamingForm_Show.Controllers
                 return RedirectToAction("Login", "Home");
             }
         }
-
-        public IActionResult SendEmail()
-        {
-
-            string ValGuid = new Guid().ToString("D");
-            HttpContext.Session.SetString(CDictionary.SK_Validation_Guid, ValGuid);
-            var message = new MimeMessage();
-            message.From.Add(new MailboxAddress("grootdb1229", "grootdb1229@gmail.com"));
-            message.To.Add(new MailboxAddress("alan90306", "alan90306@gmail.com"));
-            message.Subject = "Test mail of asp.net Core";
-            message.Body = new TextPart("html")
-            {
-                Text = "<!DOCTYPE html>" +
-                        "<html>" +
-                        "<h2> 電子信件已寄送 請至電子信箱進行確認 </h2>" +
-                        "<h3> 您的驗證碼 及 會員編號 </h3>" +
-                        "<p> 您的會員編號為:" + HttpContext.Session.GetInt32(CDictionary.SK_Confirmed_MemberID)+ "</p>" +
-                        "<p> 您的驗證碼為:"   + HttpContext.Session.GetString(CDictionary.SK_Validation_Guid) + "</p>" +
-                        "</html>"
-            };
-
-            using (var client = new SmtpClient())
-            {
-                client.Connect("smtp.gmail.com", 587, false);
-                client.Authenticate("grootdb1229@gmail.com", "fmgx uucs lgkv vqxm");
-                client.Send(message);
-                client.Disconnect(true);
-            }
-            return RedirectToAction("ValidationPage", "Member");
-        }
         public IActionResult ValidationPage()
         {
             return View();
@@ -266,7 +209,8 @@ namespace prjDB_GamingForm_Show.Controllers
             }
             return View();
         }
-
+        #endregion
+        #region MemberDetails
         public IActionResult MyOrders() 
         {
             var data = _db.Orders.Include(O => O.OrderProducts).ThenInclude(P => P.Product)
@@ -275,6 +219,13 @@ namespace prjDB_GamingForm_Show.Controllers
             return Json(data);
         }
 
+        public IActionResult MyInfo() 
+        {
+            var data = from m in _db.Members
+                       where m.MemberId == HttpContext.Session.GetInt32(CDictionary.SK_UserID)
+                       select new { m.Mycomment, m.Name, m.Phone, m.Gender, m.Birth };
+            return Json(data);
+        }
         public IActionResult MyCollections() 
         {
             return View();
@@ -302,13 +253,35 @@ namespace prjDB_GamingForm_Show.Controllers
                 MC.Intro = CW.Intro;
                 MC.FImagePath = photoName;
                 MC.MyCollection = CW.MyCollection;
-                MC.ModifiedDate = CW.ModifeidDate;
+                MC.ModifiedDate = (DateTime.Now).ToString();
                 CW.photo.CopyTo(new FileStream(_host.WebRootPath + "/images/MemberCollectionPreView/" + photoName, FileMode.Create));
                 _db.Add(MC);
                 _db.SaveChanges();
                 return RedirectToAction("MyCollections", "Member");
             }
-            
+        }
+        public IActionResult EditCollection() 
+        { 
+           return View();
+        }
+        [HttpPost]
+        public IActionResult EditCollection(MemberCollection memberCollection) 
+        {
+             MemberCollection dbCollection = _db.MemberCollections.FirstOrDefault
+                             (mc => mc.MemberId == HttpContext.Session.GetInt32(CDictionary.SK_UserID));
+            if (memberCollection == null)
+            {
+                return RedirectToAction("CreateCollection" , "Member");
+            }
+            if (memberCollection != null)
+            {
+                dbCollection.Title =  memberCollection.Title;
+                dbCollection.Intro =  memberCollection.Intro;
+                dbCollection.MyCollection = memberCollection.MyCollection;
+                dbCollection.ModifiedDate = (DateTime.Now).ToString();
+                _db.SaveChanges();
+            }
+            return RedirectToAction("MyCollections", "Member");
         }
         public IActionResult MyWorks() 
         {
@@ -343,5 +316,94 @@ namespace prjDB_GamingForm_Show.Controllers
         //{
         //    return RedirectToAction("MyWishList", "Member");
         //}
+        #endregion
+        #region Tests
+        //public IActionResult Test(int? id)
+        //{
+        //    IEnumerable<Member> datas = null;
+        //    datas = from m in _db.Members
+        //            where m.MemberId == id
+        //            select m;
+        //    return View(datas);
+        //}
+        //public IActionResult Test() 
+        //{
+        //    return View();
+        //}
+        //public IActionResult MemberPage(int? id)
+        //{
+        //    //if (id == null)
+        //    //    return RedirectToAction("Create");
+        //    if (id == null)
+        //    {
+        //        return RedirectToAction("Login", "Home");
+        //    }
+        //    _db.Members.Load();
+        //    IEnumerable<Member> datas = null;
+        //    var data = from m in _db.Members
+        //               where m.MemberId == id
+        //               select m;
+        //    return View(data);
+        //}
+        //public bool EmailVal {  get; set; }
+        //public bool PhoneVal { get; set; }
+        //public bool PasswordVal { get; set; }
+        //public IActionResult CreateValidation(CKeyWord vm) 
+        //{
+        // CMemberWrap datas = new CMemberWrap();
+        // IEnumerable<string> Email = (from m in _db.Members.AsEnumerable()
+        //            where m.Email.Equals(vm.txtEmail)
+        //            select m.Email).ToList();
+
+
+        // if (Email.Count()==0)
+        // {
+        //     EmailVal = true;
+        //     datas.EmailValMsg = "該信箱可註冊";
+        // }
+        // else
+        // {
+        //     EmailVal = false;
+        //     datas.EmailValMsg = "該信箱已被註冊";
+        // }
+
+
+        // IEnumerable<string> Phone = (from m in _db.Members.AsEnumerable()
+        //                              where m.Email.Equals(vm.txtEmail)
+        //                              select m.Email).ToList();
+        // if (Phone.Count() == 0)
+        // {
+        //     PhoneVal = true;
+        //     datas.PhoneValMsg = "該信箱可註冊";
+        // }
+        // else
+        // {
+        //     PhoneVal = false;
+        //     datas.PhoneValMsg = "該信箱已被註冊";
+
+        // }
+
+        // IEnumerable<string> password = (from m in _db.Members.AsEnumerable()
+        //                              where m.Email.Equals(vm.txtEmail)
+        //                              select m.Email).ToList();
+        // if (password.Count() == 0)
+        // {
+        //     PasswordVal = true;
+        //     datas.PasswordValMsg = "該密碼可註冊";
+        // }
+        // else
+        // {
+        //     PasswordVal = false;
+        //     datas.PasswordValMsg = "該密碼已被註冊";
+
+        // }
+
+        //if (EmailVal == true && PhoneVal == true && PasswordVal == true)
+        //塞session
+        //CDictionary.SK_Create_Validation = "true";
+        //return View(datas);
+        //}
+        //會員忘記密碼流程
+        #endregion
     }
 }

@@ -8,42 +8,33 @@
 
 <h2>檢舉內容</h2>
 
-<div>
-    <p style="font-size:25px">發文會員編號: @Html.Raw(Model.articles.FirstOrDefault().MemberId)</p>
-</div>
-<div>
-    <p style="font-size:25px">發文會員名稱: @Html.Raw(Model.articles.FirstOrDefault().Member.Name)</p>
-</div>
-<div style="color:white">
-    文章內容
-    @Html.Raw(Model.articles.FirstOrDefault().ArticleContent)
-</div>
+@foreach (var item in Model.articleComplain)
+{
+    <div>
+        <p style="font-size:25px"> 檢舉人會員編號: @Html.DisplayFor(modelItem => item.MemberId)</p>
+    </div>
+    <div>
+        <p style="font-size:25px"> 檢舉人會員名稱: @Html.DisplayFor(modelItem => item.Member.Name)</p>
+    </div>
+    <div>
+        <p style="font-size:25px"> 檢舉類型: @Html.DisplayFor(modelItem => item.SubTag.Name)</p>
+    </div>
+    if (item.ReportContent != null)
+    {
+        <div>
+            <p style="font-size:25px"> 檢舉內容: @Html.DisplayFor(modelItem => item.ReportContent)</p>
+        </div>
+    }
+
+    <div>
+        @Html.ActionLink("文章內容", "ArticleContent", "Blog", new { AFId = Model.articles.First().ArticleId , FId = Model.articles.First().SubBlog.BlogId})
+    </div>
 
 
 
-
-
-
-
-
-
-
-
-@*<table class="table">
-    <thead>
-        <tr>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
-            </td>
-        </tr>
 }
-    </tbody>
-</table>*@
+
+
+
+
+

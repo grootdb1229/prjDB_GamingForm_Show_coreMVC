@@ -963,25 +963,43 @@ namespace prjDB_GamingForm_Show.Controllers
             return RedirectToAction("BlogArticleList");
         }
 
-        public IActionResult BlogArticleComplainList()
-        {
-            var ab = from a in _db.ArticleComplains.Include(q => q.SubTag)
-                     select a;
-            return View(ab);
-        }
+        //public IActionResult BlogArticleComplainList()
+        //{
+        //    var ab = from a in _db.ArticleComplains.Include(q => q.SubTag)
+        //             select a;
+        //    return View(ab);
+        //}
 
-        public IActionResult BlogArticleComplainCheck(int? ACId,int? AFId)
+
+        public IActionResult BlogArticleComplainList()
         {
             CBlogViewModel vm = null;
             vm = new CBlogViewModel
             {
-                articleComplain = _db.ArticleComplains.Include(p => p.Article).ThenInclude(p=>p.Member).Where(p => p.Id == ACId),
-                articles = _db.Articles.Include(p=>p.Member).Where(p=>p.ArticleId==AFId),
+                articleComplain = _db.ArticleComplains.Include(p => p.Article).Include(p => p.Member).Include(p => p.SubTag).Select(a => a),
+                articles = _db.Articles.Include(p => p.SubBlog).ThenInclude(p => p.Blog).Include(p => p.Member).Select(a => a),
             };
 
             return View(vm);
-
         }
+
+
+
+
+
+
+        //public IActionResult BlogArticleComplainCheck(int? ACId,int? AFId)
+        //{
+        //    CBlogViewModel vm = null;
+        //    vm = new CBlogViewModel
+        //    {
+        //        articleComplain = _db.ArticleComplains.Include(p => p.Article).Include(p=>p.Member).Include(p=>p.SubTag).Where(p => p.Id == ACId).Select(a => a),
+        //        articles = _db.Articles.Include(p=>p.SubBlog).ThenInclude(p=>p.Blog).Include(p=>p.Member).Where(p=>p.ArticleId==AFId).Select(a=>a),
+        //    };
+
+        //    return View(vm);
+
+        //}
         #endregion
         //---------------------------論壇---------------------------
 
