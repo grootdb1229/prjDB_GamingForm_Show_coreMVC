@@ -36,7 +36,8 @@ namespace prjDB_GamingForm_Show.Controllers
 			{
 				_host = host;
 				_db = db;
-			}
+				
+            }
 
             public List<CShopPageViewModel> Listx { get; set; }
             public List<CShopPageViewModel> Temp { get; set; }
@@ -80,25 +81,36 @@ namespace prjDB_GamingForm_Show.Controllers
 
             }
 
-			public IActionResult MutipleSearch(CKeyWord vm)
+			public IActionResult MutipleSearch_Shop(string txtMutiKeywords)
 			{
+                
+                string result = "";
+                listLoad();
 				Temp = Listx;
 				IEnumerable<CShopPageViewModel> datas = null;
-				if (vm.txtMutiKeywords != null)//你的一堆標籤字串
-                {
-
-					foreach (var item in vm.txtMutiKeywords)//你的一堆標籤字串
-                    {
-						if (string.IsNullOrEmpty(item))
-							return Content("沒有符合的條件");
-
-						datas = Temp.Where(n => (n.SubTagName.Trim().ToLower().Contains(item.Trim().ToLower()))).OrderByDescending(x => x.ProductId);
+				if (txtMutiKeywords != null)//你的一堆標籤字串
+				{
+                    List<string> keywords = txtMutiKeywords.Split(',').ToList();
+                    foreach (var item in keywords)
+					{
+						if (string.IsNullOrEmpty(item))//你沒選東西
+						{
+							string noneResult = JsonSerializer.Serialize(Temp);
+							return Content(noneResult, "application/json");
+						}					
+						datas = Temp.Where(n => (n.SubTagName.Trim().ToLower().Contains(item.Trim().ToLower()))).OrderByDescending(x => x.ProductId).ToList();
                         Temp = datas.ToList();
+                        if (Temp.Count == 0)//沒有結果時
+						{
+							return Json(new { message = "沒有符合的條件" });
+						}
 					}
-				}				
-				return Json(Temp);
-			}
-
+					 result = JsonSerializer.Serialize(Temp);
+					return Content(result, "application/json");
+				}
+                 result = JsonSerializer.Serialize(Temp);
+                return Content(result, "application/json");
+            }
 
 			//public List<CShopPageViewModel> List { get; set; }
 			//public IActionResult test(CKeyWord ck)
@@ -288,8 +300,6 @@ namespace prjDB_GamingForm_Show.Controllers
 				}
 				return Json(CookieList.Take(5));
 			}
-
-
             public IActionResult LoveList()
             {
 			var aa=	_db.WishLists.Where(x => x.MemberId == HttpContext.Session.GetInt32(CDictionary.SK_UserID)).Select(a => a.Product).ToList();
@@ -330,8 +340,6 @@ namespace prjDB_GamingForm_Show.Controllers
                 }
                 return Json(LL);
             }
-
-
             public IActionResult Index(CKeyWord ck)
 			{
 
@@ -662,7 +670,7 @@ namespace prjDB_GamingForm_Show.Controllers
 					{
 						s.SubTagId,
 						s.Name,
-						ProductTagCount = s.ProductTags.Count()
+                        ProductCount = s.ProductTags.Count()
 					})
 					.ToList();
 				return Json(SelSub);

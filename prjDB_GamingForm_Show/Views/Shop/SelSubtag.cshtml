@@ -1,13 +1,13 @@
 ﻿
 <p>
-	<button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample" style="background-color:#a81d1d; border-color: #272727">
-		不知道要玩什麼? 挑個標籤吧
-	</button>
+    <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample" style="background-color:#a81d1d; border-color: #272727">
+        不知道要玩什麼? 挑個標籤吧
+    </button>
 </p>
 <div class="collapse" id="collapseExample">
-	<div style="border:solid 2px  #a81d1d ; margin-bottom:20px;" >
-		<div class="form-group" id="GameTag" style="background-color:#4F4F4F">
-            <div class="d-flex flex-wrap">         
+    <div style="border:solid 2px  #a81d1d ; margin-bottom:20px;">
+        <div class="form-group" id="GameTag" style="background-color:#4F4F4F">
+            <div class="d-flex flex-wrap">
             </div>
         </div>
         <input type="hidden" id="GameTagOptions" name="GameTagOptions" />
@@ -18,40 +18,106 @@
 
 
 <script>
+    let stringCollection = [];
+    let selectedValuesString = '';
+    const productContent = document.getElementById("ContentProduct");
+    const TagDiv = document.querySelector('#GameTag .d-flex');
 
-	
+    async function LoadTag() {
+        
+            const response = await fetch('@Url.Content("~/Shop/GameTag")');      
+            const data = await response.json();
+        // console.log("載入標籤" + data);
+            const Tag = data.map(x => `
+                    <div class="col-3">
+                        <label style="margin-bottom: 10px; display: block;">
+                                    <input type="checkbox" name="GameTag" value="${x.name}">${x.name}(${x.productCount})
+                        </label>
+                    </div>
+                `).join('');
+            TagDiv.innerHTML = Tag;
+            const checkboxes = document.querySelectorAll('input[type="checkbox"][name="GameTag"]');
+            checkboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', handleCheckboxChange);
+            });
 
-	const TagDiv = document.querySelector('#GameTag .d-flex');
+      
+    }
 
-async function LoadTag() { //讀取遊戲標籤列表
-			const response = await fetch('@Url.Content("~/Shop/GameTag")');
-			const data = await response.json();
-			// console.log(data)
-			const Tag = data.map(x => `
-			<div class="col-3">
-				<label style="margin-bottom: 10px; display: block;">
-											<input type="checkbox" name="GameTag" value="${x.subTagId}">${x.name
-			}(${x.productTagCount})
-				</label>
-			</div>
-						`).join('');
+    function handleCheckboxChange(event) {
+        const checkbox = event.target;
 
-			TagDiv.innerHTML = Tag;
-			 submitTags();
-		}
+        if (checkbox.checked) {
+            // 被選中，將 checkbox 的 value 添加到字串中
 
+            selectedValuesString += checkbox.value + ',';
+          
+        } else {
+            // 取消選中，從字串中移除 checkbox 的 value
+            selectedValuesString = selectedValuesString.replace(checkbox.value + ',', '');
+           
+        }
+
+        const selectedValuesArray = selectedValuesString.split(',').filter(Boolean);
+        
+        
+        // stringCollection = selectedValuesArray.slice();
+        // stringCollection = selectedValuesArray.concat();
+        // console.log('String collection:', stringCollection);
+        fetchProducts();
+    }
     LoadTag();
-	
-	function submitTags() {
+
+    async function fetchProducts() {
+        const response = await fetch(`@Url.Content("~/Shop/MutipleSearch_Shop")?txtMutiKeywords=${selectedValuesString}`);
+        const data = await response.json();    
+        if (data.message == "沒有符合的條件") { productContent.innerHTML = '<div class="alert alert-dark" role = "alert" > "查無資料，請確認輸入內容" </div>'; }
+ 
+        const end = data.map(product => `
+                    <div class="col mb-5">
+                        <div class="card h-100">
+                            <div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem">Sale</div>
+                                           <a href="@Url.Content("~/Shop/Details")?id=${product.ProductId}">  <img class="card-img-top" src="../images/shop/${product.FImagePath}" alt="..." style="height:25vh; " /></a>
+                                    <div class="card-body p-4"style="background-color:#4F4F4F">
+                                <div class="text-center">
+                                    ${product.SubTagName.split('/').map(tag => `<span class="badge text-bg-light">${tag}</span>`).join("")}
+                                            <h5 class="fw-bolder" style="color:black">${product.ProductName}</h5>
+                                    <div class="d-flex justify-content-center small text-warning mb-2">
+                                        <div class="bi-star-fill"></div>
+                                        <div class="bi-star-fill"></div>
+                                        <div class="bi-star-fill"></div>
+                                        <div class="bi-star-fill"></div>
+                                        <div class="bi-star-fill"></div>
+                                    </div>
+                                    <span class="text-muted text-decoration-line-through">${product.Price}</span>
+                                    <span style="color:black">${product.Price}</span>
+                                </div>
+                            </div>
+                                    <div class="card-footer p-4 pt-0 border-top-0 " style="background-color:#4F4F4F">
+                                <form action="/Shop/AddToCar" method="post">
+                                    <div class="text-center">
+                                        <a href="/Shop/Details?id=${product.ProductId}" class="btn btn-outline-dark mt-auto">查看商品</a>
+                                    </div>
+                                    <div class="text-center">
+                                        <a href="/Shop/Edit?id=${product.ProductId}" class="btn btn-outline-dark mt-auto">測試修改</a>
+                                    </div>
+                                    <input type="hidden" name="ProductID" value="${product.ProductId}" />
+                                    <div class="text-center">
+                                        <input type="submit" value="加入購物車" class="btn btn-outline-dark mt-auto" />
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+            `).join("");
+            
+        productContent.innerHTML = end;
+    }
 
 
-		const gameTagOptions = collectSelectedOptions("GameTag");
 
-		//將被勾起來的選項藏到hidden元素
-		document.getElementById("GameTagOptions").value = gameTagOptions;
-		console.log(gameTagOptions)
 
-		return true;
-	}
+
+
 
 </script>
