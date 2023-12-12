@@ -310,6 +310,28 @@ namespace prjDB_GamingForm_Show.Controllers
             }
             return count;
         }
+        
+        public IActionResult NotCheckMessage()
+        {
+            int reid = _db.Admins.Where(a => a.Name == HttpContext.Session.GetString(CDictionary.SK_管理者名稱)).Select(a => a.AdminId).FirstOrDefault();
+            List<CAdminNotCheckMessageViewModel> vm = new List<CAdminNotCheckMessageViewModel>();
+            CAdminNotCheckMessageViewModel message = null;
+            foreach(var m in _db.Chats)
+            {
+                if (m.ReceiveAdmin == reid && m.IsCheck == false)
+                {
+                    message = new CAdminNotCheckMessageViewModel()
+                    {
+                        senderName = _db.Admins.Where(a => a.AdminId == m.SenderAdmin).Select(a => a.Name).FirstOrDefault(),
+                        senderImgPath = _db.Admins.Where(a => a.AdminId == m.SenderAdmin).Select(a => a.ImgPath).FirstOrDefault(),
+                        message = m.ChatContent,
+                        sendTime = MessageTime(m.ModefiedDate)
+                    };
+                    vm.Add(message);
+                }
+            }
+            return Json(vm);
+        }
         [HttpPost]
         public void CheckAllMessage(int senderid)
         {
@@ -354,6 +376,28 @@ namespace prjDB_GamingForm_Show.Controllers
             _db.Coupons.Add(coupon);
             _db.SaveChanges();
             return RedirectToAction("");
+        }
+        public string MessageTime(string time)
+        {
+            DateTime messagetime = DateTime.Parse(time);            
+            DateTime now = DateTime.Now.ToLocalTime();
+            TimeSpan timeSpan = now - messagetime;
+            if(timeSpan.TotalDays >= 1)
+            {
+                return timeSpan.Days.ToString() + "天前";
+            }
+            else if (timeSpan.TotalHours >= 1)
+            {
+                return timeSpan.Hours.ToString() + "小時前";
+            }
+            else if (timeSpan.TotalMinutes >= 1)
+            {
+                return timeSpan.Minutes.ToString() + "分鐘前";
+            }
+            else
+            {
+                return "現在";
+            }            
         }
         //public IActionResult MemberListNexttest()
         //{
