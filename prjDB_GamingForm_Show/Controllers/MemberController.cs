@@ -50,8 +50,9 @@ namespace prjDB_GamingForm_Show.Controllers
         //    return View(data);
         //}
 
-        public IActionResult MemberPageTest(int? id) 
+        public IActionResult MemberPageTest() 
         {
+            int id = (int)HttpContext.Session.GetInt32(CDictionary.SK_UserID);
             if (id == null)
             {
                 return RedirectToAction("Login", "Home");
@@ -105,68 +106,68 @@ namespace prjDB_GamingForm_Show.Controllers
         public bool EmailVal {  get; set; }
         public bool PhoneVal { get; set; }
         public bool PasswordVal { get; set; }
-        public IActionResult CreateValidation(CKeyWord vm) 
-        {
-            CMemberWrap datas = new CMemberWrap();
-            IEnumerable<string> Email = (from m in _db.Members.AsEnumerable()
-                       where m.Email.Equals(vm.txtEmail)
-                       select m.Email).ToList();
+        //public IActionResult CreateValidation(CKeyWord vm) 
+        //{
+           // CMemberWrap datas = new CMemberWrap();
+           // IEnumerable<string> Email = (from m in _db.Members.AsEnumerable()
+           //            where m.Email.Equals(vm.txtEmail)
+           //            select m.Email).ToList();
             
 
-            if (Email.Count()==0)
-            {
-                EmailVal = true;
-                datas.EmailValMsg = "該信箱可註冊";
-            }
-            else
-            {
-                EmailVal = false;
-                datas.EmailValMsg = "該信箱已被註冊";
-            }
+           // if (Email.Count()==0)
+           // {
+           //     EmailVal = true;
+           //     datas.EmailValMsg = "該信箱可註冊";
+           // }
+           // else
+           // {
+           //     EmailVal = false;
+           //     datas.EmailValMsg = "該信箱已被註冊";
+           // }
 
             
-            IEnumerable<string> Phone = (from m in _db.Members.AsEnumerable()
-                                         where m.Email.Equals(vm.txtEmail)
-                                         select m.Email).ToList();
-            if (Phone.Count() == 0)
-            {
-                PhoneVal = true;
-                datas.PhoneValMsg = "該信箱可註冊";
-            }
-            else
-            {
-                PhoneVal = false;
-                datas.PhoneValMsg = "該信箱已被註冊";
+           // IEnumerable<string> Phone = (from m in _db.Members.AsEnumerable()
+           //                              where m.Email.Equals(vm.txtEmail)
+           //                              select m.Email).ToList();
+           // if (Phone.Count() == 0)
+           // {
+           //     PhoneVal = true;
+           //     datas.PhoneValMsg = "該信箱可註冊";
+           // }
+           // else
+           // {
+           //     PhoneVal = false;
+           //     datas.PhoneValMsg = "該信箱已被註冊";
 
-            }
+           // }
 
-            IEnumerable<string> password = (from m in _db.Members.AsEnumerable()
-                                         where m.Email.Equals(vm.txtEmail)
-                                         select m.Email).ToList();
-            if (password.Count() == 0)
-            {
-                PasswordVal = true;
-                datas.PasswordValMsg = "該密碼可註冊";
-            }
-            else
-            {
-                PasswordVal = false;
-                datas.PasswordValMsg = "該密碼已被註冊";
+           // IEnumerable<string> password = (from m in _db.Members.AsEnumerable()
+           //                              where m.Email.Equals(vm.txtEmail)
+           //                              select m.Email).ToList();
+           // if (password.Count() == 0)
+           // {
+           //     PasswordVal = true;
+           //     datas.PasswordValMsg = "該密碼可註冊";
+           // }
+           // else
+           // {
+           //     PasswordVal = false;
+           //     datas.PasswordValMsg = "該密碼已被註冊";
 
-            }
+           // }
 
-            //if (EmailVal == true && PhoneVal == true && PasswordVal == true)
-            //    //塞session
-            //    //CDictionary.SK_Create_Validation = "true";
-           return View(datas);
-        }
+          //if (EmailVal == true && PhoneVal == true && PasswordVal == true)
+                //塞session
+                //CDictionary.SK_Create_Validation = "true";
+           //return View(datas);
+        //}
 
-        public IActionResult Edit(int? id)
+        public IActionResult Edit()
         {
-            id = HttpContext.Session.GetInt32("user_id");
+            int id = (int)HttpContext.Session.GetInt32(CDictionary.SK_UserID);
             Member member = _db.Members.FirstOrDefault(p => p.MemberId == id);
             if (member == null)
-                return RedirectToAction("MemberPage", "Member");
+                return RedirectToAction("MemberPageTest", "Member");
             else
                 return View(member);
         }
@@ -187,7 +188,7 @@ namespace prjDB_GamingForm_Show.Controllers
                 dbmember.Password = member.Password;
                 _db.SaveChanges();
             }
-            return RedirectToAction("MemberPage", "Member");
+            return RedirectToAction("MemberPageTest", "Member");
         }
         //會員忘記密碼流程
         public IActionResult ForgetPassword()

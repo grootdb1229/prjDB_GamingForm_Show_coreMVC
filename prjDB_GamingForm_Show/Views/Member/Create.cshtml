@@ -5,38 +5,38 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Create</h2>
 
-<h4>CMemberWrap</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create" enctype="multipart/form-data" method="post" id="ValidationForm">
+<div class="row" style="margin:10px auto ; width:720px" >
+    <div class="">
+        <h2>會員註冊</h2>
+
+        <h4>請輸入基本資料</h4>
+        <form asp-action="Create" enctype="multipart/form-data" method="post" id="ValidationForm" onsubmit="return ValidationForm()">
             <div asp-validation-summary="ModelOnly" class="text-danger" ></div>
             <div class="form-group">
                 <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
+                <input asp-for="Name" class="form-control" required />
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Phone" class="control-label"></label>
-                <input asp-for="Phone" class="form-control" id="phone" />
-                <span asp-validation-for="Phone" class="text-danger"></span>
+                <input asp-for="Phone" class="form-control" id="phone" required />
+                <span asp-validation-for="Phone" class="text-danger" id="PhoneError"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Birth" class="control-label"></label>
-                <input asp-for="Birth" class="form-control" type="date" max="@DateTime.Now.ToString("yyyy-MM-dd")"/>
+                <input asp-for="Birth" class="form-control" type="date" max="@DateTime.Now.ToString("yyyy-MM-dd")" required/>
                 <span asp-validation-for="Birth" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Email" class="control-label"></label>
-                <input asp-for="Email" class="form-control" id="email" />
+                <input asp-for="Email" class="form-control" id="email" required />
                 <span asp-validation-for="Email" class="text-danger" id="EmailError"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Password" class="control-label"></label>
-                <input asp-for="Password" class="form-control" id="password" />
-                <span asp-validation-for="Password" class="text-danger"></span>
+                <input asp-for="Password" class="form-control" id="password" required />
+                <span asp-validation-for="Password" class="text-danger" id="PasswordError"></span>
             </div>
             <div class="form-group">
                 <label asp-for="MyComment" class="control-label"></label>
@@ -45,7 +45,10 @@
             </div>
             <div class="form-group">
                 <label asp-for="Gender" class="control-label"></label>
-                <input asp-for="Gender" class="form-control" />
+                <select asp-for="Gender" class="form-control" required />
+                <option value="1">男性</option>
+                <option value="2">女性</option>
+                <option value="3">其他</option>
                 <span asp-validation-for="Gender" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -54,7 +57,7 @@
                 <img id="imagePreview" src="#" alt="Preview" style="display:none;width:360px;height:108px;" />
             </div>
             <div class="form-group">
-                <input type="submit" value="驗證並註冊" class="btn btn-default" />
+                <input type="submit" value="驗證並註冊" class="btn btn-default" id="ValidationBtn" name="ValidationBtn" />
             </div>
         </form>
     </div>
@@ -81,53 +84,114 @@
             reader.readAsDataURL(input.files[0]);
         }
     }
+    var Email = document.querySelector('#email');
+    var Password = document.querySelector('#password')
+    var Phone = document.querySelector('#phone')
+    var email = Email.value
+    var phone = Phone.value
+    var password = Password.value
 
-    function validateEmail(email) 
+    var IsValid = false
+    function validateEmail() 
     {
         var emailRegex = /^[^\s@@]+@@[^\s@@]+\.[^\s@@]+$/;
-        return emailRegex.test(email);
+        return emailRegex.test(Email.value);
     }
 
-    function validatePhone(phone) 
+    function validatePhone() 
     { 
         var phoneRegex = /^\d{10}$/;
-        return phoneRegex.test(phone);
+        return phoneRegex.test(Phone.value);
     }
 
-        var Email = document.querySelector('#email');
-        Email.addEventListener('blur', function () 
+    function validatePassword() 
+    {
+        var passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/
+        return passwordRegex.test(Password.value);
+    }
+    
+    Email.addEventListener('blur',()=>{
+              
+        if (validateEmail(email) == false) {
+            IsValid = false
+            document.querySelector('#EmailError').innerHTML = "格式錯誤 範例:xxxx@gmail.com";
+        }
+        else 
         {
-            fetch(`@Url.Content("~/Member/CreateValidation")?email=${Email.value}`)
-            .then (response => response.text())
-                .then(data => 
-                {
-                   document.querySelector('#EmailError').innerHTML = data
-                })
-        })
-    function FormValidation() 
-    { 
+            IsValid = true
+            document.querySelector('#EmailError').innerHTML = "格式正確";
+        }
+    })
+
+        Phone.addEventListener('blur', () => {
+
+        if (validatePhone(phone) == false) {
+            IsValid = false
+            document.querySelector('#PhoneError').innerHTML = "格式錯誤 範例:09xxxxxxxx";
+        }
+        else {
+            IsValid = true
+            document.querySelector('#PhoneError').innerHTML = "格式正確";
+        }
+    })
+
+        Password.addEventListener('blur', () => {
+
+        if (validatePassword(password) == false) 
+        {
+            IsValid = false
+            document.querySelector('#PasswordError').innerHTML = "格式錯誤 範例:Xx123456";
+        }
+        else 
+        {
+            IsValid = true
+            document.querySelector('#PasswordError').innerHTML = "格式正確";
+        }
+    })
+    function ValidationForm() 
+    {
+        if (IsValid == false) 
+        {
+            alert("格式有誤 不能新增會員")
+            return false;
+        } else 
+        {
+            return true
+        }
     }
 
-    function loadHotkey() {
-        var count = 0;
-        $.ajax('@Url.Content("~/Member/CreateValidation")', {
-            "type": 'Post', //POST、PUT、DELETE//
-            "data": { 
-                "txtEmail": $('#email').val(),
-                "txtPhone": $('#phone').val(),
-                "txtPassword": $('#password').val(),
-            },
-            "dataType": "json"
-        })
-            .done((data) => {
-                // count++;
-                const HkFrag = $(document.createDocumentFragment());
-                const snd = '<span class="text-truncate me-1">熱門關鍵字 :</span>'
-                HkFrag.append(snd);
-                const Hotkeys = data.map(Hotkeys => `<a href="#" id="${Hotkeys}" onclick="MutiSearch('${Hotkeys}')">#${Hotkeys} </a>`)
-                HkFrag.append(Hotkeys);
-                $('#hotkey').html(HkFrag)
-            })
-    }
+        // var ValidationBtn = document.querySelector('#ValidationBtn')
+        // ValidationBtn.()
+        // if (IsValid == false) 
+        // {
+        //     ValidationBtn.setAttribute("disabled", true)
+        // }
+        // else (IsValid == true)
+        // { 
+        //    ValidationBtn.removeAttribute("disabled")
+        // }
+   
+
+    // function loadHotkey() {
+    //     var count = 0;
+    //     $.ajax('@Url.Content("~/Member/CreateValidation")', {
+    //         "type": 'Post', //POST、PUT、DELETE//
+    //         "data": { 
+    //             "txtEmail": $('#email').val(),
+    //             "txtPhone": $('#phone').val(),
+    //             "txtPassword": $('#password').val(),
+    //         },
+    //         "dataType": "json"
+    //     })
+    //         .done((data) => {
+    //             // count++;
+    //             const HkFrag = $(document.createDocumentFragment());
+    //             const snd = '<span class="text-truncate me-1">熱門關鍵字 :</span>'
+    //             HkFrag.append(snd);
+    //             const Hotkeys = data.map(Hotkeys => `<a href="#" id="${Hotkeys}" onclick="MutiSearch('${Hotkeys}')">#${Hotkeys} </a>`)
+    //             HkFrag.append(Hotkeys);
+    //             $('#hotkey').html(HkFrag)
+    //         })
+    // }
     
 </script>
