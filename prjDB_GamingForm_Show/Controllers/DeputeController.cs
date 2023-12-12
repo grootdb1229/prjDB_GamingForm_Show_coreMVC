@@ -195,11 +195,13 @@ namespace prjDB_GamingForm_Show.Controllers
             IEnumerable<CDeputeViewModel> datas = null;
             if (vm.txtMutiKeywords != null)
             {
-
                 foreach (var item in vm.txtMutiKeywords)
                 {
-                    if (string.IsNullOrEmpty(item))
-                        return Content("沒有符合的條件");
+                    if (!string.IsNullOrEmpty(item))
+                    { 
+                        _db.SerachRecords.Add(new SerachRecord { Name = item, CreateDays = (DateTime.Now.Date) });
+                        _db.SaveChanges();
+                    }
 
                     datas = Temp.Where(n => (n.deputeContent.Trim().ToLower().Contains(item.Trim().ToLower()) ||
                                                n.title.Trim().ToLower().Contains(item.Trim().ToLower()) ||
