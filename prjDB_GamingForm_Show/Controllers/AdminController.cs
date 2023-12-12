@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using prjDB_GamingForm_Show.Models;
 using prjDB_GamingForm_Show.Models.Entities;
 using prjDB_GamingForm_Show.ViewModels;
+using System.Runtime.Intrinsics.X86;
 using System.Security.Cryptography;
 
 namespace prjDB_GamingForm_Show.Controllers
@@ -993,7 +994,17 @@ namespace prjDB_GamingForm_Show.Controllers
             datas = x.List.OrderBy(n => n.id).ToList();
             return View(datas);
         }
+        public IActionResult ADeputeEdit(CAdminDepute vm)
+        {
+            var data = _db.Deputes.Where(n => n.DeputeId == vm.txtID);
 
+            foreach (var item in data)
+            {
+                item.StatusId = vm.txtStatusID;
+            }
+            _db.SaveChanges();
+            return RedirectToAction("DeputeList");
+        }
         #endregion
     }
 }
