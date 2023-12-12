@@ -113,7 +113,54 @@
                 }).then(() => {
                     window.location.href = '@Url.Action("DeputeMain","depute")';
                 })
-            };
+            }
+            else if (@Model.StatusId== 19) {
+                Swal.fire({
+                    color: "#D0D0D0",
+                    background: "#343a40",
+                    timer: 5000,
+                    timerProgressBar: true,
+                    title: "關閉中委託無法應徵",
+                    html: "將於<b></b>秒跳轉委託首頁",
+                    icon: "warning",
+                    didOpen: () => {
+                        Swal.showLoading();
+                        const timer = Swal.getPopup().querySelector("b");
+                        timerInterval = setInterval(() => {
+                            timer.textContent = `${(Swal.getTimerLeft() / 1000).toFixed(0)}`;
+                        }, 100);
+                    },
+                    willClose: () => {
+                        clearInterval(timerInterval);
+                    }
+                }).then(() => {
+                    window.location.href = '@Url.Action("DeputeMain","depute")';
+                })
+            }
+            else if (@Model.StatusId== 16) {
+                Swal.fire({
+                    color: "#D0D0D0",
+                    background: "#343a40",
+                    timer: 5000,
+                    timerProgressBar: true,
+                    title: "該委託已完成無法應徵",
+                    html: "將於<b></b>秒跳轉委託首頁",
+                    icon: "warning",
+                    didOpen: () => {
+                    console.log('@Url.Action("DeputeMain","depute")');
+                        Swal.showLoading();
+                        const timer = Swal.getPopup().querySelector("b");
+                        timerInterval = setInterval(() => {
+                            timer.textContent = `${(Swal.getTimerLeft() / 1000).toFixed(0)}`;
+                        }, 100);
+                    },
+                    willClose: () => {
+                        clearInterval(timerInterval);
+                    }
+                }).then(() => {
+                    window.location.href = '@Url.Action("DeputeMain","depute")';
+                })
+            }
         })
     </script>
 }

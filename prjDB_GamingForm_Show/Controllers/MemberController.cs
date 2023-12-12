@@ -188,7 +188,7 @@ namespace prjDB_GamingForm_Show.Controllers
                 dbmember.Password = member.Password;
                 _db.SaveChanges();
             }
-            return RedirectToAction("MemberPage", "Member");
+            return RedirectToAction("MemberPageTest", "Member");
         }
         //會員忘記密碼流程
         public IActionResult ForgetPassword()

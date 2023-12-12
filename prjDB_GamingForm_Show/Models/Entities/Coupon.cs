@@ -23,5 +23,7 @@ public partial class Coupon
 
     public virtual ICollection<MemberCoupon> MemberCoupons { get; set; } = new List<MemberCoupon>();
 
+    public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
+
     public virtual Status Status { get; set; } = null!;
 }
