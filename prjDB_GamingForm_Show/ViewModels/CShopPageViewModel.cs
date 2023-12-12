@@ -16,7 +16,7 @@ namespace prjDB_GamingForm_Show.ViewModels
         public string? ProductContent { get; set; }
 
         public int UnitStock { get; set; }
-
+        public int ViewCoun { get; set; }
         public int StatusId { get; set; }
 
         public int? MemberId { get; set; }

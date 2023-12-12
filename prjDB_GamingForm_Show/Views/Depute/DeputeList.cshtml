@@ -68,103 +68,103 @@
 <!-- Search End -->
 <!-- Jobs Start -->
 
-<div id="popmenu" class="container">
-    <div class="accordion accordion-flush" id="accordionFlushExample">
-        <div class="accordion-item">
-            <h2 class="accordion-header">
-                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
-                    進階搜尋:
-                </button>
-            </h2>
-            <div id="flush-collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
-                <div class="accordion-body">
 
-                    <div class="row g-1">
-                        <div class="col-6 col-sm-3">-- 技能分類 --</div>
-                        <div class="col-6 col-sm-3">-- 技能名稱 --</div>
-                        <div class="col-6 col-sm-3">-- 委託區域 --</div>
-                        <div class="col-6 col-sm-3">-- 委託狀態 --</div>
-                        <div class="w-100"></div>
-                        <div class="col-6 col-sm-3" style="height:100px;">
-                            <div id="skillclass"></div>
-                        </div>
-                        <div class="col-6 col-sm-3" style="height:100px;overflow-y:auto">
-                            <div id="skill"></div>
-                        </div>
-                        <div class="col-6 col-sm-3" style="height:100px;overflow-y:auto">
-                            <div id="regions"></div>
-                        </div>
-                        <div class="col-6 col-sm-3" style="height:100px;overflow-y:auto">
-                            <div id="status"></div>
-                        </div>
-
+<div class="container-xxl py-5">
+    <div id="popmenu" class="container" style="margin-bottom:10px">
+        <div class="accordion accordion-flush" id="accordionFlushExample">
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+                        進階搜尋:
+                    </button>
+                </h2>
+                <div id="flush-collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
+                    <div class="accordion-body">
 
                         <div class="row g-1">
-
-                            <div class="col-6 col-sm-3">-- 委託金額 --</div>
-                            <div class="col-6 col-sm-3">-- 委託日期 --</div>
-                            <div class="col-6 col-sm-3">-- 瀏覽人數 --</div>
-                            <div class="col-6 col-sm-3">
-                                <span class="col-md-auto">-- 排序依據 --</span>
-                                <span class="col-md-auto">-- 排序方式 --</span>
-                            </div>
+                            <div class="col-6 col-sm-3">-- 技能分類 --</div>
+                            <div class="col-6 col-sm-3">-- 技能名稱 --</div>
+                            <div class="col-6 col-sm-3">-- 委託區域 --</div>
+                            <div class="col-6 col-sm-3">-- 委託狀態 --</div>
                             <div class="w-100"></div>
+                            <div class="col-6 col-sm-3" style="height:100px;">
+                                <div id="skillclass"></div>
+                            </div>
+                            <div class="col-6 col-sm-3" style="height:100px;overflow-y:auto">
+                                <div id="skill"></div>
+                            </div>
+                            <div class="col-6 col-sm-3" style="height:100px;overflow-y:auto">
+                                <div id="regions"></div>
+                            </div>
+                            <div class="col-6 col-sm-3" style="height:100px;overflow-y:auto">
+                                <div id="status"></div>
+                            </div>
 
 
-                            <div class="col-6 col-sm-3">
-                                <select class="col-md-8" id="money">
-                                    <option value="0" selected>請選擇...</option>
-                                    <option value="10000">1萬元以上</option>
-                                    <option value="20000">2萬元以上</option>
-                                    <option value="50000">5萬元以上</option>
-                                    <option value="100000">10萬元以上</option>
-                                </select>
-                            </div>
-                            <div class="col-6 col-sm-3">
-                                <select class="col-md-8" id="date">
-                                    <option value="300000" selected>請選擇...</option>
-                                    <option value="1">1天內</option>
-                                    <option value="3">3天內</option>
-                                    <option value="7">7天內</option>
-                                    <option value="30">30天內</option>
-                                    <option value="180">半年內</option>
-                                    <option value="365">一年內</option>
-                                </select>
-                            </div>
-                            <div class="col-6 col-sm-3">
-                                <select class="col-md-8" id="view">
-                                    <option value="0" selected>請選擇...</option>
-                                    <option value="100">100以上</option>
-                                    <option value="500">500以上</option>
-                                    <option value="1000">1000以上</option>
-                                    <option value="10000">10000以上</option>
-                                </select>
-                            </div>
-                            <div class="col-6 col-sm-3">
-                                <select class="col-md-auto" id="order">
-                                    <option value="0" selected>請選擇...</option>
-                                    <option value="1">依據金額</option>
-                                    <option value="2">依據日期</option>
-                                    <option value="3">依據人氣</option>
-                                </select>
-                                <select class="col-md-auto" id="esc">
-                                    <option value="false" selected>請選擇...</option>
-                                    <option value=true>正排</option>
-                                    <option value=false>倒排</option>
-                                </select>
+                            <div class="row g-1">
+
+                                <div class="col-6 col-sm-3">-- 委託金額 --</div>
+                                <div class="col-6 col-sm-3">-- 委託日期 --</div>
+                                <div class="col-6 col-sm-3">-- 瀏覽人數 --</div>
+                                <div class="col-6 col-sm-3">
+                                    <span class="col-md-auto">-- 排序依據 --</span>
+                                    <span class="col-md-auto">-- 排序方式 --</span>
+                                </div>
+                                <div class="w-100"></div>
+
+
+                                <div class="col-6 col-sm-3">
+                                    <select class="col-md-8" id="money">
+                                        <option value="0" selected>請選擇...</option>
+                                        <option value="10000">1萬元以上</option>
+                                        <option value="20000">2萬元以上</option>
+                                        <option value="50000">5萬元以上</option>
+                                        <option value="100000">10萬元以上</option>
+                                    </select>
+                                </div>
+                                <div class="col-6 col-sm-3">
+                                    <select class="col-md-8" id="date">
+                                        <option value="300000" selected>請選擇...</option>
+                                        <option value="1">1天內</option>
+                                        <option value="3">3天內</option>
+                                        <option value="7">7天內</option>
+                                        <option value="30">30天內</option>
+                                        <option value="180">半年內</option>
+                                        <option value="365">一年內</option>
+                                    </select>
+                                </div>
+                                <div class="col-6 col-sm-3">
+                                    <select class="col-md-8" id="view">
+                                        <option value="0" selected>請選擇...</option>
+                                        <option value="100">100以上</option>
+                                        <option value="500">500以上</option>
+                                        <option value="1000">1000以上</option>
+                                        <option value="10000">10000以上</option>
+                                    </select>
+                                </div>
+                                <div class="col-6 col-sm-3">
+                                    <select class="col-md-auto" id="order">
+                                        <option value="0" selected>請選擇...</option>
+                                        <option value="1">依據金額</option>
+                                        <option value="2">依據日期</option>
+                                        <option value="3">依據人氣</option>
+                                    </select>
+                                    <select class="col-md-auto" id="esc">
+                                        <option value="false" selected>請選擇...</option>
+                                        <option value=true>正排</option>
+                                        <option value=false>倒排</option>
+                                    </select>
+                                </div>
                             </div>
                         </div>
                     </div>
+
                 </div>
 
             </div>
-
         </div>
+
     </div>
-
-</div>
-<div class="container-xxl py-5">
-
     @{
         if (Model.Count() == 0)
         {
@@ -175,19 +175,20 @@
             <h1 id="totalcount" class="text-center mb-5 wow fadeInUp" data-wow-delay="0.1s">相關結果共@(Model.Count())筆</h1>
         }
     }
-    <nav aria-label="Page navigation">
-        <ul class="pagination justify-content-center" id="pagination">
-            <li class="page-item">
-                <a class="page-link" href="#">1</a>
-            </li>
-        </ul>
-    </nav>
+    
     <div class="container" style="margin-bottom:10px">
         <div class="row">
             <div id="loadtags" class="tag_list_wrapper">
             </div>
         </div>
-        <div id="move" style="display:flex;justify-content:center">
+        <nav aria-label="Page navigation">
+            <ul class="pagination justify-content-center" id="pagination">
+                <li class="page-item">
+                    @* <a class="page-link" href="#">1</a> *@
+                </li>
+            </ul>
+        </nav>
+        @* <div id="move" style="display:flex;justify-content:center">
             <button class="btn btn-primary" style="margin:0px 2px">上一頁</button>
             <button class="btn btn-primary " style="margin:0px 2px">1</button>
             <button class="btn btn-primary " style="margin:0px 2px">2</button>
@@ -195,7 +196,7 @@
             <button class="btn btn-primary " style="margin:0px 2px">4</button>
             <button class="btn btn-primary " style="margin:0px 2px">5</button>
             <button class="btn btn-primary" style="margin:0px 2px">下一頁</button>
-        </div>
+        </div> *@
     </div>
 
 
@@ -207,7 +208,7 @@
             <div class="tab-content">
                 <div id="tab-1" class="tab-pane fade show p-0 active">
                     <div class="job-item p-4 mb-4">
-                        <div id="resultlist" class="row g-4">
+                        <div id="resultlist" class="row g-4" style="background-color:black;border-radius:20px">
                             @foreach (var item in Model)
                             {
                                 <div class="col-sm-12 col-md-8 d-flex align-items-center">
@@ -248,7 +249,6 @@
         const text = document.querySelector('#text');
         loadSkillClassess();
         let keyword = [];
-
         $('#search').click(() => { MutiSearch(text.value) });
         $('#money').change(() => { MutiSearch(keyword) });
         $('#date').change(() => { MutiSearch(keyword) });
@@ -264,12 +264,12 @@
                     const SkillClassessFrag = $(document.createDocumentFragment());
                     const SkillClassess = data.map(value =>
                         `<div class="form-check">
-                                                                 <input class="form-check-input skillclass" type="checkbox" id="${value.name}-1" value="${value.skillClassId}"name="${value.name}">
-                                                 <label class="form-check-label" for="${value.name}-1">
-                                                 ${value.name}
-                                                 </label>
-                                                 </div>
-                                                         ` )
+                                                                         <input class="form-check-input skillclass" type="checkbox" id="${value.name}-1" value="${value.skillClassId}"name="${value.name}">
+                                                         <label class="form-check-label" for="${value.name}-1">
+                                                         ${value.name}
+                                                         </label>
+                                                         </div>
+                                                                 ` )
                     SkillClassessFrag.append(SkillClassess);
                     $('#skillclass').after(SkillClassessFrag)
                     loadRegion();
@@ -315,12 +315,12 @@
                         if (keyword.find(n => n == Skills.name))
                             var hi = 'checked'
                         return `<div class="form-check">
-                                                          <input class="form-check-input skill" type="checkbox" ${hi} id="${Skills.name}-1" name="${Skills.name}">
-                                                          <label class="form-check-label" for="${Skills.name}-1">
-                                                          ${Skills.name}
-                                                         </label>
-                                                         </div>
-                                                         `
+                                                                  <input class="form-check-input skill" type="checkbox" ${hi} id="${Skills.name}-1" name="${Skills.name}">
+                                                                  <label class="form-check-label" for="${Skills.name}-1">
+                                                                  ${Skills.name}
+                                                                 </label>
+                                                                 </div>
+                                                                 `
                     })
                     SkillFrag.append(Skills);
                     $('#skill').html(SkillFrag);
@@ -358,13 +358,13 @@
                     const RegionFrag = $(document.createDocumentFragment());
                     const Regions = data.map(Regions =>
                         `
-                                                <div class="col order-12">
-                                                <input class="form-check-input region" type="checkbox" id="${Regions.city}-1" value="${Regions.city}" name="${Regions.city}">
-                                                <label class="form-check-label" for="${Regions.city}-1">
-                                                 ${Regions.city}
-                                                </label>
-                                                </div>
-                                                 `
+                                                        <div class="col order-12">
+                                                        <input class="form-check-input region" type="checkbox" id="${Regions.city}-1" value="${Regions.city}" name="${Regions.city}">
+                                                        <label class="form-check-label" for="${Regions.city}-1">
+                                                         ${Regions.city}
+                                                        </label>
+                                                        </div>
+                                                         `
                     )
 
                     RegionFrag.append(Regions);
@@ -404,13 +404,13 @@
                     const StatusFrag = $(document.createDocumentFragment());
                     const Status = data.map(Status =>
                         `
-                                                        <div class="col order-12">
-                                                                                <input class="form-check-input status" type="checkbox" id="${Status}-1" value="${Status}" name="${Status}">
-                                                                <label class="form-check-label" for="${Status}-1">
-                                                                 ${Status}
-                                                        </label>
-                                                        </div>
-                                                         `
+                                                                <div class="col order-12">
+                                                                                        <input class="form-check-input status" type="checkbox" id="${Status}-1" value="${Status}" name="${Status}">
+                                                                        <label class="form-check-label" for="${Status}-1">
+                                                                         ${Status}
+                                                                </label>
+                                                                </div>
+                                                                 `
                     )
 
                     StatusFrag.append(Status);
@@ -477,34 +477,38 @@
                     const lstFrag = $(document.createDocumentFragment());
                     const resultlist = data.map(resultlist =>
                         `
-                                                                <div  class="col-sm-12 col-md-8 d-flex align-items-center">
-                                                                        <img class="flex-shrink-0 img-fluid border rounded" src="/images/${resultlist.imgfilepath}" alt="" style="width: 80px; height: 80px;">
-                                                                <div class="text-start ps-4">
-                                                                        <h5 class="mb-3">${resultlist.title}</h5>
-                                                                        <span class="text-truncate me-3"><i class="fa fa-map-marker-alt text-primary me-2"></i>${resultlist.region}</span>
-                                                                        <span class="text-truncate me-3"><i class="fa fa-user-tie text-primary me-2"></i>${resultlist.providername}</span>
-                                                                        <span class="text-truncate me-3"><i class="far fa-clock text-primary me-2"></i>${resultlist.startdate}</span>
-                                                                <span class="text-truncate me-3"><i class="far fa-money-bill-alt text-primary me-2"></i>${resultlist.salary}</span>
-                                                                        <span class="text-truncate me-3"><i class="far fa-solid fa-eye text-primary me-2"></i>${resultlist.viewcount}</span>
-                                                                </div>
-                                                                </div>
-                                                                <div class="col-sm-12 col-md-4 d-flex flex-column align-items-start align-items-md-end justify-content-center">
-                                                                <div class="d-flex mb-3">
-                                                                <a class="btn btn-light btn-square me-3" href=""><i class="far fa-heart text-primary"></i></a>
-                                                                        <a href="/Depute/DeputeDetails/${resultlist.id}" class="btn btn-primary "id=" btndp">詳細...</a>
-                                                                        <a href="/Depute/Apply/${resultlist.id}" class="btn btn-primary" id=" btndp">我要應徵...</a>
-                                                                </div>
-                                                                                <small class="text-truncate"><i class="far fa-regular fa-chart-bar text-primary me-2"></i>狀態 : ${resultlist.status}</small>
-                                                                                <small class="text-truncate"><i class="far fa-calendar-alt text-primary me-2"></i>Last Update : ${resultlist.modifieddate}</small>
-                                                                </div>
+                                                                        <div  class="col-sm-12 col-md-8 d-flex align-items-center">
+                                                                                <img class="flex-shrink-0 img-fluid border rounded" src="/images/${resultlist.imgfilepath}" alt="" style="width: 80px; height: 80px;">
+                                                                        <div class="text-start ps-4">
+                                                                                <h5 class="mb-3">${resultlist.title}</h5>
+                                                                                <span class="text-truncate me-3"><i class="fa fa-map-marker-alt text-primary me-2"></i>${resultlist.region}</span>
+                                                                                <span class="text-truncate me-3"><i class="fa fa-user-tie text-primary me-2"></i>${resultlist.providername}</span>
+                                                                                <span class="text-truncate me-3"><i class="far fa-clock text-primary me-2"></i>${resultlist.startdate}</span>
+                                                                        <span class="text-truncate me-3"><i class="far fa-money-bill-alt text-primary me-2"></i>${resultlist.salary}</span>
+                                                                                <span class="text-truncate me-3"><i class="far fa-solid fa-eye text-primary me-2"></i>${resultlist.viewcount}</span>
+                                                                        </div>
+                                                                        </div>
+                                                                        <div class="col-sm-12 col-md-4 d-flex flex-column align-items-start align-items-md-end justify-content-center">
+                                                                        <div class="d-flex mb-3">
+                                                                        <a class="btn btn-light btn-square me-3" href=""><i class="far fa-heart text-primary"></i></a>
+                                                                                <a href="/Depute/DeputeDetails/${resultlist.id}" class="btn btn-primary "id=" btndp">詳細...</a>
+                                                                                <a href="/Depute/Apply/${resultlist.id}" class="btn btn-primary" id=" btndp">我要應徵...</a>
+                                                                        </div>
+                                                                                        <small class="text-truncate"><i class="far fa-regular fa-chart-bar text-primary me-2"></i>狀態 : ${resultlist.status}</small>
+                                                                                        <small class="text-truncate"><i class="far fa-calendar-alt text-primary me-2"></i>Last Update : ${resultlist.modifieddate}</small>
+                                                                        </div>
 
-                                                                        `
+                                                                                `
                     )
                     lstFrag.append(resultlist);
                     $('#resultlist').html(lstFrag);
+                    pagination.addEventListener('click', event => {
+                        event.preventDefault()
+                        if (event.target.tagName === 'A') {
+                            getPageData(event.target.dataset.page, data)
+                        }
+                    })
                     getTotalPages(data);
-                    getPageData(data);
-                    Move(data)
                 })
         }
         function loadHotkey() {
@@ -523,23 +527,6 @@
                     HkFrag.append(Hotkeys);
                     $('#hotkey').html(HkFrag)
                 })
-        }
-        function Move(value) {
-            let pre = ' <button class="btn btn-primary" style = "margin:0px 2px" > 上一頁 </button>'
-            let next = `<button class="btn btn-primary" style="margin:0px 2px">下一頁</button>`
-            let totalPages = Math.ceil(value.length / 2) || 1
-            const MoveFrag = $(document.createDocumentFragment());
-            MoveFrag.append(pre)
-            let pageItemContent = ''
-            for (let i = 1; i < totalPages; i++) {
-                pageItemContent = 
-                `
-                                <button class="btn btn-primary " style="margin:0px 2px" value = ${i} >${i}</button>
-                `
-                MoveFrag.append(pageItemContent)
-            }
-            MoveFrag.append(next)
-            $('#move').html(MoveFrag)
         }
 
 
@@ -732,12 +719,8 @@
     </script>
 
     <script>
-        pagination.addEventListener('click', event => {
-            event.preventDefault()
-            if (event.target.tagName === 'A') {
-                getPageData(event.target.dataset.page)
-            }
-        })
+
+
 
         //計算總共頁數
         function getTotalPages(choiceMovies) {
@@ -745,51 +728,56 @@
             let pageItemContent = ''
             for (let i = 0; i < totalPages; i++) {
                 pageItemContent += `
-                    <li class="page-item">
-                      <button class="btn btn-primary" style="margin:0px 2px">${i + 1}</button>
-                      <a class="page-link" href="javascript:;" data-page="${i + 1}">${i + 1}</a>
-                    </li>
-                  `
+                        <li class="page-item ">
+                                          <a class="btn btn-primary" style="margin:0px 2px" href="javascript:;" data-page="${i + 1}">${i + 1}</a>
+                        </li>
+                      `
             }
             pagination.innerHTML = pageItemContent
         }
 
         //篩選出指定頁面的資料並顯示
         function getPageData(pageNum, choiceMovies) {
-            $('#resultlist').html(''); //記得先清空現有內容
+            $('#resultlist').html('');//記得先清空現有內容
             paginationData = choiceMovies || paginationData
             let offset = (pageNum - 1) * 5
             let pageData = paginationData.slice(offset, offset + 5)
             let htmlContent = ''
             //console.log(paginationData)
             if (paginationData.length === 0) {
-                dataPanel.innerHTML = `
-                  <h3>此類別無資料，請點選其他選項。</h3>
-                `
+                $('#resultlist').html(`
+                              <h3>此類別無資料，請點選其他選項。</h3>
+                            `);
             }
-
-            for (let i = 0; i < pageData.length; i++) {
-                htmlContent += `
-                  <div class="col-sm-4">
-                    <div class="card mb-1">
-                    <img class="card-img-top " src="${posterBASE_URL}${pageData[i].image}" alt="Card image cap">
-                    <div class="card-body movie-item-body">
-                    <h5 class="card-title">${pageData[i].title}</h5>
-                  `
-
-                for (let j = 0; j < pageData[i].genres.length; j++) {
-                    htmlContent += `
-                  <h6><span class="badge badge-secondary">${genresList[pageData[i].genres[j]]}</span></h6>
-                  `
-                }
-                htmlContent += `
-                    </div>
-                  </div>
-                </div>
+            const lstFrag = $(document.createDocumentFragment());
+            const resultlist = pageData.map(resultlist =>
                 `
-                //console.log(htmlContent)
-            }
-            dataPanel.innerHTML += htmlContent
+                                                                                <div  class="col-sm-12 col-md-8 d-flex align-items-center">
+                                                                                        <img class="flex-shrink-0 img-fluid border rounded" src="/images/${resultlist.imgfilepath}" alt="" style="width: 80px; height: 80px;">
+                                                                                <div class="text-start ps-4">
+                                                                                        <h5 class="mb-3">${resultlist.title}</h5>
+                                                                                        <span class="text-truncate me-3"><i class="fa fa-map-marker-alt text-primary me-2"></i>${resultlist.region}</span>
+                                                                                        <span class="text-truncate me-3"><i class="fa fa-user-tie text-primary me-2"></i>${resultlist.providername}</span>
+                                                                                        <span class="text-truncate me-3"><i class="far fa-clock text-primary me-2"></i>${resultlist.startdate}</span>
+                                                                                <span class="text-truncate me-3"><i class="far fa-money-bill-alt text-primary me-2"></i>${resultlist.salary}</span>
+                                                                                        <span class="text-truncate me-3"><i class="far fa-solid fa-eye text-primary me-2"></i>${resultlist.viewcount}</span>
+                                                                                </div>
+                                                                                </div>
+                                                                                <div class="col-sm-12 col-md-4 d-flex flex-column align-items-start align-items-md-end justify-content-center">
+                                                                                <div class="d-flex mb-3">
+                                                                                <a class="btn btn-light btn-square me-3" href=""><i class="far fa-heart text-primary"></i></a>
+                                                                                        <a href="/Depute/DeputeDetails/${resultlist.id}" class="btn btn-primary "id=" btndp">詳細...</a>
+                                                                                        <a href="/Depute/Apply/${resultlist.id}" class="btn btn-primary" id=" btndp">我要應徵...</a>
+                                                                                </div>
+                                                                                                <small class="text-truncate"><i class="far fa-regular fa-chart-bar text-primary me-2"></i>狀態 : ${resultlist.status}</small>
+                                                                                                <small class="text-truncate"><i class="far fa-calendar-alt text-primary me-2"></i>Last Update : ${resultlist.modifieddate}</small>
+                                                                                </div>
+
+                                                                                        `
+            )
+            lstFrag.append(resultlist);
+            $('#resultlist').html(lstFrag);
+            
         }
     </script>
 }

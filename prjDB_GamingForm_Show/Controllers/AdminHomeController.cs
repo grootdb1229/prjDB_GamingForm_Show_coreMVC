@@ -38,6 +38,8 @@ namespace prjDB_GamingForm_Show.Controllers
         public IActionResult Logout()
         {
             HttpContext.Session.Remove(CDictionary.SK_管理者登入資訊使用關鍵字);
+            HttpContext.Session.Remove(CDictionary.SK_管理者名稱);
+            HttpContext.Session.Remove(CDictionary.SK_管理者照片路徑);
             return RedirectToAction("Login");            
         }
     }

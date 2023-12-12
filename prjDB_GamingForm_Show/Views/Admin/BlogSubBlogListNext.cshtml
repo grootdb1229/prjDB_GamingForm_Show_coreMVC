@@ -49,9 +49,9 @@
                         @Html.DisplayFor(modelItem => item.Blog.Title)
                     </td>
                     <td>
-                        @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                        @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                        @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+                        @Html.ActionLink("修改名稱", "BlogSubBlogEdit","Admin", new { SBId = item.SubBlogId},new  { @class = "btn btn-dark"}) |
+                        @Html.ActionLink("查看子版文章", "BlogArticleList","Admin", new { txtKeyWord = item.Title , FId=item.Blog.BlogId},new  { @class = "btn btn-dark", target = "_blank"  }) |
+                        @Html.ActionLink("刪除", "BlogSubBlogDelete","Admin", new { SBId = item.SubBlogId},new  { @class = "btn btn-danger" , onclick = "return confirm('確定要刪除嗎?')" })
                     </td>
                 </tr>
             }

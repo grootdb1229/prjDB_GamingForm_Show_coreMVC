@@ -195,11 +195,13 @@ namespace prjDB_GamingForm_Show.Controllers
             IEnumerable<CDeputeViewModel> datas = null;
             if (vm.txtMutiKeywords != null)
             {
-
                 foreach (var item in vm.txtMutiKeywords)
                 {
-                    if (string.IsNullOrEmpty(item))
-                        return Content("沒有符合的條件");
+                    if (!string.IsNullOrEmpty(item))
+                    { 
+                        _db.SerachRecords.Add(new SerachRecord { Name = item, CreateDays = (DateTime.Now.Date) });
+                        _db.SaveChanges();
+                    }
 
                     datas = Temp.Where(n => (n.deputeContent.Trim().ToLower().Contains(item.Trim().ToLower()) ||
                                                n.title.Trim().ToLower().Contains(item.Trim().ToLower()) ||
@@ -549,6 +551,7 @@ namespace prjDB_GamingForm_Show.Controllers
         }
         public IActionResult DeleteDepute(int id)
         {
+            //partialrelease-刪除
             Depute o = _db.Deputes.Where(_ => _.DeputeId == id).Select(_ => _).FirstOrDefault();
             var dro = _db.DeputeRecords.Where(_ => _.DeputeId == id).Select(_ => _);
             var dso = _db.DeputeSkills.Where(_ => _.DeputeId == id).Select(_ => _);
@@ -572,6 +575,7 @@ namespace prjDB_GamingForm_Show.Controllers
         }
         public IActionResult DeleteDeputeRecord(int id)
         {
+            //partialreceive-撤回
             DeputeRecord o = _db.DeputeRecords.FirstOrDefault(_ => _.Id == id);
             _db.DeputeRecords.Remove(o);
             _db.SaveChanges();
@@ -585,31 +589,75 @@ namespace prjDB_GamingForm_Show.Controllers
         [HttpPost]
         public IActionResult ReplyDepute(CDeputeViewModel vm,IFormFile formFile)
         {
-            var ori = _db.DeputeRecords.FirstOrDefault(_ => _.DeputeId == vm.id);
-            //ori.ReplyContent= JsonSerializer.Serialize(new { content = $"{vm.replyContent}", filepath = $"{vm.replyContent}" });
-
-            string strPath = Path.Combine(_host.WebRootPath, "images\\depute", formFile.FileName);
-            using (var fileStream = new FileStream(strPath, FileMode.Create))
+            try
             {
-                formFile.CopyTo(fileStream);
-            }
+                string fileType = formFile.FileName.Split('.')[1];
+                string fileName = Guid.NewGuid().ToString() + "." + fileType;
+                string filePath = Path.Combine(_host.WebRootPath, "files\\depute", fileName);
 
-            return RedirectToAction("homeframe");
+                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                {
+                    formFile.CopyTo(fileStream);
+                }
+                var oriDeputRecord = _db.DeputeRecords.FirstOrDefault(_ => _.Id == vm.id);
+                oriDeputRecord.ReplyContent = JsonSerializer.Serialize(new
+                {
+                    content = $"{vm.replyContent}",
+                    filename = $"{fileName}",
+                });
+                oriDeputRecord.ApplyStatusId = 25;//狀態改為已完成(待確認)
+                _db.SaveChanges();
+                return Json(new { success = true, message = "應徵成功" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message });
+            }
         }
 
         #region API
-
-        public IActionResult changeDeputeRecordStatus(string deputerecordstatus)
+        public IActionResult downloadFile(string fileName)
         {
-            CDeputeViewModel vm = JsonSerializer.Deserialize<CDeputeViewModel>(deputerecordstatus);
+            string fullFilePath= Path.Combine(_host.WebRootPath, "files\\depute", fileName);
+            return PhysicalFile(fullFilePath, "application/octet-stream");
+        }
+
+        public IActionResult confirmApply(int id)
+        {
+            var data = _db.DeputeRecords.FirstOrDefault(_ => _.DeputeId == id && _.ApplyStatusId == 25);
+            return Json(data);
+        }
+
+        public IActionResult changeDeputeRecordStatus(string jsonString)
+        {
+            CDeputeViewModel vm = JsonSerializer.Deserialize<CDeputeViewModel>(jsonString);
+
             var deputeRecord = _db.DeputeRecords.FirstOrDefault(_ => _.Id == vm.id);
+            var depute = _db.Deputes.FirstOrDefault(_ => _.DeputeId == deputeRecord.DeputeId);
+            var otherRecords = _db.DeputeRecords.Where(_ => _.DeputeId == depute.DeputeId && _.Id != vm.id).Select(_ => _);
 
-            if (!(int.TryParse(vm.statusid, out int statusID) && _db.Statuses.Any(_ => _.StatusId == statusID)))
-                return Content($"{deputeRecord.ApplyStatus.Name}");
+            //修改該會員應徵狀態
+            deputeRecord.ApplyStatusId = vm.statusid;
 
-            deputeRecord.ApplyStatusId = statusID;
+            //若與該會員合作，則此委託狀態一併改為合作中，且其他會員的應徵狀態改為備選
+            if (vm.statusid == 10)
+            {
+                depute.StatusId = 10;
+                deputeRecord.ApplyStatusId = 10;
+                foreach (var item in otherRecords)
+                {
+                    item.ApplyStatusId = 11;
+                }
+            }
+            //完成委託、委託紀錄
+            if (vm.statusid == 16)
+            {
+                depute.StatusId = 16;
+                deputeRecord.ApplyStatusId = 16;
+            }
+
             _db.SaveChanges();
-            var statusName = _db.Statuses.FirstOrDefault(_ => _.StatusId == statusID).Name;
+            var statusName = _db.Statuses.FirstOrDefault(_ => _.StatusId == vm.statusid).Name;
             return Content(statusName);
         }
         public IActionResult individualDetials(int id)
@@ -739,12 +787,41 @@ namespace prjDB_GamingForm_Show.Controllers
         #endregion
 
         #region PartialView
-
+        public IActionResult PartialReleaseOverview()
+        {
+            return PartialView();
+        }
         public IActionResult PartialOverview()
         {
-            //int memberid = (int)HttpContext.Session.GetInt32(CDictionary.SK_UserID);
-            //_db.DeputeRecords.Where()
-            return PartialView();
+            var release = _db.Deputes
+                .Where(_ => _.ProviderId == HttpContext.Session.GetInt32(CDictionary.SK_UserID))
+                .Select(depute => new
+                {
+                    ApplyCount = depute.DeputeRecords.Count(_ => _.ApplyStatusId == 5),
+                    ReplyCount = depute.DeputeRecords.Count(_ => _.ApplyStatusId == 25),
+                    ComCount = depute.DeputeRecords.Count(_ => _.ApplyStatusId == 16),
+                }).ToList();
+
+            var receive = _db.DeputeRecords
+                .Where(_ => _.MemberId == HttpContext.Session.GetInt32(CDictionary.SK_UserID))
+                .Select(_ => _);
+               
+            if (release == null && receive.Count() == 0)
+                return Content("尚無資料");
+
+            var datas = new CDeputeOverViewModel();
+            foreach (var item in release)
+            {
+                datas.ApplyCount += item.ApplyCount;
+                datas.ReplyCount += item.ReplyCount;
+                datas.ComCount += item.ComCount;
+            }
+            datas.NewCount = receive.Count(_ => _.ApplyStatusId == 9);
+            datas.RunCount = receive.Count(_ => _.ApplyStatusId == 10 || _.ApplyStatusId == 20);
+            datas.CofirmCount = receive.Count(_ => _.ApplyStatusId == 25);
+            datas.MemberComCount = receive.Count(_ => _.ApplyStatusId == 16);
+
+            return PartialView(datas);
         }
         public IActionResult PartialReleaseList()
         {

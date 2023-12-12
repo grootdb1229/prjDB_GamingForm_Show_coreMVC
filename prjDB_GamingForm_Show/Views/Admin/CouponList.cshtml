@@ -1,0 +1,85 @@
+﻿@model IEnumerable<prjDB_GamingForm_Show.ViewModels.CAdminCouponViewModel>
+@* @model prjDB_GamingForm_Show.ViewModels.CAdminCouponViewModel *@
+@{
+    ViewData["Title"] = "CouponList";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h2 style="margin-left:5px ; font-size:45px">優惠券清單</h2>
+@using (Html.BeginForm())
+{
+    <p style="display:inline;font-size:30px;margin-left:5px;margin-right:10px">名稱關鍵字查詢 : </p> @Html.TextBox("txtKeyWord", null, new { @class = "col-form-label" })
+    <input type="submit" value="查詢" class="btn btn-dark" />
+}
+
+<p>
+    @Html.ActionLink("新增優惠券", "CouponCreat", "Admin", null, null)
+</p>
+<table class="table table-dark table-hover" style="color:white ; font-size:20px">
+    <thead>
+        <tr>
+            <th>
+                優惠券名稱
+            </th>
+            <th>
+                折扣
+            </th>
+            <th>
+                折價
+            </th>
+            <th>
+                起始日期
+            </th>
+            <th>
+                結束日期
+            </th>
+            <th>
+                狀態
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            string type = "";
+            if(item.Type == "23")
+            {
+                type = "已啟用";
+            }
+            else if(item.Type == "24")
+            {
+                type = "未啟用";
+            }
+            else
+            {
+                type = "錯誤的狀態";
+            }
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Title)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Discount)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Reduce)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.StartDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.EndDate)
+                </td>
+                <td>
+                    @type
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                    @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                    @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

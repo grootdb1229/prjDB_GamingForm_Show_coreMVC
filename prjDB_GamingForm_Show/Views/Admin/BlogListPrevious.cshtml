@@ -28,7 +28,7 @@
                 名稱
             </th>
             <th>
-                所屬分類
+                所屬分類                
             </th>
             <th></th>
         </tr>
@@ -50,9 +50,9 @@
                         @Html.DisplayFor(modelItem => item.SubTag.Name)
                     </td>
                     <td>
-                        @Html.ActionLink("修改", "BlogEdit", "Admin", new { BId = item.BlogId}, new { @class = "btn btn-dark" })
-                        @Html.ActionLink("詳細?", "Details","Admin", new { /* id=item.PrimaryKey */ },new  { @class = "btn btn-dark" })
-                        @Html.ActionLink("刪除", "BlogDelete", "Admin", new { BId = item.BlogId }, new { @class = "btn btn-dark", onclick = "return confirm('確定要刪除嗎?')" })
+                        @Html.ActionLink("此主版的子版", "BlogSubBlogList","Admin", new { txtKeyWord = item.Title },new  { @class = "btn btn-dark" }) |
+                        @Html.ActionLink("修改主版名稱", "BlogEdit", "Admin", new { BId = item.BlogId}, new { @class = "btn btn-dark" }) |
+                        @Html.ActionLink("刪除此主版", "BlogDelete", "Admin", new { BId = item.BlogId }, new { @class = "btn btn-danger", onclick = "return confirm('確定要刪除嗎?')" })
                     </td>
                 </tr>
             }
@@ -60,21 +60,3 @@
     </tbody>
 
 </table>
-@*@section Scripts{
-    <script>
-        const lastbtn = document.querySelector('#last');
-        const nextbtn = document.querySelector('#next');
-        nextbtn.addEventListener('click', () => {
-            next();
-        });
-
-        async function next() {
-            const response = await fetch('@Url.Content("~/Admin/BlogListNext")');
-            const datas = await response.json()
-            const blogid = datas.map(b => `${b}`)
-            document.querySelector('bid').innerHTML = blogid.join("")
-            console.log(blogid)
-        }
-
-    </script>
-}*@
