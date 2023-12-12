@@ -1000,6 +1000,7 @@ namespace prjDB_GamingForm_Show.Controllers
 
             foreach (var item in data)
             {
+                //
                 item.StatusId = vm.txtStatusID;
             }
             _db.SaveChanges();
