@@ -30,9 +30,9 @@ namespace prjDB_GamingForm_Show.Models.Member
         [DisplayName("性別")]
         public int Gender { get { return _member.Gender;} set { this.member.Gender = value; } }
         public IFormFile photo { get; set; }
-        public string EmailValMsg { get; set; }
-        public string PhoneValMsg { get; set; }
-        public string PasswordValMsg { get; set; }
+        //public string EmailValMsg { get; set; }
+        //public string PhoneValMsg { get; set; }
+        //public string PasswordValMsg { get; set; }
 
     }
 }

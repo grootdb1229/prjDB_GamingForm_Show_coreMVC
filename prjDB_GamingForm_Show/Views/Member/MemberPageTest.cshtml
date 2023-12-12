@@ -73,6 +73,7 @@
         <nav class="navbar navbar-expand-lg navbar-dark px-5 py-3 py-lg-0">
             <a href="@Url.Action("MemberPageTest" , "Member")" class="navbar-brand p-0">
                 <h1 class="m-0"><i class="fa fa-user-tie me-2"></i>會員中心</h1>
+                <input type="hidden" name="MemberId" value=@Context.Session.GetInt32(CDictionary.SK_UserID) />
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
                 <span class="fa fa-bars"></span>
@@ -89,6 +90,7 @@
                             <a href="@Url.Action("CreateCollection" , "Member")" class="dropdown-item">新增作品</a>
                         </div>
                     </div>
+                </div>
                     <div class="nav-item dropdown">
                         <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">其他歷史紀錄</a>
                         <div class="dropdown-menu m-0">
