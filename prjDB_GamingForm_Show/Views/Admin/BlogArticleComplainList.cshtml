@@ -6,8 +6,8 @@
 }
 @section Styles{
     <style>
-        tr{
-            color:white;
+        tr {
+            color: white;
         }
 
         .table-hover tbody tr:hover {
@@ -19,7 +19,8 @@
 <h2>檢舉清單</h2>
 
 
-<table class="table table-hover">
+
+<table class="table table-dark table-hover" style="color:white ; font-size:20px">
     <thead>
         <tr>
             <th>
@@ -32,44 +33,44 @@
                 會員編號
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.ReportContent)
+                檢舉內容
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.ReportDate)
+                檢舉日期
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.SubTagId)
+                檢舉類型
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ArticleId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.MemberId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ReportContent)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ReportDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.SubTagId)
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Id)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ArticleId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MemberId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ReportContent)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ReportDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SubTag.Name)
+                </td>
+                <td>
+                    @Html.ActionLink("查看", "BlogArticleComplainCheck", "Admin",  new {ACId = item.Id ,ADId = item }, new { @class = "btn btn-danger" })
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
+
