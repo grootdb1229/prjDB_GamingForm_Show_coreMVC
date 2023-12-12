@@ -8,77 +8,97 @@
 </head>
 
 @Html.ActionLink("發佈委託", "Create", "Depute", null, new { @class = "btn btn-primary tm-btn-next mb-3" })
-<table class="table table-dark table-striped table-bordered align-middle">
 
-    <tr class="text-center">
-        <th class="col-auto">
-            #
-        </th>
-        <th class="col-1">
-            標題
-        </th>
-        <th class="col-4">
-            內容
-        </th>
+<ul class="nav nav-tabs" id="myTab" role="tablist">
+    <li class="nav-item" role="presentation" style="margin-bottom: 0px;">
+        <button class="nav-link active" id="release-ing-tab" data-bs-toggle="tab" data-bs-target="#release-ing-tab-pane" type="button" role="tab" aria-controls="release-ing-tab-pane" aria-selected="true">合作中</button>
+    </li>
+    <li class="nav-item" role="presentation" style="margin-bottom: 0px;">
+        <button class="nav-link" id="release-com-tab" data-bs-toggle="tab" data-bs-target="#release-com-tab-pane" type="button" role="tab" aria-controls="release-com-tab-pane" aria-selected="false">已完成</button>
+    </li>
+</ul>
 
-        <th class="col-1">
-            狀態
-        </th>
-        <th class="col-1">
-            報酬
-        </th>
-        <th class="col-1">
-            應徵人數
-        </th>
-        <th class="col-3"></th>
-    </tr>
+<div class="tab-content" id="myTabContent">
+    <div class="tab-pane fade show active" id="release-ing-tab-pane" role="tabpanel" aria-labelledby="release-ing-tab" tabindex="0">
 
+        <table class="table table-dark table-striped table-bordered align-middle">
 
-    @{
-        int count = 0;
-        foreach (var i in Model)
-        {
-            count++;
-            <tr>
-                <td class="text-center">
-                    @count
-                </td>
-                <td>
-                    @i.Title
-                </td>
-                <td>
-                    @i.DeputeContent
-                </td>
-                <td class="text-center" id="deputeStatus">
-                    @i.Status.Name
-                </td>
-                <td class="text-center">
-                    @i.Salary.ToString("$###,###,##0")
-                </td>
-                <td class="text-center">
-                    <button id=`detial${@i.DeputeId}` class="btn btn-light" onclick="individualDetials(@i.DeputeId)">@i.DeputeRecords.Count()</button>
-                </td>
-                <td class="text-center">
-                    @{
-                        //若狀態為已完成(待確認)出現確認按鈕
-                        if (i.DeputeRecords.Any(_ => _.ApplyStatusId == 25))
-                        {
-                            <button type="button" onclick="confirm(@i.DeputeId)" class="btn btn-info">確認</button>
-                        }
-                        else
-                        {
-                            @Html.ActionLink("修改", "Edit", "Depute", new { id = i.DeputeId }, new { @class = "btn btn-success" })
-                        }
-                    }
-                    <button class="btn btn-secondary btn-ReleaseDeputeDetails" onclick="detailsDepute(@i.DeputeId)">詳細資料</button>
-                    <button class="btn btn-danger btn-ReleaseDeputeDelete" onclick="deleteDeputeAlert(@i.DeputeId)" data_deputeid=@i.DeputeId>刪除</button>
-                </td>
+            <tr class="text-center">
+                <th class="col-auto">
+                    #
+                </th>
+                <th class="col-1">
+                    標題
+                </th>
+                <th class="col-4">
+                    內容
+                </th>
+
+                <th class="col-1">
+                    狀態
+                </th>
+                <th class="col-1">
+                    報酬
+                </th>
+                <th class="col-1">
+                    應徵人數
+                </th>
+                <th class="col-3"></th>
             </tr>
-        }
-    }
-</table>
+
+
+            @{
+                int count = 0;
+                foreach (var i in Model)
+                {
+                    count++;
+                    <tr>
+                        <td class="text-center">
+                            @count
+                        </td>
+                        <td>
+                            @i.Title
+                        </td>
+                        <td>
+                            @i.DeputeContent
+                        </td>
+                        <td class="text-center" id="deputeStatus">
+                            @i.Status.Name
+                        </td>
+                        <td class="text-center">
+                            @i.Salary.ToString("$###,###,##0")
+                        </td>
+                        <td class="text-center">
+                            <button id=`detial${@i.DeputeId}` class="btn btn-light" onclick="individualDetials(@i.DeputeId)">@i.DeputeRecords.Count()</button>
+                        </td>
+                        <td class="text-center">
+                            @{
+                                //若狀態為已完成(待確認)出現確認按鈕
+                                if (i.DeputeRecords.Any(_ => _.ApplyStatusId == 25))
+                                {
+                                    <button type="button" onclick="confirm(@i.DeputeId)" class="btn btn-info">確認</button>
+                                }
+                                else
+                                {
+                                    @Html.ActionLink("修改", "Edit", "Depute", new { id = i.DeputeId }, new { @class = "btn btn-success" })
+                                }
+                            }
+                            <button class="btn btn-secondary btn-ReleaseDeputeDetails" onclick="detailsDepute(@i.DeputeId)">詳細資料</button>
+                            <button class="btn btn-danger btn-ReleaseDeputeDelete" onclick="deleteDeputeAlert(@i.DeputeId)" data_deputeid=@i.DeputeId>刪除</button>
+                        </td>
+                    </tr>
+                }
+            }
+        </table>
+    </div>
+    <div class="tab-pane fade" id="release-com-tab-pane" role="tabpanel" aria-labelledby="release-com-tab" tabindex="0">...</div>
+    <div class="tab-pane fade" id="contact-tab-pane" role="tabpanel" aria-labelledby="contact-tab" tabindex="0">...</div>
+    <div class="tab-pane fade" id="disabled-tab-pane" role="tabpanel" aria-labelledby="disabled-tab" tabindex="0">...</div>
+</div>
+
 
 <script>
+
     async function confirm(deputeid) {
         const response = await fetch(`@Url.Content("~/depute/confirmApply")?id=${deputeid}`);
         const data = await response.json();
