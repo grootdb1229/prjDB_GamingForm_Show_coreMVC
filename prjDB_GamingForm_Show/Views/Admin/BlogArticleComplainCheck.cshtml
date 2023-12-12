@@ -1,0 +1,49 @@
+﻿@*@model IEnumerable<prjDB_GamingForm_Show.ViewModels.CBlogViewModel>*@
+@model prjDB_GamingForm_Show.ViewModels.CBlogViewModel
+
+@{
+    ViewData["Title"] = "BlogArticleComplainCheck";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h2>檢舉內容</h2>
+
+<div>
+    <p style="font-size:25px">發文會員編號: @Html.Raw(Model.articles.FirstOrDefault().MemberId)</p>
+</div>
+<div>
+    <p style="font-size:25px">發文會員名稱: @Html.Raw(Model.articles.FirstOrDefault().Member.Name)</p>
+</div>
+<div style="color:white">
+    文章內容
+    @Html.Raw(Model.articles.FirstOrDefault().ArticleContent)
+</div>
+
+
+
+
+
+
+
+
+
+
+
+@*<table class="table">
+    <thead>
+        <tr>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+            </td>
+        </tr>
+}
+    </tbody>
+</table>*@
