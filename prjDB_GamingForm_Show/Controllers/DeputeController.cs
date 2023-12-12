@@ -549,6 +549,7 @@ namespace prjDB_GamingForm_Show.Controllers
             }
             return RedirectToAction("HomeFrame");
         }
+
         public IActionResult DeleteDepute(int id)
         {
             //partialrelease-刪除
@@ -787,10 +788,7 @@ namespace prjDB_GamingForm_Show.Controllers
         #endregion
 
         #region PartialView
-        public IActionResult PartialReleaseOverview()
-        {
-            return PartialView();
-        }
+
         public IActionResult PartialOverview()
         {
             var release = _db.Deputes
