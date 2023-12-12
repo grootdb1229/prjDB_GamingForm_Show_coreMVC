@@ -31,7 +31,8 @@ namespace prjDB_GamingForm_Show.Controllers
 
 			private readonly IWebHostEnvironment _host;
 			private readonly DbGamingFormTestContext _db;
-			public ShopController(IWebHostEnvironment host, DbGamingFormTestContext db)
+			public int couponid { get; set; }
+            public ShopController(IWebHostEnvironment host, DbGamingFormTestContext db)
 			{
 				_host = host;
 				_db = db;
@@ -613,12 +614,45 @@ namespace prjDB_GamingForm_Show.Controllers
                         s.Title,
                         s.Discount,
 						s.Reduce
-                    })
-                    .ToList();
+                    }).ToList();
                 return Json(Coupon);
             }
+			
+			public IActionResult Couponselect(int id)
+			{
+				var Coupon = _db.Coupons
+					.Where(p => p.CouponId == id)
+					.Select(s => new
+					{
+						s.CouponId,
+						s.Discount,
+						s.Reduce
+					}).ToList();
+                
+                string json = "";
+				json = HttpContext.Session.GetString(CDictionary.SK_PURCHASED_PRODUCES_LIST);
+				List<CShoppingCarViewModel> car = JsonSerializer.Deserialize<List<CShoppingCarViewModel>>(json);
+				decimal sumprice = 0;
 
 
+				foreach (var item in Coupon)
+				{
+					couponid = item.CouponId;
+					if (item.Discount != "")
+					{
+						decimal dis = decimal.Parse(item.Discount);
+						sumprice = car.Sum(c => c.Price) * dis;
+					}
+					else
+					{
+						int reduce = int.Parse(item.Reduce);
+						sumprice = car.Sum(c => c.Price) - reduce;
+					}
+				}
+				//sumprice = car.Sum(c => c.Price);
+
+                return Content(sumprice.ToString("#0"));
+			}
             [HttpPost]
 			public ActionResult Create(超酷warp product)
 			//先這樣Warp應該是用於資料驗證，有待看影片確認但目前不這樣寫驗證會一直錯誤
@@ -1206,18 +1240,35 @@ namespace prjDB_GamingForm_Show.Controllers
 			{
 				string json = HttpContext.Session.GetString(CDictionary.SK_PURCHASED_PRODUCES_LIST);
 				List<CShoppingCarViewModel> car = JsonSerializer.Deserialize<List<CShoppingCarViewModel>>(json);
-				Order order = new Order()
+				Order order = null;
+				if (couponid != 0)
 				{
-					MemberId = HttpContext.Session.GetInt32(CDictionary.SK_UserID),
-					ShipName = _db.Members.FirstOrDefault(x => x.MemberId == HttpContext.Session.GetInt32(CDictionary.SK_UserID)).Name,
-					OrderDate = DateTime.Now,
-					PaymentId = payment,
-					StatusId = 13,
-					ShipId = 1
-
-				};
+					order = new Order()
+					{
+						MemberId = HttpContext.Session.GetInt32(CDictionary.SK_UserID),
+						ShipName = _db.Members.FirstOrDefault(x => x.MemberId == HttpContext.Session.GetInt32(CDictionary.SK_UserID)).Name,
+						OrderDate = DateTime.Now,
+						PaymentId = payment,
+						StatusId = 13,
+						ShipId = 1,
+						CouponId = couponid
+					};
+				}
+				else
+				{
+                    order = new Order()
+                    {
+                        MemberId = HttpContext.Session.GetInt32(CDictionary.SK_UserID),
+                        ShipName = _db.Members.FirstOrDefault(x => x.MemberId == HttpContext.Session.GetInt32(CDictionary.SK_UserID)).Name,
+                        OrderDate = DateTime.Now,
+                        PaymentId = payment,
+                        StatusId = 13,
+                        ShipId = 1
+                    };
+                }
 				_db.Orders.Add(order);
 				_db.SaveChanges();
+
 				foreach (var p in car)
 				{
 					OrderProduct orderproduct = new OrderProduct()
