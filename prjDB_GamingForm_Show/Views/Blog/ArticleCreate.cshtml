@@ -59,7 +59,7 @@
             <div>
                 <h2 style="text-align:center;margin:10px auto;color:whitesmoke;border-bottom:dotted">發表文章</h2>
             </div>
-            <form asp-action="ArticleCreate" method="post">
+            <form asp-action="ArticleCreate" method="post" onsubmit="return validateForm()">
                 <label style="margin-top:8px" asp-for="blogs.First().Title" class="control-label">選取分類</label>
                 <input type="hidden" name="FId" value="@Model.blogs.First().BlogId" />
                 <input type="hidden" name="ViewCount" value="0" />
@@ -74,7 +74,7 @@
                 </select>
                 <div class="form-group">
                     <label asp-for="articles.First().Title" class="control-label" style="margin-top:8px">文章標題</label>
-                    <input name="Title" class="form-control" />
+                    <input name="Title" class="form-control" id="articleTitle" />
                     <span asp-validation-for="articles.First().Title" class="text-danger"></span>
                 </div>
               
@@ -269,6 +269,17 @@
             };
         }
 
+            var title = document.getElementById('articleTitle').value;
+            var content = document.getElementById('editor').value;
+        function validateForm() {
+
+            if (title.trim() === '' || content.trim() === '') {
+                alert('文章標題和內容不能為空！');
+                return false; // 取消表單提交
+            }
+
+            return true; // 允許表單提交
+        }
 
     </script>
 }
