@@ -622,7 +622,14 @@ namespace prjDB_GamingForm_Show.Controllers
 
         public IActionResult confirmApply(int id)
         {
-            var data = _db.DeputeRecords.FirstOrDefault(_ => _.DeputeId == id && _.ApplyStatusId == 25);
+            var ori = _db.DeputeRecords.FirstOrDefault(_ => _.DeputeId == id && _.ApplyStatusId == 25);
+            CDeputeViewModel data = new CDeputeViewModel()
+            {
+                id = ori.Id,
+                title = ori.Depute.Title,
+                replyContent = ori.ReplyContent,
+                replyFileName = ori.ReplyFileName,
+            };
             return Json(data);
         }
 

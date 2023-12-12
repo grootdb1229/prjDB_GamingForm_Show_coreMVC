@@ -36,15 +36,15 @@ a:hover {
 	margin-left: 0;
 }
 
-.btn-primary {
+.btn-primary.oriclass {
 	padding: 12px 50px;
-    border-radius: 0;
-    background: #a81d1d;
-    font-size: 1.2rem;
-    border: 0;
+	border-radius: 0;
+	background: #a81d1d;
+	font-size: 1.2rem;
+	border: 0;
 }
 
-.btn-primary:hover { background: #E15050; }
+.btn-primary.oriclass:hover { background: #E15050; }
 .tm-text-primary { color: #a81d1d; }
 .tm-text-secondary { color: #E15050; }
 hr { border-top: 4px solid #CCC; }
