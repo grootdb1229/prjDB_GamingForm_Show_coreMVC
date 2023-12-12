@@ -122,7 +122,8 @@ namespace prjDB_GamingForm_Show.Controllers
             return View(vm);
         }
 
-        public ActionResult ArticleContent(int? FId, int? AFId)
+        public ActionResult 
+            ArticleContent(int? FId, int? AFId)
         {
             Article art = _db.Articles.FirstOrDefault(a => a.ArticleId == AFId);
             if (art != null)
@@ -158,7 +159,7 @@ namespace prjDB_GamingForm_Show.Controllers
             if (art != null)
             {
                 // 修改 Article 的 SubBlogID
-                art.SubBlogId = 42;  // 新的 SubBlogID
+                art.SubBlogId = 191;  // 新的 SubBlogID
                 _db.SaveChanges();
             }
             return RedirectToAction("ArticleList", new { FId });

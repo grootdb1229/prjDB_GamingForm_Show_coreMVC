@@ -77,5 +77,21 @@
                 })
             };
         }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            if (@Model.StatusId== 10 || @Model.StatusId== 20) {
+                Swal.fire({
+                    color: "#D0D0D0",
+                    background: "#343a40",
+                    timer: 5000,
+                    timerProgressBar: true,
+                    title: "合作中",
+                    text: "合作中委託無法應徵，將於5秒後跳轉委託頁面",
+                    icon: "warning"
+                }).then(() => {
+                    window.location.href = '@Url.Action("DeputeMain","depute")';
+                })
+            };
+        })
     </script>
 }
