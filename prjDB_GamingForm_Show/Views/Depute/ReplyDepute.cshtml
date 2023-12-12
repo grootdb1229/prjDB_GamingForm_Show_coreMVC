@@ -40,6 +40,9 @@
         const icon = result.success ? "success" : "error";
         if (result.success) {
             Swal.fire({
+                color: "#D0D0D0",
+                background: "#343a40",
+                scrollbarPadding: false,
                 timer: 3000,
                 timerProgressBar: true,
                 title: `${result.message}`,

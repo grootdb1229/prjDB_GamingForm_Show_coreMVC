@@ -50,6 +50,7 @@ namespace DB_GamingForm_Show.Job.DeputeClass
         public string? applyerContent { get; set; }
         public string? applyerGender {  get; set; }
         public string? replyContent {  get; set; }
+        public string? replyFileName {  get; set; }
     }
 
 
