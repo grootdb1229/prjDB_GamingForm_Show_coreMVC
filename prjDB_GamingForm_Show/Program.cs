@@ -8,7 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddSession();
-builder.Services.AddDbContext<DbGamingFormTestContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("LocalConnection")));
+builder.Services.AddDbContext<DbGamingFormTestContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("SchoolConnection")));
 builder.Services.AddControllers().AddJsonOptions(x => x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 builder.Services.AddSignalR();
 var app = builder.Build();
@@ -30,9 +30,9 @@ app.MapHub<ChatHub>("/chatHub");
 app.MapControllerRoute(
     name: "default",
 //pattern: "{controller=depute}/{action=deputemain}/{id?}");
-pattern: "{controller=Blog}/{action=List}/{id?}");
+//pattern: "{controller=Blog}/{action=List}/{id?}");
 //pattern: "{controller=Shop}/{action=Index}/{id?}");
 //pattern: "{controller=Depute}/{action=DeputeList}/{id?}");
-//pattern: "{controller=Admin}/{action=Index}/{id?}");
+pattern: "{controller=Admin}/{action=Index}/{id?}");
 
 app.Run();
