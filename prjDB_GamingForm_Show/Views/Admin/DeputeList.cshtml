@@ -12,10 +12,6 @@
         <div class="col-md-auto">
             <button id="search" name="txtKeyword" class="btn btn-dark border-0 w-100">搜尋</button>
         </div>
-        <div class="col-md-auto">
-            @Html.ActionLink("重設", "DeputeList", "Depute", new { id = "null" }, new { @class = "btn btn-dark border-0 w-100", @id = "search", name = "txtKeyword" })
-        </div>
-        
     </div>
 </div>
 <table class="table table-dark table-hover" style="color:white ; font-size:20px">
@@ -45,7 +41,7 @@
         @foreach (var item in Model)
         {
             <tr>
-                <td>
+                <td class="id">
                     @Html.DisplayFor(modelItem => item.id)
                 </td>
                 <td>
@@ -64,24 +60,25 @@
                     @Html.DisplayFor(modelItem => item.status)
                 </td>
                 <td>
-                    @Html.ActionLink("編輯", "DeputeList", "Depute", new { id = "null" }, new { @class = "btn btn-dark ", @id = "search", name = "txtKeyword" })
-                    @Html.ActionLink("刪除", "DeputeList", "Depute", new { id = "null" }, new { @class = "btn btn-dark ", @id = "search", name = "txtKeyword" })
-                    <button type="button" class="btn btn-dark status">測試</button>
+                    @Html.ActionLink("刪除委託", "DeputeList", "Depute", new { id = "null" }, new { @class = "btn btn-dark ", @id = "search", name = "txtKeyword" })
+                    <button type="button" class="btn btn-dark status" onclick="test2(@Html.DisplayFor(modelItem => item.id))">修改狀態</button>
                     @* @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ }) *@
                 </td>
+
+
             </tr>
         }
     </tbody>
-
+    
 </table>
 
 @section Scripts
     {
 
     <script>
-        $('.btn btn-dark status').click(() => { test2() })
+        // $('.btn btn-dark status').click(() => { test2() })
 
-        async function test2() {
+        async function test2(value) {
 
             const { value: status } = await Swal.fire({
                 title: "修改委託狀態",
@@ -91,7 +88,7 @@
                         18: "已開放",
                         19: "已關閉",
                         16: "已完成",
-                        oranges: "開啟"
+                        10: "合作中",
                     }
                 },
                 inputPlaceholder: "選擇狀態以修改",
@@ -101,45 +98,27 @@
                         if (value != "") {
                             resolve();
                         } else {
-                            resolve("You need to select oranges :)");
+                            resolve("請選擇一個選項");
                         }
                     });
                 }
             });
             if (status) {
-                Swal.fire(`You selected: ${status}`);
+                // Swal.fire(`You selected: ${status}`);
+                $.ajax('@Url.Content("~/Admin/ADeputeEdit")', {
+                    "type": 'post', //POST、PUT、DELETE//
+                    "data": {
+                        "txtID": value,
+                        "txtStatusID": status,
+                    },
+                })
+                    .done(() => { window.location.href = "/Admin/DeputeList" })
             }
+            
 
         }
 
-        async function test() {
-            const { value: fruit } = await Swal.fire({
-                title: "修改委託狀態",
-                input: "select",
-                inputOptions: {
-                    狀態: {
-                        apples: "開啟",
-                        bananas: "關閉",
-                        grapes: "Grapes",
-                        oranges: "開啟"
-                    }
-                },
-                inputPlaceholder: "選擇狀態以修改",
-                showCancelButton: true,
-                inputValidator: (value) => {
-                    return new Promise((resolve) => {
-                        if (value === "oranges") {
-                            resolve();
-                        } else {
-                            resolve("You need to select oranges :)");
-                        }
-                    });
-                }
-            });
-            if (fruit) {
-                Swal.fire(`You selected: ${fruit}`);
-            }
-        }
+        
     </script>
 
 }
