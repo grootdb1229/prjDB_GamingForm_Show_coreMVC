@@ -208,7 +208,7 @@
             <div class="tab-content">
                 <div id="tab-1" class="tab-pane fade show p-0 active">
                     <div class="job-item p-4 mb-4">
-                        <div id="resultlist" class="row g-4" style="background-color:black">
+                        <div id="resultlist" class="row g-4" style="background-color:black;border-radius:20px">
                             @foreach (var item in Model)
                             {
                                 <div class="col-sm-12 col-md-8 d-flex align-items-center">
@@ -249,7 +249,6 @@
         const text = document.querySelector('#text');
         loadSkillClassess();
         let keyword = [];
-
         $('#search').click(() => { MutiSearch(text.value) });
         $('#money').change(() => { MutiSearch(keyword) });
         $('#date').change(() => { MutiSearch(keyword) });

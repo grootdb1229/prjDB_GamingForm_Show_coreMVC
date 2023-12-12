@@ -34,7 +34,7 @@ namespace prjDB_GamingForm_Show.Controllers
                 { "ReturnURL",  $"{website}/api/Ecpay/AddPayInfo"},
                 { "OrderResultURL", $"{website}/Home/PayInfo/{orderId}"},
                 { "PaymentInfoURL",  $"{website}/api/Ecpay/AddAccountInfo"},
-                { "ClientRedirectURL",  $"{website}/Home/AccountInfo/{orderId}"},
+                { "ClientRedirectURL",  $"{website}/Payment/AccountInfo/{orderId}"},
                 { "MerchantID",  "2000132"},
                 { "IgnorePayment",  "GooglePay#WebATM#CVS#BARCODE"},
                 { "PaymentType",  "aio"},

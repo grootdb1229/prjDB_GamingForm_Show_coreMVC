@@ -34,9 +34,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="DB\" />
     <Folder Include="Models\Entities\" />
+    <Folder Include="wwwroot\files\depute\" />
     <Folder Include="wwwroot\images\MemberCollectionPreView\" />
-    <Folder Include="wwwroot\images\depute\" />
     <Folder Include="wwwroot\images\shop\" />
   </ItemGroup>
 

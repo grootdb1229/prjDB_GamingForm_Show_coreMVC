@@ -261,21 +261,26 @@
                     result.dismiss === Swal.DismissReason.cancel
                 ) {
                     swalWithBootstrapButtons.fire({
-                        timer: 3000,
-                        timerProgressBar: true,
                         color: "#D0D0D0",
                         background: "#343a40",
                         title: "已取消",
-                        text: "將於2秒後跳轉回首頁",
+                        html: `將於5秒後跳轉回首頁`,
                         icon: "error",
-                        didOpen: (toast) => {
-                            toast.onmouseenter = Swal.stopTimer;
-                            toast.onmouseleave = Swal.resumeTimer;
+                        timer: 5000,
+                        timerProgressBar: true,
+                        willClose: () => {
+                            clearInterval(timerInterval);
+                        },
+                        didOpen: () => {
+                            Swal.showLoading();
+                            const timer = Swal.getPopup().querySelector("b");
+                            timerInterval = setInterval(() => {
+                                // timer.textContent = `${(Swal.getTimerLeft() / 1000).toFixed(0)}`;
+                            }, 100);
                         }
                     }).then(() => {
                         back();
                     });
-
                 }
             });
         }

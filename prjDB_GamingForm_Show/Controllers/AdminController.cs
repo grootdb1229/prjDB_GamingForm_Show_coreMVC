@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Hosting;
+﻿using DB_GamingForm_Show.Job.DeputeClass;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using prjDB_GamingForm_Show.Models;
@@ -977,5 +978,17 @@ namespace prjDB_GamingForm_Show.Controllers
 
         #endregion
         //---------------------------論壇---------------------------
+
+        #region 委託Admin
+
+        public IActionResult DeputeList()
+        {
+            IEnumerable<CDeputeViewModel> datas = null;
+            CDeputtListLoad x = new CDeputtListLoad(_host,_db);
+            datas = x.List.OrderBy(n=>n.id).ToList();
+            return View(datas);
+        }
+
+        #endregion
     }
 }

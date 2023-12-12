@@ -1,0 +1,145 @@
+﻿@model IEnumerable<DB_GamingForm_Show.Job.DeputeClass.CDeputeViewModel>
+
+@{
+    ViewData["Title"] = "DeputeList";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+<div class="container">
+    <div class="row">
+        <div class="col-md-auto">
+            <input type="text" id="text" name="txtKeyword" class="form-control border-0" placeholder="請輸入想尋找的委託..." />
+        </div>
+        <div class="col-md-auto">
+            <button id="search" name="txtKeyword" class="btn btn-dark border-0 w-100">搜尋</button>
+        </div>
+        <div class="col-md-auto">
+            @Html.ActionLink("重設", "DeputeList", "Depute", new { id = "null" }, new { @class = "btn btn-dark border-0 w-100", @id = "search", name = "txtKeyword" })
+        </div>
+        
+    </div>
+</div>
+<table class="table table-dark table-hover" style="color:white ; font-size:20px">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.id)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.providername)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.startdate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.modifieddate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.status)
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.id)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.title)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.providername)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.startdate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.modifieddate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.status)
+                </td>
+                <td>
+                    @Html.ActionLink("編輯", "DeputeList", "Depute", new { id = "null" }, new { @class = "btn btn-dark ", @id = "search", name = "txtKeyword" })
+                    @Html.ActionLink("刪除", "DeputeList", "Depute", new { id = "null" }, new { @class = "btn btn-dark ", @id = "search", name = "txtKeyword" })
+                    <button type="button" class="btn btn-dark status">測試</button>
+                    @* @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ }) *@
+                </td>
+            </tr>
+        }
+    </tbody>
+
+</table>
+
+@section Scripts
+    {
+
+    <script>
+        $('.btn btn-dark status').click(() => { test2() })
+
+        async function test2() {
+
+            const { value: status } = await Swal.fire({
+                title: "修改委託狀態",
+                input: "select",
+                inputOptions: {
+                    狀態: {
+                        18: "已開放",
+                        19: "已關閉",
+                        16: "已完成",
+                        oranges: "開啟"
+                    }
+                },
+                inputPlaceholder: "選擇狀態以修改",
+                showCancelButton: true,
+                inputValidator: (value) => {
+                    return new Promise((resolve) => {
+                        if (value != "") {
+                            resolve();
+                        } else {
+                            resolve("You need to select oranges :)");
+                        }
+                    });
+                }
+            });
+            if (status) {
+                Swal.fire(`You selected: ${status}`);
+            }
+
+        }
+
+        async function test() {
+            const { value: fruit } = await Swal.fire({
+                title: "修改委託狀態",
+                input: "select",
+                inputOptions: {
+                    狀態: {
+                        apples: "開啟",
+                        bananas: "關閉",
+                        grapes: "Grapes",
+                        oranges: "開啟"
+                    }
+                },
+                inputPlaceholder: "選擇狀態以修改",
+                showCancelButton: true,
+                inputValidator: (value) => {
+                    return new Promise((resolve) => {
+                        if (value === "oranges") {
+                            resolve();
+                        } else {
+                            resolve("You need to select oranges :)");
+                        }
+                    });
+                }
+            });
+            if (fruit) {
+                Swal.fire(`You selected: ${fruit}`);
+            }
+        }
+    </script>
+
+}

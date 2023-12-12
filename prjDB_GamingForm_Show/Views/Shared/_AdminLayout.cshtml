@@ -105,7 +105,8 @@
                                         @*<i class="fa fa-table"></i>*@<i class="fa fa-clone" style="color:#a81d1d"></i> 委託管理 <span class="fa fa-chevron-down"></span>
                                     </a>
                                     <ul class="nav child_menu">
-                                        <li><a href="~/tables.html" style="font-size:15px">申訴處理</a></li>
+                                        <li>@Html.ActionLink("委託清單", "DeputeList", "Admin", null, new { @style = "font-size:15px" })</li>
+                                        <li>@Html.ActionLink("申訴處理", "DeputeComplain", "Admin", null, new { @style = "font-size:15px" })</li>
                                         @*<li><a href="~/tables_dynamic.html">Table Dynamic</a></li>**@
                                     </ul>
                                 </li>
@@ -330,6 +331,7 @@
     <script src="~/js/custom.min.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
     <script src="~/js/signalr/dist/browser/signalr.js"></script>
+    <script src="~/js/sweetalert2.all.js"></script>
     <script>
         var name = $('#AdminNameInSession').text();
         $('#test').load('@Url.Content("~/Admin/SignalRPV")');
