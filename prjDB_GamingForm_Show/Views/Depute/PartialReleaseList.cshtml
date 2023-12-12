@@ -39,41 +39,41 @@
         foreach (var i in Model)
         {
             count++;
-                    <tr>
-                        <td class="text-center">
-                            @count
-                        </td>
-                        <td>
-                            @i.Title
-                        </td>
-                        <td>
-                            @i.DeputeContent
-                        </td>
-                        <td class="text-center" id="deputeStatus">
-                            @i.Status.Name
-                        </td>
-                        <td class="text-center">
-                            @i.Salary.ToString("$###,###,##0")
-                        </td>
-                        <td class="text-center">
-                            <button id=`detial${@i.DeputeId}` class="btn btn-light" onclick="individualDetials(@i.DeputeId)">@i.DeputeRecords.Count()</button>
-                        </td>
-                        <td class="text-center">
-                            @{
+            <tr>
+                <td class="text-center">
+                    @count
+                </td>
+                <td>
+                    @i.Title
+                </td>
+                <td>
+                    @i.DeputeContent
+                </td>
+                <td class="text-center" id="deputeStatus">
+                    @i.Status.Name
+                </td>
+                <td class="text-center">
+                    @i.Salary.ToString("$###,###,##0")
+                </td>
+                <td class="text-center">
+                    <button id=`detial${@i.DeputeId}` class="btn btn-light" onclick="individualDetials(@i.DeputeId)">@i.DeputeRecords.Count()</button>
+                </td>
+                <td class="text-center">
+                    @{
                         //若狀態為已完成(待確認)出現確認按鈕
                         if (i.DeputeRecords.Any(_ => _.ApplyStatusId == 25))
                         {
-                                            <button type="button" onclick="confirm(@i.DeputeId)" class="btn btn-info">確認</button>
+                            <button type="button" onclick="confirm(@i.DeputeId)" class="btn btn-info">確認</button>
                         }
                         else
                         {
-                                            @Html.ActionLink("修改", "Edit", "Depute", new { id = i.DeputeId }, new { @class = "btn btn-success" })
+                            @Html.ActionLink("修改", "Edit", "Depute", new { id = i.DeputeId }, new { @class = "btn btn-success" })
                         }
-                            }
-                            <button class="btn btn-secondary btn-ReleaseDeputeDetails" onclick="detailsDepute(@i.DeputeId)">詳細資料</button>
-                            <button class="btn btn-danger btn-ReleaseDeputeDelete" onclick="deleteDeputeAlert(@i.DeputeId)" data_deputeid=@i.DeputeId>刪除</button>
-                        </td>
-                    </tr>
+                    }
+                    <button class="btn btn-secondary btn-ReleaseDeputeDetails" onclick="detailsDepute(@i.DeputeId)">詳細資料</button>
+                    <button class="btn btn-danger btn-ReleaseDeputeDelete" onclick="deleteDeputeAlert(@i.DeputeId)" data_deputeid=@i.DeputeId>刪除</button>
+                </td>
+            </tr>
         }
     }
 </table>

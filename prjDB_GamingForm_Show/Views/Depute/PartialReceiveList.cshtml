@@ -67,18 +67,77 @@
                 </td>
                 <td class="text-center">
                     @{
-                        if (@i.ApplyStatus.Name.Contains("合作中"))
+                        if (@i.ApplyStatus.Name.Contains("合作中") || @i.ApplyStatus.Name.Contains("已完成"))
                         {
-                            @Html.ActionLink("完成", "ReplyDepute", new { id = i.Id }, new { @class = "btn btn-success" })
+                            string replyDisabled = i.ApplyStatus.Name.Contains("已完成") ? " disabled" : "";
+                            @Html.ActionLink("完成", "ReplyDepute", new { id = i.Id }, new { @class = "btn btn-success"+replyDisabled })
                         }
                     }
-                    @Html.ActionLink("詳細資料", "Details", new { id = i.Id }, new { @class = "btn btn-secondary" }) 
-                    @Html.ActionLink("撤回", "DeleteDeputeRecord", "Depute", new { id = i.Id }, new { @class = "btn btn-danger" })
+                    @Html.ActionLink("詳細資料", "Details", new { id = i.Id }, new { @class = "btn btn-secondary" })
+                    <button class="btn btn-danger" onclick="deleteDeputeRecordAlert(@i.Id)">撤回</button>
                 </td>
             </tr>
         }
     }
 </table>
 <script>
-    
+    function deleteDeputeRecordAlert(deputeRecordID) {
+        const swalWithBootstrapButtons = Swal.mixin({
+            customClass: {
+                confirmButton: "btn btn-success",
+                cancelButton: "btn btn-danger"
+            },
+            buttonsStyling: false
+        });
+        swalWithBootstrapButtons.fire({
+            color: "#D0D0D0",
+            background: "#343a40",
+            scrollbarPadding: false,
+            title: "確定撤回嗎?",
+            text: "此動作無法復原!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "是的，確定撤回!",
+            cancelButtonText: "取消!",
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                fetch(`@Url.Content("~/depute/DeleteDeputeRecord")?id=${deputeRecordID}`);
+                swalWithBootstrapButtons.fire({
+                    color: "#D0D0D0",
+                    background: "#343a40",
+                    title: "已撤回!",
+                    text: "該應徵已撤回",
+                    icon: "success"
+                });
+                setTimeout(function () {
+                    reloadPartial();
+                }, 500);
+            } else if (
+                /* Read more about handling dismissals below */
+                result.dismiss === Swal.DismissReason.cancel
+            ) {
+                swalWithBootstrapButtons.fire({
+                    color: "#D0D0D0",
+                    background: "#343a40",
+                    title: "已取消",
+                    text: "應徵尚未撤回",
+                    icon: "error"
+                });
+            }
+        });
+    }
+
+    function reloadPartial() {
+        $.ajax({
+            url: '@Url.Action("PartialReceiveList", "depute")',
+            type: "GET",
+            success: function (result) {
+                $('#divReceivePart').html(result);
+            },
+            error: function (error) {
+                console.error('Error reloading partial view:', error);
+            }
+        })
+    }
 </script>
