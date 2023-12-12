@@ -33,6 +33,8 @@ public partial class Order
 
     public int StatusId { get; set; }
 
+    public virtual Coupon? Coupon { get; set; }
+
     public virtual Member? Member { get; set; }
 
     public virtual ICollection<OrderProduct> OrderProducts { get; set; } = new List<OrderProduct>();

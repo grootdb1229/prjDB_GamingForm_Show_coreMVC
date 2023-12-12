@@ -83,6 +83,15 @@
     <div style="border:solid 2px  #a81d1d ; margin-bottom:20px;">
         <div class="form-group" id="Coupon" style="background-color:#4F4F4F">
             <div class="d-flex flex-wrap">
+                <button type="button" id="CouponSelect" value="${x.couponId}" onclick="Couponselect()">
+                    <div class="card text-bg-light mb-3" style="max-width: 18rem;">
+                        <div class="card-header">${x.title}</div>
+                        <div class="card-body">
+                            <h5 class="card-title">${x.discount}</h5>
+                            <p class="card-text">${x.reduce}</p>
+                        </div>
+                    </div>
+                </button>
             </div>
         </div>
         <input type="hidden" id="CouponOptions" name="CouponOptions" />
@@ -90,7 +99,10 @@
 
 </div>
 <li>交易金額:@sum.ToString("###,###,##0")</li>
-<li>應付金額:@pay.ToString("###,###,##0")</li>
+<div id="pay">
+    <li>應付金額:@pay.ToString("###,###,##0")</li>
+</div>
+
 
 <div class="container" style="margin-left:-10px">
     
@@ -102,17 +114,21 @@
         <option value="grape">Grape</option>
     </select>
         <input type="button" value="結帳" class="btn btn-outline-dark mt-auto" id="btnpurchase" style="margin-left:30px" /> 
-     @* @Html.ActionLink("結帳", "Purchase", "Shop",new{payment= payment.value }, new { @class = "btn btn-outline-dark mt-auto", @id="btnpurchase",@type="button",@style="margin-left:30px" }) *@
+     @Html.ActionLink("綠界測試", "Index", "Payment",null, null)
     
     @* @Html.DropDownListFor(m => m.payment, new SelectList(ViewBag.Items, "Value", "Text")) *@
 </div>
+
 <style>
     .textcolor {
         color:white
      }
 </style>
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 <script src="~/js/sweetalert2.all.js"></script>
 <script>
+    
+
     const btn = document.querySelector('#btnpurchase');
     const payment = document.querySelector('#payment');
     btn.addEventListener('click', () => {
@@ -138,39 +154,63 @@
         payment.innerHTML = Payment; 
     }
     LoadPayment();
+    
+   
 
     payment.addEventListener('change', () => { 
         console.log(payment.value)
     })
 
-    const TagDiv = document.querySelector('#Coupon .d-flex');
+    const CouponDiv = document.querySelector('#Coupon .d-flex');
 
-    async function LoadTag() { //讀取遊戲標籤列表
+    async function LoadCoupon() {
         const response = await fetch('@Url.Content("~/Shop/Coupon")');
         const data = await response.json();
-        // console.log(data)
         const Coupon = data.map(x => `
-                        <div class="col-3">
-                            <label style="margin-bottom: 10px; display: block;">
-                                        <input type="radio" name="Coupon" value="${x.couponId}">${x.title}(${x.discount})(${x.reduce})
-                            </label>
-                        </div>
+                            <button type="button" id="${x.couponId}" value="${x.couponId}" onclick="Couponselect1(${x.couponId})">
+                                <div  style="max-width: 18rem;" >
+              <div class="card-header" >${x.title}</div>
+    </div>
+        </button>
                                     `).join('');
 
-        TagDiv.innerHTML = Coupon;
-        submitTags();
+        CouponDiv.innerHTML = Coupon;
+
     }
 
-    LoadTag();
+    LoadCoupon();
 
-    function submitTags() {
+    //async function Couponselect(value){
+        
+    //    console.log(value)
+    //    const CouponFrag = $(document.createDocumentFragment());
+    //    const payprice =  document.querySelector('#pay');
 
+    //    const response = await fetch(`@Url.Content("~/Shop/Couponselect")?id=${value}`);
+    //    const data = await response.json();
+    //    console.log(data);
+    //    const Coupon = data.map(x => `<li>應付金額:${x.sumprice}("###,###,##0")</li>`)
+    //    //join('');
+    //    CouponFrag.append(Coupon);
+    //    console.log(Coupon);
+    //    $('#pay').html(CouponFrag);
+    //    //payprice.innerHTML = Coupon;
+    //}
 
-        const couponOptions = collectSelectedOptions("Coupon");
-
-        //將被勾起來的選項藏到hidden元素
-        document.getElementById("CouponOptions").value = couponOptions;
-
-        return true;
+    function Couponselect1(value) {
+        $.ajax('@Url.Content("~/Shop/Couponselect")', {
+            "type": 'get', //POST、PUT、DELETE//
+            "data": { "id": value },
+            "dataType": "text"
+        })
+            .done((data) => {
+                const CouponFrag = $(document.createDocumentFragment());
+                const Coupons = `<li>應付金額:${data}</li>`
+                CouponFrag.append(Coupons);
+                $('#pay').html(CouponFrag)
+            })
+            
     }
+
+    
 </script>
