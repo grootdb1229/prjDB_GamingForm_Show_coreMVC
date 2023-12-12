@@ -1312,7 +1312,7 @@ namespace prjDB_GamingForm_Show.Controllers
 				Order order = null;
 
                 string jsoncoupon = HttpContext.Session.GetString(CDictionary.SK_COUPON);
-                List<CShoppingCarViewModel> car = JsonSerializer.Deserialize<List<CShoppingCarViewModel>>(json);
+                //List<CShoppingCarViewModel> car = JsonSerializer.Deserialize<List<CShoppingCarViewModel>>(json);
 
                 if (couponid != 0)
 				{
