@@ -102,7 +102,9 @@
             html: `<ul class="list-group">
                       <li class="list-group-item text-reset bg-dark">主題：${data.depute.title}</li>
                       <li class="list-group-item text-reset bg-dark">檔案簡介：${replyContent.content}</li>
-                      <li class="list-group-item text-reset bg-dark"><button type="button" id="download" class="btn btn-info" ${hasFile}>檔案下載</button></li>
+                      <li class="list-group-item text-reset bg-dark">
+                        <a type="button" id="download" class="btn btn-info" ${hasFile}>檔案下載</a>
+                      </li>
                    </ul>`,
             icon: "info",
             showCancelButton: true,
@@ -112,7 +114,9 @@
             didOpen: (modalElement) => {
                 const downloadbtn = modalElement.querySelector('#download');
                 downloadbtn.download = `${replyContent.fileName}`;
+                console.log(replyContent.fileName);
                 downloadbtn.href = `@Url.Content("~/depute/downloadFile")?fileName=${replyContent.fileName}`;
+                console.log(downloadbtn.href);
             }
         }).then((result) => {
             if (result.isConfirmed) {

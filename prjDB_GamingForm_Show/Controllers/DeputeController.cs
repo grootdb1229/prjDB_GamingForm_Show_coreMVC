@@ -603,7 +603,7 @@ namespace prjDB_GamingForm_Show.Controllers
                 oriDeputRecord.ReplyContent = JsonSerializer.Serialize(new
                 {
                     content = $"{vm.replyContent}",
-                    filename = $"{fileName}",
+                    fileName = $"{fileName}",
                 });
                 oriDeputRecord.ApplyStatusId = 25;//狀態改為已完成(待確認)
                 _db.SaveChanges();
