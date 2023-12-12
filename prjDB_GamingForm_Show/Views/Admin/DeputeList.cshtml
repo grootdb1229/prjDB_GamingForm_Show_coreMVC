@@ -66,7 +66,7 @@
                 <td>
                     @Html.ActionLink("編輯", "DeputeList", "Depute", new { id = "null" }, new { @class = "btn btn-dark ", @id = "search", name = "txtKeyword" })
                     @Html.ActionLink("刪除", "DeputeList", "Depute", new { id = "null" }, new { @class = "btn btn-dark ", @id = "search", name = "txtKeyword" })
-                    <button type="button" class="btn btn-dark status">測試</button>
+                    <button type="button" class="btn btn-dark status" onclick="test2()">測試</button>
                     @* @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ }) *@
                 </td>
             </tr>
@@ -79,7 +79,7 @@
     {
 
     <script>
-        $('.btn btn-dark status').click(() => { test2() })
+        // $('.btn btn-dark status').click(() => { test2() })
 
         async function test2() {
 
@@ -110,35 +110,6 @@
                 Swal.fire(`You selected: ${status}`);
             }
 
-        }
-
-        async function test() {
-            const { value: fruit } = await Swal.fire({
-                title: "修改委託狀態",
-                input: "select",
-                inputOptions: {
-                    狀態: {
-                        apples: "開啟",
-                        bananas: "關閉",
-                        grapes: "Grapes",
-                        oranges: "開啟"
-                    }
-                },
-                inputPlaceholder: "選擇狀態以修改",
-                showCancelButton: true,
-                inputValidator: (value) => {
-                    return new Promise((resolve) => {
-                        if (value === "oranges") {
-                            resolve();
-                        } else {
-                            resolve("You need to select oranges :)");
-                        }
-                    });
-                }
-            });
-            if (fruit) {
-                Swal.fire(`You selected: ${fruit}`);
-            }
         }
     </script>
 
