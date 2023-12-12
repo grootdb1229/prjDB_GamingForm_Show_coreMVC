@@ -696,12 +696,17 @@ namespace prjDB_GamingForm_Show.Controllers
                 string json = "";
 				json = HttpContext.Session.GetString(CDictionary.SK_PURCHASED_PRODUCES_LIST);
 				List<CShoppingCarViewModel> car = JsonSerializer.Deserialize<List<CShoppingCarViewModel>>(json);
-				decimal sumprice = 0;
+
+                string jsoncoupon = "";
+                jsoncoupon = JsonSerializer.Serialize(Coupon);
+                HttpContext.Session.SetString(CDictionary.SK_COUPON, jsoncoupon);
+                decimal sumprice = 0;
 
 
 				foreach (var item in Coupon)
 				{
-					couponid = item.CouponId;
+                    //couponid放不進全域
+                    couponid = item.CouponId;
 					if (item.Discount != "")
 					{
 						decimal dis = decimal.Parse(item.Discount);
@@ -1305,7 +1310,11 @@ namespace prjDB_GamingForm_Show.Controllers
 				string json = HttpContext.Session.GetString(CDictionary.SK_PURCHASED_PRODUCES_LIST);
 				List<CShoppingCarViewModel> car = JsonSerializer.Deserialize<List<CShoppingCarViewModel>>(json);
 				Order order = null;
-				if (couponid != 0)
+
+                string jsoncoupon = HttpContext.Session.GetString(CDictionary.SK_COUPON);
+                List<CShoppingCarViewModel> car = JsonSerializer.Deserialize<List<CShoppingCarViewModel>>(json);
+
+                if (couponid != 0)
 				{
 					order = new Order()
 					{

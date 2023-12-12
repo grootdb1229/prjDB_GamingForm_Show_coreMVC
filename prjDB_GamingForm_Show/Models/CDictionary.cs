@@ -12,6 +12,7 @@ namespace prjDB_GamingForm_Show.Models
         public static readonly string SK_HOTKEY_KEYWORD3 = "SK_HOTKEY_KEYWORD3";
         public static readonly string Test = "test_key";
         public static string SK_PURCHASED_PRODUCES_LIST = "SK_PURCHASED_PRODUCES_LIST";
+        public static string SK_COUPON = "SK_COUPON";
         public static string SK_HOTKEY_KEYWORD = "SK_HOTKEY_KEYWORD";
         public static readonly string SK_UserID = "SK_UserID";
         public static readonly string SK_UserName = "SK_UserName";
