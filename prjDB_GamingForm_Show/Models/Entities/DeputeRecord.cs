@@ -17,6 +17,8 @@ public partial class DeputeRecord
 
     public string? ReplyContent { get; set; }
 
+    public string? ReplyFileName { get; set; }
+
     public virtual Status ApplyStatus { get; set; } = null!;
 
     public virtual Depute Depute { get; set; } = null!;
