@@ -39,6 +39,8 @@ public partial class DbGamingFormTestContext : DbContext
 
     public virtual DbSet<DeputeAction> DeputeActions { get; set; }
 
+    public virtual DbSet<DeputeComplain> DeputeComplains { get; set; }
+
     public virtual DbSet<DeputeRecord> DeputeRecords { get; set; }
 
     public virtual DbSet<DeputeSkill> DeputeSkills { get; set; }
@@ -379,6 +381,18 @@ public partial class DbGamingFormTestContext : DbContext
                 .HasConstraintName("FK_DeputeAction_Member");
         });
 
+        modelBuilder.Entity<DeputeComplain>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToTable("DeputeComplain");
+
+            entity.Property(e => e.DeputeId).HasColumnName("DeputeID");
+            entity.Property(e => e.Id).HasColumnName("ID");
+            entity.Property(e => e.MemberId).HasColumnName("MemberID");
+            entity.Property(e => e.ReportDate).HasColumnType("datetime");
+        });
+
         modelBuilder.Entity<DeputeRecord>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PK_JobResume");
@@ -613,7 +627,10 @@ public partial class DbGamingFormTestContext : DbContext
                 .HasDefaultValueSql("(N'無')");
             entity.Property(e => e.ShippingDate).HasColumnType("date");
             entity.Property(e => e.StatusId).HasColumnName("StatusID");
-            entity.Property(e => e.Zipcode).HasDefaultValueSql("((0))");
+
+            entity.HasOne(d => d.Coupon).WithMany(p => p.Orders)
+                .HasForeignKey(d => d.CouponId)
+                .HasConstraintName("FK_Order_Coupon");
 
             entity.HasOne(d => d.Member).WithMany(p => p.Orders)
                 .HasForeignKey(d => d.MemberId)

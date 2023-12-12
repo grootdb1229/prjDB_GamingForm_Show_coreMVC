@@ -8,8 +8,8 @@
 
 <h4>請輸入修改資料</h4>
 <hr />
-<div class="row">
-    <div class="col-md-4">
+<div class="row" style="margin:10px auto ; width:720px">
+    <div class="">
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <p>
@@ -19,28 +19,28 @@
             </p>
             <div class="form-group">
                 <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
+                <input asp-for="Name" class="form-control"  required />
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Phone" class="control-label"></label>
-                <input asp-for="Phone" class="form-control" />
-                <span asp-validation-for="Phone" class="text-danger"></span>
+                <input asp-for="Phone" class="form-control" id="phone" required/>
+                <span asp-validation-for="Phone" class="text-danger" id="PhoneError"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Birth" class="control-label"></label>
-                <input asp-for="Birth" class="form-control" />
+                <input asp-for="Birth" class="form-control" type="date" max="@DateTime.Now.ToString("yyyy-MM-dd")" required />
                 <span asp-validation-for="Birth" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Email" class="control-label"></label>
-                <input asp-for="Email" class="form-control" />
-                <span asp-validation-for="Email" class="text-danger"></span>
+                <input asp-for="Email" class="form-control" id="email" required/>
+                <span asp-validation-for="Email" class="text-danger" id="EmailError"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Password" class="control-label"></label>
-                <input asp-for="Password" class="form-control" />
-                <span asp-validation-for="Password" class="text-danger"></span>
+                <input asp-for="Password" class="form-control" id="password" required/>
+                <span asp-validation-for="Password" class="text-danger" id="PasswordError"></span>
             </div>
            @* <div class="form-group">
                  <label asp-for="FImagePath" class="control-label"></label>
@@ -49,20 +49,106 @@
             </div>*@
             <div class="form-group">
                 <label asp-for="Gender" class="control-label"></label>
-                <input asp-for="Gender" class="form-control" />
+                <select asp-for="Gender" class="form-control" />
+                <option value="1">男性</option>
+                <option value="2">女性</option>
+                <option value="3">其他</option>
                 <span asp-validation-for="Gender" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+                <input type="submit" value="送出並修改" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="MemberPage">回到會員個人頁面</a>
+    <a asp-action="MemberPageTest">回到會員個人頁面</a>
 </div>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
+
+<script>
+    function previewImage(input) {
+        var imagePreview = document.getElementById('imagePreview');
+
+        if (input.files[0]) {
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+                imagePreview.src = e.target.result;
+                imagePreview.style.display = 'block';
+            };
+
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+    var Email = document.querySelector('#email');
+    var Password = document.querySelector('#password')
+    var Phone = document.querySelector('#phone')
+    var email = Email.value
+    var phone = Phone.value
+    var password = Password.value
+
+    var IsValid = false
+    function validateEmail() {
+        var emailRegex = /^[^\s@@]+@@[^\s@@]+\.[^\s@@]+$/;
+        return emailRegex.test(Email.value);
+    }
+
+    function validatePhone() {
+        var phoneRegex = /^\d{10}$/;
+        return phoneRegex.test(Phone.value);
+    }
+
+    function validatePassword() {
+        var passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/
+        return passwordRegex.test(Password.value);
+    }
+
+    Email.addEventListener('blur', () => {
+
+        if (validateEmail(email) == false) {
+            IsValid = false
+            document.querySelector('#EmailError').innerHTML = "格式錯誤 範例:xxxx@gmail.com";
+        }
+        else {
+            IsValid = true
+            document.querySelector('#EmailError').innerHTML = "格式正確";
+        }
+    })
+
+    Phone.addEventListener('blur', () => {
+
+        if (validatePhone(phone) == false) {
+            IsValid = false
+            document.querySelector('#PhoneError').innerHTML = "格式錯誤 範例:09xxxxxxxx";
+        }
+        else {
+            IsValid = true
+            document.querySelector('#PhoneError').innerHTML = "格式正確";
+        }
+    })
+
+    Password.addEventListener('blur', () => {
+
+        if (validatePassword(password) == false) {
+            IsValid = false
+            document.querySelector('#PasswordError').innerHTML = "格式錯誤 範例:Xx123456";
+        }
+        else {
+            IsValid = true
+            document.querySelector('#PasswordError').innerHTML = "格式正確";
+        }
+    })
+    function ValidationForm() {
+        if (IsValid == false) {
+            alert("格式有誤 不能新增會員")
+            return false;
+        } else {
+            return true
+        }
+    }
+</script>

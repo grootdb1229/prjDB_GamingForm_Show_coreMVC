@@ -1,0 +1,40 @@
+﻿@*@model IEnumerable<prjDB_GamingForm_Show.ViewModels.CBlogViewModel>*@
+@model prjDB_GamingForm_Show.ViewModels.CBlogViewModel
+
+@{
+    ViewData["Title"] = "BlogArticleComplainCheck";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h2>檢舉內容</h2>
+
+@foreach (var item in Model.articleComplain)
+{
+    <div>
+        <p style="font-size:25px"> 檢舉人會員編號: @Html.DisplayFor(modelItem => item.MemberId)</p>
+    </div>
+    <div>
+        <p style="font-size:25px"> 檢舉人會員名稱: @Html.DisplayFor(modelItem => item.Member.Name)</p>
+    </div>
+    <div>
+        <p style="font-size:25px"> 檢舉類型: @Html.DisplayFor(modelItem => item.SubTag.Name)</p>
+    </div>
+    if (item.ReportContent != null)
+    {
+        <div>
+            <p style="font-size:25px"> 檢舉內容: @Html.DisplayFor(modelItem => item.ReportContent)</p>
+        </div>
+    }
+
+    <div>
+        @Html.ActionLink("文章內容", "ArticleContent", "Blog", new { AFId = Model.articles.First().ArticleId , FId = Model.articles.First().SubBlog.BlogId})
+    </div>
+
+
+
+}
+
+
+
+
+

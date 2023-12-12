@@ -155,7 +155,7 @@ hr { border-top: 4px solid #CCC; }
 	margin-bottom: 10px;
 }
 
-.nav-link {
+.nav-link.oriclass {
 	position: relative;
 	color: #a81d1d;
 	font-size: 1.4rem;
@@ -176,15 +176,15 @@ hr { border-top: 4px solid #CCC; }
 	transition: all 0.3s ease;
 }
 
-.nav-item:hover .nav-link,
-.nav-link.current {
+.nav-item:hover .nav-link.oriclass,
+.nav-link.oriclass.current {
 	background-color: #F2F2F2;
 	color: #a81d1d;
 	padding-left: 30px;
 }
 
-.nav-item:hover > .nav-link > .triangle-right,
-.nav-link.current > .triangle-right {
+.nav-item:hover > .nav-link.oriclass > .triangle-right,
+.nav-link.oriclass.current > .triangle-right {
 	opacity: 1;
 }
 

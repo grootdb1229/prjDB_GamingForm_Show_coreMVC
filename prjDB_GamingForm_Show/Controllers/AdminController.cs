@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using prjDB_GamingForm_Show.Models;
 using prjDB_GamingForm_Show.Models.Entities;
 using prjDB_GamingForm_Show.ViewModels;
+using System.Runtime.Intrinsics.X86;
 using System.Security.Cryptography;
 
 namespace prjDB_GamingForm_Show.Controllers
@@ -208,7 +209,7 @@ namespace prjDB_GamingForm_Show.Controllers
                 _db.SaveChanges();
             }
             return RedirectToAction("ProductList");
-        }        
+        }
         public IActionResult ProductReview()
         {
             CAdminCheckProductViewModel vm = new CAdminCheckProductViewModel
@@ -344,8 +345,8 @@ namespace prjDB_GamingForm_Show.Controllers
                 }
             }
             _db.SaveChanges();
-        }       
-        
+        }
+
         public IActionResult CouponList()
         {
             List<CAdminCouponViewModel> viewModel = new List<CAdminCouponViewModel>();
@@ -979,14 +980,14 @@ namespace prjDB_GamingForm_Show.Controllers
                         articles = _db.Articles.Include(p => p.SubBlog).ThenInclude(p => p.Blog).Where(b => b.Title.Contains(kyvm.txtKeyWord) || b.SubBlog.Title.Contains(kyvm.txtKeyWord) || b.SubBlog.Blog.Title.Contains(kyvm.txtKeyWord)).Skip(i每頁筆數 * i頁數).Take(i每頁筆數)
                     };
                 }
-                else 
+                else
                 {
                     vm = new CBlogViewModel
                     {
                         subTags = _db.SubTags,
                         blogs = _db.Blogs.Include(p => p.SubTag),
                         subBlogs = _db.SubBlogs.Include(p => p.Blog),
-                        articles = _db.Articles.Include(p => p.SubBlog).ThenInclude(p => p.Blog).Where(b => (b.Title.Contains(kyvm.txtKeyWord) || b.SubBlog.Title.Contains(kyvm.txtKeyWord) || b.SubBlog.Blog.Title.Contains(kyvm.txtKeyWord))&&b.SubBlog.BlogId==FId).Skip(i每頁筆數 * i頁數).Take(i每頁筆數)
+                        articles = _db.Articles.Include(p => p.SubBlog).ThenInclude(p => p.Blog).Where(b => (b.Title.Contains(kyvm.txtKeyWord) || b.SubBlog.Title.Contains(kyvm.txtKeyWord) || b.SubBlog.Blog.Title.Contains(kyvm.txtKeyWord)) && b.SubBlog.BlogId == FId).Skip(i每頁筆數 * i頁數).Take(i每頁筆數)
                     };
                 }
                 return View(vm);
@@ -1006,20 +1007,43 @@ namespace prjDB_GamingForm_Show.Controllers
             return RedirectToAction("BlogArticleList");
         }
 
+        //public IActionResult BlogArticleComplainList()
+        //{
+        //    var ab = from a in _db.ArticleComplains.Include(q => q.SubTag)
+        //             select a;
+        //    return View(ab);
+        //}
+
+
         public IActionResult BlogArticleComplainList()
         {
-            var ab = from a in _db.ArticleComplains
-                     select a;
-            return View(ab);
-            //var bc = from b in _db.SubTags.Include(p => p.Tag).Where(tid => tid.TagId == 4)
-            //             select b;
-            //    return View(bc);
-            
+            CBlogViewModel vm = null;
+            vm = new CBlogViewModel
+            {
+                articleComplain = _db.ArticleComplains.Include(p => p.Article).Include(p => p.Member).Include(p => p.SubTag).Select(a => a),
+                articles = _db.Articles.Include(p => p.SubBlog).ThenInclude(p => p.Blog).Include(p => p.Member).Select(a => a),
+            };
 
+            return View(vm);
         }
 
 
 
+
+
+
+        //public IActionResult BlogArticleComplainCheck(int? ACId,int? AFId)
+        //{
+        //    CBlogViewModel vm = null;
+        //    vm = new CBlogViewModel
+        //    {
+        //        articleComplain = _db.ArticleComplains.Include(p => p.Article).Include(p=>p.Member).Include(p=>p.SubTag).Where(p => p.Id == ACId).Select(a => a),
+        //        articles = _db.Articles.Include(p=>p.SubBlog).ThenInclude(p=>p.Blog).Include(p=>p.Member).Where(p=>p.ArticleId==AFId).Select(a=>a),
+        //    };
+
+        //    return View(vm);
+
+        //}
         #endregion
         //---------------------------論壇---------------------------
 
@@ -1028,11 +1052,22 @@ namespace prjDB_GamingForm_Show.Controllers
         public IActionResult DeputeList()
         {
             IEnumerable<CDeputeViewModel> datas = null;
-            CDeputtListLoad x = new CDeputtListLoad(_host,_db);
-            datas = x.List.OrderBy(n=>n.id).ToList();
+            CDeputtListLoad x = new CDeputtListLoad(_host, _db);
+            datas = x.List.OrderBy(n => n.id).ToList();
             return View(datas);
         }
+        public IActionResult ADeputeEdit(CAdminDepute vm)
+        {
+            var data = _db.Deputes.Where(n => n.DeputeId == vm.txtID);
 
+            foreach (var item in data)
+            {
+                //
+                item.StatusId = vm.txtStatusID;
+            }
+            _db.SaveChanges();
+            return RedirectToAction("DeputeList");
+        }
         #endregion
     }
 }

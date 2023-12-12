@@ -549,6 +549,7 @@ namespace prjDB_GamingForm_Show.Controllers
             }
             return RedirectToAction("HomeFrame");
         }
+
         public IActionResult DeleteDepute(int id)
         {
             //partialrelease-刪除
@@ -600,11 +601,8 @@ namespace prjDB_GamingForm_Show.Controllers
                     formFile.CopyTo(fileStream);
                 }
                 var oriDeputRecord = _db.DeputeRecords.FirstOrDefault(_ => _.Id == vm.id);
-                oriDeputRecord.ReplyContent = JsonSerializer.Serialize(new
-                {
-                    content = $"{vm.replyContent}",
-                    filename = $"{fileName}",
-                });
+                oriDeputRecord.ReplyContent = vm.replyContent;
+                oriDeputRecord.ReplyFileName = fileName;
                 oriDeputRecord.ApplyStatusId = 25;//狀態改為已完成(待確認)
                 _db.SaveChanges();
                 return Json(new { success = true, message = "應徵成功" });
@@ -787,10 +785,7 @@ namespace prjDB_GamingForm_Show.Controllers
         #endregion
 
         #region PartialView
-        public IActionResult PartialReleaseOverview()
-        {
-            return PartialView();
-        }
+
         public IActionResult PartialOverview()
         {
             var release = _db.Deputes
