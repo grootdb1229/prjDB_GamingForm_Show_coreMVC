@@ -269,11 +269,11 @@
             };
         }
 
-            var title = document.getElementById('articleTitle').value;
-            var content = document.getElementById('editor').value;
         function validateForm() {
+            var title = document.getElementById('articleTitle').value;
+            var content = document.querySelector('textarea').value;
 
-            if (title.trim() === '' || content.trim() === '') {
+            if (title== '' || content== '') {
                 alert('文章標題和內容不能為空！');
                 return false; // 取消表單提交
             }
