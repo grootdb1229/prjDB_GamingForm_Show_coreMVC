@@ -67,7 +67,7 @@
                     @Html.DisplayFor(modelItem => item.SubTag.Name)
                 </td>
                 <td>
-                    @Html.ActionLink("查看", "BlogArticleComplainCheck", "Admin",  new {ACId = item.Id ,ADId = item }, new { @class = "btn btn-danger" })
+                    @Html.ActionLink("查看", "BlogArticleComplainCheck", "Admin",  new {ACId = item.Id ,AFId = item.ArticleId }, new { @class = "btn btn-danger" })
                 </td>
             </tr>
         }
