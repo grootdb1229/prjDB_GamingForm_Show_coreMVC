@@ -98,7 +98,9 @@ namespace prjDB_GamingForm_Show.Controllers
             {
                 dbmember.Name = member.Name;
                 dbmember.Phone = member.Phone;
+                dbmember.Birth = member.Birth;
                 dbmember.Email = member.Email;
+                dbmember.Gender = member.Gender;
                 dbmember.Password = member.Password;
                 _db.SaveChanges();
             }
@@ -223,12 +225,15 @@ namespace prjDB_GamingForm_Show.Controllers
         {
             var data = from m in _db.Members
                        where m.MemberId == HttpContext.Session.GetInt32(CDictionary.SK_UserID)
-                       select new { m.Mycomment, m.Name, m.Phone, m.Gender, m.Birth };
+                       select new { m.Mycomment, m.Name, m.Phone, m.Gender, m.Birth.Year , m.FImagePath , m.Email};
             return Json(data);
         }
-        public IActionResult MyCollections() 
+        public IActionResult MyCollection() 
         {
-            return View();
+            var data = from c in _db.MemberCollections
+                       where c.MemberId == HttpContext.Session.GetInt32(CDictionary.SK_UserID)
+                       select new { c.Title, c.ModifiedDate, c.FImagePath, c.Intro };
+            return Json(data);
         }
         public IActionResult CreateCollection() 
         {
