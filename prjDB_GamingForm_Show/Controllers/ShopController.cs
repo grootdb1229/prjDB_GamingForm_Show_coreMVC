@@ -1372,8 +1372,8 @@ namespace prjDB_GamingForm_Show.Controllers
 				json = JsonSerializer.Serialize(car);
 				HttpContext.Session.SetString(CDictionary.SK_PURCHASED_PRODUCES_LIST, json);
 				ViewBag.Car = 0;
-				//Thread.Sleep(1000);
-				return RedirectToAction("OrderDetail");
+                SendOrderEmail(orderview());
+                return RedirectToAction("OrderDetail");
 			}
 
 			public IActionResult OrderDetail()
@@ -1430,11 +1430,68 @@ namespace prjDB_GamingForm_Show.Controllers
                     }
                     vm.Add(n);
 				}
-				SendOrderEmail(vm.First());
+				//SendOrderEmail(vm.First());
 				return View(vm);
 			}
 
-			public IActionResult SendOrderEmail(COrderViewModel vm)
+			public COrderViewModel orderview()
+			{
+                COrderViewModel vm = new COrderViewModel();
+                var order = _db.Orders.Where(x => x.MemberId == HttpContext.Session.GetInt32(CDictionary.SK_UserID))
+                            .OrderByDescending(x => x.OrderId).Take(1)
+                            .Select(x => new { x.OrderId, x.Payment.Name, x.Coupon.Title, x.OrderDate });
+                COrderViewModel n = null;
+
+                foreach (var i in order)
+                {
+                    n = new COrderViewModel()
+                    {
+                        OrderId = i.OrderId,
+                        CouponTitle = i.Title,
+                        OrderDate = i.OrderDate,
+                        PaymentName = i.Name,
+                        products = new List<CProductNamePrice>()
+                    };
+
+                    var orderproduct = _db.OrderProducts.Where(x => x.OrderId == i.OrderId).Select(x => x.ProductId);
+                    foreach (var pp in orderproduct)
+                    {
+                        var op = _db.Products.Where(x => x.ProductId == pp).Select(x => new { x.ProductName, x.Price });
+                        CProductNamePrice cpnp = null;
+                        foreach (var ppp in op)
+                        {
+                            cpnp = new CProductNamePrice()
+                            {
+                                ProductName = ppp.ProductName,
+                                Price = ppp.Price
+                            };
+                            n.products.Add(cpnp);
+                        }
+                    }
+                    if (n.Coupon != null)
+                    {
+                        if (n.Coupon.Discount != 0)
+                        {
+                            double dis = (double)n.Coupon.Discount;
+                            n.Sumprice = (double)n.products.Sum(c => c.Price) * dis;
+                        }
+                        else
+                        {
+                            int reduce = (int)n.Coupon.Reduce;
+                            n.Sumprice = (int)n.products.Sum(c => c.Price) - reduce;
+                        }
+                    }
+                    else
+                    {
+                        n.Sumprice = (double)n.products.Sum(x => x.Price);
+
+                    }
+                    vm = n;
+                }
+                return vm;
+			}
+
+            public IActionResult SendOrderEmail(COrderViewModel vm)
 			{
 				string s = "<div class='row'>";
 				foreach (var item in vm.products)
