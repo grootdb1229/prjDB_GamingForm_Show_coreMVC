@@ -708,22 +708,22 @@ namespace prjDB_GamingForm_Show.Controllers
                 string jsoncoupon = "";
                 jsoncoupon = JsonSerializer.Serialize(Coupon);
                 HttpContext.Session.SetString(CDictionary.SK_COUPON, jsoncoupon);
-                decimal sumprice = 0;
+                double sumprice = 0;
 
 
 				foreach (var item in Coupon)
 				{
                     //couponid放不進全域
                     couponid = item.CouponId;
-					if (item.Discount != "")
+					if (item.Discount != 0)
 					{
-						decimal dis = decimal.Parse(item.Discount);
-						sumprice = car.Sum(c => c.Price) * dis;
+						double dis = (double)item.Discount;
+						sumprice = (double)car.Sum(c => c.Price) * dis;
 					}
 					else
 					{
-						int reduce = int.Parse(item.Reduce);
-						sumprice = car.Sum(c => c.Price) - reduce;
+						int reduce = (int)item.Reduce;
+						sumprice = (int)car.Sum(c => c.Price) - reduce;
 					}
 				}
 				//sumprice = car.Sum(c => c.Price);
