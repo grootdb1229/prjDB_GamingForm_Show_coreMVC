@@ -357,6 +357,7 @@ namespace prjDB_GamingForm_Show.Controllers
                 c = new CAdminCouponViewModel()
                 {
                     Title = m.Title,
+                    Content = m.CouponContent,
                     Discount = m.Discount,
                     Reduce = m.Reduce,
                     StartDate = m.StartDate,
