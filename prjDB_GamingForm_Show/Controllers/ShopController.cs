@@ -17,10 +17,14 @@ using System.Dynamic;
 using System.Linq;
 using System.Reflection.PortableExecutable;
 using System.Runtime.CompilerServices;
+using System.Runtime.ConstrainedExecution;
 using System.Security.Cryptography.Xml;
 using System.Text;
 using System.Text.Json;
 using System.Transactions;
+using MailKit;
+using MailKit.Net.Smtp;
+using MimeKit;
 
 namespace prjDB_GamingForm_Show.Controllers
 {
@@ -710,10 +714,9 @@ namespace prjDB_GamingForm_Show.Controllers
                 HttpContext.Session.SetString(CDictionary.SK_COUPON, jsoncoupon);
                 decimal sumprice = 0;
 
-
 				foreach (var item in Coupon)
 				{
-                    //couponid放不進全域
+                    
                     couponid = item.CouponId;
 					if (item.Discount != "")
 					{
@@ -726,7 +729,7 @@ namespace prjDB_GamingForm_Show.Controllers
 						sumprice = car.Sum(c => c.Price) - reduce;
 					}
 				}
-				//sumprice = car.Sum(c => c.Price);
+				
 
                 return Content(sumprice.ToString("#0"));
 			}
@@ -1320,20 +1323,23 @@ namespace prjDB_GamingForm_Show.Controllers
 				Order order = null;
 
                 string jsoncoupon = HttpContext.Session.GetString(CDictionary.SK_COUPON);
-                //List<CShoppingCarViewModel> car = JsonSerializer.Deserialize<List<CShoppingCarViewModel>>(json);
+                List<Coupon> coupon = JsonSerializer.Deserialize<List<Coupon>>(jsoncoupon);
 
-                if (couponid != 0)
+                if (coupon != null)
 				{
-					order = new Order()
+					foreach (var item in coupon)
 					{
-						MemberId = HttpContext.Session.GetInt32(CDictionary.SK_UserID),
-						ShipName = _db.Members.FirstOrDefault(x => x.MemberId == HttpContext.Session.GetInt32(CDictionary.SK_UserID)).Name,
-						OrderDate = DateTime.Now,
-						PaymentId = payment,
-						StatusId = 13,
-						ShipId = 1,
-						CouponId = couponid
-					};
+						order = new Order()
+						{
+							MemberId = HttpContext.Session.GetInt32(CDictionary.SK_UserID),
+							ShipName = _db.Members.FirstOrDefault(x => x.MemberId == HttpContext.Session.GetInt32(CDictionary.SK_UserID)).Name,
+							OrderDate = DateTime.Now,
+							PaymentId = payment,
+							StatusId = 13,
+							ShipId = 1,
+							CouponId = item.CouponId
+						};
+					}
 				}
 				else
 				{
@@ -1369,10 +1375,103 @@ namespace prjDB_GamingForm_Show.Controllers
 				HttpContext.Session.SetString(CDictionary.SK_PURCHASED_PRODUCES_LIST, json);
 				ViewBag.Car = 0;
 				Thread.Sleep(1000);
-				return RedirectToAction("Index");
+				return RedirectToAction("OrderDetail");
 			}
 
+			public IActionResult OrderDetail()
+			{ 
+				List<COrderViewModel> vm = new List<COrderViewModel>();
+				var order =  _db.Orders.Where(x=>x.MemberId== HttpContext.Session.GetInt32(CDictionary.SK_UserID))
+							.OrderByDescending(x => x.OrderId)
+							.Select(x => new { x.OrderId,x.Payment.Name, x.Coupon.Title,x.OrderDate});
+				COrderViewModel n = null;
 
+				foreach (var i in order)
+				{
+					n = new COrderViewModel()
+					{
+						OrderId = i.OrderId,
+						CouponTitle = i.Title,
+						OrderDate = i.OrderDate,
+                        PaymentName = i.Name,
+                        products = new List<CProductNamePrice>()
+					};
+
+					var orderproduct = _db.OrderProducts.Where(x => x.OrderId == i.OrderId).Select(x => x.ProductId);
+                    foreach (var pp in orderproduct)
+					{
+                        var op = _db.Products.Where(x => x.ProductId == pp).Select(x =>new { x.ProductName,x.Price });
+						CProductNamePrice cpnp = null;
+						foreach (var ppp in op)
+						{
+							cpnp = new CProductNamePrice()
+							{
+								ProductName = ppp.ProductName,
+								Price = ppp.Price
+							};
+							n.products.Add(cpnp);
+						}
+					}
+					if (n.Coupon != null)
+					{
+						if (n.Coupon.Discount != "")
+						{
+							decimal dis = decimal.Parse(n.Coupon.Discount);
+							n.Sumprice = n.products.Sum(x => x.Price) * dis;
+						}
+						else
+						{
+							int reduce = int.Parse(n.Coupon.Reduce);
+							n.Sumprice = n.products.Sum(x => x.Price) - reduce;
+						}
+					}
+					else
+					{
+						n.Sumprice = n.products.Sum(x => x.Price);
+
+                    }
+                    vm.Add(n);
+				}
+				SendOrderEmail(vm.First());
+				return View(vm);
+			}
+
+			public IActionResult SendOrderEmail(COrderViewModel vm)
+			{
+				string s = "<div class='row'>";
+				foreach (var item in vm.products)
+				{
+					s += "<div class='col' style='color:black'>商品名稱:" + item.ProductName + "</div>"
+						+"<div class='col' style='color:black'>商品價格:" + item.Price.ToString("#0") + "元</div>";
+				}
+				s += "</div>";
+				var message = new MimeMessage();
+				message.From.Add(new MailboxAddress("grootdb1229", "grootdb1229@gmail.com"));
+				message.To.Add(new MailboxAddress(_db.Members.FirstOrDefault(x => x.MemberId == HttpContext.Session.GetInt32(CDictionary.SK_UserID)).Name, "kakuc0e0ig@gmail.com"));
+				message.Subject = "Your Order from GrootShopping";
+				message.Body = new TextPart("html")
+				{
+					Text = "<!DOCTYPE html>"
+					+
+							"<html>" +
+							"<h2>  您的訂單資訊 </h2>" +
+							"<p>   您的訂單編號編號為:" + vm.OrderId + "</p>" +
+							"<p>   價格為:" + vm.Sumprice.ToString("#0") + "元</p>" +
+							"<p>   下單日期為:" + vm.OrderDate + "</p>" +
+							s +
+							"</html>"
+				};
+				//用迴圈抓商品名稱 可能要抓折扣後的價格(折扣) 可能要抓(訂單編號) 下單時間
+
+				using (var client = new SmtpClient())
+				{
+					client.Connect("smtp.gmail.com", 587, false);
+					client.Authenticate("grootdb1229@gmail.com", "fmgx uucs lgkv vqxm");
+					client.Send(message);
+					client.Disconnect(true);
+				}
+				return RedirectToAction("OrderDetail", "Shop");
+			}
 		}
-	}
+    }
 }
