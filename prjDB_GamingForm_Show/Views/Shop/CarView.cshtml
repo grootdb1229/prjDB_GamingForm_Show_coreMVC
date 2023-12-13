@@ -131,22 +131,11 @@
 
     const btn = document.querySelector('#btnpurchase');
     const payment = document.querySelector('#payment');
-    btn.addEventListener('click', () => {
-        const payid = payment.value
-
-        fetch(`@Url.Content("~/Shop/Purchase")?payment=${payid}`)
-            .then(Swal.fire({
-                title: "結帳成功!",
-                text: "訂單已送至電子信箱!",
-                icon: "success",
-            })
-            )
-    })
     
     async function LoadPayment() { 
         const response = await fetch('@Url.Content("~/Shop/payment")');
         const data = await response.json();
-
+        console.log(data)
         const Payment = data.map(x => `
                                      <option value="${x.paymentId}">${x.name}</option>
                             `).join('');
@@ -154,6 +143,22 @@
         payment.innerHTML = Payment; 
     }
     LoadPayment();
+    btn.addEventListener('click', () => {
+        const payid = payment.value
+
+        fetch(`@Url.Content("~/Shop/Purchase")?payment=${payid}`)
+            .then(()=>{
+                Swal.fire({
+                    title: "結帳成功!",
+                    text: "訂單已送至電子信箱!",
+                    icon: "success",
+                })
+            })
+            .then(() => { window.location.href = "OrderDetail" })
+            
+    })
+    
+    
     
    
 
