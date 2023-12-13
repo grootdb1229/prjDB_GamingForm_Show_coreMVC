@@ -7,103 +7,62 @@
 
 <!-- Header-->
 <header class="" id="headerCarousel">
-    @* <div class="container px-4 px-lg-5 my-5">
-        <div class="text-center text-white">
-            <h1 class="display-4 fw-bolder">Shop in style</h1>
-            <p class="lead fw-normal text-white-50 mb-0">With this shop hompeage template</p>
-        </div>
-    </div> *@
 </header>
 <body>
- @*    <div class="container px-4 px-lg-5 mt-5"> //不一定要放這裡
-    <div class="" id="Hotproduct"></div>
-    <div class="" id="Seenproduct"></div>
-    <div class="" id="YourTop5"></div>
-    </div> *@
 <p>
-    @using (Html.BeginForm())
-    {
-        @*        @: 關鍵字 @Html.TextBox("txtKeyword")
-    <input type="submit" value="查詢" />*@
-
-
-        <!-- Search Start -->
+   
         <div class="container-fluid bg-primary mb-5 wow fadeIn" data-wow-delay="0.1s" style="padding: 35px;">
-            <div class="container">
-                <div class="row g-2">
-                    <div class="col-md-5">
-                        <div class="row g-2">
-                            <div class="col-md-4">
-                                <input type="text" class="form-control border-0" placeholder="Keyword" id="Kw" name="txtKeyword" />
-                            </div>
-                            <div class="col-md-2">
-                                <input id="QueryAjax" type="button" value="查詢" style="padding: 0.375rem 0.75rem" />
-                            </div>
-                            <div class="col-md-3">
-                                @Html.ActionLink("我要上架", "Create", "Shop",null, new { @class = "btn btn-outline-dark mt-auto" })
-                            </div>
-
-                                @if (Context.Session.GetInt32(CDictionary.SK_UserID) == null)
-                                { <div class="text-center">
-                                        @Html.ActionLink("願望清單", "LoveList", "Shop", new { id = Context.Session.GetInt32(CDictionary.SK_UserID) }, new { @class = "btn btn-outline-dark mt-auto", id = "myLink", data_bs_toggle = "modal", data_bs_target = "#staticBackdrop" })
-                                    </div>
-                                }else
-                                {
-                                    <div class="text-center">
-                                        @Html.ActionLink("願望清單", "LoveList", "Shop", new { id = Context.Session.GetInt32(CDictionary.SK_UserID) }, new { @class = "btn btn-outline-dark mt-auto" })
-                                    </div>
-                                }
-
-                               
-                        </div>
-                    </div>
-                    
-                    
-                    <div class="container" style="margin-left:-41px">
-                        <ul style="margin-top:10px">
-                            <li style="list-style-type: none; float:left">
-                                <select id="SortControl" class="form-select border-0">
-                                    <option selected>Location</option>
-                                    <option value="1">最熱銷</option>
-                                    <option value="2">最新上架</option>
-                                    <option value="3">價格:高到低</option>
-                                    <option value="4">價格:低到高</option>
-                                </select>
-                            </li>
-                        </ul>
-                        <!-- 類別標籤 -->
-                   @*      <ul class="nav-item dropdown" style="list-style-type: none" id="tags">
-                            
-                            <li style="list-style-type: none; float:left;padding-left:10px;padding-top:7px" id="tags">
-                                <option class="nav-link dropdown-toggle tagclick" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="width:100px">遊戲商城</option>
-                                <ul class="dropdown-menu" aria-labelledby="navbarDropdown" id="Subtags">
-                                  
-                                </ul>
-                            </li>
-
-                        </ul> *@
-                    </div>
-                    <!-- 類別標籤END -->
-                </div>
-               
+            <div class="col-md-3">
+                @Html.ActionLink("我要上架", "Create", "Shop", null, new { @class = "btn btn-outline-dark mt-auto" })
             </div>
         </div>
-    }
-
-    <!-- Search End -->
 </p>
 <div id="Eroor"></div>
 
-<div class="container px-4 px-lg-5 mt-5">
-         <div class ="" id="BodySelSub"></div>
+<div class="container px-4 px-lg-5 mt-5">      
         <div class=""  id="Hotproduct"></div>
         <div class="" id="Seenproduct"></div>
         <div class="" id="YourTop5"></div>
-    <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center" id="ContentProduct">
+</div>
 
+    <p>
+        @using (Html.BeginForm())
+        {
+            <div class="container-fluid bg-primary mb-5 wow fadeIn" data-wow-delay="0.1s" style="padding: 35px;">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-5">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <input type="text" class="form-control border-0" placeholder="Keyword" id="Kw" name="txtKeyword" />
+                                </div>
+                                <div class="col-md-2">
+                                    <input id="QueryAjax" type="button" value="查詢" style="padding: 0.375rem 0.75rem" />
+                                </div>                           
+                                <div class="col-md-5">
+                                            <select id="SortControl" class="form-select border-0">
+                                                <option selected>Location</option>
+                                                <option value="1">最熱銷</option>
+                                                <option value="2">最新上架</option>
+                                                <option value="3">價格:高到低</option>
+                                                <option value="4">價格:低到高</option>
+                                            </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>                    
+        }
+
+        <!-- Search End -->
+    </p>
+    <div class="container px-4 px-lg-5 mt-5">
+        <div class="" id="BodySelSub"></div>
+    <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center" id="ContentProduct">
+           
        @foreach (var item in Model)
-            {
-         
+            {      
             <div class="col mb-5">
                 <div class="card h-100">
                     <!-- Sale badge-->
@@ -161,7 +120,8 @@
             </div>
         }
     </div>
-</div>
+    </div>
+
     
 </body>
 <style>

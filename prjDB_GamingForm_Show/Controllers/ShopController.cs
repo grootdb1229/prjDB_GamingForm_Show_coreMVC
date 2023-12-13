@@ -40,7 +40,7 @@ namespace prjDB_GamingForm_Show.Controllers
 			{
 				_host = host;
 				_db = db;
-				
+            
             }
 
             public List<CShopPageViewModel> Listx { get; set; }
@@ -84,7 +84,7 @@ namespace prjDB_GamingForm_Show.Controllers
                 Temp = Listx;
 
             }
-
+			
 			public IActionResult MutipleSearch_Shop(string txtMutiKeywords)
 			{
                 
@@ -237,7 +237,7 @@ namespace prjDB_GamingForm_Show.Controllers
 			}
 			public IActionResult HotTopFive() //取熱門商品
 			{
-				var TopFive = _db.Products.Select(x => new { x.FImagePath, x.ViewCount, x.ProductName, x.ProductId }).OrderByDescending(x => x.ViewCount).Take(5).ToList();
+				var TopFive = _db.Products.Select(x => new { x.FImagePath, x.ViewCount, x.ProductName, x.ProductId,x.Price }).OrderByDescending(x => x.ViewCount).Take(5).ToList();
 				return Json(TopFive);
 			}
 			public IActionResult YourFavorite()
@@ -319,7 +319,7 @@ namespace prjDB_GamingForm_Show.Controllers
 					LL.Add(CLVM);
 				}
 
-				ViewBag.LList = LL.Count();
+				//ViewBag.LList = LL.Count();
 				//TP.LListCount=LL.Count();
 				return View(LL);
             }
@@ -712,21 +712,21 @@ namespace prjDB_GamingForm_Show.Controllers
                 string jsoncoupon = "";
                 jsoncoupon = JsonSerializer.Serialize(Coupon);
                 HttpContext.Session.SetString(CDictionary.SK_COUPON, jsoncoupon);
-                decimal sumprice = 0;
+                double sumprice = 0;
 
 				foreach (var item in Coupon)
 				{
                     
                     couponid = item.CouponId;
-					if (item.Discount != "")
+					if (item.Discount != 0)
 					{
-						decimal dis = decimal.Parse(item.Discount);
-						sumprice = car.Sum(c => c.Price) * dis;
+						double dis = (double)item.Discount;
+						sumprice = (double)car.Sum(c => c.Price) * dis;
 					}
 					else
 					{
-						int reduce = int.Parse(item.Reduce);
-						sumprice = car.Sum(c => c.Price) - reduce;
+						int reduce = (int)item.Reduce;
+						sumprice = (int)car.Sum(c => c.Price) - reduce;
 					}
 				}
 				
@@ -1327,30 +1327,23 @@ namespace prjDB_GamingForm_Show.Controllers
 
                 if (coupon != null)
 				{
-					foreach (var item in coupon)
+					order = new Order()
 					{
-						order = new Order()
-						{
-							MemberId = HttpContext.Session.GetInt32(CDictionary.SK_UserID),
-							ShipName = _db.Members.FirstOrDefault(x => x.MemberId == HttpContext.Session.GetInt32(CDictionary.SK_UserID)).Name,
-							OrderDate = DateTime.Now,
-							PaymentId = payment,
-							StatusId = 13,
-							ShipId = 1,
-							CouponId = item.CouponId
-						};
-					}
+						MemberId = HttpContext.Session.GetInt32(CDictionary.SK_UserID),
+						OrderDate = DateTime.Now,
+						PaymentId = payment,
+						StatusId = 13,
+						CouponId = couponid
+					};
 				}
 				else
 				{
                     order = new Order()
                     {
                         MemberId = HttpContext.Session.GetInt32(CDictionary.SK_UserID),
-                        ShipName = _db.Members.FirstOrDefault(x => x.MemberId == HttpContext.Session.GetInt32(CDictionary.SK_UserID)).Name,
                         OrderDate = DateTime.Now,
                         PaymentId = payment,
                         StatusId = 13,
-                        ShipId = 1
                     };
                 }
 				_db.Orders.Add(order);

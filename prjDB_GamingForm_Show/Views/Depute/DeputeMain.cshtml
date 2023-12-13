@@ -24,17 +24,17 @@
 <!-- Jobs Start -->
 <div class="container-xxl py-5">
     <div class="container">
-        <h1 class="text-center mb-5 wow fadeInUp" data-wow-delay="0.1s">懸賞總榜</h1>
+        <h1 class="text-center mb-5 wow fadeInUp" data-wow-delay="0.1s">委託概要</h1>
         <div class="tab-class text-center wow fadeInUp" data-wow-delay="0.3s">
             <ul class="nav nav-pills d-inline-flex justify-content-center border-bottom mb-5">
                 <li class="nav-item">
                     <a class="d-flex align-items-center text-start mx-3 ms-0 pb-3 active" data-bs-toggle="pill" href="#tab-1">
-                        <h6 id="title1" class="mt-n1 mb-0">最新懸賞</h6>
+                        <h6 id="title1" class="mt-n1 mb-0">最新委託</h6>
                     </a>
                 </li>
                 <li class="nav-item">
                     <a class="d-flex align-items-center text-start mx-3 pb-3" data-bs-toggle="pill" href="#tab-2">
-                        <h6 id="title2" class="mt-n1 mb-0">熱門懸賞</h6>
+                        <h6 id="title2" class="mt-n1 mb-0">熱門委託</h6>
                     </a>
                 </li>
                 <li class="nav-item">
@@ -69,7 +69,7 @@
 
                     </div>
 
-                    @Html.ActionLink("前往懸賞總榜","DeputeList","Depute",null,new{@class ="btn btn-primary py-3 px-5"})
+                    @Html.ActionLink("前往所有委託","DeputeList","Depute",null,new{@class ="btn btn-primary py-3 px-5"})
                     @* <a class="btn btn-primary py-3 px-5" href="">Browse More Jobs</a> *@
                 </div>
                 <div id="tab-2" class="tab-pane fade show p-0">
@@ -95,7 +95,7 @@
                         </div>
                     </div>
                     
-                    @Html.ActionLink("前往懸賞總榜","DeputeList","Depute",null,new{@class ="btn btn-primary py-3 px-5"})
+                    @Html.ActionLink("前往所有委託","DeputeList","Depute",null,new{@class ="btn btn-primary py-3 px-5"})
                 </div>
                 <div id="tab-3" class="tab-pane fade show p-0">
                     <div class="job-item p-4 mb-4">
@@ -120,7 +120,7 @@
                         </div>
                     </div>
                     
-                    @Html.ActionLink("前往懸賞總榜", "DeputeList", "Depute", null, new { @class = "btn btn-primary py-3 px-5" })
+                    @Html.ActionLink("前往所有委託", "DeputeList", "Depute", null, new { @class = "btn btn-primary py-3 px-5" })
                 </div>
                 <input type="hidden" name="txtCategory" value="" />
             </div>
@@ -162,7 +162,7 @@
         $('#title3').click(() => { Cookie() });
         function getFive(id, tag) {
             $.ajax('@Url.Content("~/Depute/GetFive")', {
-                "type": 'POST', //POST、PUT、DELETE
+                "type": 'POST', //POST、PUT、DELETE//
                 "data": { "id": id },
                 "dataType": "json"
             })

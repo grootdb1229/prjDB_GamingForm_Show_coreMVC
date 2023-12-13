@@ -58,6 +58,7 @@ namespace prjDB_GamingForm_Show.Controllers
             {
                 HttpContext.Session.Remove(CDictionary.SK_UserID);
                 HttpContext.Session.Remove(CDictionary.SK_UserName);
+                HttpContext.Session.Remove(CDictionary.SK_PURCHASED_PRODUCES_LIST);
             }
            return RedirectToAction("HomePage");
         }

@@ -15,5 +15,11 @@ public partial class DeputeComplain
 
     public DateTime ReportDate { get; set; }
 
-    public int SubTag { get; set; }
+    public int SubTagId { get; set; }
+
+    public virtual Depute Depute { get; set; } = null!;
+
+    public virtual Member Member { get; set; } = null!;
+
+    public virtual SubTag SubTag { get; set; } = null!;
 }

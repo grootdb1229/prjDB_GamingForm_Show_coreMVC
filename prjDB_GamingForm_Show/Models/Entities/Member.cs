@@ -33,6 +33,8 @@ public partial class Member
 
     public virtual ICollection<DeputeAction> DeputeActions { get; set; } = new List<DeputeAction>();
 
+    public virtual ICollection<DeputeComplain> DeputeComplains { get; set; } = new List<DeputeComplain>();
+
     public virtual ICollection<DeputeRecord> DeputeRecords { get; set; } = new List<DeputeRecord>();
 
     public virtual ICollection<Depute> Deputes { get; set; } = new List<Depute>();
