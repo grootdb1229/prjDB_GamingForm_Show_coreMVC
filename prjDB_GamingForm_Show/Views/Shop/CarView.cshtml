@@ -95,9 +95,15 @@
         <option value="orange">Orange</option>
         <option value="grape">Grape</option>
     </select>
+    @if (Context.Session.GetInt32(CDictionary.SK_UserID) == null)
+    {
+        <input type="button" value="結帳" class="btn btn-outline-dark mt-auto" id="btnLike" data-bs-toggle="modal" data-bs-target="#staticBackdrop" style="margin-left:30px">
+       
+    }else{
+
         <input type="button" value="結帳" class="btn btn-outline-dark mt-auto" id="btnpurchase" style="margin-left:30px" /> 
      @Html.ActionLink("綠界測試", "Index", "Payment",null, null)
-    
+    }
     @* @Html.DropDownListFor(m => m.payment, new SelectList(ViewBag.Items, "Value", "Text")) *@
 </div>
 
