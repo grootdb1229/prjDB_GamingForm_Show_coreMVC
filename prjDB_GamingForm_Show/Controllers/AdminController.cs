@@ -356,6 +356,7 @@ namespace prjDB_GamingForm_Show.Controllers
             {
                 c = new CAdminCouponViewModel()
                 {
+                    CouponId = m.CouponId,
                     Title = m.Title,
                     Content = m.CouponContent,
                     Discount = m.Discount,
@@ -368,6 +369,29 @@ namespace prjDB_GamingForm_Show.Controllers
             }
             return View(viewModel);
         }
+        [HttpPost]
+        public IActionResult CouponTypeEdit(int id)
+        {
+            Coupon coupon = _db.Coupons.FirstOrDefault(c => c.CouponId == id);
+            if (coupon == null)
+            {
+                return RedirectToAction("CouponList");
+            }
+            else
+            {
+                if (coupon.StatusId == 23)
+                {
+                    coupon.StatusId = 24;
+                }
+                else if (coupon.StatusId == 24)
+                {
+                    coupon.StatusId = 23;
+                }
+                _db.SaveChanges();
+            }
+            return RedirectToAction("CouponList");
+        }
+
         public IActionResult CouponCreat()
         {
             Coupon coupon = new Coupon();
