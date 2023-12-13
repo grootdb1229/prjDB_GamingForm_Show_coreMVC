@@ -78,35 +78,22 @@
                         <div class="card h-100">
                             <div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem">Sale</div>
                                            <a href="@Url.Content("~/Shop/Details")?id=${product.ProductId}">  <img class="card-img-top" src="../images/shop/${product.FImagePath}" alt="..." style="height:25vh; " /></a>
-                                    <div class="card-body p-4"style="background-color:#4F4F4F">
+                                    <div class="card-body p-3"style="background-color:#4F4F4F">
                                 <div class="text-center">
                                     ${product.SubTagName.split('/').map(tag => `<span class="badge text-bg-light">${tag}</span>`).join("")}
-                                            <h5 class="fw-bolder" style="color:black">${product.ProductName}</h5>
-                                    <div class="d-flex justify-content-center small text-warning mb-2">
-                                        <div class="bi-star-fill"></div>
-                                        <div class="bi-star-fill"></div>
-                                        <div class="bi-star-fill"></div>
-                                        <div class="bi-star-fill"></div>
-                                        <div class="bi-star-fill"></div>
-                                    </div>
-                                    <span class="text-muted text-decoration-line-through">${product.Price}</span>
-                                    <span style="color:black">${product.Price}</span>
+
+                                        <div style="margin: 10px">
+                                                <h4 class="fw-bolder" style="color:#fffafa">${product.ProductName}</h5>
+                                    </div>           
                                 </div>
-                            </div>
-                                    <div class="card-footer p-4 pt-0 border-top-0 " style="background-color:#4F4F4F">
-                                <form action="/Shop/AddToCar" method="post">
-                                    <div class="text-center">
-                                        <a href="/Shop/Details?id=${product.ProductId}" class="btn btn-outline-dark mt-auto">查看商品</a>
-                                    </div>
-                                    <div class="text-center">
-                                        <a href="/Shop/Edit?id=${product.ProductId}" class="btn btn-outline-dark mt-auto">測試修改</a>
-                                    </div>
-                                    <input type="hidden" name="ProductID" value="${product.ProductId}" />
-                                    <div class="text-center">
-                                        <input type="submit" value="加入購物車" class="btn btn-outline-dark mt-auto" />
-                                    </div>
-                                </form>
-                            </div>
+
+                                           <div style="background-color:black; position: relative; height: 38px;">    
+                                           <input type="submit" value="加入購物車" class="btn btn-outline-dark mt-auto" style="color:#90ee90; background-color:#6fa720; position: absolute; right: 0;" />
+                                        <div style="position: absolute;bottom:6px; left: 0;">   
+                                      <span style="color:weight; ">NT$${product.Price}</span>
+                                      </div>
+                                      </div>  
+                            </div>                                
                         </div>
                     </div>
             `).join("");
