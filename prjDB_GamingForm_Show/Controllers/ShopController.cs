@@ -680,20 +680,20 @@ namespace prjDB_GamingForm_Show.Controllers
 				return Json(SelSub);
 			}
 
-      //      public IActionResult Coupon()
-      //      {
-      //          var Coupon = _db.Coupons
-      //              .Where(p => p.StatusId == 23)
-      //              .Select(s => new
-      //              {
-						//s.CouponId,
-      //                  s.Title,
-      //                  s.Discount,
-						//s.Reduce
-      //              }).ToList();
-      //          return Json(Coupon);
-      //      }
-			
+			public IActionResult Coupon()
+			{
+				var Coupon = _db.Coupons
+					.Where(p => p.StatusId == 23)
+					.Select(s => new
+					{
+						s.CouponId,
+						s.Title,
+						s.Discount,
+						s.Reduce
+					}).ToList();
+				return Json(Coupon);
+			}
+
 			public IActionResult Couponselect(int id)
 			{
 				var Coupon = _db.Coupons
