@@ -22,10 +22,10 @@
                 優惠券名稱
             </th>
             <th>
-                折扣
+                內容
             </th>
             <th>
-                折價
+                折扣/折價
             </th>
             <th>
                 起始日期
@@ -43,6 +43,7 @@
         @foreach (var item in Model)
         {
             string type = "";
+            double money = 0;
             if(item.Type == "23")
             {
                 type = "已啟用";
@@ -54,6 +55,10 @@
             else
             {
                 type = "錯誤的狀態";
+            }
+            if(item.Discount == null)
+            {
+                
             }
             <tr>
                 <td>
