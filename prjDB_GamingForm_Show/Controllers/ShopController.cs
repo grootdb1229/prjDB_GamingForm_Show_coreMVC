@@ -1327,11 +1327,9 @@ namespace prjDB_GamingForm_Show.Controllers
 					order = new Order()
 					{
 						MemberId = HttpContext.Session.GetInt32(CDictionary.SK_UserID),
-						ShipName = _db.Members.FirstOrDefault(x => x.MemberId == HttpContext.Session.GetInt32(CDictionary.SK_UserID)).Name,
 						OrderDate = DateTime.Now,
 						PaymentId = payment,
 						StatusId = 13,
-						ShipId = 1,
 						CouponId = couponid
 					};
 				}
@@ -1340,11 +1338,9 @@ namespace prjDB_GamingForm_Show.Controllers
                     order = new Order()
                     {
                         MemberId = HttpContext.Session.GetInt32(CDictionary.SK_UserID),
-                        ShipName = _db.Members.FirstOrDefault(x => x.MemberId == HttpContext.Session.GetInt32(CDictionary.SK_UserID)).Name,
                         OrderDate = DateTime.Now,
                         PaymentId = payment,
                         StatusId = 13,
-                        ShipId = 1
                     };
                 }
 				_db.Orders.Add(order);

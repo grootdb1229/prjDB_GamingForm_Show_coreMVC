@@ -307,7 +307,7 @@ namespace prjDB_GamingForm_Show.Controllers
                     MemberId = (int)HttpContext.Session.GetInt32(CDictionary.SK_UserID),
                     ReportContent = vm.txtReportContent,
                     ReportDate = (DateTime.Now),
-                    SubTag = vm.txtSubTagID
+                    //SubTag = vm.txtSubTagID
                 }
                 );
             _db.SaveChanges();
