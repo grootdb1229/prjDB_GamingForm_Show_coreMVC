@@ -716,9 +716,7 @@ namespace prjDB_GamingForm_Show.Controllers
 
 				foreach (var item in Coupon)
 				{
-                    
-                    couponid = item.CouponId;
-					if (item.Discount != 0)
+					if (item.Discount != 0&&item.Discount!=null)
 					{
 						double dis = (double)item.Discount;
 						sumprice = (double)car.Sum(c => c.Price) * dis;
@@ -1321,20 +1319,27 @@ namespace prjDB_GamingForm_Show.Controllers
 				string json = HttpContext.Session.GetString(CDictionary.SK_PURCHASED_PRODUCES_LIST);
 				List<CShoppingCarViewModel> car = JsonSerializer.Deserialize<List<CShoppingCarViewModel>>(json);
 				Order order = null;
+				List<Coupon> coupon = null;
 
-                string jsoncoupon = HttpContext.Session.GetString(CDictionary.SK_COUPON);
-                List<Coupon> coupon = JsonSerializer.Deserialize<List<Coupon>>(jsoncoupon);
-
+                if (HttpContext.Session.GetString(CDictionary.SK_COUPON) != null)
+				{ 
+					 string jsoncoupon = HttpContext.Session.GetString(CDictionary.SK_COUPON);
+                     coupon = JsonSerializer.Deserialize<List<Coupon>>(jsoncoupon);
+				}
+               
                 if (coupon != null)
 				{
-					order = new Order()
+					foreach (var i in coupon)
 					{
-						MemberId = HttpContext.Session.GetInt32(CDictionary.SK_UserID),
-						OrderDate = DateTime.Now,
-						PaymentId = payment,
-						StatusId = 13,
-						CouponId = couponid
-					};
+						order = new Order()
+						{
+							MemberId = HttpContext.Session.GetInt32(CDictionary.SK_UserID),
+							OrderDate = DateTime.Now,
+							PaymentId = payment,
+							StatusId = 13,
+							CouponId = i.CouponId
+						};
+					}
 				}
 				else
 				{
@@ -1367,7 +1372,7 @@ namespace prjDB_GamingForm_Show.Controllers
 				json = JsonSerializer.Serialize(car);
 				HttpContext.Session.SetString(CDictionary.SK_PURCHASED_PRODUCES_LIST, json);
 				ViewBag.Car = 0;
-				Thread.Sleep(1000);
+				//Thread.Sleep(1000);
 				return RedirectToAction("OrderDetail");
 			}
 
@@ -1407,20 +1412,20 @@ namespace prjDB_GamingForm_Show.Controllers
 					}
 					if (n.Coupon != null)
 					{
-						if (n.Coupon.Discount != "")
-						{
-							decimal dis = decimal.Parse(n.Coupon.Discount);
-							n.Sumprice = n.products.Sum(x => x.Price) * dis;
-						}
-						else
-						{
-							int reduce = int.Parse(n.Coupon.Reduce);
-							n.Sumprice = n.products.Sum(x => x.Price) - reduce;
-						}
+                        if (n.Coupon.Discount != 0)
+                        {
+                            double dis = (double)n.Coupon.Discount;
+                            n.Sumprice = (double)n.products.Sum(c => c.Price) * dis;
+                        }
+                        else
+                        {
+                            int reduce = (int)n.Coupon.Reduce;
+                            n.Sumprice = (int)n.products.Sum(c => c.Price) - reduce;
+                        }
 					}
 					else
 					{
-						n.Sumprice = n.products.Sum(x => x.Price);
+						n.Sumprice = (double)n.products.Sum(x => x.Price);
 
                     }
                     vm.Add(n);

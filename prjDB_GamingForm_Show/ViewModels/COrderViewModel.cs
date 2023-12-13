@@ -17,7 +17,7 @@ namespace prjDB_GamingForm_Show.ViewModels
 
         public List<decimal> Price { get; set; }
 
-        public decimal Sumprice { get; set; }
+        public double Sumprice { get; set; }
 
         public List<CProductNamePrice> products { get; set; }
 

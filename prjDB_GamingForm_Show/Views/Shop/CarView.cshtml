@@ -147,12 +147,14 @@
         const payid = payment.value
 
         fetch(`@Url.Content("~/Shop/Purchase")?payment=${payid}`)
-            //.then(Swal.fire({
-            //    title: "結帳成功!",
-            //    text: "訂單已送至電子信箱!",
-            //    icon: "success",
-            //})
-            // .done(() => { window.location.href = "/Shop/Index" })
+            .then(()=>{
+                Swal.fire({
+                    title: "結帳成功!",
+                    text: "訂單已送至電子信箱!",
+                    icon: "success",
+                })
+            })
+            .then(() => { window.location.href = "OrderDetail" })
             
     })
     
