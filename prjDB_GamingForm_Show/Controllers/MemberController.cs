@@ -13,6 +13,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using MailKit.Search;
 using prjDB_GamingForm_Show.Models.Shop;
+using Microsoft.AspNetCore.Components.Web;
 
 namespace prjDB_GamingForm_Show.Controllers
 {
@@ -108,6 +109,41 @@ namespace prjDB_GamingForm_Show.Controllers
         }
         #endregion
         #region SendEmails
+        public IActionResult SendEmailByModel() 
+        {
+            return View();
+        }
+        [HttpPost]
+        public IActionResult SendEmailByModel(CEmail email) 
+        {
+            List<string>  EmailData = (from E in _db.Members
+                             where E.Email.Contains("alan")
+                             select E.Email).ToList();
+            List<string> Emails = EmailData;
+            Emails.Add("alan90306@gmail.com");
+            Emails.Add("alan90306@gmail.com");
+            email.Emails = Emails;
+            foreach ( string Address in email.Emails)
+            {
+                var message = new MimeMessage();
+                message.From.Add(new MailboxAddress("grootdb1229", "grootdb1229@gmail.com"));
+                message.To.Add(new MailboxAddress("alan90306", Address));
+                message.Subject = email.EmailSubject;
+                message.Body = new TextPart("html")
+                {
+                    Text = email.EmailBody
+                };
+
+                using (var client = new SmtpClient())
+                {
+                    client.Connect("smtp.gmail.com", 587, false);
+                    client.Authenticate("grootdb1229@gmail.com", "fmgx uucs lgkv vqxm");
+                    client.Send(message);
+                    client.Disconnect(true);
+                }
+            }
+            return RedirectToAction("HomePage", "Home");
+        }
         public IActionResult SendEmail()
         {
 
