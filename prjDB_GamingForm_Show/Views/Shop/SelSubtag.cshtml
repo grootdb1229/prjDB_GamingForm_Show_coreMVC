@@ -22,7 +22,7 @@
     let selectedValuesString = '';
     const productContent = document.getElementById("ContentProduct");
     const TagDiv = document.querySelector('#GameTag .d-flex');
-
+    const KeyWord = document.getElementById("Kw");
     async function LoadTag() {
         
             const response = await fetch('@Url.Content("~/Shop/GameTag")');      
@@ -60,7 +60,7 @@
 
         const selectedValuesArray = selectedValuesString.split(',').filter(Boolean);
         
-        
+        KeyWord.value = "";
         // stringCollection = selectedValuesArray.slice();
         // stringCollection = selectedValuesArray.concat();
         // console.log('String collection:', stringCollection);

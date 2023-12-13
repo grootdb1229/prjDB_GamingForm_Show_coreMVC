@@ -36,7 +36,7 @@ namespace prjDB_GamingForm_Show.Controllers
 			{
 				_host = host;
 				_db = db;
-				
+            
             }
 
             public List<CShopPageViewModel> Listx { get; set; }
@@ -80,7 +80,7 @@ namespace prjDB_GamingForm_Show.Controllers
                 Temp = Listx;
 
             }
-
+			
 			public IActionResult MutipleSearch_Shop(string txtMutiKeywords)
 			{
                 
@@ -233,7 +233,7 @@ namespace prjDB_GamingForm_Show.Controllers
 			}
 			public IActionResult HotTopFive() //取熱門商品
 			{
-				var TopFive = _db.Products.Select(x => new { x.FImagePath, x.ViewCount, x.ProductName, x.ProductId }).OrderByDescending(x => x.ViewCount).Take(5).ToList();
+				var TopFive = _db.Products.Select(x => new { x.FImagePath, x.ViewCount, x.ProductName, x.ProductId,x.Price }).OrderByDescending(x => x.ViewCount).Take(5).ToList();
 				return Json(TopFive);
 			}
 			public IActionResult YourFavorite()
@@ -315,7 +315,7 @@ namespace prjDB_GamingForm_Show.Controllers
 					LL.Add(CLVM);
 				}
 
-				ViewBag.LList = LL.Count();
+				//ViewBag.LList = LL.Count();
 				//TP.LListCount=LL.Count();
 				return View(LL);
             }
