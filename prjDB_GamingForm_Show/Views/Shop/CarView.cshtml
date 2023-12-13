@@ -15,16 +15,13 @@
     <thead>
         <tr class="textcolor">
             <th>
+                
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.ProductName)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Price)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Count)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.total)
             </th>
             <th></th>
         </tr>
@@ -46,22 +43,7 @@
                     <td>
                         @Html.DisplayFor(modelItem => item.Price)
                     </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Count)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.total)
-                    </td>
-                            @using (Html.BeginForm("EditCar", "Shop", FormMethod.Post))
-                    {
-                                <input type="hidden" name="ProductID" value="@item.ProductID" />
-                                <td>
-                                    @Html.TextBox("txtCount", "1", new { @class = "form-control text-center me-3", @style = "max-width: 3rem" })
-                                </td>
-                                <td>
-                                    <input type="submit" value="修改數量" class="btn btn-outline-dark mt-auto" />
-                                </td>
-                    }
+
                             <td>
                                 @Html.ActionLink("查看商品", "Details", "Shop", new { id = item.ProductID }, new { @class = "btn btn-outline-dark mt-auto" })
                                 @Html.ActionLink("刪除購物車", "DeleteFromCar", "Shop", new { id = item.ProductID }, new { @class = "btn btn-outline-dark mt-auto", onclick = "return confirm('確定要刪除嗎?')" })
@@ -98,9 +80,9 @@
     </div>
 
 </div>
-<li>交易金額:@sum.ToString("###,###,##0")</li>
+<li>交易金額:@sum.ToString("#0")元</li>
 <div id="pay">
-    <li>應付金額:@pay.ToString("###,###,##0")</li>
+    <li>應付金額:@pay.ToString("#0")元</li>
 </div>
 
 
@@ -155,12 +137,8 @@
                 })
             })
             .then(() => { window.location.href = "OrderDetail" })
-            
     })
     
-    
-    
-   
 
     payment.addEventListener('change', () => { 
         console.log(payment.value)
@@ -210,7 +188,7 @@
         })
             .done((data) => {
                 const CouponFrag = $(document.createDocumentFragment());
-                const Coupons = `<li>應付金額:${data}</li>`
+                const Coupons = `<li>應付金額:${data}元</li>`
                 CouponFrag.append(Coupons);
                 $('#pay').html(CouponFrag)
             })
