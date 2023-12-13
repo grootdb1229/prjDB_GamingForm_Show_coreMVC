@@ -301,9 +301,7 @@ public partial class DbGamingFormTestContext : DbContext
             entity.ToTable("Coupon");
 
             entity.Property(e => e.CouponId).HasColumnName("CouponID");
-            entity.Property(e => e.Discount).HasMaxLength(50);
             entity.Property(e => e.EndDate).HasMaxLength(50);
-            entity.Property(e => e.Reduce).HasMaxLength(50);
             entity.Property(e => e.StartDate).HasMaxLength(50);
             entity.Property(e => e.StatusId).HasColumnName("StatusID");
             entity.Property(e => e.Title)

@@ -11,9 +11,9 @@ public partial class Coupon
 
     public string CouponContent { get; set; } = null!;
 
-    public string? Discount { get; set; }
+    public double? Discount { get; set; }
 
-    public string? Reduce { get; set; }
+    public int? Reduce { get; set; }
 
     public string StartDate { get; set; } = null!;
 
