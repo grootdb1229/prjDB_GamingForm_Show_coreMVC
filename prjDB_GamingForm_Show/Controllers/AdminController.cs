@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using prjDB_GamingForm_Show.Models;
+using prjDB_GamingForm_Show.Models.Admin;
 using prjDB_GamingForm_Show.Models.Entities;
 using prjDB_GamingForm_Show.ViewModels;
 using System.Runtime.Intrinsics.X86;
@@ -356,6 +357,7 @@ namespace prjDB_GamingForm_Show.Controllers
                 c = new CAdminCouponViewModel()
                 {
                     Title = m.Title,
+                    Content = m.CouponContent,
                     Discount = m.Discount,
                     Reduce = m.Reduce,
                     StartDate = m.StartDate,
@@ -1049,7 +1051,7 @@ namespace prjDB_GamingForm_Show.Controllers
 
         #region 委託Admin
 
-        public IActionResult DeputeList()
+        public IActionResult ADeputeList()
         {
             IEnumerable<CDeputeViewModel> datas = null;
             CDeputtListLoad x = new CDeputtListLoad(_host, _db);
@@ -1066,7 +1068,27 @@ namespace prjDB_GamingForm_Show.Controllers
                 item.StatusId = vm.txtStatusID;
             }
             _db.SaveChanges();
-            return RedirectToAction("DeputeList");
+            return RedirectToAction("ADeputeList");
+        }
+        public IActionResult ACDeputeList(CAdminDepute vm)
+        {
+            _db.Members.Load();
+            _db.SubTags.Load();
+            List<CDeputeComplainsWrap> list = new List<CDeputeComplainsWrap>();
+            CDeputeComplainsWrap x = null;
+            var datas = _db.DeputeComplains.OrderBy(n => n.Id);
+            foreach (var item in datas) 
+            {
+                x = new CDeputeComplainsWrap();
+                x.Id = item.Id;
+                x.DeputeId = item.DeputeId;
+                x.MemberId = item.MemberId;
+                x.ReportContent = item.ReportContent;
+                x.ReportDate = item.ReportDate;
+                list.Add(x);
+            }
+            
+            return View(list);
         }
         #endregion
     }

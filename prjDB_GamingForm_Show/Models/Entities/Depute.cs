@@ -27,6 +27,8 @@ public partial class Depute
 
     public virtual ICollection<DeputeAction> DeputeActions { get; set; } = new List<DeputeAction>();
 
+    public virtual ICollection<DeputeComplain> DeputeComplains { get; set; } = new List<DeputeComplain>();
+
     public virtual ICollection<DeputeRecord> DeputeRecords { get; set; } = new List<DeputeRecord>();
 
     public virtual ICollection<DeputeSkill> DeputeSkills { get; set; } = new List<DeputeSkill>();

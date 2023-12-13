@@ -1,0 +1,119 @@
+﻿@model IEnumerable<prjDB_GamingForm_Show.Models.Admin.CDeputeComplainsWrap>
+
+@{
+    ViewData["Title"] = "ACDeputeList";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+<table class="table table-dark table-hover" style="color:white ; font-size:20px">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Id)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DeputeId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MemberId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ReportContent)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ReportDate)
+            </th>
+
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Id)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DeputeId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MemberId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ReportContent)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ReportDate)
+                </td>
+
+                <td>
+                    <button type="button" class="btn btn-dark status" onclick="TEST()">會員詳情</button>
+                    <button type="button" class="btn btn-dark status" onclick="StatusEdit()">修改狀態</button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+@section Scripts
+    {
+
+    <script>
+        // $('.btn btn-dark status').click(() => { test2() })
+
+        async function TEST() {
+
+
+            Swal.fire({
+                title: "<strong>會員資料</strong>",
+                html: `
+            <b>姓名</b><p>詳細</p></br>
+            <b>電話:</b><p>詳細</p></br>
+            <b>出生年月</b><p>詳細</p></br>
+            <a href="#">links</a>,
+            and other HTML tags
+          `,
+                showCloseButton: true,
+                showCancelButton: true,
+              
+            });
+        }
+
+        
+        async function MemberDetail(value) {
+
+
+            // Swal.fire(`You selected: ${status}`);
+            $.ajax('@Url.Content("~/Member/MyInfo")', {
+                "type": 'post', //POST、PUT、DELETE//
+                "data": {
+                    "txtID": value,
+                    "txtStatusID": status,
+                },
+            })
+                .done((data) => {
+                    Swal.fire({
+                        title: "<strong>HTML <u>example</u></strong>",
+                        icon: "info",
+                        html: 
+                        `You can use <b>bold text</b>,
+                    <a href="#">links</a>,
+                    and other HTML tags
+                  `,
+                        showCloseButton: true,
+                        showCancelButton: true,
+                        focusConfirm: false,
+                    });
+
+
+
+
+                })
+        }
+
+
+
+
+
+    </script>
+
+}

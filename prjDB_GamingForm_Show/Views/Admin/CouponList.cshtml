@@ -4,6 +4,21 @@
     ViewData["Title"] = "CouponList";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
+<style>
+    .offline {
+        background-color: #4F4F4F;
+        color: #ADADAD;
+        padding: 3px;
+        border-radius: 5px
+    }
+
+    .online {
+        background-color: #009100;
+        color: #F0FFF0;
+        padding: 3px;
+        border-radius: 5px
+    }
+</style>
 
 <h2 style="margin-left:5px ; font-size:45px">優惠券清單</h2>
 @using (Html.BeginForm())
@@ -22,10 +37,10 @@
                 優惠券名稱
             </th>
             <th>
-                折扣
+                內容
             </th>
             <th>
-                折價
+                折扣/折價
             </th>
             <th>
                 起始日期
@@ -43,27 +58,36 @@
         @foreach (var item in Model)
         {
             string type = "";
+            string money = "";
             if(item.Type == "23")
             {
-                type = "已啟用";
+                type = "<span class='online'>已啟用</span>";
             }
             else if(item.Type == "24")
             {
-                type = "未啟用";
+                type = "<span class='offline'>未啟用</span>";
             }
             else
             {
                 type = "錯誤的狀態";
+            }
+            if(item.Discount == null)
+            {
+                money = $"折{item.Reduce}元";
+            }
+            else
+            {
+                money = $"{item.Discount*10}折";
             }
             <tr>
                 <td>
                     @Html.DisplayFor(modelItem => item.Title)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Discount)
+                    @Html.DisplayFor(modelItem => item.Content)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Reduce)
+                    @money
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.StartDate)
@@ -72,12 +96,10 @@
                     @Html.DisplayFor(modelItem => item.EndDate)
                 </td>
                 <td>
-                    @type
+                    @Html.Raw(type)
                 </td>
                 <td>
-                    @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                    @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                    @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+                    @Html.ActionLink("開啟/關閉", "ProductListNext", "Admin", null, new { @class = "btn btn-dark" })
                 </td>
             </tr>
         }
