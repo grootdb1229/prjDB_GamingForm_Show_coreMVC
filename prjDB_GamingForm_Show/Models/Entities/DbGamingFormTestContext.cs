@@ -383,14 +383,27 @@ public partial class DbGamingFormTestContext : DbContext
 
         modelBuilder.Entity<DeputeComplain>(entity =>
         {
-            entity
-                .HasNoKey()
-                .ToTable("DeputeComplain");
+            entity.ToTable("DeputeComplain");
 
-            entity.Property(e => e.DeputeId).HasColumnName("DeputeID");
             entity.Property(e => e.Id).HasColumnName("ID");
+            entity.Property(e => e.DeputeId).HasColumnName("DeputeID");
             entity.Property(e => e.MemberId).HasColumnName("MemberID");
             entity.Property(e => e.ReportDate).HasColumnType("datetime");
+
+            entity.HasOne(d => d.Depute).WithMany(p => p.DeputeComplains)
+                .HasForeignKey(d => d.DeputeId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_DeputeComplain_Depute");
+
+            entity.HasOne(d => d.Member).WithMany(p => p.DeputeComplains)
+                .HasForeignKey(d => d.MemberId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_DeputeComplain_Member");
+
+            entity.HasOne(d => d.SubTagNavigation).WithMany(p => p.DeputeComplains)
+                .HasForeignKey(d => d.SubTag)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_DeputeComplain_SubTag");
         });
 
         modelBuilder.Entity<DeputeRecord>(entity =>
