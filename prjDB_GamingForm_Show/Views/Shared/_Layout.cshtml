@@ -80,16 +80,30 @@
 
                     </ul>
                 </div>
-
+                @* 願望清單 *@
                 @{
-                    <form class="d-flex">
-                    <a href="~/Shop/LoveList" class="btn mt-auto btn-outline-dark  me-1">
+                    if (Context.Session.GetInt32(CDictionary.SK_UserID) == null)
+                    {
+                            <form class="d-flex">
+                             <a href="@Url.Action("LoveList", "Shop", new { id = Context.Session.GetInt32(CDictionary.SK_UserID) })" class="btn btn-outline-dark mt-auto" id="myLink" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                                <img src="~/images/shop/blackheart.png" width="16" height="15">
+                                <span class="badge bg-dark text-white ms-1 rounded-pill" id="carcount">@ViewBag.LList</span>
+                            </a>
+                        </form>
+                    }
+                
+                    else
+                    {
+                        <form class="d-flex">
+                            <a href="@Url.Action("LoveList", "Shop", new { id = Context.Session.GetInt32(CDictionary.SK_UserID) })" class="btn mt-auto btn-outline-dark  me-1">
                         <img src="~/images/shop/blackheart.png" width="16" height="15">
                         <span class="badge bg-dark text-white ms-1 rounded-pill" id="carcount">@ViewBag.LList</span>
                         </a>
                     </form>
+                    }
+                   
 
-
+                    // 購物車
                     <form class="d-flex">
                         <a href="~/Shop/CarView" class="btn mt-auto btn-outline-dark bi-cart-fill me-1" id="car">
                             <span class="badge bg-dark text-white ms-1 rounded-pill" id="carcount">@ViewBag.Car</span>

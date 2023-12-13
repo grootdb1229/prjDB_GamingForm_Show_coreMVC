@@ -43,7 +43,7 @@
                                 @Html.ActionLink("我要上架", "Create", "Shop",null, new { @class = "btn btn-outline-dark mt-auto" })
                             </div>
 
-                                @if (Context.Session.GetInt32(CDictionary.SK_UserID) == null)
+                            @*     @if (Context.Session.GetInt32(CDictionary.SK_UserID) == null)
                                 { <div class="text-center">
                                         @Html.ActionLink("願望清單", "LoveList", "Shop", new { id = Context.Session.GetInt32(CDictionary.SK_UserID) }, new { @class = "btn btn-outline-dark mt-auto", id = "myLink", data_bs_toggle = "modal", data_bs_target = "#staticBackdrop" })
                                     </div>
@@ -52,7 +52,7 @@
                                     <div class="text-center">
                                         @Html.ActionLink("願望清單", "LoveList", "Shop", new { id = Context.Session.GetInt32(CDictionary.SK_UserID) }, new { @class = "btn btn-outline-dark mt-auto" })
                                     </div>
-                                }
+                                } *@
 
                                
                         </div>
