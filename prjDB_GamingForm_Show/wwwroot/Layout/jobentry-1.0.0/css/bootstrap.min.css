@@ -200,7 +200,8 @@ a {
 }
 
     a:hover {
-        color: #008d5d
+        /*mouseover*/
+        color: #a81d1d
     }
 
     a:not([href]):not([class]), a:not([href]):not([class]):hover {
