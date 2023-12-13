@@ -11,27 +11,19 @@ public partial class Order
 
     public int? CouponId { get; set; }
 
-    public string ShipName { get; set; } = null!;
-
     public DateTime OrderDate { get; set; }
 
     public DateTime? PaymentDate { get; set; }
-
-    public DateTime? ShippingDate { get; set; }
 
     public DateTime? CompletedDate { get; set; }
 
     public int PaymentId { get; set; }
 
-    public int ShipId { get; set; }
-
-    public int? Zipcode { get; set; }
-
-    public string? ShipAddress { get; set; }
-
     public string? Note { get; set; }
 
     public int StatusId { get; set; }
+
+    public decimal SumPrice { get; set; }
 
     public virtual Coupon? Coupon { get; set; }
 
@@ -41,9 +33,5 @@ public partial class Order
 
     public virtual Payment Payment { get; set; } = null!;
 
-    public virtual ShipMethod Ship { get; set; } = null!;
-
     public virtual Status Status { get; set; } = null!;
-
-    public virtual RegionDistrict? ZipcodeNavigation { get; set; }
 }
