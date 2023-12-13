@@ -162,7 +162,7 @@
         $('#title3').click(() => { Cookie() });
         function getFive(id, tag) {
             $.ajax('@Url.Content("~/Depute/GetFive")', {
-                "type": 'POST', //POST、PUT、DELETE
+                "type": 'POST', //POST、PUT、DELETE//
                 "data": { "id": id },
                 "dataType": "json"
             })

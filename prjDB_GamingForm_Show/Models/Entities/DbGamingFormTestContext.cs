@@ -105,8 +105,6 @@ public partial class DbGamingFormTestContext : DbContext
 
     public virtual DbSet<SerachRecord> SerachRecords { get; set; }
 
-    public virtual DbSet<ShipMethod> ShipMethods { get; set; }
-
     public virtual DbSet<Skill> Skills { get; set; }
 
     public virtual DbSet<SkillClass> SkillClasses { get; set; }
@@ -303,9 +301,7 @@ public partial class DbGamingFormTestContext : DbContext
             entity.ToTable("Coupon");
 
             entity.Property(e => e.CouponId).HasColumnName("CouponID");
-            entity.Property(e => e.Discount).HasMaxLength(50);
             entity.Property(e => e.EndDate).HasMaxLength(50);
-            entity.Property(e => e.Reduce).HasMaxLength(50);
             entity.Property(e => e.StartDate).HasMaxLength(50);
             entity.Property(e => e.StatusId).HasColumnName("StatusID");
             entity.Property(e => e.Title)
@@ -389,6 +385,7 @@ public partial class DbGamingFormTestContext : DbContext
             entity.Property(e => e.DeputeId).HasColumnName("DeputeID");
             entity.Property(e => e.MemberId).HasColumnName("MemberID");
             entity.Property(e => e.ReportDate).HasColumnType("datetime");
+            entity.Property(e => e.SubTagId).HasColumnName("SubTagID");
 
             entity.HasOne(d => d.Depute).WithMany(p => p.DeputeComplains)
                 .HasForeignKey(d => d.DeputeId)
@@ -400,8 +397,8 @@ public partial class DbGamingFormTestContext : DbContext
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_DeputeComplain_Member");
 
-            entity.HasOne(d => d.SubTagNavigation).WithMany(p => p.DeputeComplains)
-                .HasForeignKey(d => d.SubTag)
+            entity.HasOne(d => d.SubTag).WithMany(p => p.DeputeComplains)
+                .HasForeignKey(d => d.SubTagId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_DeputeComplain_SubTag");
         });
@@ -633,13 +630,8 @@ public partial class DbGamingFormTestContext : DbContext
             entity.Property(e => e.OrderDate).HasColumnType("date");
             entity.Property(e => e.PaymentDate).HasColumnType("date");
             entity.Property(e => e.PaymentId).HasColumnName("PaymentID");
-            entity.Property(e => e.ShipAddress).HasDefaultValueSql("(N'無')");
-            entity.Property(e => e.ShipId).HasColumnName("ShipID");
-            entity.Property(e => e.ShipName)
-                .HasMaxLength(50)
-                .HasDefaultValueSql("(N'無')");
-            entity.Property(e => e.ShippingDate).HasColumnType("date");
             entity.Property(e => e.StatusId).HasColumnName("StatusID");
+            entity.Property(e => e.SumPrice).HasColumnType("money");
 
             entity.HasOne(d => d.Coupon).WithMany(p => p.Orders)
                 .HasForeignKey(d => d.CouponId)
@@ -654,19 +646,10 @@ public partial class DbGamingFormTestContext : DbContext
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Order_Payment");
 
-            entity.HasOne(d => d.Ship).WithMany(p => p.Orders)
-                .HasForeignKey(d => d.ShipId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_Order_ShipMethod");
-
             entity.HasOne(d => d.Status).WithMany(p => p.Orders)
                 .HasForeignKey(d => d.StatusId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Order_Status");
-
-            entity.HasOne(d => d.ZipcodeNavigation).WithMany(p => p.Orders)
-                .HasForeignKey(d => d.Zipcode)
-                .HasConstraintName("FK_Order_RegionDistrict");
         });
 
         modelBuilder.Entity<OrderProduct>(entity =>
@@ -933,16 +916,6 @@ public partial class DbGamingFormTestContext : DbContext
             entity.Property(e => e.CreateDays)
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("date");
-        });
-
-        modelBuilder.Entity<ShipMethod>(entity =>
-        {
-            entity.HasKey(e => e.ShipId);
-
-            entity.ToTable("ShipMethod");
-
-            entity.Property(e => e.ShipId).HasColumnName("ShipID");
-            entity.Property(e => e.Name).HasMaxLength(50);
         });
 
         modelBuilder.Entity<Skill>(entity =>
