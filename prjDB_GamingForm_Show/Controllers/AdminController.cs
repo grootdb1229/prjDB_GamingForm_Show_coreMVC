@@ -1069,23 +1069,6 @@ namespace prjDB_GamingForm_Show.Controllers
             return RedirectToAction("ADeputeList");
         }
 
-        public IActionResult ADeputeComplain(CAdminDepute vm)
-        {
-            if(HttpContext.Session.GetInt32(CDictionary.SK_UserID) ==null)
-                return Content("尚未登入");
-            _db.DeputeComplains.Add(
-                new DeputeComplain 
-                { 
-                    DeputeId = vm.txtID, 
-                    MemberId = (int)HttpContext.Session.GetInt32(CDictionary.SK_UserID),
-                    ReportContent = vm.txtReportContent,
-                    ReportDate = (DateTime.Now.Date),
-                    SubTag = vm.txtSubTagID
-                }
-                );
-            _db.SaveChanges();
-            return RedirectToAction("ADeputeList");
-        }
         #endregion
     }
 }
