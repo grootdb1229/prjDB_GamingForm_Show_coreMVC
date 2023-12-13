@@ -44,8 +44,8 @@
         <h1 class="display-3 text-white mb-3 animated slideInDown">懸賞細節</h1>
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb text-uppercase">
-                @Html.ActionLink("懸賞首頁","DeputeMain","Depute",null,new{@class ="breadcrumb-item"})
-                @Html.ActionLink("選賞清單","DeputeList","Depute",null,new{@class ="breadcrumb-item"})
+                @Html.ActionLink("委託首頁","DeputeMain","Depute",null,new{@class ="breadcrumb-item"})
+                @Html.ActionLink("委託清單","DeputeList","Depute",null,new{@class ="breadcrumb-item"})
                 <li class="breadcrumb-item text-white active" aria-current="page">詳細資料</li>
             </ol>
         </nav>
@@ -60,11 +60,23 @@
             
                 <div class="row gy-5 gx-4">
                     <div class="col-lg-8">
+                @{
+                    if (Context.Session.GetInt32(CDictionary.SK_UserID) == null)
+                    {
+                        <button type="button" value="檢舉" class="btn btn-dark status" style="float:right" data-bs-toggle="modal" data-bs-target="#staticBackdrop">檢舉 </button>
+
+                    }
+                    else
+                    {
+                        <button type="button" class="btn btn-dark status" style="float:right" onclick="test2(@Html.DisplayFor(model => model.id))">檢舉</button>
+                    }
+                }
+                
                         <div class="d-flex align-items-center mb-5">
                             <img class="flex-shrink-0 img-fluid border rounded" src="~/images/04.jfif" alt="" style="width: 80px; height: 80px;">
                             <div class="text-start ps-4">
                         <input type="hidden" id="detailid" value=@Html.DisplayFor(model => model.id) />
-                        <h3 class="mb-3">@Html.DisplayFor(model => model.title)</h3>
+                        <h3 class="mb-3" style="clear:right">@Html.DisplayFor(model => model.title)</h3>
                         <span class="text-truncate me-3"><i class="fa fa-map-marker-alt text-primary me-2"></i>@Html.DisplayFor(model => model.region)</span>
                         <span class="text-truncate me-3"><i class="far fa-clock text-primary me-2"></i>@Html.DisplayFor(model => model.modifieddate)</span>
                         <span class="text-truncate me-0"><i class="far fa-money-bill-alt text-primary me-2"></i>@Html.DisplayFor(model => model.salary)</span>
@@ -83,7 +95,7 @@
                                 <li><i class="fa fa-angle-right text-primary me-2"></i>Diam diam stet erat no est est</li>
                             </ul>
                         </div>
-
+                
                         <div class="">
                             
                             <form>
@@ -139,6 +151,61 @@
 
 
     }
+
+
+   async function test2(value) {
+
+            const { value: reason } = await Swal.fire({
+                title: "選擇檢舉原因",
+                input: "select",
+                inputOptions: {
+                    原因: {
+                        60: "與本主題無關",
+                        61: "洗版",
+                        62: "辱罵",
+                        67: "不當內容",
+                    }
+                },
+                inputPlaceholder: "選擇檢舉原因",
+                showCancelButton: true,
+                inputValidator: (value) => {
+                    return new Promise((resolve) => {
+                        if (value != "") {
+                            resolve();
+                        } else {
+                            resolve("請選擇一個檢舉原因");
+                        }
+                    });
+                }
+            });
+            if(reason!==undefined)
+             { 
+                const { value: text } = await Swal.fire({
+                    input: "textarea",
+                    inputLabel: "Message",
+                    inputPlaceholder: "Type your message here...",
+                    inputAttributes: {
+                        "aria-label": "Type your message here"
+                    },
+                    showCancelButton: true
+                });
+                if (text !== undefined) {
+                    $.ajax('@Url.Content("~/Depute/DeputeComplain")', {
+                    "type": 'post', //POST、PUT、DELETE//
+                    "data": {
+                        "txtID": value,
+                        "txtReportContent": text,
+                        "txtSubTagID": reason,
+                    },
+                })
+                }
+                Swal.fire("檢舉成功，我們會盡速為您處理");
+            }
+            
+
+
+        }
+
 
 </script>
 }

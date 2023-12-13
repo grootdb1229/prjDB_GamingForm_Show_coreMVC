@@ -295,6 +295,27 @@ namespace prjDB_GamingForm_Show.Controllers
 
 
         }
+        //檢舉//
+        public IActionResult DeputeComplain(CAdminDepute vm)
+        {
+            if (HttpContext.Session.GetInt32(CDictionary.SK_UserID) != null)
+            { 
+            _db.DeputeComplains.Add(
+                new DeputeComplain
+                {
+                    DeputeId = vm.txtID,
+                    MemberId = (int)HttpContext.Session.GetInt32(CDictionary.SK_UserID),
+                    ReportContent = vm.txtReportContent,
+                    ReportDate = (DateTime.Now.Date),
+                    SubTag = vm.txtSubTagID
+                }
+                );
+            _db.SaveChanges();
+            }
+            return View();
+        }
+
+        //Cookie
         public void Cookie(int? id)
         {
             int userid =0;

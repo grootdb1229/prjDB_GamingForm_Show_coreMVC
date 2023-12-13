@@ -1049,7 +1049,7 @@ namespace prjDB_GamingForm_Show.Controllers
 
         #region 委託Admin
 
-        public IActionResult DeputeList()
+        public IActionResult ADeputeList()
         {
             IEnumerable<CDeputeViewModel> datas = null;
             CDeputtListLoad x = new CDeputtListLoad(_host, _db);
@@ -1066,7 +1066,25 @@ namespace prjDB_GamingForm_Show.Controllers
                 item.StatusId = vm.txtStatusID;
             }
             _db.SaveChanges();
-            return RedirectToAction("DeputeList");
+            return RedirectToAction("ADeputeList");
+        }
+
+        public IActionResult ADeputeComplain(CAdminDepute vm)
+        {
+            if(HttpContext.Session.GetInt32(CDictionary.SK_UserID) ==null)
+                return Content("尚未登入");
+            _db.DeputeComplains.Add(
+                new DeputeComplain 
+                { 
+                    DeputeId = vm.txtID, 
+                    MemberId = (int)HttpContext.Session.GetInt32(CDictionary.SK_UserID),
+                    ReportContent = vm.txtReportContent,
+                    ReportDate = (DateTime.Now.Date),
+                    SubTag = vm.txtSubTagID
+                }
+                );
+            _db.SaveChanges();
+            return RedirectToAction("ADeputeList");
         }
         #endregion
     }

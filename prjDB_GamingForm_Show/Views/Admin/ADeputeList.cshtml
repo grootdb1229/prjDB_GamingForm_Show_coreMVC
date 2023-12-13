@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<DB_GamingForm_Show.Job.DeputeClass.CDeputeViewModel>
 
 @{
-    ViewData["Title"] = "DeputeList";
+    ViewData["Title"] = "ADeputeList";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 <div class="container">
@@ -61,7 +61,7 @@
                 </td>
                 <td>
                     @Html.ActionLink("刪除委託", "DeputeList", "Depute", new { id = "null" }, new { @class = "btn btn-dark ", @id = "search", name = "txtKeyword" })
-                    <button type="button" class="btn btn-dark status" onclick="test2(@Html.DisplayFor(modelItem => item.id))">修改狀態</button>
+                    <button type="button" class="btn btn-dark status" onclick="StatusEdit(@Html.DisplayFor(modelItem => item.id))">修改狀態</button>
                     @* @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ }) *@
                 </td>
 
@@ -78,7 +78,7 @@
     <script>
         // $('.btn btn-dark status').click(() => { test2() })
 
-        async function test2(value) {
+        async function StatusEdit(value) {
 
             const { value: status } = await Swal.fire({
                 title: "修改委託狀態",
@@ -112,7 +112,7 @@
                         "txtStatusID": status,
                     },
                 })
-                    .done(() => { window.location.href = "/Admin/DeputeList" })
+                    .done(() => { window.location.href = "/Admin/ADeputeList" })
             }
             
 
