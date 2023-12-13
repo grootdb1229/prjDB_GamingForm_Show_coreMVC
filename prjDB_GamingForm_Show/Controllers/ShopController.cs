@@ -233,7 +233,7 @@ namespace prjDB_GamingForm_Show.Controllers
 			}
 			public IActionResult HotTopFive() //取熱門商品
 			{
-				var TopFive = _db.Products.Select(x => new { x.FImagePath, x.ViewCount, x.ProductName, x.ProductId }).OrderByDescending(x => x.ViewCount).Take(5).ToList();
+				var TopFive = _db.Products.Select(x => new { x.FImagePath, x.ViewCount, x.ProductName, x.ProductId,x.Price }).OrderByDescending(x => x.ViewCount).Take(5).ToList();
 				return Json(TopFive);
 			}
 			public IActionResult YourFavorite()

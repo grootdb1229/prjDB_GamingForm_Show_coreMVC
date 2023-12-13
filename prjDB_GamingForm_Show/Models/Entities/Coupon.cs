@@ -9,6 +9,8 @@ public partial class Coupon
 
     public string Title { get; set; } = null!;
 
+    public string CouponContent { get; set; } = null!;
+
     public string? Discount { get; set; }
 
     public string? Reduce { get; set; }
