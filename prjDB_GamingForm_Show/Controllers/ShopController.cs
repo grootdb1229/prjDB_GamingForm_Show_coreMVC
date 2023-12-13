@@ -711,21 +711,21 @@ namespace prjDB_GamingForm_Show.Controllers
                 decimal sumprice = 0;
 
 
-				foreach (var item in Coupon)
-				{
-                    //couponid放不進全域
-                    couponid = item.CouponId;
-					if (item.Discount != "")
-					{
-						decimal dis = decimal.Parse(item.Discount);
-						sumprice = car.Sum(c => c.Price) * dis;
-					}
-					else
-					{
-						int reduce = int.Parse(item.Reduce);
-						sumprice = car.Sum(c => c.Price) - reduce;
-					}
-				}
+				//foreach (var item in Coupon)
+				//{
+    //                //couponid放不進全域
+    //                couponid = item.CouponId;
+				//	if (item.Discount != "")
+				//	{
+				//		decimal dis = decimal.Parse(item.Discount);
+				//		sumprice = car.Sum(c => c.Price) * dis;
+				//	}
+				//	else
+				//	{
+				//		int reduce = int.Parse(item.Reduce);
+				//		sumprice = car.Sum(c => c.Price) - reduce;
+				//	}
+				//}
 				//sumprice = car.Sum(c => c.Price);
 
                 return Content(sumprice.ToString("#0"));
