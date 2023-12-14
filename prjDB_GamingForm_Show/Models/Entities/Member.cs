@@ -25,6 +25,8 @@ public partial class Member
 
     public int Gender { get; set; }
 
+    public int StatusId { get; set; }
+
     public virtual ICollection<ArticleAction> ArticleActions { get; set; } = new List<ArticleAction>();
 
     public virtual ICollection<ArticleComplain> ArticleComplains { get; set; } = new List<ArticleComplain>();
@@ -43,8 +45,6 @@ public partial class Member
 
     public virtual ICollection<MemberCoupon> MemberCoupons { get; set; } = new List<MemberCoupon>();
 
-    public virtual ICollection<MemberStatus> MemberStatuses { get; set; } = new List<MemberStatus>();
-
     public virtual ICollection<MemberTag> MemberTags { get; set; } = new List<MemberTag>();
 
     public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
@@ -56,6 +56,8 @@ public partial class Member
     public virtual ICollection<Product> Products { get; set; } = new List<Product>();
 
     public virtual ICollection<Reply> Replies { get; set; } = new List<Reply>();
+
+    public virtual Status Status { get; set; } = null!;
 
     public virtual ICollection<WishList> WishLists { get; set; } = new List<WishList>();
 }

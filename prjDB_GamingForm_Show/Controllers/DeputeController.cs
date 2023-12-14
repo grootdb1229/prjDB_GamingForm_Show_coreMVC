@@ -39,7 +39,7 @@ namespace prjDB_GamingForm_Show.Controllers
         }
         #region 老朱
 
-        //TODO #1 讀資料
+        //TODO #1 讀資料//
         public void ListLoad()
         {
             //te
