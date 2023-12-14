@@ -25,6 +25,9 @@ using System.Transactions;
 using MailKit;
 using MailKit.Net.Smtp;
 using MimeKit;
+using NuGet.Protocol.Plugins;
+using Microsoft.AspNetCore.Http;
+using System.Diagnostics.Metrics;
 
 namespace prjDB_GamingForm_Show.Controllers
 {
@@ -84,8 +87,32 @@ namespace prjDB_GamingForm_Show.Controllers
                 Temp = Listx;
 
             }
-			
-			public IActionResult MutipleSearch_Shop(string txtMutiKeywords)
+
+			public IActionResult ProductInfo(int? id)
+			{
+				var data = _db.Products.Where(x => x.ProductId == id).Select(x => new { x.ProductId, x.ProductName, x.Price, x.ProductContent, x.MemberId, x.FImagePath });
+				return Json(data);
+			}
+			//檢舉
+            public IActionResult DeputeComplain(CProductAdmin vm)
+            {
+                if (HttpContext.Session.GetInt32(CDictionary.SK_UserID) != null)
+                {
+                    _db.ProductComplains.Add(
+                        new ProductComplain
+                        {
+                            Id = vm.txtID,
+                            MemeberId = (int)HttpContext.Session.GetInt32(CDictionary.SK_UserID),
+                            ReplyContent = vm.txtReportContent,
+                            //ReportDate = (DateTime.Now),
+                            //SubTagId = vm.txtSubTagID
+                        }
+                        );
+                    _db.SaveChanges();
+                }
+                return View();
+            }
+            public IActionResult MutipleSearch_Shop(string txtMutiKeywords)
 			{
                 
                 string result = "";
@@ -1181,12 +1208,46 @@ namespace prjDB_GamingForm_Show.Controllers
 				var payment = _db.Payments.Select(x => x);
 				return Json(payment);
 			}
-			[HttpPost]
-			public IActionResult AddToCar(CShoppingCarViewModel vm)
+			public IActionResult getLoveList() 
 			{
+				int count = 0;
+				int memberID = 0;
+				
+                if ((HttpContext.Session.GetInt32(CDictionary.SK_UserID) != null))
+                {
+                    memberID = (int)HttpContext.Session.GetInt32(CDictionary.SK_UserID);
+                    count=_db.WishLists.Where(x=>x.MemberId==memberID).Count();   
+                }
+				string countString = count.ToString();
+                return Content(countString);
+            }
 
-				Product product = _db.Products.FirstOrDefault(x => x.ProductId == vm.ProductID);
-				if (product != null)
+            public IActionResult getcarList()
+            {
+                int count = 0;
+               
+
+                if (HttpContext.Session.Keys.Contains(CDictionary.SK_PURCHASED_PRODUCES_LIST))
+                {
+                 string json = HttpContext.Session.GetString(CDictionary.SK_PURCHASED_PRODUCES_LIST);
+                  var  car = JsonSerializer.Deserialize<List<CShoppingCarViewModel>>(json);
+                    count=car.Count;
+                }
+                string countString = count.ToString();
+                return Content(countString);
+            }
+
+
+            [HttpPost]
+			public IActionResult AddToCar(CShoppingCarViewModel vm)
+            {
+				int memberID = 0;
+				if ((HttpContext.Session.GetInt32(CDictionary.SK_UserID) != null)) {
+					memberID = (int)HttpContext.Session.GetInt32(CDictionary.SK_UserID);
+				}
+					Product product = _db.Products.FirstOrDefault(x => x.ProductId == vm.ProductID);
+
+                    if (product != null)
 				{
 					string json = "";
 
@@ -1200,18 +1261,27 @@ namespace prjDB_GamingForm_Show.Controllers
 					{
 						car = new List<CShoppingCarViewModel>();
 					}
-					var listCheck = car.Any(a => a.ProductName == product.ProductName);
-					if (!listCheck)
+					if (memberID != 0)
 					{
-						CShoppingCarViewModel x = new CShoppingCarViewModel();
-						x.Price = (decimal)product.Price;
-						x.ProductName = product.ProductName;
-						x.FImagePath = product.FImagePath;
-						x.Count = vm.txtCount;
-						x.ProductID = product.ProductId;
-						car.Add(x);
+						var OrdersList = _db.OrderProducts.Where(x => x.ProductId == product.ProductId).Select(x => x.Order);//已經購買的商品不能加入
+						Order order = OrdersList.FirstOrDefault(x => x.MemberId == memberID);
+						if (order != null)
+						{ return Json(new { success = false, message = "以購買過的商品" }); }
 					}
-					else { return Json(new { success = false }); } 
+
+						var listCheck = car.Any(a => a.ProductName == product.ProductName); //重複商品不能加入
+						if (!listCheck)
+						{
+							CShoppingCarViewModel x = new CShoppingCarViewModel();
+							x.Price = (decimal)product.Price;
+							x.ProductName = product.ProductName;
+							x.FImagePath = product.FImagePath;
+							x.Count = vm.txtCount;
+							x.ProductID = product.ProductId;
+                        car.Add(x);
+                    }
+					else { return Json(new { success = false , message="購物車內容重複"}); }
+					
 					json = JsonSerializer.Serialize(car);
 					HttpContext.Session.SetString(CDictionary.SK_PURCHASED_PRODUCES_LIST, json);
 					ViewBag.Car = car.Count();
@@ -1223,6 +1293,11 @@ namespace prjDB_GamingForm_Show.Controllers
 
             public IActionResult AddToCar2(int? id)
             {
+                int memberID = 0;
+                if ((HttpContext.Session.GetInt32(CDictionary.SK_UserID) != null))
+                {
+                    memberID = (int)HttpContext.Session.GetInt32(CDictionary.SK_UserID);
+                }
 
                 Product product = _db.Products.FirstOrDefault(x => x.ProductId == id);
                 if (product != null)
@@ -1238,6 +1313,14 @@ namespace prjDB_GamingForm_Show.Controllers
                     {
                         car = new List<CShoppingCarViewModel>();
                     }
+                    if (memberID != 0)
+                    {
+                        var OrdersList = _db.OrderProducts.Where(x => x.ProductId == product.ProductId).Select(x => x.Order);//已經購買的商品不能加入
+                        Order order = OrdersList.FirstOrDefault(x => x.MemberId == memberID);
+                        if (order != null)
+                        { return Json(new { success = false, message = "以購買過的商品" }); }
+                    }
+
                     var listCheck = car.Any(a => a.ProductName == product.ProductName);
 					if (!listCheck)
 					{
@@ -1260,7 +1343,8 @@ namespace prjDB_GamingForm_Show.Controllers
 
             public IActionResult CarView()
 			{
-				if (!HttpContext.Session.Keys.Contains(CDictionary.SK_PURCHASED_PRODUCES_LIST))
+            
+                if (!HttpContext.Session.Keys.Contains(CDictionary.SK_PURCHASED_PRODUCES_LIST))
 				{
 					return RedirectToAction("Index");
 				}
@@ -1270,10 +1354,37 @@ namespace prjDB_GamingForm_Show.Controllers
 				{
 					return RedirectToAction("Index");
 				}
+				////
+				///檢測重複購買商品
+			
+                int memberID = 0;
+                if ((HttpContext.Session.GetInt32(CDictionary.SK_UserID) != null))
+                {
+                    memberID = (int)HttpContext.Session.GetInt32(CDictionary.SK_UserID);
+                }
+                if (memberID != 0)
+                {	List<int> OrdersList = _db.OrderProducts.Where(x=>x.Order.MemberId== memberID).Select(x => x.ProductId).ToList();
+					List<int> product = car.Select(x=>x.ProductID).ToList();
+					bool HaveProduct = OrdersList.Any(x => product.Contains(x));//檢查你的車子裡面有沒有歷史購買紀錄
+					if (!HaveProduct) 
+					{ 
+						return View(car);
+					}
+					else
+					{
+                        List<CShoppingCarViewModel> uniqueProducts = car.Except(car.Where(x => OrdersList.Contains(x.ProductID))).ToList();
+						car = uniqueProducts;
+						string jsoncar= JsonSerializer.Serialize(car);
+                        HttpContext.Session.SetString(CDictionary.SK_PURCHASED_PRODUCES_LIST, jsoncar);
+                        TempData["SuccessMessage"] = "這是重複商品！"; //即使返回，要用特殊資料做出判斷差異
+						return View(car);
+                    }           
+               
+				}
 
-				ViewBag.Car = car.Count();
-				return View(car);
-			}
+                return View(car);
+
+            }
 
 			public IActionResult DeleteFromCar(int id)////應該能正常移除購物車了/////
 			{
@@ -1322,7 +1433,7 @@ namespace prjDB_GamingForm_Show.Controllers
 			}
 
 
-			public IActionResult Purchase(int payment)
+			public void Purchase(int payment)
 			{
 				string json = HttpContext.Session.GetString(CDictionary.SK_PURCHASED_PRODUCES_LIST);
 				List<CShoppingCarViewModel> car = JsonSerializer.Deserialize<List<CShoppingCarViewModel>>(json);
@@ -1380,8 +1491,7 @@ namespace prjDB_GamingForm_Show.Controllers
 				json = JsonSerializer.Serialize(car);
 				HttpContext.Session.SetString(CDictionary.SK_PURCHASED_PRODUCES_LIST, json);
 				ViewBag.Car = 0;
-                SendOrderEmail(orderview());
-                return RedirectToAction("OrderDetail");
+                
 			}
 
 			public IActionResult OrderDetail()
@@ -1442,7 +1552,7 @@ namespace prjDB_GamingForm_Show.Controllers
 				return View(vm);
 			}
 
-			public COrderViewModel orderview()
+			public void orderview()
 			{
                 COrderViewModel vm = new COrderViewModel();
                 var order = _db.Orders.Where(x => x.MemberId == HttpContext.Session.GetInt32(CDictionary.SK_UserID))
@@ -1496,8 +1606,8 @@ namespace prjDB_GamingForm_Show.Controllers
                     }
                     vm = n;
                 }
-                return vm;
-			}
+                SendOrderEmail(vm);
+            }
 
             public IActionResult SendOrderEmail(COrderViewModel vm)
 			{
@@ -1518,7 +1628,7 @@ namespace prjDB_GamingForm_Show.Controllers
 					+
 							"<html>" +
 							"<h2>  您的訂單資訊 </h2>" +
-							"<p>   您的訂單編號編號為:" + vm.OrderId + "</p>" +
+							"<p>   您的訂單編號為:" + vm.OrderId + "</p>" +
 							"<p>   價格為:" + vm.Sumprice.ToString("#0") + "元</p>" +
 							"<p>   下單日期為:" + vm.OrderDate + "</p>" +
 							s +
