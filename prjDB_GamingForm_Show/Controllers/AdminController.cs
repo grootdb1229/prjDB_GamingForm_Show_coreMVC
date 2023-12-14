@@ -1172,7 +1172,7 @@ namespace prjDB_GamingForm_Show.Controllers
                 x.Id = item.Id;
                 x.DeputeId = item.DeputeId;
                 x.ProviderId = item.Depute.ProviderId;
-                //x.ProviderStatus = _db.Members.Where(n=>n.MemberId==item.Depute.ProviderId)
+                //x.ProviderStatus = item.Depute.
                 x.MemberId = item.MemberId;
                 x.SubTagId = item.SubTag.Name;
                 x.ReportContent = item.ReportContent;
