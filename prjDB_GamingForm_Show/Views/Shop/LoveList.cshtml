@@ -78,7 +78,7 @@
                         </td>
                     </tr>
                 `);
-                getcarList();
+                getLoveList();
                 // 更新表格內容
                 $("#wishlistTable tbody").html(refresh.join(""));
             });
@@ -96,6 +96,7 @@
                 } else {
                     Swal.fire('已有此商品', data.message, 'error');
                 }
+                getcarList();
             });
         });
 

@@ -169,9 +169,9 @@
           
             } else {
                 // 如果失敗，顯示後端返回的錯誤提示
-                Swal.fire('已有此商品', result.message, 'error');
-             
+                Swal.fire('已有此商品', result.message, 'error');                     
             }
+            getcarList();
         });
 
         //複製現在的網址
@@ -225,7 +225,7 @@
                                 console.log(data.message + "進來後");
                             }
                         }
-                        getcarList();
+                        getLoveList();
                     });
                 }
                 favourite();
