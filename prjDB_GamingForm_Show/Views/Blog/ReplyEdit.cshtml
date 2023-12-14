@@ -75,6 +75,8 @@
             ClassicEditor
                 .create(document.querySelector('#editor'), {
                     extraPlugins: [MyCustomUploadAdapterPlugin],
+                    mediaEmbed: {
+                        previewsInData: true
                 }).then(editor => {
                     // 獲取 CKEditor 實例，你可以在這裡保存或使用它
                     window.ckeditorInstance = editor;
