@@ -47,7 +47,7 @@
                 </td>
 
                 <td>
-                    <button type="button" class="btn btn-dark status" onclick="TEST()">會員詳情</button>
+                    <button type="button" class="btn btn-dark status" onclick="MemberDetail(@Html.DisplayFor(modelItem => item.MemberId))">會員詳情</button>
                     <button type="button" class="btn btn-dark status" onclick="StatusEdit()">修改狀態</button>
                 </td>
             </tr>
@@ -86,22 +86,24 @@
             $.ajax('@Url.Content("~/Member/MyInfo")', {
                 "type": 'post', //POST、PUT、DELETE//
                 "data": {
-                    "txtID": value,
-                    "txtStatusID": status,
+                    "id": value,
                 },
+                "dataType": "json"
             })
                 .done((data) => {
+                    console.log(data);
                     Swal.fire({
-                        title: "<strong>HTML <u>example</u></strong>",
-                        icon: "info",
-                        html: 
-                        `You can use <b>bold text</b>,
-                    <a href="#">links</a>,
-                    and other HTML tags
+                        title: `<strong>會員詳細資訊:</strong>`,
+                        html: `
+                            <b>姓名</b><p>${data[0].name}</p></br>
+                            <b>電話:</b><p>${data[0].phone}</p></br>
+                            <b>出生年月</b><p>${data[0].year}</p></br>
+                            <b>信箱</b><p>${data[0].email}</p></br>
+                            <a href="#">個人頁面</a>
                   `,
                         showCloseButton: true,
                         showCancelButton: true,
-                        focusConfirm: false,
+
                     });
 
 
