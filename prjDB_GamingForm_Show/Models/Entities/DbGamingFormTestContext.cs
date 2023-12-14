@@ -540,6 +540,14 @@ public partial class DbGamingFormTestContext : DbContext
             entity.Property(e => e.Mycomment).HasColumnType("ntext");
             entity.Property(e => e.Name).HasMaxLength(50);
             entity.Property(e => e.Phone).HasMaxLength(24);
+            entity.Property(e => e.StatusId)
+                .HasDefaultValueSql("((1))")
+                .HasColumnName("StatusID");
+
+            entity.HasOne(d => d.Status).WithMany(p => p.Members)
+                .HasForeignKey(d => d.StatusId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Member_Status");
         });
 
         modelBuilder.Entity<MemberCollection>(entity =>
