@@ -1378,7 +1378,7 @@ namespace prjDB_GamingForm_Show.Controllers
 			}
 
 
-			public IActionResult Purchase(int payment)
+			public void Purchase(int payment)
 			{
 				string json = HttpContext.Session.GetString(CDictionary.SK_PURCHASED_PRODUCES_LIST);
 				List<CShoppingCarViewModel> car = JsonSerializer.Deserialize<List<CShoppingCarViewModel>>(json);
@@ -1436,8 +1436,7 @@ namespace prjDB_GamingForm_Show.Controllers
 				json = JsonSerializer.Serialize(car);
 				HttpContext.Session.SetString(CDictionary.SK_PURCHASED_PRODUCES_LIST, json);
 				ViewBag.Car = 0;
-                //SendOrderEmail(orderview());
-                return RedirectToAction("OrderDetail");
+                
 			}
 
 			public IActionResult OrderDetail()
@@ -1498,7 +1497,7 @@ namespace prjDB_GamingForm_Show.Controllers
 				return View(vm);
 			}
 
-			public COrderViewModel orderview()
+			public void orderview()
 			{
                 COrderViewModel vm = new COrderViewModel();
                 var order = _db.Orders.Where(x => x.MemberId == HttpContext.Session.GetInt32(CDictionary.SK_UserID))
@@ -1552,8 +1551,8 @@ namespace prjDB_GamingForm_Show.Controllers
                     }
                     vm = n;
                 }
-                return vm;
-			}
+                SendOrderEmail(vm);
+            }
 
             public IActionResult SendOrderEmail(COrderViewModel vm)
 			{

@@ -17,12 +17,20 @@
                 @Html.DisplayNameFor(model => model.MemberId)
             </th>
             <th>
+                @Html.DisplayNameFor(model => model.ProviderId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SubTagId)
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.ReportContent)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.ReportDate)
             </th>
-
+            <th>
+                @Html.DisplayNameFor(model => model.Status)
+            </th>
             <th></th>
         </tr>
     </thead>
@@ -40,15 +48,24 @@
                     @Html.DisplayFor(modelItem => item.MemberId)
                 </td>
                 <td>
+                    @Html.DisplayFor(modelItem => item.ProviderId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SubTagId)
+                </td>
+                <td>
                     @Html.DisplayFor(modelItem => item.ReportContent)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.ReportDate)
                 </td>
-
                 <td>
-                    <button type="button" class="btn btn-dark status" onclick="MemberDetail(@Html.DisplayFor(modelItem => item.MemberId))">會員詳情</button>
-                    <button type="button" class="btn btn-dark status" onclick="StatusEdit()">修改狀態</button>
+                    @Html.DisplayFor(modelItem => item.Status)
+                </td>
+                <td>
+                    <button type="button" class="btn btn-dark status" onclick="MemberDetail(@Html.DisplayFor(modelItem => item.ProviderId))">會員詳情</button>
+                    <button type="button" class="btn btn-dark status" onclick="StatusEdit(@Html.DisplayFor(modelItem => item.Id))">修改狀態</button>
+                    <button type="button" class="btn btn-dark status" onclick="StatusEdit(@Html.DisplayFor(modelItem => item.Id))">懲處</button>
                 </td>
             </tr>
         }
@@ -60,25 +77,85 @@
     <script>
         // $('.btn btn-dark status').click(() => { test2() })
 
-        async function TEST() {
+        async function StatusEdit(value) {
 
-
-            Swal.fire({
-                title: "<strong>會員資料</strong>",
-                html: `
-            <b>姓名</b><p>詳細</p></br>
-            <b>電話:</b><p>詳細</p></br>
-            <b>出生年月</b><p>詳細</p></br>
-            <a href="#">links</a>,
-            and other HTML tags
-          `,
-                showCloseButton: true,
+            const { value: status } = await Swal.fire({
+                title: "修改委託狀態",
+                input: "select",
+                inputOptions: {
+                    狀態: {
+                        28: "未處理",
+                        29: "處理中",
+                        30: "申訴通過",
+                        31: "申訴失敗",
+                    }
+                },
+                inputPlaceholder: "選擇狀態以修改",
                 showCancelButton: true,
-              
+                inputValidator: (value) => {
+                    return new Promise((resolve) => {
+                        if (value != "") {
+                            resolve();
+                        } else {
+                            resolve("請選擇一個選項");
+                        }
+                    });
+                }
             });
+            if (status) {
+                // Swal.fire(`You selected: ${status}`);
+                $.ajax('@Url.Content("~/Admin/ACDeputeEdit")', {
+                    "type": 'post', //POST、PUT、DELETE//
+                    "data": {
+                        "txtID": value,
+                        "txtStatusID": status,
+                    },
+                })
+                    .done(() => { window.location.href = "/Admin/ACDeputeList" })
+            }
+
+
         }
 
-        
+        async function penalties(value) {
+
+            const { value: status } = await Swal.fire({
+                title: "修改委託狀態",
+                input: "select",
+                inputOptions: {
+                    狀態: {
+                        32: "警告1次",
+                        33: "警告2次",
+                        34: "警告3次",
+                        26: "已封鎖",
+                    }
+                },
+                inputPlaceholder: "選擇懲處",
+                showCancelButton: true,
+                inputValidator: (value) => {
+                    return new Promise((resolve) => {
+                        if (value != "") {
+                            resolve();
+                        } else {
+                            resolve("請選擇一個選項");
+                        }
+                    });
+                }
+            });
+            if (status) {
+                // Swal.fire(`You selected: ${status}`);
+                $.ajax('@Url.Content("~/Admin/ACDeputeEdit")', {
+                    "type": 'post', //POST、PUT、DELETE//
+                    "data": {
+                        "txtID": value,
+                        "txtStatusID": status,
+                    },
+                })
+                    .done(() => { window.location.href = "/Admin/ACDeputeList" })
+            }
+
+
+        }
         async function MemberDetail(value) {
 
 
