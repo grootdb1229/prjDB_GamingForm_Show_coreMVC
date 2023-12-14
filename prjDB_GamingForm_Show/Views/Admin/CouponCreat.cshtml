@@ -5,89 +5,57 @@
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
-<h2>CouponCreat</h2>
 
-<h4>CAdminCouponViewModel</h4>
+
+<h4 class="text-center">新增折扣券</h4>
 <hr />
-<div class="row">
+<div class="row justify-content-center">
     <div class="col-md-4">
-        <form asp-action="CouponCreat">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1" onclick="dis()">
-                <label class="form-check-label" for="inlineRadio1">折扣</label>
+        <form asp-action="CouponCreat" class="mx-auto">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>                      
+            <div class="input-group mb-3">
+                <span asp-validation-for="Title" class="input-group-text" id="inputGroup-sizing-default">名稱</span>
+                <input asp-for="Title" type="text" class="form-control" id="titleval" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" style="border-radius:5px" />                
+            </div>            
+            <div class="input-group mb-3">
+                <span asp-validation-for="Content" class="input-group-text" id="inputGroup-sizing-default1">內容</span>                
+                <input asp-for="Content" type="text" class="form-control" id="contentval" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default1" style="border-radius:5px" />
             </div>
-            <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2" onclick="re()" >
-                <label class="form-check-label" for="inlineRadio2">折價</label>
+            <div class="input-group mb-3" id="discount">
+                <span asp-validation-for="Discount" class="input-group-text" id="inputGroup-sizing-default2">折扣</span>
+                <input asp-for="Discount" type="range" id="disval" min="0.1" max="0.9" step="0.1" value="0.9" class="form-range" onchange="updateRangeValue(this.value)" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default2" style="border-radius:5px" />
+                <div id="rangeValue" style="padding-top:9px;padding-left:1px;font-size:15px">折數：9折</div>                
+            </div>            
+            <div class="input-group mb-3">
+                <span asp-validation-for="StartDate" class="input-group-text" id="inputGroup-sizing-default4">起日</span>
+                <input asp-for="StartDate" type="date" class="form-control" min="@DateTime.Today.ToString("yyyy-MM-dd")" id="startDate" onchange="updateEndDateMin()" aria-describedby="inputGroup-sizing-default3" style="border-radius:5px" />                
             </div>
-            
-            <div class="form-group">
-                <label asp-for="Title" class="control-label">名稱</label>
-                <input asp-for="Title" class="form-control" />
-                <span asp-validation-for="Title" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Content" class="control-label">內容</label>
-                <input asp-for="Content" class="form-control" />
-                <span asp-validation-for="Content" class="text-danger"></span>
-            </div>
-            <div class="form-group" id="discount">
-                <label asp-for="Discount" class="form-label" style="display: block; margin-bottom: 5px;">折扣幅度</label>
-                <input asp-for="Discount" type="range" id="disval" min="0.1" max="0.9" step="0.1" value="0.9" class="form-range" onchange="updateRangeValue(this.value)" />
-                <div id="rangeValue">選擇折數：</div>
-                <span asp-validation-for="Discount" class="text-danger"></span>
-            </div>
-            <div class="form-group" id="reduce">
-                <label asp-for="Reduce" class="control-label"></label>
-                <input asp-for="Reduce" class="form-control" />
-                <span asp-validation-for="Reduce" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="StartDate" class="control-label">起始日期</label>
-                <input asp-for="StartDate" type="date" class="form-control" placeholder="自定義預設文字"/>
-                <span asp-validation-for="StartDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="EndDate" class="control-label">結束日期</label>
-                <input asp-for="EndDate" class="form-control" />
-                <span asp-validation-for="EndDate" class="text-danger"></span>
+            <div class="input-group mb-3">
+                <span asp-validation-for="EndDate" class="input-group-text" id="inputGroup-sizing-default4">迄日</span>
+                <input asp-for="EndDate" type="date" class="form-control" min="@DateTime.Today.ToString("yyyy-MM-dd")" id="endDate" aria-describedby="inputGroup-sizing-default3" style="border-radius:5px" />                
             </div>            
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-default" />
+                <input type="submit" value="確認新增" class="btn btn-dark" />
             </div>
         </form>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
+<div class="text-center">
+    <a asp-action="CouponList" style="font-size:25px">回到清單</a>
 </div>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-    <script>
-        var dis2 = $('#discount')
-        var re2 = $('#reduce')
-        var disvalue = $('#disval')
-        dis2.hide();
-        re2.hide();
+    <script>        
         function updateRangeValue(value) {
             const discount = value * 10;
             // 顯示目前選擇的range值
-            document.getElementById('rangeValue').innerText = `選擇折數：${discount}折`;
-        }        
-        
-        function dis() {
-            dis2.show();
-            re2.hide();
-        }
-
-        function re() {
-            dis2.hide();
-            re2.show();
-            disvalue.value = null
-            console.log(disvalue.value)
+            document.getElementById('rangeValue').innerText = `折數：${discount}折`;
+        }   
+        function updateEndDateMin() {
+            var startDate = document.getElementById("startDate").value;
+            document.getElementById("endDate").min = startDate;
         }
     </script>
 }

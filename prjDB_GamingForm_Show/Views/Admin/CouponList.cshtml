@@ -23,13 +23,12 @@
 <h2 style="margin-left:5px ; font-size:45px">優惠券清單</h2>
 @using (Html.BeginForm())
 {
-    <p style="display:inline;font-size:30px;margin-left:5px;margin-right:10px">名稱關鍵字查詢 : </p> @Html.TextBox("txtKeyWord", null, new { @class = "col-form-label" })
+    <p style="display:inline;font-size:30px;margin-left:5px;margin-right:10px;">名稱關鍵字查詢 : </p> @Html.TextBox("txtKeyWord", null, new { @class = "col-form-label" })
     <input type="submit" value="查詢" class="btn btn-dark" />
 }
 
-<p>
-    @Html.ActionLink("新增優惠券", "CouponCreat", "Admin", null, null)
-    <button type="button" onclick="CreatCoupon()">新增優惠券</button>
+<p>    
+    <button class="btn btn-dark" type="button" onclick="CreatCoupon()">新增優惠券</button>
 </p>
 <table class="table table-dark table-hover" style="color:white ; font-size:20px">
     <thead>
@@ -175,101 +174,24 @@
                 });
             });
             const { value: coupon } = await Swal.fire({
-                title: "Select color",
+                title: "要新增哪種優惠券?",
                 input: "radio",
                 inputOptions,
                 inputValidator: (value) => {
                     if (!value) {
-                        return "You need to choose something!";
+                        return "請選擇其中一種!";
                     }
                 },
             });
             if (coupon) {
+                let url = "";
                 if (coupon == "discount") {
-                    const { value: formValues } =await Swal.fire({
-                        html: `
-                        <h4>新增折扣券</h4>
-                        <hr />
-                        <div class="row">
-                            <div class="col-md-4">
-                                <form asp-action="CouponCreat">
-                                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                                    <div class="form-group">
-                                        <label asp-for="Title" class="control-label">名稱</label>
-                                                <input asp-for="Title" class="form-control" id="titleval"/>
-                                        <span asp-validation-for="Title" class="text-danger"></span>
-                                    </div>
-                                    <div class="form-group">
-                                        <label asp-for="Content" class="control-label">內容</label>
-                                                <input asp-for="Content" class="form-control" id="contentval"/>
-                                        <span asp-validation-for="Content" class="text-danger"></span>
-                                    </div>
-                                    <div class="form-group" id="discount">
-                                        <label asp-for="Discount" class="form-label" style="display: block; margin-bottom: 5px;">折扣幅度</label>
-                                        <input asp-for="Discount" type="range" id="disval" min="0.1" max="0.9" step="0.1" value="0.9" class="form-range" onchange="updateRangeValue(this.value)" />
-                                        <div id="rangeValue">選擇折數：</div>
-                                        <span asp-validation-for="Discount" class="text-danger"></span>
-                                    </div>
-                                    <div class="form-group">
-                                        <label asp-for="StartDate" class="control-label">起始日期</label>
-                                        <input asp-for="StartDate" class="form-control" />
-                                        <span asp-validation-for="StartDate" class="text-danger"></span>
-                                    </div>
-                                    <div class="form-group">
-                                        <label asp-for="EndDate" class="control-label">結束日期</label>
-                                        <input asp-for="EndDate" class="form-control" />
-                                        <span asp-validation-for="EndDate" class="text-danger"></span>
-                                    </div>                                    
-                                </form>
-                            </div>
-                        </div>
-                        `, preConfirm: () => {
-                            return [
-                                document.getElementById("disval").value
-                            ];
-                        }
-                    });
-                    if (formValues) {
-                        Swal.fire(JSON.stringify(formValues));
-                    }
+                    url = "/Admin/CouponCreat";
                 }
                 else {
-                    Swal.fire({
-                        html: `<h4>新增折價券</h4>
-                                <hr />
-                                <div class="row">
-                                    <div class="col-md-4">
-                                        <form asp-action="CouponCreat">
-                                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                                            <div class="form-group">
-                                                <label asp-for="Title" class="control-label">名稱</label>
-                                                <input asp-for="Title" class="form-control" />
-                                                <span asp-validation-for="Title" class="text-danger"></span>
-                                            </div>
-                                            <div class="form-group">
-                                                <label asp-for="Content" class="control-label">內容</label>
-                                                <input asp-for="Content" class="form-control" />
-                                                <span asp-validation-for="Content" class="text-danger"></span>
-                                            </div>
-                                            <div class="form-group" id="reduce">
-                                               <label asp-for="Reduce" class="control-label">折價金額</label>
-                                               <input asp-for="Reduce" class="form-control" />
-                                               <span asp-validation-for="Reduce" class="text-danger"></span>
-                                            </div>
-                                            <div class="form-group">
-                                                <label asp-for="StartDate" class="control-label">起始日期</label>
-                                                <input asp-for="StartDate" class="form-control" />
-                                                <span asp-validation-for="StartDate" class="text-danger"></span>
-                                            </div>
-                                            <div class="form-group">
-                                                <label asp-for="EndDate" class="control-label">結束日期</label>
-                                                <input asp-for="EndDate" class="form-control" />
-                                                <span asp-validation-for="EndDate" class="text-danger"></span>
-                                            </div>                                            
-                                        </form>
-                                    </div>
-                                </div>` });
+                    url = "/Admin/ReduceCreat";
                 }
+                window.location.href = url;
             }
         }
     </script>

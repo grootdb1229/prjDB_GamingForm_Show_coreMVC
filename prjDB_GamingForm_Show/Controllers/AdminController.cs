@@ -377,26 +377,48 @@ namespace prjDB_GamingForm_Show.Controllers
             _db.SaveChanges();
         }
 
-        public IActionResult CouponList()
+        public IActionResult CouponList(CKeyWordViewModel kyvm)
         {
             List<CAdminCouponViewModel> viewModel = new List<CAdminCouponViewModel>();
             CAdminCouponViewModel c = null;
-            foreach (var m in _db.Coupons)
+            if (string.IsNullOrEmpty(kyvm.txtKeyWord))
             {
-                c = new CAdminCouponViewModel()
+                foreach (var m in _db.Coupons)
                 {
-                    CouponId = m.CouponId,
-                    Title = m.Title,
-                    Content = m.CouponContent,
-                    Discount = m.Discount,
-                    Reduce = m.Reduce,
-                    StartDate = m.StartDate,
-                    EndDate = m.EndDate,
-                    Type = m.StatusId.ToString(),
-                };
-                viewModel.Add(c);
+                    c = new CAdminCouponViewModel()
+                    {
+                        CouponId = m.CouponId,
+                        Title = m.Title,
+                        Content = m.CouponContent,
+                        Discount = m.Discount,
+                        Reduce = m.Reduce,
+                        StartDate = m.StartDate,
+                        EndDate = m.EndDate,
+                        Type = m.StatusId.ToString(),
+                    };
+                    viewModel.Add(c);
+                }
+                return View(viewModel);
             }
-            return View(viewModel);
+            else
+            {
+                foreach (var m in _db.Coupons.Where(c => c.Title.Contains(kyvm.txtKeyWord)||c.CouponContent.Contains(kyvm.txtKeyWord)))
+                {
+                    c = new CAdminCouponViewModel()
+                    {
+                        CouponId = m.CouponId,
+                        Title = m.Title,
+                        Content = m.CouponContent,
+                        Discount = m.Discount,
+                        Reduce = m.Reduce,
+                        StartDate = m.StartDate,
+                        EndDate = m.EndDate,
+                        Type = m.StatusId.ToString(),
+                    };
+                    viewModel.Add(c);
+                }
+                return View(viewModel);
+            }
         }
         [HttpPost]
         public IActionResult CouponTypeEdit(int id)
@@ -432,7 +454,28 @@ namespace prjDB_GamingForm_Show.Controllers
             {
                 Title = vm.Title,
                 CouponContent = vm.Content,
-                Discount = vm.Discount,
+                Discount = vm.Discount,                
+                StartDate = vm.StartDate,
+                EndDate = vm.EndDate,
+                StatusId = 24
+            };
+
+            _db.Coupons.Add(coupon);
+            _db.SaveChanges();
+            return RedirectToAction("CouponList");
+        }
+
+        public IActionResult ReduceCreat()
+        {
+            return View();
+        }
+        [HttpPost]
+        public IActionResult ReduceCreat(CAdminCouponViewModel vm)
+        {
+            Coupon coupon = new Coupon()
+            {
+                Title = vm.Title,
+                CouponContent = vm.Content,                
                 Reduce = vm.Reduce,
                 StartDate = vm.StartDate,
                 EndDate = vm.EndDate,
@@ -442,6 +485,10 @@ namespace prjDB_GamingForm_Show.Controllers
             _db.Coupons.Add(coupon);
             _db.SaveChanges();
             return RedirectToAction("CouponList");
+        }
+        public IActionResult fuck()
+        {
+            return View();
         }
         public string MessageTime(string time)
         {
