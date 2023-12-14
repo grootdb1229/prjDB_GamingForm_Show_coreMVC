@@ -121,7 +121,7 @@
           
                     @*------Line按鈕------*@
                 <p class="lead">@Html.DisplayFor(model => model.ProductContent)</p>
-
+                <button type="button" class="btn btn-dark status" style="float:right" onclick="test2(@Html.DisplayFor(model => model.ProductId))">檢舉</button>
 
                 @using (Html.BeginForm("AddToCar", "Shop", FormMethod.Post, new { id = "addToCartForm" }))
                 {
@@ -229,7 +229,59 @@
             }
         }
 
+        //檢舉商品
+        async function test2(value) {
 
+            const { value: reason } = await Swal.fire({
+                title: "選擇檢舉原因",
+                input: "select",
+                inputOptions: {
+                    原因: {
+                        60: "與本主題無關",
+                        61: "洗版",
+                        62: "辱罵",
+                        67: "不當內容",
+                    }
+                },
+                inputPlaceholder: "選擇檢舉原因",
+                showCancelButton: true,
+                inputValidator: (value) => {
+                    return new Promise((resolve) => {
+                        if (value != "") {
+                            resolve();
+                        } else {
+                            resolve("請選擇一個檢舉原因");
+                        }
+                    });
+                }
+            });
+            if (reason !== undefined) {
+                const { value: text } = await Swal.fire({
+                    input: "textarea",
+                    inputLabel: "Message",
+                    inputPlaceholder: "Type your message here...",
+                    inputAttributes: {
+                        "aria-label": "Type your message here"
+                    },
+                    showCancelButton: true
+                });
+                if (text !== undefined) {
+                    $.ajax('@Url.Content("~/Depute/DeputeComplain")', {
+                        "type": 'post', //POST、PUT、DELETE//
+                        "data": {
+                            "txtID": value,
+                            "txtReportContent": text,
+                            "txtSubTagID": reason,
+                        },
+                    })
+
+                    Swal.fire("檢舉成功，我們會盡速為您處理");
+                }
+            }
+
+
+
+        }
        
 
     </script>
