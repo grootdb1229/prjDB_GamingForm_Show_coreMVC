@@ -15,16 +15,13 @@
     <thead>
         <tr class="textcolor">
             <th>
+                
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.ProductName)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Price)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Count)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.total)
             </th>
             <th></th>
         </tr>
@@ -36,6 +33,7 @@
         decimal sum = 0;
     foreach (var item in Model) {
         count++;
+                var successMessage = TempData["SuccessMessage"] as string;
                 <tr class="textcolor">
                 <td>
                    <img class="card-img-top" src="~/images/shop/@item.FImagePath" alt="..." style="height:120px; width=80px;" />
@@ -46,22 +44,7 @@
                     <td>
                         @Html.DisplayFor(modelItem => item.Price)
                     </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Count)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.total)
-                    </td>
-                            @using (Html.BeginForm("EditCar", "Shop", FormMethod.Post))
-                    {
-                                <input type="hidden" name="ProductID" value="@item.ProductID" />
-                                <td>
-                                    @Html.TextBox("txtCount", "1", new { @class = "form-control text-center me-3", @style = "max-width: 3rem" })
-                                </td>
-                                <td>
-                                    <input type="submit" value="修改數量" class="btn btn-outline-dark mt-auto" />
-                                </td>
-                    }
+
                             <td>
                                 @Html.ActionLink("查看商品", "Details", "Shop", new { id = item.ProductID }, new { @class = "btn btn-outline-dark mt-auto" })
                                 @Html.ActionLink("刪除購物車", "DeleteFromCar", "Shop", new { id = item.ProductID }, new { @class = "btn btn-outline-dark mt-auto", onclick = "return confirm('確定要刪除嗎?')" })
@@ -98,9 +81,9 @@
     </div>
 
 </div>
-<li>交易金額:@sum.ToString("###,###,##0")</li>
+<li>交易金額:@sum.ToString("#0")元</li>
 <div id="pay">
-    <li>應付金額:@pay.ToString("###,###,##0")</li>
+    <li>應付金額:@pay.ToString("#0")元</li>
 </div>
 
 
@@ -113,9 +96,15 @@
         <option value="orange">Orange</option>
         <option value="grape">Grape</option>
     </select>
+    @if (Context.Session.GetInt32(CDictionary.SK_UserID) == null)
+    {
+        <input type="button" value="結帳" class="btn btn-outline-dark mt-auto" id="btnLike" data-bs-toggle="modal" data-bs-target="#staticBackdrop" style="margin-left:30px">
+       
+    }else{
+
         <input type="button" value="結帳" class="btn btn-outline-dark mt-auto" id="btnpurchase" style="margin-left:30px" /> 
      @Html.ActionLink("綠界測試", "Index", "Payment",null, null)
-    
+    }
     @* @Html.DropDownListFor(m => m.payment, new SelectList(ViewBag.Items, "Value", "Text")) *@
 </div>
 
@@ -131,22 +120,11 @@
 
     const btn = document.querySelector('#btnpurchase');
     const payment = document.querySelector('#payment');
-    btn.addEventListener('click', () => {
-        const payid = payment.value
-
-        fetch(`@Url.Content("~/Shop/Purchase")?payment=${payid}`)
-            .then(Swal.fire({
-                title: "結帳成功!",
-                text: "訂單已送至電子信箱!",
-                icon: "success",
-            })
-            )
-    })
     
     async function LoadPayment() { 
         const response = await fetch('@Url.Content("~/Shop/payment")');
         const data = await response.json();
-
+        console.log(data)
         const Payment = data.map(x => `
                                      <option value="${x.paymentId}">${x.name}</option>
                             `).join('');
@@ -154,8 +132,20 @@
         payment.innerHTML = Payment; 
     }
     LoadPayment();
+    btn.addEventListener('click', () => {
+        const payid = payment.value
+
+        fetch(`@Url.Content("~/Shop/Purchase")?payment=${payid}`)
+            .then(()=>{
+                Swal.fire({
+                    title: "結帳成功!",
+                    text: "訂單已送至電子信箱!",
+                    icon: "success",
+                }).then((result) => {if (result.isConfirmed) { window.location.href = "OrderDetail" }})
+            })
+            .then(() => { fetch(`@Url.Content("~/Shop/orderview")`) })
+    })
     
-   
 
     payment.addEventListener('change', () => { 
         console.log(payment.value)
@@ -205,7 +195,7 @@
         })
             .done((data) => {
                 const CouponFrag = $(document.createDocumentFragment());
-                const Coupons = `<li>應付金額:${data}</li>`
+                const Coupons = `<li>應付金額:${data}元</li>`
                 CouponFrag.append(Coupons);
                 $('#pay').html(CouponFrag)
             })

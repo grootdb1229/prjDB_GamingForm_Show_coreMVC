@@ -11,7 +11,5 @@ public partial class RegionDistrict
 
     public string District { get; set; } = null!;
 
-    public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
-
     public virtual Region Region { get; set; } = null!;
 }

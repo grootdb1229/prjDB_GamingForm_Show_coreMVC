@@ -86,10 +86,16 @@
         ///加入購物車
         $(document).ready(function () {
             $("#wishlistTable").on("click", ".AddtoCar", async function () {
-                var productId = $(this).data("product-id");
+                var productId = $(this).data("product-id");           
+                const response = await fetch(`@Url.Content("~/Shop/AddToCar2")?id=${productId}`);             
+                const data = await response.json();
 
-                const response =  fetch(`@Url.Content("~/Shop/AddToCar2")?id=${productId}` );
-
+                // 檢查後端響應
+                if (data.success) {
+                    Swal.fire('商品已成功添加到購物車！', '', 'success');      
+                } else {
+                    Swal.fire('已有此商品', data.message, 'error');
+                }
             });
         });
 

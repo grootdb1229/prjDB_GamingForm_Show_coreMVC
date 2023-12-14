@@ -24,7 +24,7 @@ namespace prjDB_GamingForm_Show.ViewModels
             _db = db;
             ListLoad();
         }
-        
+
         public void ListLoad()
         {
             //te
@@ -72,6 +72,7 @@ namespace prjDB_GamingForm_Show.ViewModels
                 Temp = List;
             }
         }
+
 
 
     }

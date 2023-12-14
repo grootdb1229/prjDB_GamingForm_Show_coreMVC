@@ -7,7 +7,13 @@
     </div>
   
 </div>
-
+<style>
+    .PN {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;       
+    }
+</style>
 <script>
     async function LoadTopFive() 
     {
@@ -19,7 +25,8 @@
                               <a href="@Url.Content("~/Shop/Details")?id=${x.productId}">
             <img src="/images/shop/${x.fImagePath}" style="width: 100%; height: 100%;" />
                <div style="position: absolute; bottom: 0; left: 0; width: 100%; height: 20%; text-align: center; background-color: black;">
-            <p style="position: absolute; top: 50%; transform: translateY(-50%); color: white;font-size: 12px;">${x.productName}</p>
+                <p style="position: absolute; top: 50%; transform: translateY(-50%); color: white;font-size: 12px;" class="PN">${truncateText(x.productName, 10)}</p>
+                           <p style="position: absolute; right: 4px; top: 50%; transform: translateY(-50%); color: white;font-size: 12px;" class="PN">NT$${x.price}</p>
     </div>
     </a>
         </div>
@@ -29,8 +36,14 @@
         // 將父容器設置為 display: flex
         document.querySelector('#top5').style.display = 'flex';
         document.querySelector('#top5').innerHTML = MapPic;
+        //壓縮為10個字的方法/參數設定
+        function truncateText(text, maxLength) {
+            return text.length > maxLength ? text.substring(0, maxLength) + '...' : text;
+        }
 
     } 
     LoadTopFive();
+
+   
 
 </script>

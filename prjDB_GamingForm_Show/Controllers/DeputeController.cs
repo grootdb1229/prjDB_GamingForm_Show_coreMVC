@@ -295,6 +295,27 @@ namespace prjDB_GamingForm_Show.Controllers
 
 
         }
+        //檢舉//
+        public IActionResult DeputeComplain(CAdminDepute vm)
+        {
+            if (HttpContext.Session.GetInt32(CDictionary.SK_UserID) != null)
+            { 
+            _db.DeputeComplains.Add(
+                new DeputeComplain
+                {
+                    DeputeId = vm.txtID,
+                    MemberId = (int)HttpContext.Session.GetInt32(CDictionary.SK_UserID),
+                    ReportContent = vm.txtReportContent,
+                    ReportDate = (DateTime.Now),
+                    SubTagId = vm.txtSubTagID
+                }
+                );
+            _db.SaveChanges();
+            }
+            return View();
+        }
+
+        //Cookie
         public void Cookie(int? id)
         {
             int userid =0;
@@ -614,6 +635,14 @@ namespace prjDB_GamingForm_Show.Controllers
         }
 
         #region API
+        public IActionResult myApplyContent(int id)
+        {
+            var o = _db.DeputeRecords.Where(_ => _.MemberId == HttpContext.Session.GetInt32(CDictionary.SK_UserID)).Select(_ => new
+            {
+                content=_.RecordContent
+            });
+            return Json(o);
+        }
         public IActionResult downloadFile(string fileName)
         {
             string fullFilePath= Path.Combine(_host.WebRootPath, "files\\depute", fileName);

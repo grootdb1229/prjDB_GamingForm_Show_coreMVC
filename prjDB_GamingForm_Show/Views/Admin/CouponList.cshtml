@@ -4,6 +4,21 @@
     ViewData["Title"] = "CouponList";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
+<style>
+    .offline {
+        background-color: #4F4F4F;
+        color: #ADADAD;
+        padding: 3px;
+        border-radius: 5px
+    }
+
+    .online {
+        background-color: #009100;
+        color: #F0FFF0;
+        padding: 3px;
+        border-radius: 5px
+    }
+</style>
 
 <h2 style="margin-left:5px ; font-size:45px">優惠券清單</h2>
 @using (Html.BeginForm())
@@ -22,10 +37,10 @@
                 優惠券名稱
             </th>
             <th>
-                折扣
+                內容
             </th>
             <th>
-                折價
+                折扣/折價
             </th>
             <th>
                 起始日期
@@ -43,27 +58,36 @@
         @foreach (var item in Model)
         {
             string type = "";
+            string money = "";
             if(item.Type == "23")
             {
-                type = "已啟用";
+                type = "<span class='online'>已啟用</span>";
             }
             else if(item.Type == "24")
             {
-                type = "未啟用";
+                type = "<span class='offline'>未啟用</span>";
             }
             else
             {
                 type = "錯誤的狀態";
+            }
+            if(item.Discount == null)
+            {
+                money = $"折{item.Reduce}元";
+            }
+            else
+            {
+                money = $"{item.Discount*10}折";
             }
             <tr>
                 <td>
                     @Html.DisplayFor(modelItem => item.Title)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Discount)
+                    @Html.DisplayFor(modelItem => item.Content)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Reduce)
+                    @money
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.StartDate)
@@ -72,14 +96,75 @@
                     @Html.DisplayFor(modelItem => item.EndDate)
                 </td>
                 <td>
-                    @type
+                    @Html.Raw(type)
                 </td>
-                <td>
-                    @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                    @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                    @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+                <td>                    
+                    <button class="btn btn-dark" onclick="confirmAction(@item.CouponId)">啟用/停用</button>
                 </td>
             </tr>
         }
     </tbody>
 </table>
+
+@section Scripts{
+    <script>
+        function confirmAction(couponId) {
+        const swalWithBootstrapButtons = Swal.mixin({
+            customClass: {
+                confirmButton: "btn btn-success",
+                cancelButton: "btn btn-danger"
+            },
+            buttonsStyling: false
+        });
+
+        swalWithBootstrapButtons.fire({
+            title: "確定啟/停用嗎?",
+            text: "優惠券會馬上啟用/停用！",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "確定",
+            cancelButtonText: "取消",
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // 使用Ajax將確認結果送到後端
+                $.ajax({
+                    url: '/Admin/CouponTypeEdit',
+                    type: 'POST',
+                    data: { id: couponId },
+                    success: function (data) {
+                        // 在這裡處理後端返回的結果，可以更新UI等操作
+                        swalWithBootstrapButtons.fire({
+                            title: "成功!",
+                            text: "資料已經被啟用/停用。",
+                            icon: "success"
+                        }).then(() => {
+                            // 關閉SweetAlert2後重新刷新當前頁面
+                            location.reload();
+                        });
+                    },
+                    error: function () {
+                        // 在這裡處理錯誤情況
+                        swalWithBootstrapButtons.fire({
+                            title: "錯誤",
+                            text: "發生錯誤，請稍後再試。",
+                            icon: "error"
+                        });
+                    }
+                });
+            } else if (result.dismiss === Swal.DismissReason.cancel) {
+                swalWithBootstrapButtons.fire({
+                    title: "已取消",
+                    text: "您的操作已被取消 :)",
+                    icon: "error"
+                }).then(() => {
+                    // 關閉SweetAlert2後重新刷新當前頁面
+                    location.reload();
+                });
+            }
+        });
+    
+    }
+    </script>
+
+}

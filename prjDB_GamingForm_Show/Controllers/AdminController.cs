@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using prjDB_GamingForm_Show.Models;
+using prjDB_GamingForm_Show.Models.Admin;
 using prjDB_GamingForm_Show.Models.Entities;
 using prjDB_GamingForm_Show.ViewModels;
 using System.Drawing;
@@ -356,7 +357,9 @@ namespace prjDB_GamingForm_Show.Controllers
             {
                 c = new CAdminCouponViewModel()
                 {
+                    CouponId = m.CouponId,
                     Title = m.Title,
+                    Content = m.CouponContent,
                     Discount = m.Discount,
                     Reduce = m.Reduce,
                     StartDate = m.StartDate,
@@ -367,6 +370,29 @@ namespace prjDB_GamingForm_Show.Controllers
             }
             return View(viewModel);
         }
+        [HttpPost]
+        public IActionResult CouponTypeEdit(int id)
+        {
+            Coupon coupon = _db.Coupons.FirstOrDefault(c => c.CouponId == id);
+            if (coupon == null)
+            {
+                return RedirectToAction("CouponList");
+            }
+            else
+            {
+                if (coupon.StatusId == 23)
+                {
+                    coupon.StatusId = 24;
+                }
+                else if (coupon.StatusId == 24)
+                {
+                    coupon.StatusId = 23;
+                }
+                _db.SaveChanges();
+            }
+            return RedirectToAction("CouponList");
+        }
+
         public IActionResult CouponCreat()
         {
             Coupon coupon = new Coupon();
@@ -1112,7 +1138,7 @@ namespace prjDB_GamingForm_Show.Controllers
 
         #region 委託Admin
 
-        public IActionResult DeputeList()
+        public IActionResult ADeputeList()
         {
             IEnumerable<CDeputeViewModel> datas = null;
             CDeputtListLoad x = new CDeputtListLoad(_host, _db);
@@ -1129,8 +1155,48 @@ namespace prjDB_GamingForm_Show.Controllers
                 item.StatusId = vm.txtStatusID;
             }
             _db.SaveChanges();
-            return RedirectToAction("DeputeList");
+            return RedirectToAction("ADeputeList");
         }
+        public IActionResult ACDeputeList(CAdminDepute vm)
+        {
+            _db.Members.Load();
+            _db.SubTags.Load();
+            _db.Statuses.Load();
+            _db.Deputes.Load();
+            List<CDeputeComplainsWrap> list = new List<CDeputeComplainsWrap>();
+            CDeputeComplainsWrap x = null;
+            var datas = _db.DeputeComplains.OrderBy(n => n.Id);
+            foreach (var item in datas) 
+            {
+                x = new CDeputeComplainsWrap();
+                x.Id = item.Id;
+                x.DeputeId = item.DeputeId;
+                x.ProviderId = item.Depute.ProviderId;
+                x.MemberId = item.MemberId;
+                x.SubTagId = item.SubTag.Name;
+                x.ReportContent = item.ReportContent;
+                x.ReportDate = item.ReportDate;
+                x.Status = item.Status.Name;
+                list.Add(x);
+            }
+            //
+
+            return View(list);
+        }
+        public IActionResult ACDeputeEdit(CAdminDepute vm)
+        {
+            var data = _db.DeputeComplains.Where(n => n.Id == vm.txtID);
+
+            foreach (var item in data)
+            {
+                item.StatusId = vm.txtStatusID;
+            }
+            _db.SaveChanges();
+            return RedirectToAction("ACDeputeList");
+        }
+
+
+       
         #endregion
     }
 }
