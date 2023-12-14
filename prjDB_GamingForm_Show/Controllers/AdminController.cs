@@ -1109,6 +1109,7 @@ namespace prjDB_GamingForm_Show.Controllers
                 x.Id = item.Id;
                 x.DeputeId = item.DeputeId;
                 x.ProviderId = item.Depute.ProviderId;
+                //x.ProviderStatus = _db.Members.Where(n=>n.MemberId==item.Depute.ProviderId)
                 x.MemberId = item.MemberId;
                 x.SubTagId = item.SubTag.Name;
                 x.ReportContent = item.ReportContent;
@@ -1131,9 +1132,19 @@ namespace prjDB_GamingForm_Show.Controllers
             _db.SaveChanges();
             return RedirectToAction("ACDeputeList");
         }
+        public IActionResult ACDeputePenalties(CAdminDepute vm)
+        {
+            var data = _db.Members.Where(n => n.MemberId == vm.txtID);
+
+            foreach (var item in data)
+            {
+                item.StatusId = vm.txtStatusID;
+            }
+            _db.SaveChanges();
+            return RedirectToAction("ACDeputeList");
+        }
 
 
-       
         #endregion
     }
 }
