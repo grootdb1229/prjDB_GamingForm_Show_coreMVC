@@ -25,6 +25,8 @@ using System.Transactions;
 using MailKit;
 using MailKit.Net.Smtp;
 using MimeKit;
+using NuGet.Protocol.Plugins;
+using Microsoft.AspNetCore.Http;
 
 namespace prjDB_GamingForm_Show.Controllers
 {
@@ -1183,10 +1185,14 @@ namespace prjDB_GamingForm_Show.Controllers
 			}
 			[HttpPost]
 			public IActionResult AddToCar(CShoppingCarViewModel vm)
-			{
+            {
+				int memberID = 0;
+				if ((HttpContext.Session.GetInt32(CDictionary.SK_UserID) != null)) {
+					memberID = (int)HttpContext.Session.GetInt32(CDictionary.SK_UserID);
+				}
+					Product product = _db.Products.FirstOrDefault(x => x.ProductId == vm.ProductID);
 
-				Product product = _db.Products.FirstOrDefault(x => x.ProductId == vm.ProductID);
-				if (product != null)
+                    if (product != null)
 				{
 					string json = "";
 
@@ -1200,18 +1206,27 @@ namespace prjDB_GamingForm_Show.Controllers
 					{
 						car = new List<CShoppingCarViewModel>();
 					}
-					var listCheck = car.Any(a => a.ProductName == product.ProductName);
-					if (!listCheck)
+					if (memberID != 0)
 					{
-						CShoppingCarViewModel x = new CShoppingCarViewModel();
-						x.Price = (decimal)product.Price;
-						x.ProductName = product.ProductName;
-						x.FImagePath = product.FImagePath;
-						x.Count = vm.txtCount;
-						x.ProductID = product.ProductId;
-						car.Add(x);
+						var OrdersList = _db.OrderProducts.Where(x => x.ProductId == product.ProductId).Select(x => x.Order);//已經購買的商品不能加入
+						Order order = OrdersList.FirstOrDefault(x => x.MemberId == memberID);
+						if (order != null)
+						{ return Json(new { success = false, message = "以購買過的商品" }); }
 					}
-					else { return Json(new { success = false }); } 
+
+						var listCheck = car.Any(a => a.ProductName == product.ProductName); //重複商品不能加入
+						if (!listCheck)
+						{
+							CShoppingCarViewModel x = new CShoppingCarViewModel();
+							x.Price = (decimal)product.Price;
+							x.ProductName = product.ProductName;
+							x.FImagePath = product.FImagePath;
+							x.Count = vm.txtCount;
+							x.ProductID = product.ProductId;
+                        car.Add(x);
+                    }
+					else { return Json(new { success = false , message="購物車內容重複"}); }
+					
 					json = JsonSerializer.Serialize(car);
 					HttpContext.Session.SetString(CDictionary.SK_PURCHASED_PRODUCES_LIST, json);
 					ViewBag.Car = car.Count();
@@ -1223,6 +1238,11 @@ namespace prjDB_GamingForm_Show.Controllers
 
             public IActionResult AddToCar2(int? id)
             {
+                int memberID = 0;
+                if ((HttpContext.Session.GetInt32(CDictionary.SK_UserID) != null))
+                {
+                    memberID = (int)HttpContext.Session.GetInt32(CDictionary.SK_UserID);
+                }
 
                 Product product = _db.Products.FirstOrDefault(x => x.ProductId == id);
                 if (product != null)
@@ -1238,6 +1258,14 @@ namespace prjDB_GamingForm_Show.Controllers
                     {
                         car = new List<CShoppingCarViewModel>();
                     }
+                    if (memberID != 0)
+                    {
+                        var OrdersList = _db.OrderProducts.Where(x => x.ProductId == product.ProductId).Select(x => x.Order);//已經購買的商品不能加入
+                        Order order = OrdersList.FirstOrDefault(x => x.MemberId == memberID);
+                        if (order != null)
+                        { return Json(new { success = false, message = "以購買過的商品" }); }
+                    }
+
                     var listCheck = car.Any(a => a.ProductName == product.ProductName);
 					if (!listCheck)
 					{
@@ -1260,7 +1288,8 @@ namespace prjDB_GamingForm_Show.Controllers
 
             public IActionResult CarView()
 			{
-				if (!HttpContext.Session.Keys.Contains(CDictionary.SK_PURCHASED_PRODUCES_LIST))
+            
+                if (!HttpContext.Session.Keys.Contains(CDictionary.SK_PURCHASED_PRODUCES_LIST))
 				{
 					return RedirectToAction("Index");
 				}
@@ -1270,10 +1299,37 @@ namespace prjDB_GamingForm_Show.Controllers
 				{
 					return RedirectToAction("Index");
 				}
+				////
+				///檢測重複購買商品
+				List<int> OrdersList = _db.OrderProducts.Select(x => x.ProductId).ToList();
+                List<int> product = car.Select(x=>x.ProductID).ToList();
+                int memberID = 0;
+                if ((HttpContext.Session.GetInt32(CDictionary.SK_UserID) != null))
+                {
+                    memberID = (int)HttpContext.Session.GetInt32(CDictionary.SK_UserID);
+                }
+                if (memberID != 0)
+                {
+					bool HaveProduct = OrdersList.Any(x => product.Contains(x));//檢查你的車子裡面有沒有歷史購買紀錄
+					if (!HaveProduct) 
+					{ 
+						return View(car);
+					}
+					else
+					{
+                        List<CShoppingCarViewModel> uniqueProducts = car.Except(car.Where(x => OrdersList.Contains(x.ProductID))).ToList();
+						car = uniqueProducts;
+						string jsoncar= JsonSerializer.Serialize(car);
+                        HttpContext.Session.SetString(CDictionary.SK_PURCHASED_PRODUCES_LIST, jsoncar);
+                        TempData["SuccessMessage"] = "這是重複商品！"; //即使返回，要用特殊資料做出判斷差異
+						return View(car);
+                    }           
+               
+				}
 
-				ViewBag.Car = car.Count();
-				return View(car);
-			}
+                return View(car);
+
+            }
 
 			public IActionResult DeleteFromCar(int id)////應該能正常移除購物車了/////
 			{

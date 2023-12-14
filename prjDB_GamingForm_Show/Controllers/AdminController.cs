@@ -6,6 +6,7 @@ using prjDB_GamingForm_Show.Models;
 using prjDB_GamingForm_Show.Models.Admin;
 using prjDB_GamingForm_Show.Models.Entities;
 using prjDB_GamingForm_Show.ViewModels;
+using System.Drawing;
 using System.Runtime.Intrinsics.X86;
 using System.Security.Cryptography;
 
@@ -1056,7 +1057,69 @@ namespace prjDB_GamingForm_Show.Controllers
 
 
 
+        public IActionResult BlogArticleComplainFail(int? APId)
+        {
+            var q = from n in _db.ArticleComplains
+                    where n.Id == APId
+                    select n;
+            var q1=_db.ArticleComplains.First(a => a.Id == APId);
 
+            _db.ArticleComplains.Remove(q1);
+            _db.SaveChanges();
+
+            return Content("此篇檢舉非屬實，已移除此篇檢舉");
+        }
+
+        public IActionResult BlogArticleComplainSusscess(int? APId , int? AFId)
+        {
+            var q = from n in _db.ArticleComplains
+                    where n.Id == APId
+                    select n;
+            var q1 = _db.ArticleComplains.First(a => a.Id == APId);
+
+            _db.ArticleComplains.Remove(q1);
+            _db.SaveChanges();
+
+            //-----------
+
+
+            Article art = _db.Articles.FirstOrDefault(a => a.ArticleId == AFId);
+
+            if (art != null)
+            {
+                // 修改 Article 的 SubBlogID
+                art.SubBlogId = 191;  // 新的 SubBlogID
+                _db.SaveChanges();
+            }
+
+
+            return Content("此篇檢舉屬實，已刪除文章，並已移除此篇檢舉");
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        public IActionResult a1()
+        {
+
+            return View();
+        }
 
         //public IActionResult BlogArticleComplainCheck(int? ACId,int? AFId)
         //{

@@ -93,8 +93,8 @@
                 // 檢查後端響應
                 if (data.success) {
                     Swal.fire('商品已成功添加到購物車！', '', 'success');      
-                } else {              
-                    Swal.fire('購物車已有此商品','', 'error');
+                } else {
+                    Swal.fire('已有此商品', data.message, 'error');
                 }
             });
         });
