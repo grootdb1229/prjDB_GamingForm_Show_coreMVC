@@ -1301,15 +1301,15 @@ namespace prjDB_GamingForm_Show.Controllers
 				}
 				////
 				///檢測重複購買商品
-				List<int> OrdersList = _db.OrderProducts.Select(x => x.ProductId).ToList();
-                List<int> product = car.Select(x=>x.ProductID).ToList();
+			
                 int memberID = 0;
                 if ((HttpContext.Session.GetInt32(CDictionary.SK_UserID) != null))
                 {
                     memberID = (int)HttpContext.Session.GetInt32(CDictionary.SK_UserID);
                 }
                 if (memberID != 0)
-                {
+                {	List<int> OrdersList = _db.OrderProducts.Where(x=>x.Order.MemberId== memberID).Select(x => x.ProductId).ToList();
+					List<int> product = car.Select(x=>x.ProductID).ToList();
 					bool HaveProduct = OrdersList.Any(x => product.Contains(x));//檢查你的車子裡面有沒有歷史購買紀錄
 					if (!HaveProduct) 
 					{ 
