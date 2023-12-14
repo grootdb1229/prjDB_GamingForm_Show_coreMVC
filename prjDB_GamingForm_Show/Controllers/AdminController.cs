@@ -423,15 +423,25 @@ namespace prjDB_GamingForm_Show.Controllers
 
         public IActionResult CouponCreat()
         {
-            Coupon coupon = new Coupon();
-            return View(coupon);
+            return View();
         }
         [HttpPost]
-        public IActionResult CouponCreat(Coupon coupon)
+        public IActionResult CouponCreat(CAdminCouponViewModel vm)
         {
+            Coupon coupon = new Coupon()
+            {
+                Title = vm.Title,
+                CouponContent = vm.Content,
+                Discount = vm.Discount,
+                Reduce = vm.Reduce,
+                StartDate = vm.StartDate,
+                EndDate = vm.EndDate,
+                StatusId = 24
+            };
+
             _db.Coupons.Add(coupon);
             _db.SaveChanges();
-            return RedirectToAction("");
+            return RedirectToAction("CouponList");
         }
         public string MessageTime(string time)
         {
