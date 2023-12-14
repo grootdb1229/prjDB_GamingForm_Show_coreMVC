@@ -1116,7 +1116,8 @@ namespace prjDB_GamingForm_Show.Controllers
                 x.Status = item.Status.Name;
                 list.Add(x);
             }
-            
+            //
+
             return View(list);
         }
         public IActionResult ACDeputeEdit(CAdminDepute vm)
