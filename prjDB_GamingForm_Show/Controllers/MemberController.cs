@@ -13,6 +13,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using MailKit.Search;
 using prjDB_GamingForm_Show.Models.Shop;
+using Microsoft.AspNetCore.Components.Web;
+using System.Net.Mail;
+using SmtpClient = MailKit.Net.Smtp.SmtpClient;
 
 namespace prjDB_GamingForm_Show.Controllers
 {
@@ -30,23 +33,23 @@ namespace prjDB_GamingForm_Show.Controllers
             return View();
         }
         #region MemberCreate&MemberPage 
-        public IActionResult MemberPageTest()
+        public IActionResult MemberPageTest(int? id)
         {
-            int id = (int)HttpContext.Session.GetInt32(CDictionary.SK_UserID);
+            int MemberID=0;
             if (id == null)
-            {
-                return RedirectToAction("Login", "Home");
-            }
+                MemberID = (int)HttpContext.Session.GetInt32(CDictionary.SK_UserID);
+            else
+                MemberID = (int)id;
             _db.Members.Load();
             IEnumerable<Member> datas = null;
             var data = from m in _db.Members
-                       where m.MemberId == id
+                       where m.MemberId == MemberID
                        select m;
             return View(data);
         }
         public IActionResult Create()
         {
-           
+
             return View();
         }
         [HttpPost]
@@ -59,9 +62,9 @@ namespace prjDB_GamingForm_Show.Controllers
                 member.FImagePath = photoName;
                 memberWrap.photo.CopyTo(new FileStream(_host.WebRootPath + "/MemberPhoto/" + photoName, FileMode.Create));
             }
-            else 
-            { 
-                 member.FImagePath ="MemberDefault.jpg";
+            else
+            {
+                member.FImagePath = "MemberDefault.jpg";
             }
             member.Name = memberWrap.Name;
             member.Phone = memberWrap.Phone;
@@ -69,7 +72,7 @@ namespace prjDB_GamingForm_Show.Controllers
             member.Email = memberWrap.Email;
             member.Password = memberWrap.Password;
             member.Mycomment = memberWrap.MyComment;
-            member.Gender =memberWrap.Gender;
+            member.Gender = memberWrap.Gender;
             _db.Members.Add(member);
             _db.SaveChanges();
             ViewBag.ID = member.MemberId;
@@ -107,7 +110,87 @@ namespace prjDB_GamingForm_Show.Controllers
             return RedirectToAction("MemberPageTest", "Member");
         }
         #endregion
-        #region SendEmails
+
+        //public string ReadHtmlTemplate(string HtmlTemplatePath) 
+        //{
+        //    string result = "";
+        //    StreamReader reader = new StreamReader(HtmlTemplatePath);
+        //    result = reader.ReadToEnd();
+        //    reader.Close();
+        //    return result;
+        //}
+        public IActionResult SendAdvertisments(CEmail email)
+        {
+            List<string> EmailData = (from E in _db.Members
+                                      where E.Email.Contains("alan")
+                                      select E.Email).ToList();
+            List<string> Emails = EmailData;
+            Emails.Add("alan90306@gmail.com");
+            Emails.Add("alan90306@gmail.com");
+            email.Emails = Emails;
+            foreach (string Address in email.Emails)
+            {
+                var message = new MimeMessage();
+                message.From.Add(new MailboxAddress("grootdb1229", "grootdb1229@gmail.com"));
+                message.To.Add(new MailboxAddress("alan90306", Address));
+                message.Subject = email.EmailSubject;
+                message.Body = new TextPart("html")
+                {
+                    Text = email.EmailBody
+                };
+
+                using (var client = new SmtpClient())
+                {
+                    client.Connect("smtp.gmail.com", 587, false);
+                    client.Authenticate("grootdb1229@gmail.com", "fmgx uucs lgkv vqxm");
+                    client.Send(message);
+                    client.Disconnect(true);
+                }
+            }
+            return RedirectToAction("Home", "HomePage");
+        }
+
+        
+        
+        #region SendEmailByModel
+        public IActionResult SendEmailByModel()
+        {
+            return View();
+        }
+        [HttpPost]
+        public IActionResult SendEmailByModel(CEmail email) 
+        {
+            List<string>  EmailData = (from E in _db.Members
+                             where E.Email.Contains("alan")
+                             select E.Email).ToList();
+            List<string> Emails = EmailData;
+            Emails.Add("alan90306@gmail.com");
+            Emails.Add("alan90306@gmail.com");
+            email.Emails = Emails;
+            foreach ( string Address in email.Emails)
+            {
+                var message = new MimeMessage();
+                message.From.Add(new MailboxAddress("grootdb1229", "grootdb1229@gmail.com"));
+                message.To.Add(new MailboxAddress("alan90306", Address));
+                message.Subject = email.EmailSubject;
+                message.Body = new TextPart("html")
+                {
+                    Text = email.EmailBody
+                };
+
+                using (var client = new SmtpClient())
+                {
+                    client.Connect("smtp.gmail.com", 587, false);
+                    client.Authenticate("grootdb1229@gmail.com", "fmgx uucs lgkv vqxm");
+                    client.Send(message);
+                    client.Disconnect(true);
+                }
+            }
+            return RedirectToAction("HomePage", "Home");
+        }
+        #endregion
+        #region SendEmail V1
+        //Send ValidationEmail
         public IActionResult SendEmail()
         {
 
@@ -122,8 +205,8 @@ namespace prjDB_GamingForm_Show.Controllers
                 Text = "<!DOCTYPE html>" +
                         "<html>" +
                         "<h2> 您的驗證碼 及 會員編號 </h3>" +
-                        "<p> 您的會員編號為:" + HttpContext.Session.GetInt32(CDictionary.SK_Confirmed_MemberID)+ "</p>" +
-                        "<p> 您的驗證碼為:"   + HttpContext.Session.GetString(CDictionary.SK_Validation_Guid) + "</p>" +
+                        "<p> 您的會員編號為:" + HttpContext.Session.GetInt32(CDictionary.SK_Confirmed_MemberID) + "</p>" +
+                        "<p> 您的驗證碼為:" + HttpContext.Session.GetString(CDictionary.SK_Validation_Guid) + "</p>" +
                         "</html>"
             };
 
@@ -197,13 +280,13 @@ namespace prjDB_GamingForm_Show.Controllers
         public IActionResult ValidationPage(CValidationViewModel CV)
         {
             Member dbMember = (from m in _db.Members
-                             where m.MemberId == HttpContext.Session.GetInt32(CDictionary.SK_Confirmed_MemberID)
-                             select m).FirstOrDefault();
-            if (dbMember == null) 
+                               where m.MemberId == HttpContext.Session.GetInt32(CDictionary.SK_Confirmed_MemberID)
+                               select m).FirstOrDefault();
+            if (dbMember == null)
             {
-                return RedirectToAction("ForgetPassword" , "Member");
+                return RedirectToAction("ForgetPassword", "Member");
             }
-            if (dbMember != null) 
+            if (dbMember != null)
             {
                 dbMember.Password = CV.txtVal_Password;
                 _db.SaveChanges();
@@ -213,34 +296,40 @@ namespace prjDB_GamingForm_Show.Controllers
         }
         #endregion
         #region MemberDetails
-        public IActionResult MyOrders() 
+        public IActionResult MyOrders()
         {
             var data = _db.Orders.Include(O => O.OrderProducts).ThenInclude(P => P.Product)
                       .Where(O => O.MemberId == HttpContext.Session.GetInt32(CDictionary.SK_UserID))
                       .Select(O => O);
             return Json(data);
         }
-
-        public IActionResult MyInfo() 
+        public IActionResult MyInfo(int? id)
         {
             var data = from m in _db.Members
-                       where m.MemberId == HttpContext.Session.GetInt32(CDictionary.SK_UserID)
-                       select new { m.Mycomment, m.Name, m.Phone, m.Gender, m.Birth.Year , m.FImagePath , m.Email};
+                       where m.MemberId == id
+                       select new { m.Mycomment, m.Name, m.Phone, m.Gender, m.Birth.Year, m.FImagePath, m.Email };
             return Json(data);
         }
-        public IActionResult MyCollection() 
+        public IActionResult MyCollectionList(int? id) 
         {
             var data = from c in _db.MemberCollections
-                       where c.MemberId == HttpContext.Session.GetInt32(CDictionary.SK_UserID)
-                       select new { c.Title, c.ModifiedDate, c.FImagePath, c.Intro };
-            return Json(data);
+                       where c.MemberId == id
+                       select c;
+            return View(data);
         }
-        public IActionResult CreateCollection() 
+        public IActionResult MyCollection(int? id)
+        {
+            var data = from c in _db.MemberCollections
+                       where c.Id == id
+                       select new { c.Title, c.ModifiedDate, c.FImagePath, c.Intro , c.MyCollection};
+            return View(data);
+        }
+        public IActionResult CreateCollection()
         {
             return View();
         }
         [HttpPost]
-        public IActionResult CreateCollection(CMemberCollectionWrap CW) 
+        public IActionResult CreateCollection(CMemberCollectionWrap CW)
         {
             Member dbMember = (from m in _db.Members
                                where m.MemberId == HttpContext.Session.GetInt32(CDictionary.SK_UserID)
@@ -249,7 +338,7 @@ namespace prjDB_GamingForm_Show.Controllers
             {
                 return RedirectToAction("Login", "Home");
             }
-            else 
+            else
             {
                 string photoName = Guid.NewGuid().ToString() + ".jpg";
                 MemberCollection MC = new MemberCollection();
@@ -265,62 +354,55 @@ namespace prjDB_GamingForm_Show.Controllers
                 return RedirectToAction("MyCollections", "Member");
             }
         }
-        public IActionResult EditCollection() 
-        { 
-           return View();
-        }
+        //public IActionResult EditCollection(int? id)
+        //{
+        //    var data = from C in _db.MemberCollections 
+        //               where C.Id == id
+
+        //}
         [HttpPost]
-        public IActionResult EditCollection(MemberCollection memberCollection) 
+        public IActionResult EditCollection(CMemberCollectionWrap memberCollection)
         {
-             MemberCollection dbCollection = _db.MemberCollections.FirstOrDefault
-                             (mc => mc.MemberId == HttpContext.Session.GetInt32(CDictionary.SK_UserID));
+            MemberCollection dbCollection = _db.MemberCollections.FirstOrDefault
+                            (mc => mc.Id == memberCollection.ID);
             if (memberCollection == null)
             {
-                return RedirectToAction("CreateCollection" , "Member");
+                return RedirectToAction("CreateCollection", "Member");
             }
             if (memberCollection != null)
             {
-                dbCollection.Title =  memberCollection.Title;
-                dbCollection.Intro =  memberCollection.Intro;
+                dbCollection.Title = memberCollection.Title;
+                dbCollection.Intro = memberCollection.Intro;
                 dbCollection.MyCollection = memberCollection.MyCollection;
                 dbCollection.ModifiedDate = (DateTime.Now).ToString();
                 _db.SaveChanges();
             }
             return RedirectToAction("MyCollections", "Member");
         }
-        public IActionResult MyWorks() 
+        public IActionResult MyWorks()
         {
             return View();
         }
 
-        public IActionResult MyBlog() 
+        public IActionResult MyBlog()
         {
             return View();
         }
 
-        public IActionResult MyArticles() 
+        public IActionResult MyArticles(int? id)
         {
             var data = _db.Articles.Include(a => a.SubBlog).ThenInclude(s => s.Blog)
-                .Where(a => a.MemberId == HttpContext.Session.GetInt32(CDictionary.SK_UserID))
+                .Where(a => a.MemberId == (int)id )
                 .Select(a => a);
             var datas = from A in _db.Articles
                         where A.MemberId == HttpContext.Session.GetInt32(CDictionary.SK_UserID)
                         select A;
             return Json(data);
         }
-        public IActionResult MyWishList() 
+        public IActionResult MyWishList()
         {
             return View();
         }
-        //public IActionResult MakeAWish() 
-        //{
-        //    return View();
-        //}
-        //[HttpPost]
-        //public IActionResult MakeAWish() 
-        //{
-        //    return RedirectToAction("MyWishList", "Member");
-        //}
         #endregion
         #region Tests
         //public IActionResult Test(int? id)

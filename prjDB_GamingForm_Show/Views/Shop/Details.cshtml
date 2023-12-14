@@ -18,9 +18,9 @@
                             foreach (var item in mulpics)
                             {if (!string.IsNullOrEmpty(item))
                                 {
-                                    <div class="carousel-item">
-                                        <img src="~/images/shop/@item" class="d-block w-100" alt="..." style="max-width: 600px; max-height: 340px">
-                                    </div>
+                                            <div class="carousel-item">
+                                                <img src="~/images/shop/@item" class="d-block w-100" alt="..." style="max-width: 600px; max-height: 340px">
+                                            </div>
                                     loopCount++;
                                 }
                             }
@@ -29,14 +29,14 @@
                     @{
                         if (loopCount != 0)
                         {
-                            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
-                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                <span class="visually-hidden">Previous</span>
-                            </button>
-                            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
-                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                        <span class="visually-hidden">Next</span>
-                    </button>}
+                                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+                                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                        <span class="visually-hidden">Previous</span>
+                                    </button>
+                                    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+                                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Next</span>
+                            </button>}
                     }
                 </div>
                 </div>
@@ -48,7 +48,7 @@
                         string[] tags = Model.SubTagName.Split('/');
                         foreach (var t in tags)
                         {
-                            <span class="badge text-bg-light">@t</span>
+                                    <span class="badge text-bg-light">@t</span>
                         }
                     }
                 </div>
@@ -121,13 +121,15 @@
           
                     @*------Line按鈕------*@
                 <p class="lead">@Html.DisplayFor(model => model.ProductContent)</p>
-                @using (Html.BeginForm("AddToCar", "Shop", FormMethod.Post))
+
+
+                @using (Html.BeginForm("AddToCar", "Shop", FormMethod.Post, new { id = "addToCartForm" }))
                 {
                     <input type="hidden" name="ProductID" value="@Model.ProductId" />
                     <div class="d-flex">
                         @Html.TextBox("txtCount", "1", new { @class = "form-control text-center me-3", @style = "max-width: 3rem" })
                         <i class="bi-cart-fill me-1"></i>
-                        <input type="submit" value="加入購物車" class="btn btn-outline-dark mt-auto" />
+                        <input type="submit" value="加入購物車" class="btn btn-outline-dark mt-auto" id="addToCartButton" />
                     </div>
                 }
             </div>
@@ -135,9 +137,42 @@
     </div>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.8/clipboard.min.js"></script>
         <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+          <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </section>
 @section Scripts {
     <script>
+        //
+        document.getElementById('addToCartForm').addEventListener('submit', async function (event) {
+            event.preventDefault(); 
+
+            const response = await fetch('/Shop/AddToCar', {
+                method: 'POST',
+                body: new FormData(event.target),
+            });
+            const result = await response.json();  
+            if (result.success) {
+                Swal.fire({
+                    title: '商品已成功添加到購物車！',
+                    icon: 'success',
+                    showCancelButton: true,
+                    confirmButtonText: '去購物車看看',
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonText: '留在本頁',
+                    cancelButtonColor: '#d33'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // 使用者按下確認按鈕後的處理邏輯
+                        window.location.href = '/Shop/CarView';
+                    }
+                });
+            
+            } else {
+                // 如果失敗，顯示後端返回的錯誤提示
+                Swal.fire('已有此商品', result.message, 'error');
+            }
+        });
+
+        //複製現在的網址
         document.addEventListener('DOMContentLoaded', function () {
             // 獲取當前網址
             var currentUrl = window.location.href;
@@ -160,8 +195,8 @@
             });
         });
 
-
-
+            
+        //有沒有收藏按鈕
         if (document.getElementById('btnLike') !== null) {
             const btnlike = document.getElementById('btnLike');
             if (!btnlike.hasAttribute('data-bs-toggle')) {

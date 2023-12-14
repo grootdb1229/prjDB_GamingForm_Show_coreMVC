@@ -385,6 +385,9 @@ public partial class DbGamingFormTestContext : DbContext
             entity.Property(e => e.DeputeId).HasColumnName("DeputeID");
             entity.Property(e => e.MemberId).HasColumnName("MemberID");
             entity.Property(e => e.ReportDate).HasColumnType("datetime");
+            entity.Property(e => e.StatusId)
+                .HasDefaultValueSql("((28))")
+                .HasColumnName("StatusID");
             entity.Property(e => e.SubTagId).HasColumnName("SubTagID");
 
             entity.HasOne(d => d.Depute).WithMany(p => p.DeputeComplains)
@@ -396,6 +399,11 @@ public partial class DbGamingFormTestContext : DbContext
                 .HasForeignKey(d => d.MemberId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_DeputeComplain_Member");
+
+            entity.HasOne(d => d.Status).WithMany(p => p.DeputeComplains)
+                .HasForeignKey(d => d.StatusId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_DeputeComplain_Status");
 
             entity.HasOne(d => d.SubTag).WithMany(p => p.DeputeComplains)
                 .HasForeignKey(d => d.SubTagId)

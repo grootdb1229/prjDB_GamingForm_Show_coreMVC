@@ -1,0 +1,159 @@
+﻿@model IEnumerable<prjDB_GamingForm_Show.Models.Entities.MemberCollection>
+
+@{
+    ViewData["Title"] = "MyCollectionList";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    a{color:black}
+</style>
+<div style="display:flex;justify-content:center">
+<h2 style="margin:20px 0px">作品集</h2>
+</div>
+<div class="card-group">
+    <div class="row">
+@{
+    
+    foreach (var item in Model)
+    {
+                <div class="col-md-4" style="padding:5px">
+                    <div class="card" style="border-radius:20px;">
+                        <img class="card-img-top" style="border-radius:20px" src="/images/MemberCollectionPreView/@Html.DisplayFor(modelItem => item.FImagePath)" alt="Card image cap">
+                        <div class="card-body">
+                            <a href=@Url.Action("MyCollection","Member",new{id =1})><h5 class="card-title">@Html.DisplayFor(modelItem => item.Title)</h5></a>
+                            <p class="card-text">@Html.DisplayFor(modelItem => item.Intro)</p>
+                        </div>
+                        <div class="card-footer">
+                            <small class="text-muted">@Html.DisplayFor(modelItem => item.ModifiedDate)</small>
+                            <button class="btn-bd-primary">修改作品</button>
+                            <button class="btn-bd-primary">刪除作品</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4" style="padding:5px">
+                    <div class="card" style="border-radius:20px;">
+                        <img class="card-img-top" style="border-radius:20px" src="/images/MemberCollectionPreView/@Html.DisplayFor(modelItem => item.FImagePath)" alt="Card image cap">
+                        <div class="card-body">
+                            <a href=@Url.Action("MyCollection","Member",new{id =1})><h5 class="card-title">@Html.DisplayFor(modelItem => item.Title)</h5></a>
+                            <p class="card-text">@Html.DisplayFor(modelItem => item.Intro)</p>
+                        </div>
+                        <div class="card-footer">
+                            <small class="text-muted">@Html.DisplayFor(modelItem => item.ModifiedDate)</small>
+                            <button class="btn-bd-primary">修改作品</button>
+                            <button class="btn-bd-primary">刪除作品</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4" style="padding:5px">
+                    <div class="card" style="border-radius:20px;">
+                        <img class="card-img-top" style="border-radius:20px" src="/images/MemberCollectionPreView/@Html.DisplayFor(modelItem => item.FImagePath)" alt="Card image cap">
+                        <div class="card-body">
+                            <a href=@Url.Action("MyCollection","Member",new{id =1})><h5 class="card-title">@Html.DisplayFor(modelItem => item.Title)</h5></a>
+                            <p class="card-text">@Html.DisplayFor(modelItem => item.Intro)</p>
+                        </div>
+                        <div class="card-footer">
+                            <small class="text-muted">@Html.DisplayFor(modelItem => item.ModifiedDate)</small>
+                            <button class="btn-bd-primary">修改作品</button>
+                            <button class="btn-bd-primary">刪除作品</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4" style="padding:5px">
+                    <div class="card" style="border-radius:20px;">
+                        <img class="card-img-top" style="border-radius:20px" src="/images/MemberCollectionPreView/@Html.DisplayFor(modelItem => item.FImagePath)" alt="Card image cap">
+                        <div class="card-body">
+                            <a href=@Url.Action("MyCollection","Member",new{id =1})><h5 class="card-title">@Html.DisplayFor(modelItem => item.Title)</h5></a>
+                            <p class="card-text">@Html.DisplayFor(modelItem => item.Intro)</p>
+                        </div>
+                        <div class="card-footer">
+                            <small class="text-muted">@Html.DisplayFor(modelItem => item.ModifiedDate)</small>
+                            <button class="btn-bd-primary">修改作品</button>
+                            <button class="btn-bd-primary">刪除作品</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4" style="padding:5px">
+                    <div class="card" style="border-radius:20px;">
+                        <img class="card-img-top" style="border-radius:20px" src="/images/MemberCollectionPreView/@Html.DisplayFor(modelItem => item.FImagePath)" alt="Card image cap">
+                        <div class="card-body">
+                            <a href=@Url.Action("MyCollection","Member",new{id =1})><h5 class="card-title">@Html.DisplayFor(modelItem => item.Title)</h5></a>
+                            <p class="card-text">@Html.DisplayFor(modelItem => item.Intro)</p>
+                        </div>
+                        <div class="card-footer">
+                            <small class="text-muted">@Html.DisplayFor(modelItem => item.ModifiedDate)</small>
+                            <button class="btn-bd-primary">修改作品</button>
+                            <button class="btn-bd-primary">刪除作品</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4" style="padding:5px">
+                    <div class="card" style="border-radius:20px;">
+                        <img class="card-img-top" style="border-radius:20px" src="/images/MemberCollectionPreView/@Html.DisplayFor(modelItem => item.FImagePath)" alt="Card image cap">
+                        <div class="card-body">
+                            <a href=@Url.Action("MyCollection","Member",new{id =1})><h5 class="card-title">@Html.DisplayFor(modelItem => item.Title)</h5></a>
+                            <p class="card-text">@Html.DisplayFor(modelItem => item.Intro)</p>
+                        </div>
+                        <div class="card-footer">
+                            <small class="text-muted">@Html.DisplayFor(modelItem => item.ModifiedDate)</small>
+                            <button class="btn-bd-primary">修改作品</button>
+                            <button class="btn-bd-primary">刪除作品</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4" style="padding:5px">
+                    <div class="card" style="border-radius:20px;">
+                        <img class="card-img-top" style="border-radius:20px" src="/images/MemberCollectionPreView/@Html.DisplayFor(modelItem => item.FImagePath)" alt="Card image cap">
+                        <div class="card-body">
+                            <a href=@Url.Action("MyCollection","Member",new{id =1})><h5 class="card-title">@Html.DisplayFor(modelItem => item.Title)</h5></a>
+                            <p class="card-text">@Html.DisplayFor(modelItem => item.Intro)</p>
+                        </div>
+                        <div class="card-footer">
+                            <small class="text-muted">@Html.DisplayFor(modelItem => item.ModifiedDate)</small>
+                            <button class="btn-bd-primary">修改作品</button>
+                            <button class="btn-bd-primary">刪除作品</button>
+                        </div>
+                    </div>
+                </div>
+    } 
+}
+    </div>
+</div>
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+@* @foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MemberId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CollectionId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Title)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Intro)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FImagePath)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MyCollection)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ModifiedDate)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+ *@

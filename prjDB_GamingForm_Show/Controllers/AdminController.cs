@@ -356,6 +356,7 @@ namespace prjDB_GamingForm_Show.Controllers
             {
                 c = new CAdminCouponViewModel()
                 {
+                    CouponId = m.CouponId,
                     Title = m.Title,
                     Content = m.CouponContent,
                     Discount = m.Discount,
@@ -368,6 +369,29 @@ namespace prjDB_GamingForm_Show.Controllers
             }
             return View(viewModel);
         }
+        [HttpPost]
+        public IActionResult CouponTypeEdit(int id)
+        {
+            Coupon coupon = _db.Coupons.FirstOrDefault(c => c.CouponId == id);
+            if (coupon == null)
+            {
+                return RedirectToAction("CouponList");
+            }
+            else
+            {
+                if (coupon.StatusId == 23)
+                {
+                    coupon.StatusId = 24;
+                }
+                else if (coupon.StatusId == 24)
+                {
+                    coupon.StatusId = 23;
+                }
+                _db.SaveChanges();
+            }
+            return RedirectToAction("CouponList");
+        }
+
         public IActionResult CouponCreat()
         {
             Coupon coupon = new Coupon();
@@ -1074,6 +1098,8 @@ namespace prjDB_GamingForm_Show.Controllers
         {
             _db.Members.Load();
             _db.SubTags.Load();
+            _db.Statuses.Load();
+            _db.Deputes.Load();
             List<CDeputeComplainsWrap> list = new List<CDeputeComplainsWrap>();
             CDeputeComplainsWrap x = null;
             var datas = _db.DeputeComplains.OrderBy(n => n.Id);
@@ -1082,14 +1108,31 @@ namespace prjDB_GamingForm_Show.Controllers
                 x = new CDeputeComplainsWrap();
                 x.Id = item.Id;
                 x.DeputeId = item.DeputeId;
+                x.ProviderId = item.Depute.ProviderId;
                 x.MemberId = item.MemberId;
+                x.SubTagId = item.SubTag.Name;
                 x.ReportContent = item.ReportContent;
                 x.ReportDate = item.ReportDate;
+                x.Status = item.Status.Name;
                 list.Add(x);
             }
             
             return View(list);
         }
+        public IActionResult ACDeputeEdit(CAdminDepute vm)
+        {
+            var data = _db.DeputeComplains.Where(n => n.Id == vm.txtID);
+
+            foreach (var item in data)
+            {
+                item.StatusId = vm.txtStatusID;
+            }
+            _db.SaveChanges();
+            return RedirectToAction("ACDeputeList");
+        }
+
+
+       
         #endregion
     }
 }

@@ -680,20 +680,20 @@ namespace prjDB_GamingForm_Show.Controllers
 				return Json(SelSub);
 			}
 
-            public IActionResult Coupon()
-            {
-                var Coupon = _db.Coupons
-                    .Where(p => p.StatusId == 23)
-                    .Select(s => new
-                    {
+			public IActionResult Coupon()
+			{
+				var Coupon = _db.Coupons
+					.Where(p => p.StatusId == 23)
+					.Select(s => new
+					{
 						s.CouponId,
-                        s.Title,
-                        s.Discount,
+						s.Title,
+						s.Discount,
 						s.Reduce
-                    }).ToList();
-                return Json(Coupon);
-            }
-			
+					}).ToList();
+				return Json(Coupon);
+			}
+
 			public IActionResult Couponselect(int id)
 			{
 				var Coupon = _db.Coupons
@@ -1165,15 +1165,15 @@ namespace prjDB_GamingForm_Show.Controllers
 		
 
 
-            public IActionResult AddToCar(int? id)
-			{
-				if (id == null)
-				{
-					return RedirectToAction("Index");
-				}
-				ViewBag.FID = id;
-				return View();
-			}
+   //         public IActionResult AddToCar(int? id)  不知道是不是炸彈
+			//{
+			//	if (id == null)
+			//	{
+			//		return RedirectToAction("Index");
+			//	}
+			//	ViewBag.FID = id;
+			//	return View();
+			//}
 
 			public IActionResult payment()
 			{
@@ -1189,6 +1189,7 @@ namespace prjDB_GamingForm_Show.Controllers
 				if (product != null)
 				{
 					string json = "";
+
 					List<CShoppingCarViewModel> car = null;
 					if (HttpContext.Session.Keys.Contains(CDictionary.SK_PURCHASED_PRODUCES_LIST))
 					{
@@ -1199,22 +1200,26 @@ namespace prjDB_GamingForm_Show.Controllers
 					{
 						car = new List<CShoppingCarViewModel>();
 					}
-					CShoppingCarViewModel x = new CShoppingCarViewModel();
-					x.Price = (decimal)product.Price;
-					x.ProductName = product.ProductName;
-					x.FImagePath = product.FImagePath;
-					x.Count = vm.txtCount;
-					x.ProductID = product.ProductId;
-
-
-					car.Add(x);
+					var listCheck = car.Any(a => a.ProductName == product.ProductName);
+					if (!listCheck)
+					{
+						CShoppingCarViewModel x = new CShoppingCarViewModel();
+						x.Price = (decimal)product.Price;
+						x.ProductName = product.ProductName;
+						x.FImagePath = product.FImagePath;
+						x.Count = vm.txtCount;
+						x.ProductID = product.ProductId;
+						car.Add(x);
+					}
+					else { return Json(new { success = false }); } 
 					json = JsonSerializer.Serialize(car);
 					HttpContext.Session.SetString(CDictionary.SK_PURCHASED_PRODUCES_LIST, json);
 					ViewBag.Car = car.Count();
 				}
+                return Json(new { success = true});
+                //return RedirectToAction("Index");
+            }
 
-				return RedirectToAction("Index");
-			}
 
             public IActionResult AddToCar2(int? id)
             {
@@ -1233,21 +1238,24 @@ namespace prjDB_GamingForm_Show.Controllers
                     {
                         car = new List<CShoppingCarViewModel>();
                     }
-                    CShoppingCarViewModel x = new CShoppingCarViewModel();
-                    x.Price = (decimal)product.Price;
-                    x.ProductName = product.ProductName;
-                    x.FImagePath = product.FImagePath;
-                    x.Count = 1;
-                    x.ProductID = product.ProductId;
-
-
-                    car.Add(x);
+                    var listCheck = car.Any(a => a.ProductName == product.ProductName);
+					if (!listCheck)
+					{
+						CShoppingCarViewModel x = new CShoppingCarViewModel();
+						x.Price = (decimal)product.Price;
+						x.ProductName = product.ProductName;
+						x.FImagePath = product.FImagePath;
+						x.Count = 1;
+						x.ProductID = product.ProductId;
+						car.Add(x);
+					}
+                    else { return Json(new { success = false }); }
                     json = JsonSerializer.Serialize(car);
                     HttpContext.Session.SetString(CDictionary.SK_PURCHASED_PRODUCES_LIST, json);
                     ViewBag.Car = car.Count();
                 }
-
-                return RedirectToAction("Index");
+                return Json(new { success = true });
+                //return RedirectToAction("CarView");
             }
 
             public IActionResult CarView()
