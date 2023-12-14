@@ -26,6 +26,9 @@
             <th>
                 申訴時間
             </th>
+            <th>
+                申訴狀態
+            </th>
             <th></th>
         </tr>
     </thead>
@@ -48,6 +51,9 @@
             <td>
                 @Html.DisplayFor(modelItem => item.ReportDate)
             </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Status)
+                </td>
             <td>
                     <button type="button" class="btn btn-dark status" onclick="MemberDetail(@Html.DisplayFor(modelItem => item.Member))">會員詳情</button>
                     @*<button type="button" class="btn btn-dark status" onclick="StatusEdit(@Html.DisplayFor(modelItem => item.Id))">修改狀態</button>*@
