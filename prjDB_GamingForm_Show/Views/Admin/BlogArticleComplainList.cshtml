@@ -102,6 +102,7 @@
                         var StName = Model.status.Where(a => a.StatusId == queryResult.StatusId).Select(a => new { a.Name }).FirstOrDefault();
 
                     }
+                    @queryResult?.StatusId
                     @StName?.Name
                 </td>
 
@@ -144,7 +145,7 @@
                     @{
                         foreach (var type in Model.status.Where(s => (s.StatusId >= 32 && s.StatusId <= 34) || s.StatusId == 26))
                         {
-                            <option value="@type.StatusId">@type.Name</option>
+                            <option value="@type.StatusId">@type.StatusId @type.Name</option>
                         }
                     }
                 </select>

@@ -1066,7 +1066,7 @@ namespace prjDB_GamingForm_Show.Controllers
             return Content("此篇檢舉非屬實，已移除此篇檢舉");
         }
 
-        public IActionResult BlogArticleComplainSusscess(int? APId , int? AFId)
+        public IActionResult BlogArticleComplainSusscess(int? APId , int? AFId )
         {
             var q = from n in _db.ArticleComplains
                     where n.Id == APId
@@ -1087,6 +1087,11 @@ namespace prjDB_GamingForm_Show.Controllers
                 art.SubBlogId = 191;  // 新的 SubBlogID
                 _db.SaveChanges();
             }
+            //-----------
+
+            
+
+
 
 
             return Content("此篇檢舉屬實，已刪除文章，並已移除此篇檢舉");
