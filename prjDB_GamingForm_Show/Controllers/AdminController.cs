@@ -221,6 +221,23 @@ namespace prjDB_GamingForm_Show.Controllers
             };
             return View(vm);
         }
+
+        public IActionResult ProductComplain()
+        { 
+            List<CProductComplainViewModel> ProductComplain = new List<CProductComplainViewModel>();
+            var datas = _db.ProductComplains.OrderBy(x=>x.Id).Select(x =>new {x.Id,x.ProductId,x.MemeberId,x.ReplyContent,x.ReportDate } );
+            CProductComplainViewModel pc = new CProductComplainViewModel();
+            foreach (var data in datas)
+            {
+               pc.Id = data.Id;
+               pc.ProductId= data.ProductId;
+               pc.MemeberId= data.MemeberId;
+               pc.ReplyContent= data.ReplyContent;
+               pc.ReportDate= data.ReportDate;
+               ProductComplain.Add(pc);
+            }
+            return View(ProductComplain);
+        }
         public IActionResult SignalRPV()
         {
             List<CSignalRUseAdminList> Admins = new List<CSignalRUseAdminList>();
