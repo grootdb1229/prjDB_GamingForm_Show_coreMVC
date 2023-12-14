@@ -9,7 +9,7 @@ public partial class ProductComplain
 
     public int ProductId { get; set; }
 
-    public int ReplyContent { get; set; }
+    public string ReplyContent { get; set; } = null!;
 
     public int MemeberId { get; set; }
 
