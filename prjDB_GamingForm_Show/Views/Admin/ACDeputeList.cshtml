@@ -65,6 +65,7 @@
                 <td>
                     <button type="button" class="btn btn-dark status" onclick="MemberDetail(@Html.DisplayFor(modelItem => item.ProviderId))">會員詳情</button>
                     <button type="button" class="btn btn-dark status" onclick="StatusEdit(@Html.DisplayFor(modelItem => item.Id))">修改狀態</button>
+                    <button type="button" class="btn btn-dark status" onclick="StatusEdit(@Html.DisplayFor(modelItem => item.Id))">懲處</button>
                 </td>
             </tr>
         }
@@ -116,7 +117,45 @@
 
         }
 
-        
+        async function penalties(value) {
+
+            const { value: status } = await Swal.fire({
+                title: "修改委託狀態",
+                input: "select",
+                inputOptions: {
+                    狀態: {
+                        32: "警告1次",
+                        33: "警告2次",
+                        34: "警告3次",
+                        26: "已封鎖",
+                    }
+                },
+                inputPlaceholder: "選擇懲處",
+                showCancelButton: true,
+                inputValidator: (value) => {
+                    return new Promise((resolve) => {
+                        if (value != "") {
+                            resolve();
+                        } else {
+                            resolve("請選擇一個選項");
+                        }
+                    });
+                }
+            });
+            if (status) {
+                // Swal.fire(`You selected: ${status}`);
+                $.ajax('@Url.Content("~/Admin/ACDeputeEdit")', {
+                    "type": 'post', //POST、PUT、DELETE//
+                    "data": {
+                        "txtID": value,
+                        "txtStatusID": status,
+                    },
+                })
+                    .done(() => { window.location.href = "/Admin/ACDeputeList" })
+            }
+
+
+        }
         async function MemberDetail(value) {
 
 
