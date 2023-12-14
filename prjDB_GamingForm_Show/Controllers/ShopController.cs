@@ -1183,7 +1183,21 @@ namespace prjDB_GamingForm_Show.Controllers
 				var payment = _db.Payments.Select(x => x);
 				return Json(payment);
 			}
-			[HttpPost]
+			public IActionResult getcarList() 
+			{
+				int count = 0;
+				int memberID = 0;
+				
+                if ((HttpContext.Session.GetInt32(CDictionary.SK_UserID) != null))
+                {
+                    memberID = (int)HttpContext.Session.GetInt32(CDictionary.SK_UserID);
+                    count=_db.WishLists.Where(x=>x.MemberId==memberID).Count();   
+                }
+				string countString = count.ToString();
+                return Content(countString);
+            }
+
+            [HttpPost]
 			public IActionResult AddToCar(CShoppingCarViewModel vm)
             {
 				int memberID = 0;
