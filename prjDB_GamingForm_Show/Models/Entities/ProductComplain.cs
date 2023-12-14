@@ -15,7 +15,11 @@ public partial class ProductComplain
 
     public string ReportDate { get; set; } = null!;
 
+    public int StatusId { get; set; }
+
     public virtual Member Memeber { get; set; } = null!;
 
     public virtual Product Product { get; set; } = null!;
+
+    public virtual Status Status { get; set; } = null!;
 }

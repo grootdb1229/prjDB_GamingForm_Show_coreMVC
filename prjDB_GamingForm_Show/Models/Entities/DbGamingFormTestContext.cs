@@ -540,6 +540,14 @@ public partial class DbGamingFormTestContext : DbContext
             entity.Property(e => e.Mycomment).HasColumnType("ntext");
             entity.Property(e => e.Name).HasMaxLength(50);
             entity.Property(e => e.Phone).HasMaxLength(24);
+            entity.Property(e => e.StatusId)
+                .HasDefaultValueSql("((28))")
+                .HasColumnName("StatusID");
+
+            entity.HasOne(d => d.Status).WithMany(p => p.Members)
+                .HasForeignKey(d => d.StatusId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Member_Status");
         });
 
         modelBuilder.Entity<MemberCollection>(entity =>
@@ -735,6 +743,8 @@ public partial class DbGamingFormTestContext : DbContext
         {
             entity.ToTable("ProductComplain");
 
+            entity.Property(e => e.StatusId).HasColumnName("StatusID");
+
             entity.HasOne(d => d.Memeber).WithMany(p => p.ProductComplains)
                 .HasForeignKey(d => d.MemeberId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
@@ -744,6 +754,11 @@ public partial class DbGamingFormTestContext : DbContext
                 .HasForeignKey(d => d.ProductId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_ProductComplain_Product");
+
+            entity.HasOne(d => d.Status).WithMany(p => p.ProductComplains)
+                .HasForeignKey(d => d.StatusId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_ProductComplain_Status");
         });
 
         modelBuilder.Entity<ProductEvaluate>(entity =>

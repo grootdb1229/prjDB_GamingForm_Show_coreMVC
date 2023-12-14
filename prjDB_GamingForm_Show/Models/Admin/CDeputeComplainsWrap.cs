@@ -13,6 +13,8 @@ namespace prjDB_GamingForm_Show.Models.Admin
         public int DeputeId { get; set; }
         [DisplayName("被申訴人ID")]
         public int ProviderId { get; set; }
+        [DisplayName("被申訴人帳號狀態")]
+        public string ProviderStatus { get; set; }
         [DisplayName("申訴人ID")]
         public int MemberId { get; set; }
         [DisplayName("申訴理由")]
