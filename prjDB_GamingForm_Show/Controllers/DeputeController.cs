@@ -635,6 +635,14 @@ namespace prjDB_GamingForm_Show.Controllers
         }
 
         #region API
+        public IActionResult myApplyContent(int id)
+        {
+            var o = _db.DeputeRecords.Where(_ => _.MemberId == HttpContext.Session.GetInt32(CDictionary.SK_UserID)).Select(_ => new
+            {
+                content=_.RecordContent
+            });
+            return Json(o);
+        }
         public IActionResult downloadFile(string fileName)
         {
             string fullFilePath= Path.Combine(_host.WebRootPath, "files\\depute", fileName);
