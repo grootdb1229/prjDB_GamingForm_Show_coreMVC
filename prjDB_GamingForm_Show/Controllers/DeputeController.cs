@@ -39,7 +39,7 @@ namespace prjDB_GamingForm_Show.Controllers
         }
         #region 老朱
 
-        //TODO #1 讀資料
+        //TODO #1 讀資料//
         public void ListLoad()
         {
             //te
@@ -295,7 +295,7 @@ namespace prjDB_GamingForm_Show.Controllers
 
 
         }
-        //檢舉//
+        //檢舉//////
         public IActionResult DeputeComplain(CAdminDepute vm)
         {
             if (HttpContext.Session.GetInt32(CDictionary.SK_UserID) != null)
@@ -404,9 +404,11 @@ namespace prjDB_GamingForm_Show.Controllers
         }
         public IActionResult Region()
         {
+            List<string> regions = new List<string>();
             var datas = from n in _db.Regions
-                        select n;
-            return Json(datas);
+                        select n.City;
+            regions = datas.ToList();
+            return Json(regions);
         }
         public IActionResult Status()
         {
@@ -635,6 +637,14 @@ namespace prjDB_GamingForm_Show.Controllers
         }
 
         #region API
+        public IActionResult myApplyContent(int id)
+        {
+            var o = _db.DeputeRecords.Where(_ => _.MemberId == HttpContext.Session.GetInt32(CDictionary.SK_UserID)).Select(_ => new
+            {
+                content=_.RecordContent
+            });
+            return Json(o);
+        }
         public IActionResult downloadFile(string fileName)
         {
             string fullFilePath= Path.Combine(_host.WebRootPath, "files\\depute", fileName);

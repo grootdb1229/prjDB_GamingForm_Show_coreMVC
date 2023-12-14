@@ -38,10 +38,10 @@
             </div>
             <div>
                 <label class="control-label">自我推薦(選填)：</label>
-                <button onclick="showPreContent()" class="btn btn-warning">使用歷史範本</button>
+                <button type="button" onclick="showPreContent()" class="btn btn-warning btn-sm">使用其他範本</button>
                 <br />
                 <label class="control-label">寫下工作相關經驗，個人特質或專長，提升錄取率吧</label>
-                <textarea class="form-control" name="RecordContent" rows="4" cols="50" placeholder="在這裡輸入您的應徵補充資訊..."></textarea>
+                <textarea class="form-control" name="RecordContent" rows="4" cols="50" placeholder="在這裡輸入您的應徵補充資訊..." id="RecordContent"></textarea>
             </div>
             <div class="form-group mt-3">
                 <a asp-action="DeputeMain" class="btn btn-secondary">返回</a>
@@ -56,6 +56,30 @@
     }
 
     <script>
+        async function showPreContent() {
+            const response = await fetch(`@Url.Content("~/depute/myApplyContent")`);
+            const datas = await response.json();
+            const content = datas.map(content => `<a class="list-group-item list-group-item-action text-start text-truncate" id="list-${content.content}-list" data-bs-toggle="list" href="#list-${content.content}" role="tab" aria-controls="list-${content.content}">${content.content}</a>`);
+            const { value: formValues } = await Swal.fire({
+                color: "#D0D0D0",
+                background: "#343a40",
+                scrollbarPadding: false,
+                title: "自我推薦範本",
+                html: `<div class="list-group" id="list-tab" role="tablist">${content.join("")}</div>`,
+                focusConfirm: false,
+                confirmButtonText:"確認",
+                preConfirm: () => {
+                    return [
+                        document.querySelector(".list-group-item.list-group-item-action.active")
+                    ];
+                }
+            });
+            if (formValues) {
+                console.log(formValues[0].textContent);
+                document.querySelector('#RecordContent').textContent = formValues[0].textContent;
+            }
+           
+        }
 
         async function prepareAndSubmit() {
             const formElement = document.querySelector('#formElement');

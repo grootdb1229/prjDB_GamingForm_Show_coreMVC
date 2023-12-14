@@ -24,7 +24,10 @@
 						<i class="fa-solid fa-file"></i>上傳圖片
 					</label>
 					<div id="imagePreviewContainer" style="width:100%">
+						<div style="display: inline-block; position: relative;">
 						<img id="imagePreview" style="max-width: 300px; max-height: 300px; margin-top: 10px;" src="~/images/shop/@Model.FImagePath" />
+							<span class="deleteButton" style="position: absolute; top: 0; right: 0; cursor: pointer;" onclick="deleteImage(this)">X</span>
+						</div>
 						@{
 							if (Model.MulPic != null)
 							{
@@ -33,7 +36,10 @@
 								{
 									if (item != "")
 									{
-										<img id="imagePreview" style="max-width: 300px; max-height: 300px; margin-top: 10px;" src="~/images/shop/@item" />
+										<div style="display: inline-block; position: relative;">
+											<img class="previewImage" style="max-width: 300px; max-height: 300px; margin-top: 10px;" src="~/images/shop/@item" />
+											<span class="deleteButton" style="position: absolute; top: 0; right: 0; cursor: pointer;" onclick="deleteImage(this)">X</span>
+										</div>
 									}
 								}
 							}
@@ -142,9 +148,18 @@
 		</script>
 		<!--圖片呈現-->
 		<script>
+			function deleteImage(deleteButton) {
+				// 找到要刪除的圖片及其父節點
+				var imageContainer = deleteButton.parentNode;
+
+				// 刪除整個包裹圖片和刪除按鈕的 div
+				imageContainer.parentNode.removeChild(imageContainer);
+			}
+		</script>
+
+		<script>
 			function previewImages(input) {
 				var previewContainer = document.getElementById('imagePreviewContainer');
-				previewContainer.innerHTML = '';
 
 				var files = input.files;
 				for (var i = 0; i < files.length; i++) {
@@ -160,7 +175,18 @@
 							img.style.height = '180px';
 							img.style.objectFit = 'cover'; // 'contain'會保持比例。
 
-							previewContainer.appendChild(img);
+							var deleteButton = document.createElement('span');
+							deleteButton.innerHTML = 'X';
+							deleteButton.style.cursor = 'pointer';
+							deleteButton.onclick = function () {
+								// Call a function to delete the corresponding image
+								deleteImage(deleteButton);
+							};
+
+							previewContainer.innerHTML += '<div style="display: inline-block; position: relative;">' +
+								'<img src="' + currentReader.result + '" style="width: 220px; height: 180px; object-fit: cover;">' +
+								'<span style="position: absolute; top: 0; right: 0; cursor: pointer;" onclick="deleteImage(this)">X</span>' +
+								'</div>';
 						};
 					})(reader);
 

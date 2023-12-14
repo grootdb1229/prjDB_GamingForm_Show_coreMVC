@@ -6,6 +6,7 @@ using prjDB_GamingForm_Show.Models;
 using prjDB_GamingForm_Show.Models.Admin;
 using prjDB_GamingForm_Show.Models.Entities;
 using prjDB_GamingForm_Show.ViewModels;
+using System.Drawing;
 using System.Runtime.Intrinsics.X86;
 using System.Security.Cryptography;
 
@@ -220,6 +221,34 @@ namespace prjDB_GamingForm_Show.Controllers
             };
             return View(vm);
         }
+        public IActionResult ProductEdit(CProductAdmin vm)
+        {
+            var data = _db.ProductComplains.Where(n => n.Id == vm.txtID);
+
+            foreach (var item in data)
+            {
+                item.StatusId = vm.txtStatusID;
+            }
+            _db.SaveChanges();
+            return RedirectToAction("ProductComplain");
+        }
+        public IActionResult ProductComplain()
+        { 
+            List<CProductComplainViewModel> ProductComplain = new List<CProductComplainViewModel>();
+            var datas = _db.ProductComplains.OrderBy(x=>x.Id).Select(x =>new {x.Id,x.ProductId,x.MemeberId,x.ReplyContent,x.ReportDate ,x.Status.Name} );
+            CProductComplainViewModel pc = new CProductComplainViewModel();
+            foreach (var data in datas)
+            {
+               pc.Id = data.Id;
+               pc.ProductId= data.ProductId;
+               pc.MemeberId= data.MemeberId;
+               pc.ReplyContent= data.ReplyContent;
+               //pc.ReportDate= data.ReportDate;
+               pc.Status = data.Name;
+               ProductComplain.Add(pc);
+            }
+            return View(ProductComplain);
+        }
         public IActionResult SignalRPV()
         {
             List<CSignalRUseAdminList> Admins = new List<CSignalRUseAdminList>();
@@ -348,26 +377,48 @@ namespace prjDB_GamingForm_Show.Controllers
             _db.SaveChanges();
         }
 
-        public IActionResult CouponList()
+        public IActionResult CouponList(CKeyWordViewModel kyvm)
         {
             List<CAdminCouponViewModel> viewModel = new List<CAdminCouponViewModel>();
             CAdminCouponViewModel c = null;
-            foreach (var m in _db.Coupons)
+            if (string.IsNullOrEmpty(kyvm.txtKeyWord))
             {
-                c = new CAdminCouponViewModel()
+                foreach (var m in _db.Coupons)
                 {
-                    CouponId = m.CouponId,
-                    Title = m.Title,
-                    Content = m.CouponContent,
-                    Discount = m.Discount,
-                    Reduce = m.Reduce,
-                    StartDate = m.StartDate,
-                    EndDate = m.EndDate,
-                    Type = m.StatusId.ToString(),
-                };
-                viewModel.Add(c);
+                    c = new CAdminCouponViewModel()
+                    {
+                        CouponId = m.CouponId,
+                        Title = m.Title,
+                        Content = m.CouponContent,
+                        Discount = m.Discount,
+                        Reduce = m.Reduce,
+                        StartDate = m.StartDate,
+                        EndDate = m.EndDate,
+                        Type = m.StatusId.ToString(),
+                    };
+                    viewModel.Add(c);
+                }
+                return View(viewModel);
             }
-            return View(viewModel);
+            else
+            {
+                foreach (var m in _db.Coupons.Where(c => c.Title.Contains(kyvm.txtKeyWord)||c.CouponContent.Contains(kyvm.txtKeyWord)))
+                {
+                    c = new CAdminCouponViewModel()
+                    {
+                        CouponId = m.CouponId,
+                        Title = m.Title,
+                        Content = m.CouponContent,
+                        Discount = m.Discount,
+                        Reduce = m.Reduce,
+                        StartDate = m.StartDate,
+                        EndDate = m.EndDate,
+                        Type = m.StatusId.ToString(),
+                    };
+                    viewModel.Add(c);
+                }
+                return View(viewModel);
+            }
         }
         [HttpPost]
         public IActionResult CouponTypeEdit(int id)
@@ -394,15 +445,50 @@ namespace prjDB_GamingForm_Show.Controllers
 
         public IActionResult CouponCreat()
         {
-            Coupon coupon = new Coupon();
-            return View(coupon);
+            return View();
         }
         [HttpPost]
-        public IActionResult CouponCreat(Coupon coupon)
+        public IActionResult CouponCreat(CAdminCouponViewModel vm)
         {
+            Coupon coupon = new Coupon()
+            {
+                Title = vm.Title,
+                CouponContent = vm.Content,
+                Discount = vm.Discount,                
+                StartDate = vm.StartDate,
+                EndDate = vm.EndDate,
+                StatusId = 24
+            };
+
             _db.Coupons.Add(coupon);
             _db.SaveChanges();
-            return RedirectToAction("");
+            return RedirectToAction("CouponList");
+        }
+
+        public IActionResult ReduceCreat()
+        {
+            return View();
+        }
+        [HttpPost]
+        public IActionResult ReduceCreat(CAdminCouponViewModel vm)
+        {
+            Coupon coupon = new Coupon()
+            {
+                Title = vm.Title,
+                CouponContent = vm.Content,                
+                Reduce = vm.Reduce,
+                StartDate = vm.StartDate,
+                EndDate = vm.EndDate,
+                StatusId = 24
+            };
+
+            _db.Coupons.Add(coupon);
+            _db.SaveChanges();
+            return RedirectToAction("CouponList");
+        }
+        public IActionResult fuck()
+        {
+            return View();
         }
         public string MessageTime(string time)
         {
@@ -1033,12 +1119,6 @@ namespace prjDB_GamingForm_Show.Controllers
             return RedirectToAction("BlogArticleList");
         }
 
-        //public IActionResult BlogArticleComplainList()
-        //{
-        //    var ab = from a in _db.ArticleComplains.Include(q => q.SubTag)
-        //             select a;
-        //    return View(ab);
-        //}
 
 
         public IActionResult BlogArticleComplainList()
@@ -1048,6 +1128,8 @@ namespace prjDB_GamingForm_Show.Controllers
             {
                 articleComplain = _db.ArticleComplains.Include(p => p.Article).Include(p => p.Member).Include(p => p.SubTag).Select(a => a),
                 articles = _db.Articles.Include(p => p.SubBlog).ThenInclude(p => p.Blog).Include(p => p.Member).Select(a => a),
+                members = _db.Members,
+                status = _db.Statuses,
             };
 
             return View(vm);
@@ -1056,20 +1138,51 @@ namespace prjDB_GamingForm_Show.Controllers
 
 
 
+        public IActionResult BlogArticleComplainFail(int? APId)
+        {
+            var q = from n in _db.ArticleComplains
+                    where n.Id == APId
+                    select n;
+            var q1=_db.ArticleComplains.First(a => a.Id == APId);
+
+            _db.ArticleComplains.Remove(q1);
+            _db.SaveChanges();
+
+            return Content("此篇檢舉非屬實，已移除此篇檢舉");
+        }
+
+        public IActionResult BlogArticleComplainSusscess(int? APId , int? AFId )
+        {
+            var q = from n in _db.ArticleComplains
+                    where n.Id == APId
+                    select n;
+            var q1 = _db.ArticleComplains.First(a => a.Id == APId);
+
+            _db.ArticleComplains.Remove(q1);
+            _db.SaveChanges();
+
+            //-----------
 
 
-        //public IActionResult BlogArticleComplainCheck(int? ACId,int? AFId)
-        //{
-        //    CBlogViewModel vm = null;
-        //    vm = new CBlogViewModel
-        //    {
-        //        articleComplain = _db.ArticleComplains.Include(p => p.Article).Include(p=>p.Member).Include(p=>p.SubTag).Where(p => p.Id == ACId).Select(a => a),
-        //        articles = _db.Articles.Include(p=>p.SubBlog).ThenInclude(p=>p.Blog).Include(p=>p.Member).Where(p=>p.ArticleId==AFId).Select(a=>a),
-        //    };
+            Article art = _db.Articles.FirstOrDefault(a => a.ArticleId == AFId);
 
-        //    return View(vm);
+            if (art != null)
+            {
+                // 修改 Article 的 SubBlogID
+                art.SubBlogId = 191;  // 新的 SubBlogID
+                _db.SaveChanges();
+            }
+            //-----------
 
-        //}
+            
+
+
+
+
+            return Content("此篇檢舉屬實，已刪除文章，並已移除此篇檢舉");
+        }
+
+
         #endregion
         //---------------------------論壇---------------------------
 
@@ -1098,6 +1211,8 @@ namespace prjDB_GamingForm_Show.Controllers
         {
             _db.Members.Load();
             _db.SubTags.Load();
+            _db.Statuses.Load();
+            _db.Deputes.Load();
             List<CDeputeComplainsWrap> list = new List<CDeputeComplainsWrap>();
             CDeputeComplainsWrap x = null;
             var datas = _db.DeputeComplains.OrderBy(n => n.Id);
@@ -1106,14 +1221,43 @@ namespace prjDB_GamingForm_Show.Controllers
                 x = new CDeputeComplainsWrap();
                 x.Id = item.Id;
                 x.DeputeId = item.DeputeId;
-                x.MemberId = item.MemberId;
+                x.ProviderId = item.Depute.ProviderId;
+                x.ProviderStatus = item.Depute.Provider.
+                //x.MemberId = item.MemberId;
+                x.SubTagId = item.SubTag.Name;
                 x.ReportContent = item.ReportContent;
                 x.ReportDate = item.ReportDate;
+                x.Status = item.Status.Name;
                 list.Add(x);
             }
-            
+            ////
+
             return View(list);
         }
+        public IActionResult ACDeputeEdit(CAdminDepute vm)
+        {
+            var data = _db.DeputeComplains.Where(n => n.Id == vm.txtID);
+
+            foreach (var item in data)
+            {
+                item.StatusId = vm.txtStatusID;
+            }
+            _db.SaveChanges();
+            return RedirectToAction("ACDeputeList");
+        }
+        public IActionResult ACDeputePenalties(CAdminDepute vm)
+        {
+            var data = _db.Members.Where(n => n.MemberId == vm.txtID);
+
+            foreach (var item in data)
+            {
+                item.StatusId = vm.txtStatusID;
+            }
+            _db.SaveChanges();
+            return RedirectToAction("ACDeputeList");
+        }
+
+
         #endregion
     }
 }
