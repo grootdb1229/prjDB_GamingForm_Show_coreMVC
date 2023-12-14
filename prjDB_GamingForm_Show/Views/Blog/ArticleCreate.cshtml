@@ -42,8 +42,9 @@
             <div class="nav-menu">
                 <ul>
                     <li>
-                        @Html.ActionLink(Model.blogs.FirstOrDefault().Title, "ArticleList", "Blog", new { FId = Model.blogs.FirstOrDefault().BlogId }, null)
-
+                        @Html.ActionLink(Model.blogs.FirstOrDefault().Title, "ArticleList", "Blog", new { FId = Model.blogs.FirstOrDefault().BlogId }, new{
+                                style = "font-size:48px"
+                        })
                     </li>
                 </ul>
             </div>
@@ -122,8 +123,8 @@
                     }
 
                 }).then(editor => {
-                    // 在控制台中輸出所有可用的工具列項目名稱
-                    console.log(Array.from(editor.ui.componentFactory.names()));
+                    // 獲取 CKEditor 實例，你可以在這裡保存或使用它
+                    window.ckeditorInstance = editor;
                 })
                 .catch(error => {
                     console.log(error);
@@ -246,11 +247,7 @@
                 const progressBar = document.createElement('div');
                 progressBar.classList.add('progress-bar');
                 progressContainer.appendChild(progressBar);
-
-                // Important note: This is the right place to implement security mechanisms
-                // like authentication and CSRF protection. For instance, you can use
-                // XMLHttpRequest.setRequestHeader() to set the request headers containing
-                // the CSRF token generated earlier by your application.
+                            
 
                 // Append the progress container to the document or a specific element
                 document.body.appendChild(progressContainer);
@@ -271,7 +268,11 @@
 
         function validateForm() {
             var title = document.getElementById('articleTitle').value;
-            var content = document.querySelector('textarea').value;
+
+            var editor = window.ckeditorInstance;
+
+            // 獲取編輯器內容
+            var content = editor.getData();
 
             if (title.trim()== '' || content.trim()== '') {
                 alert('文章標題和內容不能為空！');
