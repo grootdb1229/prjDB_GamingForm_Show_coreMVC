@@ -39,7 +39,7 @@ namespace prjDB_GamingForm_Show.Controllers
         }
         #region 老朱
 
-        //TODO #1 讀資料
+        //TODO #1 讀資料//
         public void ListLoad()
         {
             //te
@@ -295,7 +295,7 @@ namespace prjDB_GamingForm_Show.Controllers
 
 
         }
-        //檢舉//
+        //檢舉//////
         public IActionResult DeputeComplain(CAdminDepute vm)
         {
             if (HttpContext.Session.GetInt32(CDictionary.SK_UserID) != null)
