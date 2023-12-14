@@ -1,4 +1,4 @@
-﻿@model prjDB_GamingForm_Show.Models.Entities.Coupon
+﻿@model prjDB_GamingForm_Show.ViewModels.CAdminCouponViewModel
 
 @{
     ViewData["Title"] = "CouponCreat";
@@ -7,52 +7,52 @@
 
 <h2>CouponCreat</h2>
 
-<h4>Coupon</h4>
+<h4>CAdminCouponViewModel</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="CouponCreat" method="post">
+        <form asp-action="CouponCreat">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="CouponId" class="control-label"></label>
-                <input asp-for="CouponId" class="form-control" />
-                <span asp-validation-for="CouponId" class="text-danger"></span>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1" onclick="dis()">
+                <label class="form-check-label" for="inlineRadio1">折扣</label>
             </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2" onclick="re()" >
+                <label class="form-check-label" for="inlineRadio2">折價</label>
+            </div>
+            
             <div class="form-group">
-                <label asp-for="Title" class="control-label"></label>
+                <label asp-for="Title" class="control-label">名稱</label>
                 <input asp-for="Title" class="form-control" />
                 <span asp-validation-for="Title" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Discount" class="control-label"></label>
-                <input asp-for="Discount" class="form-control" />
+                <label asp-for="Content" class="control-label">內容</label>
+                <input asp-for="Content" class="form-control" />
+                <span asp-validation-for="Content" class="text-danger"></span>
+            </div>
+            <div class="form-group" id="discount">
+                <label asp-for="Discount" class="form-label" style="display: block; margin-bottom: 5px;">折扣幅度</label>
+                <input asp-for="Discount" type="range" id="disval" min="0.1" max="0.9" step="0.1" value="0.9" class="form-range" onchange="updateRangeValue(this.value)" />
+                <div id="rangeValue">選擇折數：</div>
                 <span asp-validation-for="Discount" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group" id="reduce">
                 <label asp-for="Reduce" class="control-label"></label>
                 <input asp-for="Reduce" class="form-control" />
                 <span asp-validation-for="Reduce" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="StartDate" class="control-label"></label>
-                <input asp-for="StartDate" class="form-control" />
+                <label asp-for="StartDate" class="control-label">起始日期</label>
+                <input asp-for="StartDate" type="date" class="form-control" placeholder="自定義預設文字"/>
                 <span asp-validation-for="StartDate" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="EndDate" class="control-label"></label>
+                <label asp-for="EndDate" class="control-label">結束日期</label>
                 <input asp-for="EndDate" class="form-control" />
                 <span asp-validation-for="EndDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="StatusId" class="control-label"></label>
-                <input asp-for="StatusId" class="form-control" />
-                <span asp-validation-for="StatusId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Quantity" class="control-label"></label>
-                <input asp-for="Quantity" class="form-control" />
-                <span asp-validation-for="Quantity" class="text-danger"></span>
-            </div>
+            </div>            
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-default" />
             </div>
@@ -66,4 +66,28 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        var dis2 = $('#discount')
+        var re2 = $('#reduce')
+        var disvalue = $('#disval')
+        dis2.hide();
+        re2.hide();
+        function updateRangeValue(value) {
+            const discount = value * 10;
+            // 顯示目前選擇的range值
+            document.getElementById('rangeValue').innerText = `選擇折數：${discount}折`;
+        }        
+        
+        function dis() {
+            dis2.show();
+            re2.hide();
+        }
+
+        function re() {
+            dis2.hide();
+            re2.show();
+            disvalue.value = null
+            console.log(disvalue.value)
+        }
+    </script>
 }

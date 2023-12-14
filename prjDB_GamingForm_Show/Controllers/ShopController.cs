@@ -27,6 +27,7 @@ using MailKit.Net.Smtp;
 using MimeKit;
 using NuGet.Protocol.Plugins;
 using Microsoft.AspNetCore.Http;
+using System.Diagnostics.Metrics;
 
 namespace prjDB_GamingForm_Show.Controllers
 {
@@ -86,8 +87,32 @@ namespace prjDB_GamingForm_Show.Controllers
                 Temp = Listx;
 
             }
-			
-			public IActionResult MutipleSearch_Shop(string txtMutiKeywords)
+
+			public IActionResult ProductInfo(int? id)
+			{
+				var data = _db.Products.Where(x => x.ProductId == id).Select(x => new { x.ProductId, x.ProductName, x.Price, x.ProductContent, x.MemberId, x.FImagePath });
+				return Json(data);
+			}
+			//檢舉
+            //public IActionResult DeputeComplain(CProductAdmin vm)
+            //{
+            //    if (HttpContext.Session.GetInt32(CDictionary.SK_UserID) != null)
+            //    {
+            //        _db.ProductComplains.Add(
+            //            new ProductComplain
+            //            {
+            //                Id = vm.txtID,
+            //                MemeberId = (int)HttpContext.Session.GetInt32(CDictionary.SK_UserID),
+            //                ReplyContent = vm.txtReportContent,
+            //                //ReportDate = (DateTime.Now),
+            //                //SubTagId = vm.txtSubTagID
+            //            }
+            //            );
+            //        _db.SaveChanges();
+            //    }
+            //    return View();
+            //}
+            public IActionResult MutipleSearch_Shop(string txtMutiKeywords)
 			{
                 
                 string result = "";
@@ -1111,7 +1136,7 @@ namespace prjDB_GamingForm_Show.Controllers
                     MulPicString = string.Join("/", MulPicsID); 				
                 }
                
-                Trace.WriteLine("僅作查看"+MulPicString);
+                //Trace.WriteLine("僅作查看"+MulPicString);
 				List<CShopPageViewModel> aa = new List<CShopPageViewModel>();
 				CShopPageViewModel ProductInfo = new CShopPageViewModel()
 				{
@@ -1183,7 +1208,37 @@ namespace prjDB_GamingForm_Show.Controllers
 				var payment = _db.Payments.Select(x => x);
 				return Json(payment);
 			}
-			[HttpPost]
+			public IActionResult getLoveList() 
+			{
+				int count = 0;
+				int memberID = 0;
+				
+                if ((HttpContext.Session.GetInt32(CDictionary.SK_UserID) != null))
+                {
+                    memberID = (int)HttpContext.Session.GetInt32(CDictionary.SK_UserID);
+                    count=_db.WishLists.Where(x=>x.MemberId==memberID).Count();   
+                }
+				string countString = count.ToString();
+                return Content(countString);
+            }
+
+            public IActionResult getcarList()
+            {
+                int count = 0;
+               
+
+                if (HttpContext.Session.Keys.Contains(CDictionary.SK_PURCHASED_PRODUCES_LIST))
+                {
+                 string json = HttpContext.Session.GetString(CDictionary.SK_PURCHASED_PRODUCES_LIST);
+                  var  car = JsonSerializer.Deserialize<List<CShoppingCarViewModel>>(json);
+                    count=car.Count;
+                }
+                string countString = count.ToString();
+                return Content(countString);
+            }
+
+
+            [HttpPost]
 			public IActionResult AddToCar(CShoppingCarViewModel vm)
             {
 				int memberID = 0;
@@ -1301,15 +1356,15 @@ namespace prjDB_GamingForm_Show.Controllers
 				}
 				////
 				///檢測重複購買商品
-				List<int> OrdersList = _db.OrderProducts.Select(x => x.ProductId).ToList();
-                List<int> product = car.Select(x=>x.ProductID).ToList();
+			
                 int memberID = 0;
                 if ((HttpContext.Session.GetInt32(CDictionary.SK_UserID) != null))
                 {
                     memberID = (int)HttpContext.Session.GetInt32(CDictionary.SK_UserID);
                 }
                 if (memberID != 0)
-                {
+                {	List<int> OrdersList = _db.OrderProducts.Where(x=>x.Order.MemberId== memberID).Select(x => x.ProductId).ToList();
+					List<int> product = car.Select(x=>x.ProductID).ToList();
 					bool HaveProduct = OrdersList.Any(x => product.Contains(x));//檢查你的車子裡面有沒有歷史購買紀錄
 					if (!HaveProduct) 
 					{ 
