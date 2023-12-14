@@ -98,10 +98,73 @@
                 <td>
                     @Html.Raw(type)
                 </td>
-                <td>
-                    @Html.ActionLink("開啟/關閉", "ProductListNext", "Admin", null, new { @class = "btn btn-dark" })
+                <td>                    
+                    <button class="btn btn-dark" onclick="confirmAction(@item.CouponId)">啟用/停用</button>
                 </td>
             </tr>
         }
     </tbody>
 </table>
+
+@section Scripts{
+    <script>
+        function confirmAction(couponId) {
+        const swalWithBootstrapButtons = Swal.mixin({
+            customClass: {
+                confirmButton: "btn btn-success",
+                cancelButton: "btn btn-danger"
+            },
+            buttonsStyling: false
+        });
+
+        swalWithBootstrapButtons.fire({
+            title: "確定啟/停用嗎?",
+            text: "優惠券會馬上啟用/停用！",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "確定",
+            cancelButtonText: "取消",
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // 使用Ajax將確認結果送到後端
+                $.ajax({
+                    url: '/Admin/CouponTypeEdit',
+                    type: 'POST',
+                    data: { id: couponId },
+                    success: function (data) {
+                        // 在這裡處理後端返回的結果，可以更新UI等操作
+                        swalWithBootstrapButtons.fire({
+                            title: "成功!",
+                            text: "資料已經被啟用/停用。",
+                            icon: "success"
+                        }).then(() => {
+                            // 關閉SweetAlert2後重新刷新當前頁面
+                            location.reload();
+                        });
+                    },
+                    error: function () {
+                        // 在這裡處理錯誤情況
+                        swalWithBootstrapButtons.fire({
+                            title: "錯誤",
+                            text: "發生錯誤，請稍後再試。",
+                            icon: "error"
+                        });
+                    }
+                });
+            } else if (result.dismiss === Swal.DismissReason.cancel) {
+                swalWithBootstrapButtons.fire({
+                    title: "已取消",
+                    text: "您的操作已被取消 :)",
+                    icon: "error"
+                }).then(() => {
+                    // 關閉SweetAlert2後重新刷新當前頁面
+                    location.reload();
+                });
+            }
+        });
+    
+    }
+    </script>
+
+}
