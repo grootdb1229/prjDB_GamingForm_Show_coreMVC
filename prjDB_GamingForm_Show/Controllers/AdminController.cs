@@ -221,7 +221,17 @@ namespace prjDB_GamingForm_Show.Controllers
             };
             return View(vm);
         }
+        public IActionResult ProductEdit(CProductAdmin vm)
+        {
+            var data = _db.ProductComplains.Where(n => n.Id == vm.txtID);
 
+            foreach (var item in data)
+            {
+                item.StatusId = vm.txtStatusID;
+            }
+            _db.SaveChanges();
+            return RedirectToAction("ProductComplain");
+        }
         public IActionResult ProductComplain()
         { 
             List<CProductComplainViewModel> ProductComplain = new List<CProductComplainViewModel>();
@@ -233,7 +243,7 @@ namespace prjDB_GamingForm_Show.Controllers
                pc.ProductId= data.ProductId;
                pc.MemeberId= data.MemeberId;
                pc.ReplyContent= data.ReplyContent;
-               pc.ReportDate= data.ReportDate;
+               //pc.ReportDate= data.ReportDate;
                pc.Status = data.Name;
                ProductComplain.Add(pc);
             }

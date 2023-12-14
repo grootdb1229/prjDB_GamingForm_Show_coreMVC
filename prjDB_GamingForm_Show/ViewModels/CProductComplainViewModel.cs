@@ -8,7 +8,7 @@ namespace prjDB_GamingForm_Show.ViewModels
 
         public int ProductId { get; set; }
 
-        public int ReplyContent { get; set; }
+        public string ReplyContent { get; set; }
 
         public int MemeberId { get; set; }
 

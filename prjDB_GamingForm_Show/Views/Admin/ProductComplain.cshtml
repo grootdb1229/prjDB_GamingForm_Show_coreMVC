@@ -55,8 +55,8 @@
                     @Html.DisplayFor(modelItem => item.Status)
                 </td>
             <td>
-                    <button type="button" class="btn btn-dark status" onclick="MemberDetail(@Html.DisplayFor(modelItem => item.Member))">會員詳情</button>
-                    @*<button type="button" class="btn btn-dark status" onclick="StatusEdit(@Html.DisplayFor(modelItem => item.Id))">修改狀態</button>*@
+                    <button type="button" class="btn btn-dark status" onclick="ProductDetail(@Html.DisplayFor(modelItem => item.ProductId))">商品詳情</button>
+                    <button type="button" class="btn btn-dark status" onclick="StatusEdit(@Html.DisplayFor(modelItem => item.Id))">修改狀態</button>
             </td>
         </tr>
 }
@@ -66,7 +66,6 @@
     {
 
     <script>
-        // $('.btn btn-dark status').click(() => { test2() })
 
         async function StatusEdit(value) {
 
@@ -95,25 +94,24 @@
             });
             if (status) {
                 // Swal.fire(`You selected: ${status}`);
-                $.ajax('@Url.Content("~/Admin/ACDeputeEdit")', {
+                $.ajax('@Url.Content("~/Admin/ProductEdit")', {
                     "type": 'post', //POST、PUT、DELETE//
                     "data": {
                         "txtID": value,
                         "txtStatusID": status,
                     },
                 })
-                    .done(() => { window.location.href = "/Admin/ACDeputeList" })
+                    .done(() => { window.location.href = "/Admin/ProductComplain" })
             }
 
 
         }
 
 
-        async function MemberDetail(value) {
-
+        async function ProductDetail(value) {
 
             // Swal.fire(`You selected: ${status}`);
-            $.ajax('@Url.Content("~/Member/MyInfo")', {
+            $.ajax('@Url.Content("~/Shop/ProductInfo")', {
                 "type": 'post', //POST、PUT、DELETE//
                 "data": {
                     "id": value,
@@ -121,23 +119,21 @@
                 "dataType": "json"
             })
                 .done((data) => {
-                    console.log(data);
                     Swal.fire({
-                        title: `<strong>會員詳細資訊:</strong>`,
+                        title: `<strong>商品詳細資訊:</strong>`,
                         html: `
-                                    <b>姓名</b><p>${data[0].name}</p></br>
-                                    <b>電話:</b><p>${data[0].phone}</p></br>
-                                    <b>出生年月</b><p>${data[0].year}</p></br>
-                                    <b>信箱</b><p>${data[0].email}</p></br>
-                                    <a href="#">個人頁面</a>
+                                    <img src="../images/shop/${data[0].fImagePath}" alt="..." style="height:25vh; " /></br>
+                                    <b>商品編號:</b><p>${data[0].productId}</p></br>
+                                    <b>商品名稱:</b><p>${data[0].productName}</p></br>
+                                    <b>上架會員編號:</b><p>${data[0].memberId}</p></br>
+                                    <b>價格:</b><p>${data[0].price}</p></br>
+                                    <b>商品描述:</b><p>${data[0].productContent}</p></br>
+                                    
                           `,
                         showCloseButton: true,
                         showCancelButton: true,
 
                     });
-
-
-
 
                 })
         }
