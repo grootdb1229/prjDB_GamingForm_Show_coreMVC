@@ -93,7 +93,7 @@ namespace prjDB_GamingForm_Show.Controllers
 				return Json(data);
 			}
 			//檢舉
-            public IActionResult DeputeComplain(CProductAdmin vm)
+            public IActionResult ProductComplain(CProductAdmin vm)
             {
                 if (HttpContext.Session.GetInt32(CDictionary.SK_UserID) != null)
                 {
@@ -103,8 +103,8 @@ namespace prjDB_GamingForm_Show.Controllers
                             Id = vm.txtID,
                             MemeberId = (int)HttpContext.Session.GetInt32(CDictionary.SK_UserID),
                             ReplyContent = vm.txtReportContent,
-                            //ReportDate = (DateTime.Now),
-                            //SubTagId = vm.txtSubTagID
+                            ReportDate = (DateTime.Now),
+                            SubTagId = vm.txtSubTagID
                         }
                         );
                     _db.SaveChanges();

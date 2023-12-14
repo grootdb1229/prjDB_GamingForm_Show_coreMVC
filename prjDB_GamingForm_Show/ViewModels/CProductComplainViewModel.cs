@@ -12,8 +12,11 @@ namespace prjDB_GamingForm_Show.ViewModels
 
         public int MemeberId { get; set; }
 
-        public string ReportDate { get; set; } = null!;
+        public DateTime ReportDate { get; set; }
+
         public string Status { get; set; }
+
+        public string? SubTag { get; set; }
         public IEnumerable<ProductComplain>? ProductComplain { get; set; }
         public IEnumerable<Member>? Member { get; set; } = null!;
 

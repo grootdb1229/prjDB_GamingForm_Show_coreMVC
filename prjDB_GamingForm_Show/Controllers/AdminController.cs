@@ -102,7 +102,7 @@ namespace prjDB_GamingForm_Show.Controllers
                 return View(members);
             }
         }
-
+        #region Shop
         public IActionResult ProductList(CKeyWordViewModel kyvm)
         {
             HttpContext.Session.Remove(CDictionary.SK_管理者觀看商品清單頁數使用關鍵字);
@@ -235,20 +235,28 @@ namespace prjDB_GamingForm_Show.Controllers
         public IActionResult ProductComplain()
         { 
             List<CProductComplainViewModel> ProductComplain = new List<CProductComplainViewModel>();
-            var datas = _db.ProductComplains.OrderBy(x=>x.Id).Select(x =>new {x.Id,x.ProductId,x.MemeberId,x.ReplyContent,x.ReportDate ,x.Status.Name} );
+            var datas = _db.ProductComplains.OrderBy(x=>x.Id).Select(x =>new {x.Id,x.ProductId,x.MemeberId,x.ReplyContent,x.ReportDate ,x.Status.Name,x.SubTagId} );
+            
             CProductComplainViewModel pc = new CProductComplainViewModel();
             foreach (var data in datas)
             {
-               pc.Id = data.Id;
-               pc.ProductId= data.ProductId;
-               pc.MemeberId= data.MemeberId;
-               pc.ReplyContent= data.ReplyContent;
-               //pc.ReportDate= data.ReportDate;
-               pc.Status = data.Name;
-               ProductComplain.Add(pc);
+               var subtag = _db.SubTags.Where(x => x.SubTagId == data.SubTagId).Select(x =>new { x.Name });
+                foreach (var i in subtag)
+                {
+                    pc.Id = data.Id;
+                    pc.ProductId = data.ProductId;
+                    pc.MemeberId = data.MemeberId;
+                    pc.SubTag = i.Name;
+                    pc.ReplyContent = data.ReplyContent;
+                    pc.ReportDate = data.ReportDate;
+                    pc.Status = data.Name;
+                    ProductComplain.Add(pc);
+                }
+              
             }
             return View(ProductComplain);
         }
+        #endregion 
         public IActionResult SignalRPV()
         {
             List<CSignalRUseAdminList> Admins = new List<CSignalRUseAdminList>();
