@@ -13,9 +13,11 @@ public partial class ProductComplain
 
     public int MemeberId { get; set; }
 
-    public string ReportDate { get; set; } = null!;
+    public DateTime ReportDate { get; set; }
 
     public int StatusId { get; set; }
+
+    public int SubTagId { get; set; }
 
     public virtual Member Memeber { get; set; } = null!;
 

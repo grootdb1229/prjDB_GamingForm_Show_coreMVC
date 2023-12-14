@@ -233,7 +233,7 @@ namespace prjDB_GamingForm_Show.Controllers
                pc.ProductId= data.ProductId;
                pc.MemeberId= data.MemeberId;
                pc.ReplyContent= data.ReplyContent;
-               pc.ReportDate= data.ReportDate;
+               //pc.ReportDate= data.ReportDate;
                pc.Status = data.Name;
                ProductComplain.Add(pc);
             }
