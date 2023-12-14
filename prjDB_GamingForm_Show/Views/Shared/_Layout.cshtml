@@ -206,8 +206,8 @@
     </script>
 
     <!--圈圈加進來測試用-->
-    @await RenderSectionAsync("Scripts", required: false)
-    <script>
+    @* @await RenderSectionAsync("Scripts", required: false) *@
+    @* <script>
         async function getcarList() 
         {
             let url = "@Url.Content("~/Shop/getcarList")";
@@ -216,7 +216,7 @@
             document.querySelector("#lovecount").innerHTML = count
         }
         document.addEventListener('DOMContentLoaded', () => { getcarList ()})
-    </script>
+    </script> *@
 
 </body>
 </html>

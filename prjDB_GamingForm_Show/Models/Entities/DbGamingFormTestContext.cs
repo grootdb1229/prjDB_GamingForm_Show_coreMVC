@@ -595,16 +595,6 @@ public partial class DbGamingFormTestContext : DbContext
             entity.Property(e => e.Id).HasColumnName("ID");
             entity.Property(e => e.MemeberId).HasColumnName("MemeberID");
             entity.Property(e => e.StatusId).HasColumnName("StatusID");
-
-            entity.HasOne(d => d.Memeber).WithMany(p => p.MemberStatuses)
-                .HasForeignKey(d => d.MemeberId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_MemberStatus_Member");
-
-            entity.HasOne(d => d.Status).WithMany(p => p.MemberStatuses)
-                .HasForeignKey(d => d.StatusId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_MemberStatus_Status");
         });
 
         modelBuilder.Entity<MemberTag>(entity =>
@@ -743,7 +733,11 @@ public partial class DbGamingFormTestContext : DbContext
         {
             entity.ToTable("ProductComplain");
 
+            entity.Property(e => e.ReportDate).HasColumnType("datetime");
             entity.Property(e => e.StatusId).HasColumnName("StatusID");
+            entity.Property(e => e.SubTagId)
+                .HasDefaultValueSql("((61))")
+                .HasColumnName("SubTagID");
 
             entity.HasOne(d => d.Memeber).WithMany(p => p.ProductComplains)
                 .HasForeignKey(d => d.MemeberId)
