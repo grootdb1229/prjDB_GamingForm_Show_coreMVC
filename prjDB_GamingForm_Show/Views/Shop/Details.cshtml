@@ -123,6 +123,7 @@
                 <p class="lead">@Html.DisplayFor(model => model.ProductContent)</p>
                 <button type="button" class="btn btn-dark status" style="float:right" onclick="test2(@Html.DisplayFor(model => model.ProductId))">檢舉</button>
 
+
                 @using (Html.BeginForm("AddToCar", "Shop", FormMethod.Post, new { id = "addToCartForm" }))
                 {
                     <input type="hidden" name="ProductID" value="@Model.ProductId" />

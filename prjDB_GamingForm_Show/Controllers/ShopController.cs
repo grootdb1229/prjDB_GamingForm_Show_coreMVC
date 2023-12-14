@@ -94,24 +94,24 @@ namespace prjDB_GamingForm_Show.Controllers
 				return Json(data);
 			}
 			//檢舉
-            public IActionResult DeputeComplain(CProductAdmin vm)
-            {
-                if (HttpContext.Session.GetInt32(CDictionary.SK_UserID) != null)
-                {
-                    _db.ProductComplains.Add(
-                        new ProductComplain
-                        {
-                            Id = vm.txtID,
-                            MemeberId = (int)HttpContext.Session.GetInt32(CDictionary.SK_UserID),
-                            ReplyContent = vm.txtReportContent,
-                            //ReportDate = (DateTime.Now),
-                            //SubTagId = vm.txtSubTagID
-                        }
-                        );
-                    _db.SaveChanges();
-                }
-                return View();
-            }
+            //public IActionResult DeputeComplain(CProductAdmin vm)
+            //{
+            //    if (HttpContext.Session.GetInt32(CDictionary.SK_UserID) != null)
+            //    {
+            //        _db.ProductComplains.Add(
+            //            new ProductComplain
+            //            {
+            //                Id = vm.txtID,
+            //                MemeberId = (int)HttpContext.Session.GetInt32(CDictionary.SK_UserID),
+            //                ReplyContent = vm.txtReportContent,
+            //                //ReportDate = (DateTime.Now),
+            //                //SubTagId = vm.txtSubTagID
+            //            }
+            //            );
+            //        _db.SaveChanges();
+            //    }
+            //    return View();
+            //}
             public IActionResult MutipleSearch_Shop(string txtMutiKeywords)
 			{
                 
@@ -1136,7 +1136,7 @@ namespace prjDB_GamingForm_Show.Controllers
                     MulPicString = string.Join("/", MulPicsID); 				
                 }
                
-                Trace.WriteLine("僅作查看"+MulPicString);
+                //Trace.WriteLine("僅作查看"+MulPicString);
 				List<CShopPageViewModel> aa = new List<CShopPageViewModel>();
 				CShopPageViewModel ProductInfo = new CShopPageViewModel()
 				{
