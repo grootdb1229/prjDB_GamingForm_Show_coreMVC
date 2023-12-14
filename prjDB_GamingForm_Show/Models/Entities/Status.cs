@@ -13,6 +13,8 @@ public partial class Status
 
     public virtual ICollection<Coupon> Coupons { get; set; } = new List<Coupon>();
 
+    public virtual ICollection<DeputeComplain> DeputeComplains { get; set; } = new List<DeputeComplain>();
+
     public virtual ICollection<DeputeRecord> DeputeRecords { get; set; } = new List<DeputeRecord>();
 
     public virtual ICollection<Depute> Deputes { get; set; } = new List<Depute>();
