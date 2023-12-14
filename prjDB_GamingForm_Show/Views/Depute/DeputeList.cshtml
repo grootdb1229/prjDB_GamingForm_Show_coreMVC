@@ -357,12 +357,12 @@
             })
                 .done((data) => {
                     const RegionFrag = $(document.createDocumentFragment());
-                    const Regions = data.map(Regions =>
+                    const Regions = data.map(citydata =>
                         `
                                                         <div class="col order-12">
-                                                        <input class="form-check-input region" type="checkbox" id="${Regions.city}-1" value="${Regions.city}" name="${Regions.city}">
-                                                        <label class="form-check-label" for="${Regions.city}-1">
-                                                         ${Regions.city}
+                                                                                <input class="form-check-input region" type="checkbox" id="${citydata}-1" value="${citydata}" name="${citydata}">
+                                                                <label class="form-check-label" for="${citydata}-1">
+                                                                 ${citydata}
                                                         </label>
                                                         </div>
                                                          `

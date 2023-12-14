@@ -404,9 +404,11 @@ namespace prjDB_GamingForm_Show.Controllers
         }
         public IActionResult Region()
         {
+            List<string> regions = new List<string>();
             var datas = from n in _db.Regions
-                        select n;
-            return Json(datas);
+                        select n.City;
+            regions = datas.ToList();
+            return Json(regions);
         }
         public IActionResult Status()
         {
