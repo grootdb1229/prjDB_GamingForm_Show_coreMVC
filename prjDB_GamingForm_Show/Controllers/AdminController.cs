@@ -225,15 +225,16 @@ namespace prjDB_GamingForm_Show.Controllers
         public IActionResult ProductComplain()
         { 
             List<CProductComplainViewModel> ProductComplain = new List<CProductComplainViewModel>();
-            var datas = _db.ProductComplains.OrderBy(x=>x.Id).Select(x =>new {x.Id,x.ProductId,x.MemeberId,x.ReplyContent,x.ReportDate } );
+            var datas = _db.ProductComplains.OrderBy(x=>x.Id).Select(x =>new {x.Id,x.ProductId,x.MemeberId,x.ReplyContent,x.ReportDate ,x.Status.Name} );
             CProductComplainViewModel pc = new CProductComplainViewModel();
             foreach (var data in datas)
             {
                pc.Id = data.Id;
                pc.ProductId= data.ProductId;
                pc.MemeberId= data.MemeberId;
-                pc.ReplyContent = data.ReplyContent;
-                pc.ReportDate= data.ReportDate;
+               pc.ReplyContent= data.ReplyContent;
+               pc.ReportDate= data.ReportDate;
+               pc.Status = data.Name;
                ProductComplain.Add(pc);
             }
             return View(ProductComplain);
@@ -1189,7 +1190,7 @@ namespace prjDB_GamingForm_Show.Controllers
                 x.Id = item.Id;
                 x.DeputeId = item.DeputeId;
                 x.ProviderId = item.Depute.ProviderId;
-                x.ProviderStatus = item.Depute.Provider.Status.Name;
+                //x.ProviderStatus = item.Depute.
                 x.MemberId = item.MemberId;
                 x.SubTagId = item.SubTag.Name;
                 x.ReportContent = item.ReportContent;
@@ -1212,12 +1213,6 @@ namespace prjDB_GamingForm_Show.Controllers
             _db.SaveChanges();
             return RedirectToAction("ACDeputeList");
         }
-        //public IActionResult ACDeputeDelete(CAdminDepute vm)
-        //{
-        //    //var data = _db.DeputeComplains.Remove(new DeputeComplain { Name = item, CreateDays = (DateTime.Now.Date) });
-        //    //_db.SaveChanges();
-        //    //return RedirectToAction("ACDeputeList");
-        //}
         public IActionResult ACDeputePenalties(CAdminDepute vm)
         {
             var data = _db.Members.Where(n => n.MemberId == vm.txtID);
