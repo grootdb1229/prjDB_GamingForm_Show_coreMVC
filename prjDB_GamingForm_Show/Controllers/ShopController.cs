@@ -1322,7 +1322,7 @@ namespace prjDB_GamingForm_Show.Controllers
 			}
 
 
-			public IActionResult Purchase(int payment)
+			public void Purchase(int payment)
 			{
 				string json = HttpContext.Session.GetString(CDictionary.SK_PURCHASED_PRODUCES_LIST);
 				List<CShoppingCarViewModel> car = JsonSerializer.Deserialize<List<CShoppingCarViewModel>>(json);
@@ -1380,8 +1380,7 @@ namespace prjDB_GamingForm_Show.Controllers
 				json = JsonSerializer.Serialize(car);
 				HttpContext.Session.SetString(CDictionary.SK_PURCHASED_PRODUCES_LIST, json);
 				ViewBag.Car = 0;
-                SendOrderEmail(orderview());
-                return RedirectToAction("OrderDetail");
+                
 			}
 
 			public IActionResult OrderDetail()
@@ -1442,7 +1441,7 @@ namespace prjDB_GamingForm_Show.Controllers
 				return View(vm);
 			}
 
-			public COrderViewModel orderview()
+			public void orderview()
 			{
                 COrderViewModel vm = new COrderViewModel();
                 var order = _db.Orders.Where(x => x.MemberId == HttpContext.Session.GetInt32(CDictionary.SK_UserID))
@@ -1496,8 +1495,8 @@ namespace prjDB_GamingForm_Show.Controllers
                     }
                     vm = n;
                 }
-                return vm;
-			}
+                SendOrderEmail(vm);
+            }
 
             public IActionResult SendOrderEmail(COrderViewModel vm)
 			{
@@ -1518,7 +1517,7 @@ namespace prjDB_GamingForm_Show.Controllers
 					+
 							"<html>" +
 							"<h2>  您的訂單資訊 </h2>" +
-							"<p>   您的訂單編號編號為:" + vm.OrderId + "</p>" +
+							"<p>   您的訂單編號為:" + vm.OrderId + "</p>" +
 							"<p>   價格為:" + vm.Sumprice.ToString("#0") + "元</p>" +
 							"<p>   下單日期為:" + vm.OrderDate + "</p>" +
 							s +

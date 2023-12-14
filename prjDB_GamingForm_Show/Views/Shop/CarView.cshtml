@@ -140,9 +140,9 @@
                     title: "結帳成功!",
                     text: "訂單已送至電子信箱!",
                     icon: "success",
-                })
+                }).then((result) => {if (result.isConfirmed) { window.location.href = "OrderDetail" }})
             })
-            .then(() => { window.location.href = "OrderDetail" })
+            .then(() => { fetch(`@Url.Content("~/Shop/orderview")`) })
     })
     
 
