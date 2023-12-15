@@ -24,7 +24,7 @@ namespace prjDB_GamingForm_Show.ViewModels
 
         public IEnumerable<Status>? status { get; set; }
 
-
+        public string subtagTitle {  get; set; }
 
 
 

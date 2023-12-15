@@ -1131,14 +1131,27 @@ namespace prjDB_GamingForm_Show.Controllers
 
         public IActionResult BlogArticleComplainList()
         {
-            CBlogViewModel vm = null;
-            vm = new CBlogViewModel
-            {
-                articleComplain = _db.ArticleComplains.Include(p => p.Article).Include(p => p.Member).Include(p => p.SubTag).Select(a => a),
-                articles = _db.Articles.Include(p => p.SubBlog).ThenInclude(p => p.Blog).Include(p => p.Member).Select(a => a),
-                members = _db.Members,
-                status = _db.Statuses,
-            };
+            //CBlogViewModel vm = null;
+            //vm = new CBlogViewModel
+            //{
+            //    articleComplain = _db.ArticleComplains.Include(p => p.Article).Include(p => p.Member).Include(p => p.SubTag).Select(a => a),
+            //    articles = _db.Articles.Include(p => p.SubBlog).ThenInclude(p => p.Blog).Include(p => p.Member).Select(a => a),
+            //    members = _db.Members,
+            //    status = _db.Statuses,
+            //};
+
+            //return View(vm);
+            CBlogViewModel vm = new CBlogViewModel();
+
+            _db.ArticleComplains.Load();  // 使用 Load 方法進行延遲載入
+
+            vm.articleComplain = _db.ArticleComplains.Local;  // 從本地集合中獲取載入的 ArticleComplains
+            _db.Articles.Include(p => p.SubBlog).ThenInclude(p => p.Blog).Include(p => p.Member).Load();  // 使用 Load 方法進行延遲載入
+            vm.articles = _db.Articles.Local;  // 從本地集合中獲取載入的 Articles
+            _db.Members.Load();  // 使用 Load 方法進行延遲載入
+            vm.members = _db.Members.Local;  // 從本地集合中獲取載入的 Members
+            _db.Statuses.Load();  // 使用 Load 方法進行延遲載入
+            vm.status = _db.Statuses.Local;  // 從本地集合中獲取載入的 Statuses
 
             return View(vm);
         }
