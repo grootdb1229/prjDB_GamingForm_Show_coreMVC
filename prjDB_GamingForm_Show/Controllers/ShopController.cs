@@ -27,6 +27,7 @@ using MailKit.Net.Smtp;
 using MimeKit;
 using NuGet.Protocol.Plugins;
 using Microsoft.AspNetCore.Http;
+using System.Diagnostics.Metrics;
 
 namespace prjDB_GamingForm_Show.Controllers
 {
@@ -1135,7 +1136,7 @@ namespace prjDB_GamingForm_Show.Controllers
                     MulPicString = string.Join("/", MulPicsID); 				
                 }
                
-                Trace.WriteLine("僅作查看"+MulPicString);
+                //Trace.WriteLine("僅作查看"+MulPicString);
 				List<CShopPageViewModel> aa = new List<CShopPageViewModel>();
 				CShopPageViewModel ProductInfo = new CShopPageViewModel()
 				{
@@ -1207,7 +1208,7 @@ namespace prjDB_GamingForm_Show.Controllers
 				var payment = _db.Payments.Select(x => x);
 				return Json(payment);
 			}
-			public IActionResult getcarList() 
+			public IActionResult getLoveList() 
 			{
 				int count = 0;
 				int memberID = 0;
@@ -1220,6 +1221,22 @@ namespace prjDB_GamingForm_Show.Controllers
 				string countString = count.ToString();
                 return Content(countString);
             }
+
+            public IActionResult getcarList()
+            {
+                int count = 0;
+               
+
+                if (HttpContext.Session.Keys.Contains(CDictionary.SK_PURCHASED_PRODUCES_LIST))
+                {
+                 string json = HttpContext.Session.GetString(CDictionary.SK_PURCHASED_PRODUCES_LIST);
+                  var  car = JsonSerializer.Deserialize<List<CShoppingCarViewModel>>(json);
+                    count=car.Count;
+                }
+                string countString = count.ToString();
+                return Content(countString);
+            }
+
 
             [HttpPost]
 			public IActionResult AddToCar(CShoppingCarViewModel vm)

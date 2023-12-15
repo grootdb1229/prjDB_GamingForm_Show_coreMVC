@@ -15,7 +15,6 @@
     string strcomCount = intcomCount == 0 ? "" : $"({intcomCount})";
 }
 
-
 <ul class="nav nav-tabs" id="myTab" role="tablist">
     <li class="nav-item" role="presentation" style="margin-bottom: 0px;">
         <button class="nav-link active" id="release-ing-tab" data-bs-toggle="tab" data-bs-target="#release-ing-tab-pane" type="button" role="tab" aria-controls="release-ing-tab-pane" aria-selected="true">已發佈 @stringCount</button>
@@ -70,8 +69,11 @@
                         <td>
                             @i.Title
                         </td>
-                        <td>
-                            @i.DeputeContent
+                        <td >
+                            <div class="text-truncate" style="width:200px;">
+                                @i.DeputeContent
+                            </div>
+                            <button type="button" class="btn btn-primary btn-sm" onclick="toggleContent(this)">檢視內容</button>
                         </td>
                         <td class="text-center" id="deputeStatus">
                             @i.Status.Name
@@ -138,29 +140,32 @@
                         continue;
                     }
                     count2++;
-                    <tr>
-                        <td class="text-center">
-                            @count2
-                        </td>
-                        <td>
-                            @i.Title
-                        </td>
-                        <td>
-                            @i.DeputeContent
-                        </td>
-                        <td class="text-center">
-                            @i.Status.Name
-                        </td>
-                        <td class="text-center">
-                            @i.Salary.ToString("$###,###,##0")
-                        </td>
-                        <td class="text-center">
-                            <button id=`detial${@i.DeputeId}` class="btn btn-light" onclick="individualDetials(@i.DeputeId)">@i.DeputeRecords.Count()</button>
-                        </td>
-                        <td class="text-center">
-                            <button class="btn btn-secondary btn-ReleaseDeputeDetails" onclick="detailsDepute(@i.DeputeId)">詳細資料</button>
-                        </td>
-                    </tr>
+                        <tr>
+                            <td class="text-center">
+                                @count2
+                            </td>
+                            <td>
+                                @i.Title
+                            </td>
+                            <td>
+                            <div class="text-truncate" style="width:200px;">
+                                @i.DeputeContent
+                            </div>
+                            <button type="button" class="btn btn-primary btn-sm" onclick="toggleContent(this)">檢視內容</button>
+                            </td>
+                            <td class="text-center">
+                                @i.Status.Name
+                            </td>
+                            <td class="text-center">
+                                @i.Salary.ToString("$###,###,##0")
+                            </td>
+                            <td class="text-center">
+                                <button id=`detial${@i.DeputeId}` class="btn btn-light" onclick="individualDetials(@i.DeputeId)">@i.DeputeRecords.Count()</button>
+                            </td>
+                            <td class="text-center">
+                                <button class="btn btn-secondary btn-ReleaseDeputeDetails" onclick="detailsDepute(@i.DeputeId)">詳細資料</button>
+                            </td>
+                        </tr>
                 }
             }
         </table>
@@ -170,6 +175,20 @@
 
 
 <script>
+    function toggleContent(button) {
+        // 找到相關的文本元素，您可能需要根據您的HTML結構調整這裡的代碼
+        var contentDiv = button.previousElementSibling;
+        console.log(contentDiv);
+
+        // 切換內容顯示方式
+        if (contentDiv.classList.contains('text-truncate')) {
+            contentDiv.classList.remove('text-truncate'); // 展開
+            button.textContent = '隱藏內容';
+        } else {
+            contentDiv.classList.add('text-truncate');    // 截斷
+            button.textContent = '檢視內容';
+        }
+    }
 
     function loadOverview() {
         $('#divOverview').load('@Url.Content("~/depute/PartialOverview")');

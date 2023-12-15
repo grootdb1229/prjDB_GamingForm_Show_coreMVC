@@ -206,17 +206,25 @@
     </script>
 
     <!--圈圈加進來測試用-->
-     @await RenderSectionAsync("Scripts", required: false) 
+    @await RenderSectionAsync("Scripts", required: false)
     <script>
-        async function getcarList() 
+        async function getLoveList() 
         {
-            let url = "@Url.Content("~/Shop/getcarList")";
+            let url = "@Url.Content("~/Shop/getLoveList")";
             const response = await fetch(url);
             const count = await response.text();
             document.querySelector("#lovecount").innerHTML = count
         }
-        document.addEventListener('DOMContentLoaded', () => { getcarList ()})
-    </script> 
+        document.addEventListener('DOMContentLoaded', () => { getLoveList() })
+
+        async function getcarList() {
+            let url = "@Url.Content("~/Shop/getcarList")";
+            const response = await fetch(url);
+            const Lcount = await response.text();
+            document.querySelector("#carcount").innerHTML = Lcount
+        }
+        document.addEventListener('DOMContentLoaded', () => { getcarList() })
+    </script>
 
 </body>
 </html>

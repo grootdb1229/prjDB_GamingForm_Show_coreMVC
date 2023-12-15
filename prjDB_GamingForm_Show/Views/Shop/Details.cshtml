@@ -124,6 +124,7 @@
                 @*------檢舉------*@
                 <button type="button" class="btn btn-dark status" style="float:right" onclick="test2(@Html.DisplayFor(model => model.ProductId))">檢舉</button>
 
+
                 @using (Html.BeginForm("AddToCar", "Shop", FormMethod.Post, new { id = "addToCartForm" }))
                 {
                     <input type="hidden" name="ProductID" value="@Model.ProductId" />
@@ -170,9 +171,9 @@
           
             } else {
                 // 如果失敗，顯示後端返回的錯誤提示
-                Swal.fire('已有此商品', result.message, 'error');
-             
+                Swal.fire('已有此商品', result.message, 'error');                     
             }
+            getcarList();
         });
 
         //複製現在的網址
@@ -226,7 +227,7 @@
                                 console.log(data.message + "進來後");
                             }
                         }
-                        getcarList();
+                        getLoveList();
                     });
                 }
                 favourite();

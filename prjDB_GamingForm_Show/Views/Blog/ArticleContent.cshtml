@@ -75,20 +75,15 @@
                     <h2 style="color:white">
                         @Html.DisplayFor(modelItem => Model.articles.FirstOrDefault().Title)
                     </h2>
+                    <div style="background:black;border-radius:10px;width:72px;text-align:center">                       
+                        <a href="@Url.Action("ArticleList", "Blog", new { FId = Model.blogs.First().BlogId, SFId = Model.articles.First().SubBlogId })">@Model.articles.First().SubBlog.Title</a>
+                    </div>
                     <div>
                         @* 超連結個人頁面 *@
-                        <span>樓主 : </span>
-                        <span style="color:white">
-                            @Html.DisplayFor(modelItem => Model.articles.FirstOrDefault().Member.Name)
-                        </span>
+                        <span>樓主 :  @Html.DisplayFor(modelItem => Model.articles.FirstOrDefault().Member.Name)</span>                            
+                        <span style ="color:white;float:right">累計人氣 : @Model.articles.FirstOrDefault().ViewCount</span>
                     </div>
-                    <div style="max-width:800px; overflow: hidden; word-wrap: break-word; white-space: pre-line;border-bottom:1px dotted black;border-top:1px dotted black">
-                        <p style="margin: 0; max-width:650px;font-size:30px ">
-                            <div>
-                                @Html.Raw(Model.articles.FirstOrDefault().ArticleContent)
-                            </div>
-                        </p>
-                    </div>
+                    <div style="max-width:800px; overflow: hidden; word-wrap: break-word; white-space: pre-line;border-bottom:1px dotted black;border-top:1px dotted black;padding-top:8px">@Html.Raw(Model.articles.FirstOrDefault().ArticleContent)</div>
                     <div style="width:800px;" class="clearfix">
                         <p style="font-size:15px;text-align:right">
                             發表時間: @Html.DisplayFor(modelItem => Model.articles.FirstOrDefault().ModifiedDate)

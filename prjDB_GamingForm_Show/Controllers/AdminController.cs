@@ -385,26 +385,48 @@ namespace prjDB_GamingForm_Show.Controllers
             _db.SaveChanges();
         }
 
-        public IActionResult CouponList()
+        public IActionResult CouponList(CKeyWordViewModel kyvm)
         {
             List<CAdminCouponViewModel> viewModel = new List<CAdminCouponViewModel>();
             CAdminCouponViewModel c = null;
-            foreach (var m in _db.Coupons)
+            if (string.IsNullOrEmpty(kyvm.txtKeyWord))
             {
-                c = new CAdminCouponViewModel()
+                foreach (var m in _db.Coupons)
                 {
-                    CouponId = m.CouponId,
-                    Title = m.Title,
-                    Content = m.CouponContent,
-                    Discount = m.Discount,
-                    Reduce = m.Reduce,
-                    StartDate = m.StartDate,
-                    EndDate = m.EndDate,
-                    Type = m.StatusId.ToString(),
-                };
-                viewModel.Add(c);
+                    c = new CAdminCouponViewModel()
+                    {
+                        CouponId = m.CouponId,
+                        Title = m.Title,
+                        Content = m.CouponContent,
+                        Discount = m.Discount,
+                        Reduce = m.Reduce,
+                        StartDate = m.StartDate,
+                        EndDate = m.EndDate,
+                        Type = m.StatusId.ToString(),
+                    };
+                    viewModel.Add(c);
+                }
+                return View(viewModel);
             }
-            return View(viewModel);
+            else
+            {
+                foreach (var m in _db.Coupons.Where(c => c.Title.Contains(kyvm.txtKeyWord)||c.CouponContent.Contains(kyvm.txtKeyWord)))
+                {
+                    c = new CAdminCouponViewModel()
+                    {
+                        CouponId = m.CouponId,
+                        Title = m.Title,
+                        Content = m.CouponContent,
+                        Discount = m.Discount,
+                        Reduce = m.Reduce,
+                        StartDate = m.StartDate,
+                        EndDate = m.EndDate,
+                        Type = m.StatusId.ToString(),
+                    };
+                    viewModel.Add(c);
+                }
+                return View(viewModel);
+            }
         }
         [HttpPost]
         public IActionResult CouponTypeEdit(int id)
@@ -431,15 +453,50 @@ namespace prjDB_GamingForm_Show.Controllers
 
         public IActionResult CouponCreat()
         {
-            Coupon coupon = new Coupon();
-            return View(coupon);
+            return View();
         }
         [HttpPost]
-        public IActionResult CouponCreat(Coupon coupon)
+        public IActionResult CouponCreat(CAdminCouponViewModel vm)
         {
+            Coupon coupon = new Coupon()
+            {
+                Title = vm.Title,
+                CouponContent = vm.Content,
+                Discount = vm.Discount,                
+                StartDate = vm.StartDate,
+                EndDate = vm.EndDate,
+                StatusId = 24
+            };
+
             _db.Coupons.Add(coupon);
             _db.SaveChanges();
-            return RedirectToAction("");
+            return RedirectToAction("CouponList");
+        }
+
+        public IActionResult ReduceCreat()
+        {
+            return View();
+        }
+        [HttpPost]
+        public IActionResult ReduceCreat(CAdminCouponViewModel vm)
+        {
+            Coupon coupon = new Coupon()
+            {
+                Title = vm.Title,
+                CouponContent = vm.Content,                
+                Reduce = vm.Reduce,
+                StartDate = vm.StartDate,
+                EndDate = vm.EndDate,
+                StatusId = 24
+            };
+
+            _db.Coupons.Add(coupon);
+            _db.SaveChanges();
+            return RedirectToAction("CouponList");
+        }
+        public IActionResult fuck()
+        {
+            return View();
         }
         public string MessageTime(string time)
         {
@@ -1070,12 +1127,6 @@ namespace prjDB_GamingForm_Show.Controllers
             return RedirectToAction("BlogArticleList");
         }
 
-        //public IActionResult BlogArticleComplainList()
-        //{
-        //    var ab = from a in _db.ArticleComplains.Include(q => q.SubTag)
-        //             select a;
-        //    return View(ab);
-        //}
 
 
         public IActionResult BlogArticleComplainList()
@@ -1085,6 +1136,8 @@ namespace prjDB_GamingForm_Show.Controllers
             {
                 articleComplain = _db.ArticleComplains.Include(p => p.Article).Include(p => p.Member).Include(p => p.SubTag).Select(a => a),
                 articles = _db.Articles.Include(p => p.SubBlog).ThenInclude(p => p.Blog).Include(p => p.Member).Select(a => a),
+                members = _db.Members,
+                status = _db.Statuses,
             };
 
             return View(vm);
@@ -1106,7 +1159,7 @@ namespace prjDB_GamingForm_Show.Controllers
             return Content("此篇檢舉非屬實，已移除此篇檢舉");
         }
 
-        public IActionResult BlogArticleComplainSusscess(int? APId , int? AFId)
+        public IActionResult BlogArticleComplainSusscess(int? APId , int? AFId )
         {
             var q = from n in _db.ArticleComplains
                     where n.Id == APId
@@ -1127,48 +1180,17 @@ namespace prjDB_GamingForm_Show.Controllers
                 art.SubBlogId = 191;  // 新的 SubBlogID
                 _db.SaveChanges();
             }
+            //-----------
+
+            
+
+
 
 
             return Content("此篇檢舉屬實，已刪除文章，並已移除此篇檢舉");
         }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        public IActionResult a1()
-        {
-
-            return View();
-        }
-
-        //public IActionResult BlogArticleComplainCheck(int? ACId,int? AFId)
-        //{
-        //    CBlogViewModel vm = null;
-        //    vm = new CBlogViewModel
-        //    {
-        //        articleComplain = _db.ArticleComplains.Include(p => p.Article).Include(p=>p.Member).Include(p=>p.SubTag).Where(p => p.Id == ACId).Select(a => a),
-        //        articles = _db.Articles.Include(p=>p.SubBlog).ThenInclude(p=>p.Blog).Include(p=>p.Member).Where(p=>p.ArticleId==AFId).Select(a=>a),
-        //    };
-
-        //    return View(vm);
-
-        //}
         #endregion
         //---------------------------論壇---------------------------
 
@@ -1208,8 +1230,8 @@ namespace prjDB_GamingForm_Show.Controllers
                 x.Id = item.Id;
                 x.DeputeId = item.DeputeId;
                 x.ProviderId = item.Depute.ProviderId;
-                //x.ProviderStatus = item.Depute.
-                x.MemberId = item.MemberId;
+                x.ProviderStatus = item.Depute.Provider.
+                //x.MemberId = item.MemberId;
                 x.SubTagId = item.SubTag.Name;
                 x.ReportContent = item.ReportContent;
                 x.ReportDate = item.ReportDate;
