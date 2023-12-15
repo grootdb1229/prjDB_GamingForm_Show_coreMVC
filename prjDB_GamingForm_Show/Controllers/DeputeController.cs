@@ -390,7 +390,7 @@ namespace prjDB_GamingForm_Show.Controllers
 
             return View();
         }
-        //多選載入
+        //多選載入//
         public IActionResult SkillClassess()
         {
             var datas = from n in _db.SkillClasses
