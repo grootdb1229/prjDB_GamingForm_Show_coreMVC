@@ -25,7 +25,7 @@
 					</label>
 					<div id="imagePreviewContainer" style="width:100%">
 						<div style="display: inline-block; position: relative;">
-						<img id="imagePreview" style="max-width: 300px; max-height: 300px; margin-top: 10px;" src="~/images/shop/@Model.FImagePath" />
+							<img id="imagePreview" class="previewImage" data-filename="@Model.FImagePath" style="max-width: 300px; max-height: 300px; margin-top: 10px;" src="~/images/shop/@Model.FImagePath" />
 							<span class="deleteButton" style="position: absolute; top: 0; right: 0; cursor: pointer;" onclick="deleteImage(this)">X</span>
 						</div>
 						@{
@@ -37,7 +37,7 @@
 									if (item != "")
 									{
 										<div style="display: inline-block; position: relative;">
-											<img class="previewImage" style="max-width: 300px; max-height: 300px; margin-top: 10px;" src="~/images/shop/@item" />
+											<img class="previewImage" data-filename="@item" style="max-width: 300px; max-height: 300px; margin-top: 10px;" src="~/images/shop/@item" />
 											<span class="deleteButton" style="position: absolute; top: 0; right: 0; cursor: pointer;" onclick="deleteImage(this)">X</span>
 										</div>
 									}
@@ -47,6 +47,7 @@
 					</div>
 				</div>
 			</div>
+			<input type="hidden" id="hiddenInputPic" name="MulEditPic" />
 
 			<div class="form-group">
 				@Html.LabelFor(model => model.ProductName, htmlAttributes: new { @class = "control-label col-md-2" })
@@ -284,6 +285,18 @@
 			async function submitForm(event) {
 				event.preventDefault(); // 阻止表單的默認提交行為
 				await submitTags(); // 等待 submitTags 完成
+
+				var filenames = "";
+				var previewImages = document.getElementsByClassName('previewImage');
+
+				for (var i = 0; i < previewImages.length; i++) {
+					var filename = previewImages[i].getAttribute('data-filename');
+					filenames += filename + "/";
+				}
+				document.getElementById('hiddenInputPic').value = filenames;
+
+
+
 				document.getElementById('productform').submit(); // 手動提交表單
 			}
 
@@ -291,6 +304,9 @@
 				const form = document.getElementById('productform');
 				form.addEventListener('submit', submitForm);
 			});
+
+
+
 
 
 

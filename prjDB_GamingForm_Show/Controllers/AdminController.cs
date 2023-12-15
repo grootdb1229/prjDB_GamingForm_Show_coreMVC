@@ -521,6 +521,10 @@ namespace prjDB_GamingForm_Show.Controllers
                 return "現在";
             }            
         }
+        public IActionResult ShopADSetting()
+        {
+            return View();
+        }
         //public IActionResult MemberListNexttest()
         //{
         //    if (HttpContext.Session.Keys.Contains(CDictionary.SK_管理者觀看會員清單頁數使用關鍵字))
@@ -1147,6 +1151,7 @@ namespace prjDB_GamingForm_Show.Controllers
 
             _db.ArticleComplains.Load();  // 使用 Load 方法進行延遲載入
 
+            _db.Articles.Load();
             vm.articleComplain = _db.ArticleComplains.Local;  // 從本地集合中獲取載入的 ArticleComplains
             _db.Articles.Include(p => p.SubBlog).ThenInclude(p => p.Blog).Include(p => p.Member).Load();  
             vm.articles = _db.Articles.Local;  
@@ -1250,9 +1255,9 @@ namespace prjDB_GamingForm_Show.Controllers
                 x = new CDeputeComplainsWrap();
                 x.Id = item.Id;
                 x.DeputeId = item.DeputeId;
+                x.MemberId = item.MemberId;
                 x.ProviderId = item.Depute.ProviderId;
-                //x.ProviderStatus = item.Depute.Provider;//todo bian先註解
-                //x.MemberId = item.MemberId;
+                x.ProviderStatus = item.Depute.Provider.Status.Name;
                 x.SubTagId = item.SubTag.Name;
                 x.ReportContent = item.ReportContent;
                 x.ReportDate = item.ReportDate;

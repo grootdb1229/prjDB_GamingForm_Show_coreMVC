@@ -18,7 +18,7 @@ namespace prjDB_GamingForm_Show.Controllers
 
             var orderId = Guid.NewGuid().ToString().Replace("-", "").Substring(0, 20);
             //需填入你的網址
-            var website = $"https://localhost:44325/";
+            var website = $"https://prjdbgamingformshow20231215114758.azurewebsites.net/";
             var order = new Dictionary<string, string>
             {
                 { "MerchantTradeNo",  orderId},
@@ -35,8 +35,8 @@ namespace prjDB_GamingForm_Show.Controllers
                 { "OrderResultURL", $"{website}Payment/PayInfo/{orderId}"},
                 { "PaymentInfoURL",  $"{website}Ecpay/AddAccountInfo"},
                 { "ClientRedirectURL",  $"{website}Payment/AccountInfo/{orderId}"},
-                { "MerchantID",  "2000132"},
-                { "IgnorePayment",  "GooglePay#WebATM#CVS#BARCODE"},
+                { "MerchantID",  "3002607"},
+                { "IgnorePayment",  "BARCODE"},
                 { "PaymentType",  "aio"},
                 { "ChoosePayment",  "ALL"},
                 { "EncryptType",  "1"},
@@ -88,10 +88,10 @@ namespace prjDB_GamingForm_Show.Controllers
             var checkValue = string.Join("&", param);
 
             //測試用的 HashKey
-            var hashKey = "5294y06JbISpM5x9";
+            var hashKey = "pwFHCqoQZGmho4w6";
 
             //測試用的 HashIV
-            var HashIV = "v77hoKGq4kWxNNIS";
+            var HashIV = "EkRm7iFT261dpevs";
 
             checkValue = $"HashKey={hashKey}" + "&" + checkValue + $"&HashIV={HashIV}";
 
