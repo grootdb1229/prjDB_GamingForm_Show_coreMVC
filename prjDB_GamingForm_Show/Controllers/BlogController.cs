@@ -84,7 +84,8 @@ namespace prjDB_GamingForm_Show.Controllers
                     subBlogs = _db.SubBlogs.Where(s => s.BlogId == FId).Select(p => p),
                     articles = _db.Articles.Include(a => a.Replies).Include(a => a.Member).Where(a => a.SubBlog.BlogId == FId && (a.Title.Contains(kw.txtKeyWord) || a.ArticleContent.Contains(kw.txtKeyWord))).OrderByDescending(a => a.ModifiedDate).Select(p => p),
                     //replies = _db.Replies.Include(r => r.Member),
-                    members = _db.Members
+                    members = _db.Members,
+                    subtagTitle=_db.Blogs.Where(b => b.BlogId == FId).Select(_ => _.SubTag.Name).FirstOrDefault()
                 };
             }
             else
@@ -101,7 +102,8 @@ namespace prjDB_GamingForm_Show.Controllers
                         subBlogs = _db.SubBlogs.Where(s => s.BlogId == FId).Select(p => p),
                         articles = _db.Articles.Include(a => a.Replies).Include(a => a.Member).Where(a => a.SubBlog.BlogId == FId).OrderByDescending(a => a.ModifiedDate).Select(p => p),
                         //replies = _db.Replies.Include(r => r.Member),
-                        members = _db.Members
+                        members = _db.Members,
+                        subtagTitle = _db.Blogs.Where(b=>b.BlogId==FId).Select(_ => _.SubTag.Name).FirstOrDefault(),
                     };
                 }
                 else
@@ -114,7 +116,8 @@ namespace prjDB_GamingForm_Show.Controllers
                         subBlogs = _db.SubBlogs.Where(s => s.BlogId == FId).Select(p => p),
                         articles = _db.Articles.Include(a => a.Replies).Include(a => a.Member).Where(a => a.SubBlogId == SFId).OrderByDescending(a => a.ModifiedDate).Select(p => p),
                         //replies = _db.Replies.Include(r => r.Member),
-                        members = _db.Members
+                        members = _db.Members,
+                        subtagTitle = _db.SubTags.Where(s => s.Blogs.FirstOrDefault().BlogId == FId).Select(s => s.Name).FirstOrDefault()
                     };
                 }
             }
@@ -122,30 +125,54 @@ namespace prjDB_GamingForm_Show.Controllers
             return View(vm);
         }
 
-        public ActionResult ArticleContent(int? FId, int? AFId)
-            
+        public ActionResult ArticleContent(int? FId, int? AFId)            
         {
+            //Article art = _db.Articles.FirstOrDefault(a => a.ArticleId == AFId);
+            //if (art != null)
+            //{
+            //    art.ViewCount++;
+            //    _db.SaveChanges();
+            //}
+            //CBlogViewModel vm = new CBlogViewModel();
+            //vm = new CBlogViewModel
+            //{
+            //    //tags = _db.Tags.Select(p => p),
+            //    //subTags = _db.SubTags.Where(s => s.TagId == 4 && s.SubTagId != 14).Select(p => p),
+            //    blogs = _db.Blogs.Include(p => p.SubBlogs).Where(b => b.BlogId == FId),
+            //    subBlogs = _db.SubBlogs.Where(s => s.BlogId == FId)/*.Include(s => s.Articles)*/,
+            //    articles = _db.Articles.Include(a => a.Member).AsEnumerable().Where(a => a.ArticleId == AFId),
+            //    subtagTitle = _db.Blogs.Where(b => b.BlogId == FId).Select(_ => _.SubTag.Name).FirstOrDefault(),
+            //    //actions = _db.Actions,
+            //    articleActions = _db.ArticleActions.Where(a => a.ArticleId == AFId),
+            //    replies = _db.Replies.Include(a => a.Member).Where(a => a.ArticleId == AFId).ToList(),
+            //    //members = _db.Members,
+            //    ComplainssubTags = _db.SubTags.Where(s => s.TagId == 6)
+            //};
+            //var artcon = _db.Articles.Where(a => a.ArticleId == AFId).Select(a => a);
+            //ViewBag.SelectedSubBlogId = artcon.First().SubBlogId;
+
+            //return View(vm);
+
             Article art = _db.Articles.FirstOrDefault(a => a.ArticleId == AFId);
             if (art != null)
             {
                 art.ViewCount++;
                 _db.SaveChanges();
             }
-            CBlogViewModel vm = new CBlogViewModel();
-            vm = new CBlogViewModel
-            {
-                //tags = _db.Tags.Select(p => p),
-                //subTags = _db.SubTags.Where(s => s.TagId == 4 && s.SubTagId != 14).Select(p => p),
-                blogs = _db.Blogs.Include(p => p.SubBlogs).Where(b => b.BlogId == FId),
-                subBlogs = _db.SubBlogs.Where(s => s.BlogId == FId)/*.Include(s => s.Articles)*/,
-                articles = _db.Articles.Include(a => a.Member).AsEnumerable().Where(a => a.ArticleId == AFId),
 
-                //actions = _db.Actions,
-                articleActions = _db.ArticleActions.Where(a => a.ArticleId == AFId),
-                replies = _db.Replies.Include(a => a.Member).Where(a => a.ArticleId == AFId).ToList(),
-                //members = _db.Members,
-                ComplainssubTags = _db.SubTags.Where(s => s.TagId == 6)
-            };
+            CBlogViewModel vm = new CBlogViewModel();
+            vm.blogs = _db.Blogs.Include(p => p.SubBlogs).Where(b => b.BlogId == FId);
+            _db.SubBlogs.Where(s => s.BlogId == FId).Load(); // 使用 Load 方法進行延遲載入
+            vm.subBlogs = _db.SubBlogs.Local; // 從本地集合中獲取載入的 SubBlogs
+            _db.Articles.Include(a => a.Member).Where(a => a.ArticleId == AFId).Load(); // 使用 Load 方法進行延遲載入
+            vm.articles = _db.Articles.Local; // 從本地集合中獲取載入的 Articles
+            vm.subtagTitle = _db.Blogs.Where(b => b.BlogId == FId).Select(_ => _.SubTag.Name).FirstOrDefault();
+            _db.ArticleActions.Where(a => a.ArticleId == AFId).Load(); // 使用 Load 方法進行延遲載入
+            vm.articleActions = _db.ArticleActions.Local; // 從本地集合中獲取載入的 ArticleActions
+            vm.replies = _db.Replies.Include(a => a.Member).Where(a => a.ArticleId == AFId).ToList();
+            _db.SubTags.Where(s => s.TagId == 6).Load(); // 使用 Load 方法進行延遲載入
+            vm.ComplainssubTags = _db.SubTags.Local; // 從本地集合中獲取載入的 SubTags
+
             var artcon = _db.Articles.Where(a => a.ArticleId == AFId).Select(a => a);
             ViewBag.SelectedSubBlogId = artcon.First().SubBlogId;
 

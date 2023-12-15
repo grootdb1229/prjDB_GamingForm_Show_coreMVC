@@ -10,7 +10,7 @@
     //step3 : 新增訂單到資料庫
     $.ajax({
         type: 'POST',
-        url: 'https://localhost:44325/api/Ecpay/AddOrders',
+        url: 'https://prjdbgamingformshow20231215114758.azurewebsites.net/Ecpay/AddOrders',
         contentType: 'application/json; charset=utf-8',
         data: JSON.stringify(json),
         success: function (res) {

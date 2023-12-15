@@ -22,7 +22,7 @@
     <div class="nav-options">
         <div class="container">
             <div class="humberger-menu ">
-                @Html.ActionLink("前往首頁", "List", "Blog")
+                <a href="@Url.Action("List", "Blog",new{FId=Model.blogs.First().SubTagId})">@Model.subtagTitle</a>
             </div>
             <div class="nav-menu">
                 <ul>

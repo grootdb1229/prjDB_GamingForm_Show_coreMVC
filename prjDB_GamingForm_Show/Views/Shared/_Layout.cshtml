@@ -49,16 +49,17 @@
                             <li>@Html.ActionLink("委託管理", "homeframe", "Depute",  null, new { @class = "dropdown-item" })</li>
                         </ul>
                     </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">遊戲商城</a>
-                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <li class="nav-item">
+                            @Html.ActionLink("遊戲商城", "Index", "Shop", null, new { @class = "nav-link" })
+                    </li>
+                       @* <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                             <li>
-                                @Html.ActionLink("全部商品", "Index", "Shop", null, new { @class = "dropdown-item" })
+                                @Html.ActionLink("遊戲商城", "Index", "Shop", null, new { @class = "dropdown-item" })
                             </li>
                             <li><hr class="dropdown-divider" /></li>
                             <li><a class="dropdown-item" href="#!">Popular Items</a></li>
                             <li><a class="dropdown-item" href="#!">New Arrivals</a></li>
-                        </ul>
+                        </ul>*@
                     </li>
                 </ul>
                 <div>
