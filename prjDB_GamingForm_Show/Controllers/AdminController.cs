@@ -1243,8 +1243,9 @@ namespace prjDB_GamingForm_Show.Controllers
                 x = new CDeputeComplainsWrap();
                 x.Id = item.Id;
                 x.DeputeId = item.DeputeId;
+                x.MemberId = item.MemberId;
                 x.ProviderId = item.Depute.ProviderId;
-                //x.ProviderStatus = item.Depute.Provider;//todo bian先註解
+                x.ProviderStatus = item.Depute.Provider.Status.Name;
                 x.SubTagId = item.SubTag.Name;
                 x.ReportContent = item.ReportContent;
                 x.ReportDate = item.ReportDate;
