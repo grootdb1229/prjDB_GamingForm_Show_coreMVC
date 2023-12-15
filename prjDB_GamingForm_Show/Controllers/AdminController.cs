@@ -520,6 +520,10 @@ namespace prjDB_GamingForm_Show.Controllers
                 return "現在";
             }            
         }
+        public IActionResult ShopADSetting()
+        {
+            return View();
+        }
         //public IActionResult MemberListNexttest()
         //{
         //    if (HttpContext.Session.Keys.Contains(CDictionary.SK_管理者觀看會員清單頁數使用關鍵字))

@@ -81,7 +81,9 @@
                                         <h4 class="fw-bolder" style="color:#fffafa">@item.ProductName</h4>
                                         </div>           
                                   </div>
-
+                                    <div class="text-center">
+                                        @Html.ActionLink("測試修改", "Edit", "Shop", new { id = item.ProductId }, new { @class = "btn btn-outline-dark mt-auto" })
+                                    </div>
                                   <div style="background-color:black; position: relative; height: 38px;">
                                         
                                     <input type="button" value="加入購物車" class="btn btn-outline-dark mt-auto" value="@item.ProductId" onclick="Addtocar(@item.ProductId)" style=" position: absolute; right: 0;" />
