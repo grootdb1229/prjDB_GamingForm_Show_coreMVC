@@ -521,7 +521,7 @@ namespace prjDB_GamingForm_Show.Controllers
             {
             _db.DeputeRecords.Add(vm);
             _db.SaveChanges();
-                return Json(new { success = true, message = "應徵成功" });
+                return Json(new { success = true, message = "履歷投遞成功" });
             }
             catch(Exception ex)
             {
@@ -541,6 +541,10 @@ namespace prjDB_GamingForm_Show.Controllers
         public IActionResult Edit(CDeputeViewModel vm)
         {
             Depute o = _db.Deputes.Where(_ => _.DeputeId == vm.id).FirstOrDefault();
+            //前端radio，有勾選開放，沒勾選關閉
+            int statusid = vm.statusid;
+            if (statusid != 18)
+                statusid = 19;
             if (o != null)
             {
                 o.ProviderId = (int)HttpContext.Session.GetInt32(CDictionary.SK_UserID);
@@ -548,7 +552,7 @@ namespace prjDB_GamingForm_Show.Controllers
                 o.Modifiedate = DateTime.Now;
                 o.DeputeContent = vm.deputeContent;
                 o.Salary = vm.salary;
-                o.StatusId = _db.Statuses.FirstOrDefault(_ => _.Name == vm.status).StatusId;
+                o.StatusId = statusid;
                 o.RegionId = _db.Regions.FirstOrDefault(_ => _.City == vm.region).RegionId;
                 o.Title = vm.title;
                 _db.SaveChanges();
@@ -769,42 +773,26 @@ namespace prjDB_GamingForm_Show.Controllers
         }
         public IActionResult editDeputeStatuses(int id)
         {
-            List<CDeputeViewModel> statusList = new List<CDeputeViewModel>();
-            int oriStatusID = _db.Deputes.FirstOrDefault(_ => _.DeputeId == id).StatusId;
-
-            CDeputeViewModel oriStatus = new CDeputeViewModel()
-            {
-                id = oriStatusID,
-                status = _db.Statuses.FirstOrDefault(_ => _.StatusId == oriStatusID).Name,
-            };
-            statusList.Add(oriStatus);
-
-            var datas = _db.Statuses.Where(_ => (_.StatusId == 16 ||
-            _.StatusId == 18 ||
-            _.StatusId == 19) &&
-            _.StatusId != oriStatusID).Select(_ => _);
-
-            foreach (var item in datas)
-            {
-                CDeputeViewModel lastStatuses = new CDeputeViewModel()
-                {
-                    id = item.StatusId,
-                    status = item.Name,
-                };
-                statusList.Add(lastStatuses);
-            };
-            return Json(statusList);
+            var depute = _db.Deputes.FirstOrDefault(_ => _.DeputeId == id);
+            if (depute == null)
+                return NotFound();
+            int oriStatusID = depute.StatusId;
+            return Json(oriStatusID);
         }
         public IActionResult Regions()
         {
             //資料庫區域
-            var datas = _db.Regions.Select(_ => _);
+            var datas = _db.Regions.Select(_ => new
+            {
+                _.City,
+                _.RegionId
+            });
             return Json(datas);
         }
 
         public IActionResult Skillss(string skillClass)
         {
-            if (_db.SkillClasses.Where(_ => _.Name == skillClass).FirstOrDefault() == null)
+            if (_db.SkillClasses.Where(_ => _.Name == skillClass) == null)
                 return Content("");
             int skillclassid = Convert.ToInt32(_db.SkillClasses.Where(_ => _.Name == skillClass).FirstOrDefault().SkillClassId);
             var datas = _db.Skills.Where(_ => _.SkillClassId == skillclassid).Select(_ => _);
@@ -813,7 +801,6 @@ namespace prjDB_GamingForm_Show.Controllers
         #endregion
 
         #region MainView
-        //主頁框架，load各個partialview
         public IActionResult HomeFrame()
         {
             ViewBag.memberid = HttpContext.Session.GetInt32(CDictionary.SK_UserID);

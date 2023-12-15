@@ -24,17 +24,17 @@
     string MemberComVisibility = Model.MemberComCount == 0 ? "visibility:hidden" : "";
     string MemberComDisabled = Model.MemberComCount == 0 ? "disabled" : "";
 }
-<div class="row">
-    <div class="col-lg-6 tm-col-home mb-4">
+<div class="row d-flex justify-content-center">
+    <div class="col-lg-10 tm-col-home mb-4">
         <div class="tm-text-container">
-            <div class="card border-white mb-3 bg-transparent" style="max-width: 36rem;">
+            <div class="card border-white mb-3 bg-transparent" style="max-width: ;">
                 <div class="card-header bg-transparent border-white text-center"><h4>我發佈的委託</h4></div>
                 <div class="card-body text-light">
                     <table class="table table-borderless text-center">
                         <tbody>
                             <tr>
                                 <td class="col-6">
-                                    <a href="#" class="btn btn-secondary position-relative col-12 @askDisabled" aria-disabled="true">
+                                    <a href="#" class="btn btn-secondary position-relative col-8 @askDisabled" aria-disabled="true">
                                         <img src="~/layout/templatemo_555_upright/img/me/message-circle.svg" />
                                         會員提問
                                         <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="@askVisibility">
@@ -44,7 +44,7 @@
                                     </a>
                                 </td>
                                 <td class="col-6">
-                                    <a href="#release" class="btn btn-secondary position-relative col-12 @applyDisabled" aria-disabled="true">
+                                    <a href="#release" class="btn btn-secondary position-relative col-8 @applyDisabled" aria-disabled="true">
                                         <img src="~/layout/templatemo_555_upright/img/me/users.svg" />
                                         待接受
                                         <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="@applyVisibility">
@@ -56,7 +56,7 @@
                             </tr>
                             <tr>
                                 <td class="col-6">
-                                    <a href="#release" class="btn btn-secondary position-relative col-12 @ReplyDisabled" aria-disabled="true">
+                                    <a href="#release" class="btn btn-secondary position-relative col-8 @ReplyDisabled" aria-disabled="true">
                                         <img src="~/layout/templatemo_555_upright/img/me/edit.svg" />
                                         待收件
                                         <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="@ReplyVisibility">
@@ -66,7 +66,7 @@
                                     </a>
                                 </td>
                                 <td class="col-6">
-                                    <a href="#release" class="btn btn-secondary position-relative col-12 @ComDisabled" aria-disabled="true">
+                                    <a href="#release" class="btn btn-secondary position-relative col-8 @ComDisabled" aria-disabled="true">
                                         <img src="~/layout/templatemo_555_upright/img/me/check.svg" />
                                         已完成
                                         <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="@ComVisibility">
@@ -82,16 +82,16 @@
             </div>
         </div>
     </div>
-    <div class="col-lg-6 tm-col-home mb-4">
+    <div class="col-lg-10 tm-col-home mb-4">
         <div class="tm-text-container">
-            <div class="card border-white mb-3 bg-transparent" style="max-width: 36rem;">
+            <div class="card border-white mb-3 bg-transparent" style="max-width: ;">
                 <div class="card-header bg-transparent border-white text-center"><h4>我接受的委託</h4></div>
                 <div class="card-body text-light">
                     <table class="table table-borderless text-center">
                         <tbody>
                             <tr>
                                 <td class="col-6">
-                                    <a href="#receive" class="btn btn-secondary position-relative col-12 @NewDisabled" aria-disabled="true">
+                                    <a href="#receive" class="btn btn-secondary position-relative col-8 @NewDisabled" aria-disabled="true">
                                         <img src="~/layout/templatemo_555_upright/img/me/message-circle.svg" />
                                         新委託
                                         <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="@NewVisibility">
@@ -101,7 +101,7 @@
                                     </a>
                                 </td>
                                 <td class="col-6">
-                                    <a href="#receive" class="btn btn-secondary position-relative col-12 @RunDisabled" aria-disabled="true">
+                                    <a href="#receive" class="btn btn-secondary position-relative col-8 @RunDisabled" aria-disabled="true">
                                         <img src="~/layout/templatemo_555_upright/img/me/users.svg" />
                                         進行中
                                         <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="@RunVisibility">
@@ -113,7 +113,7 @@
                             </tr>
                             <tr>
                                 <td class="col-6">
-                                    <a href="#receive" class="btn btn-secondary position-relative col-12 @CofirmDisabled" aria-disabled="true">
+                                    <a href="#receive" class="btn btn-secondary position-relative col-8 @CofirmDisabled" aria-disabled="true">
                                         <img src="~/layout/templatemo_555_upright/img/me/edit.svg" />
                                         待確認
                                         <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="@CofirmVisibility">
@@ -123,7 +123,7 @@
                                     </a>
                                 </td>
                                 <td href="#receive" class="col-6">
-                                    <a href="#receive" class="btn btn-secondary position-relative col-12 @MemberComDisabled" aria-disabled="true">
+                                    <a href="#receive" class="btn btn-secondary position-relative col-8 @MemberComDisabled" aria-disabled="true">
                                         <img src="~/layout/templatemo_555_upright/img/me/check.svg" />
                                         已完成
                                         <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="@MemberComVisibility">

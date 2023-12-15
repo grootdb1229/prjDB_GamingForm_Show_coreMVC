@@ -1230,7 +1230,7 @@ namespace prjDB_GamingForm_Show.Controllers
                 x.Id = item.Id;
                 x.DeputeId = item.DeputeId;
                 x.ProviderId = item.Depute.ProviderId;
-                //x.ProviderStatus = item.Depute.Provider;
+                //x.ProviderStatus = item.Depute.Provider;//todo bian先註解
                 //x.MemberId = item.MemberId;
                 x.SubTagId = item.SubTag.Name;
                 x.ReportContent = item.ReportContent;
