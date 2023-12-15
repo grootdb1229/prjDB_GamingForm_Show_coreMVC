@@ -1189,7 +1189,7 @@ namespace prjDB_GamingForm_Show.Controllers
             _db.ArticleComplains.Remove(q1);
             _db.SaveChanges();
 
-            //-----------
+            //-----------//
 
 
             Article art = _db.Articles.FirstOrDefault(a => a.ArticleId == AFId);
