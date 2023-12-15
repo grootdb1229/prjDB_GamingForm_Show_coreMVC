@@ -84,7 +84,8 @@ namespace prjDB_GamingForm_Show.Controllers
                     subBlogs = _db.SubBlogs.Where(s => s.BlogId == FId).Select(p => p),
                     articles = _db.Articles.Include(a => a.Replies).Include(a => a.Member).Where(a => a.SubBlog.BlogId == FId && (a.Title.Contains(kw.txtKeyWord) || a.ArticleContent.Contains(kw.txtKeyWord))).OrderByDescending(a => a.ModifiedDate).Select(p => p),
                     //replies = _db.Replies.Include(r => r.Member),
-                    members = _db.Members
+                    members = _db.Members,
+                    subtagTitle=_db.Blogs.Where(b => b.BlogId == FId).Select(_ => _.SubTag.Name).FirstOrDefault()
                 };
             }
             else
@@ -101,7 +102,8 @@ namespace prjDB_GamingForm_Show.Controllers
                         subBlogs = _db.SubBlogs.Where(s => s.BlogId == FId).Select(p => p),
                         articles = _db.Articles.Include(a => a.Replies).Include(a => a.Member).Where(a => a.SubBlog.BlogId == FId).OrderByDescending(a => a.ModifiedDate).Select(p => p),
                         //replies = _db.Replies.Include(r => r.Member),
-                        members = _db.Members
+                        members = _db.Members,
+                        subtagTitle = _db.Blogs.Where(b=>b.BlogId==FId).Select(_ => _.SubTag.Name).FirstOrDefault(),
                     };
                 }
                 else
@@ -114,7 +116,8 @@ namespace prjDB_GamingForm_Show.Controllers
                         subBlogs = _db.SubBlogs.Where(s => s.BlogId == FId).Select(p => p),
                         articles = _db.Articles.Include(a => a.Replies).Include(a => a.Member).Where(a => a.SubBlogId == SFId).OrderByDescending(a => a.ModifiedDate).Select(p => p),
                         //replies = _db.Replies.Include(r => r.Member),
-                        members = _db.Members
+                        members = _db.Members,
+                        subtagTitle = _db.SubTags.Where(s => s.Blogs.FirstOrDefault().BlogId == FId).Select(s => s.Name).FirstOrDefault()
                     };
                 }
             }
@@ -139,7 +142,7 @@ namespace prjDB_GamingForm_Show.Controllers
                 blogs = _db.Blogs.Include(p => p.SubBlogs).Where(b => b.BlogId == FId),
                 subBlogs = _db.SubBlogs.Where(s => s.BlogId == FId)/*.Include(s => s.Articles)*/,
                 articles = _db.Articles.Include(a => a.Member).AsEnumerable().Where(a => a.ArticleId == AFId),
-
+                subtagTitle = _db.Blogs.Where(b => b.BlogId == FId).Select(_ => _.SubTag.Name).FirstOrDefault(),
                 //actions = _db.Actions,
                 articleActions = _db.ArticleActions.Where(a => a.ArticleId == AFId),
                 replies = _db.Replies.Include(a => a.Member).Where(a => a.ArticleId == AFId).ToList(),
