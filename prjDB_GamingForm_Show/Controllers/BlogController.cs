@@ -122,8 +122,7 @@ namespace prjDB_GamingForm_Show.Controllers
             return View(vm);
         }
 
-        public ActionResult ArticleContent(int? FId, int? AFId)
-            
+        public ActionResult ArticleContent(int? FId, int? AFId)            
         {
             Article art = _db.Articles.FirstOrDefault(a => a.ArticleId == AFId);
             if (art != null)
