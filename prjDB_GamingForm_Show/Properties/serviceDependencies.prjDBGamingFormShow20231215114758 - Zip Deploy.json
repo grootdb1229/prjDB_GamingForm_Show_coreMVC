@@ -1,19 +1,19 @@
 {
   "dependencies": {
-    "mssql1": {
-      "serviceConnectorResourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.Web/sites/prjDBGamingFormShow20231215114758/providers/Microsoft.ServiceLinker/linkers/ConnectionStringsAzureConnection_7F625FA3B5",
-      "secretStore": "AzureAppSettings",
-      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.Sql/servers/grootdatabase/databases/DB_GamingForm_test",
-      "type": "mssql.azure",
-      "connectionId": "ConnectionStrings:AzureConnection",
-      "dynamicId": null
-    },
     "signalr1": {
       "serviceConnectorResourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.Web/sites/prjDBGamingFormShow20231215114758/providers/Microsoft.ServiceLinker/linkers/AzureSignalRConnectionString_49FC9181B2",
       "secretStore": "AzureAppSettings",
       "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.SignalRService/SignalR/prjDBGamingFormShow",
       "type": "signalr.azure",
       "connectionId": "Azure:SignalR:ConnectionString",
+      "dynamicId": null
+    },
+    "mssql1": {
+      "serviceConnectorResourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.Web/sites/prjDBGamingFormShow20231215114758/providers/Microsoft.ServiceLinker/linkers/ConnectionStringsAzureConnection_7F625FA3B5",
+      "secretStore": "AzureAppSettings",
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.Sql/servers/grootdatabase/databases/DB_GamingForm_test",
+      "type": "mssql.azure",
+      "connectionId": "ConnectionStrings:AzureConnection",
       "dynamicId": null
     }
   }
