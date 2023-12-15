@@ -13,7 +13,7 @@ namespace prjDB_GamingForm_Show.Controllers
         DbGamingFormTestContext db = new DbGamingFormTestContext();
         //step4 : 新增訂單
         [HttpPost]
-        [Route("api/Ecpay/AddOrders")]
+        [Route("Ecpay/AddOrders")]
         public string AddOrders(Models.Shop.get_localStorage  json)
         {
             EcpayOrder Orders = new EcpayOrder();
@@ -34,7 +34,7 @@ namespace prjDB_GamingForm_Show.Controllers
         }
         // HomeController->Index->ReturnURL所設定的
         [HttpPost]
-        [Route("api/Ecpay/AddPayInfo")]
+        [Route("Ecpay/AddPayInfo")]
         public HttpResponseMessage AddPayInfo(JObject info)
         {
             try
@@ -50,7 +50,7 @@ namespace prjDB_GamingForm_Show.Controllers
         }
         // HomeController->Index->PaymentInfoURL所設定的
         [HttpPost]
-        [Route("api/Ecpay/AddAccountInfo")]
+        [Route("Ecpay/AddAccountInfo")]
         public HttpResponseMessage AddAccountInfo(JObject info)
         {
             try
