@@ -57,14 +57,6 @@
                     <span>@Html.DisplayFor(model => model.Price)</span>
                 </div>
                 <div style="display: flex; align-items: center;">
-                    <!-- 左側的星星評分 -->
-                    <div class="d-flex text-warning mb-2">
-                        <div class="bi-star-fill"></div>
-                        <div class="bi-star-fill"></div>
-                        <div class="bi-star-fill"></div>
-                        <div class="bi-star-fill"></div>
-                        <div class="bi-star-fill"></div>
-                    </div>
 
                     <!-- 右側的按鈕和其他內容 -->
                     <div style="margin-left: auto;">
@@ -123,13 +115,13 @@
                 <p class="lead">@Html.DisplayFor(model => model.ProductContent)</p>
                 @*------檢舉------*@
                 <button type="button" class="btn btn-dark status" style="float:right" onclick="test2(@Html.DisplayFor(model => model.ProductId))">檢舉</button>
-
+                
 
                 @using (Html.BeginForm("AddToCar", "Shop", FormMethod.Post, new { id = "addToCartForm" }))
                 {
                     <input type="hidden" name="ProductID" value="@Model.ProductId" />
                     <div class="d-flex">
-                        @Html.TextBox("txtCount", "1", new { @class = "form-control text-center me-3", @style = "max-width: 3rem" })
+                        
                         <i class="bi-cart-fill me-1"></i>
                         <input type="submit" value="加入購物車" class="btn btn-outline-dark mt-auto" id="addToCartButton" />
                     </div>
