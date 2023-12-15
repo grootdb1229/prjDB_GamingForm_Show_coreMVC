@@ -21,6 +21,9 @@
                 申訴人ID
             </th>
             <th>
+                申訴理由
+            </th>
+            <th>
                 申訴內容
             </th>
             <th>
@@ -43,6 +46,9 @@
             </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.MemeberId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SubTag)
                 </td>
             <td>
                 @Html.DisplayFor(modelItem => item.ReplyContent)

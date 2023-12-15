@@ -45,6 +45,8 @@ public partial class Member
 
     public virtual ICollection<MemberCoupon> MemberCoupons { get; set; } = new List<MemberCoupon>();
 
+    public virtual ICollection<MemberStatus> MemberStatuses { get; set; } = new List<MemberStatus>();
+
     public virtual ICollection<MemberTag> MemberTags { get; set; } = new List<MemberTag>();
 
     public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
