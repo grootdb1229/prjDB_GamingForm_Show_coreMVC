@@ -15,13 +15,15 @@ public partial class ProductComplain
 
     public DateTime ReportDate { get; set; }
 
-    public int StatusId { get; set; }
-
     public int SubTagId { get; set; }
+
+    public int StatusId { get; set; }
 
     public virtual Member Memeber { get; set; } = null!;
 
     public virtual Product Product { get; set; } = null!;
 
     public virtual Status Status { get; set; } = null!;
+
+    public virtual SubTag SubTag { get; set; } = null!;
 }
