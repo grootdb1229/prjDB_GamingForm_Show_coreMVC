@@ -923,57 +923,8 @@ namespace prjDB_GamingForm_Show.Controllers
 			[HttpPost]
 			public ActionResult Edit(超酷warp product) //原Product物件   
 			{
-				{
-					//if (!ModelState.IsValid)
-					//{
-					//    var errors = ModelState.Values.SelectMany(v => v.Errors);
-					//    return View((超酷warp)product);
-					//}
-
-					//Product x = _db.Products.FirstOrDefault(p => p.ProductId == product.ProductId);
-					//if (x != null)
-					//{
-					//    if (product.photo != null)
-					//    {
-					//        string photoName = Guid.NewGuid().ToString() + ".jpg";
-					//        x.FImagePath = photoName;
-					//        product.photo.CopyTo(new FileStream(_host.WebRootPath + "/images/shop/" + photoName, FileMode.Create));
-					//    }
-					//    x.ProductName = product.ProductName;
-					//    x.Price = (decimal)product.Price;
-					//    x.AvailableDate = product.AvailableDate;
-					//    x.ProductContent = product.ProductContent;
-					//    x.UnitStock = product.UnitStock;
-					//    x.StatusId = (int)product.StatusID;
-					//    x.MemberId = product.MemberID;
-
-					//    _db.SaveChanges();
-					//}
-					//if (product.GameTagOptions != null)//確保有選標籤
-					//{
-					//    _db.ProductTags.RemoveRange(_db.ProductTags.Where(x => x.ProductId == product.ProductId));
-
-
-					//    List<int> tagsList = product.GameTagOptions.Split(',').Select(int.Parse).ToList();
-					//    //Trace.WriteLine("AAAA" + tagsList);
-					//    foreach (var tags in tagsList)
-					//    {
-					//        int tagsID = _db.SubTags.FirstOrDefault(x => x.SubTagId == tags).SubTagId;
-					//        ProductTag productTag = new ProductTag
-					//        {
-					//            SubTagId = tagsID,
-					//            ProductId = x.ProductId
-					//        };
-
-					//        _db.ProductTags.Add(productTag);
-					//    }
-
-					//    _db.SaveChanges();
-
-					//}//Thread.Sleep(3000);
-					//return RedirectToAction("Index");
-				}//以防萬一 這是單圖存檔用
-				using (var transaction = _db.Database.BeginTransaction())
+				
+				using (var transaction = _db.Database.BeginTransaction()) //開始交易
 				{
 					try
 					{
@@ -986,9 +937,10 @@ namespace prjDB_GamingForm_Show.Controllers
 
 						Product x = _db.Products.FirstOrDefault(p => p.ProductId == product.ProductId);
 						string MulPic = "";
+						List<string> PicList= new List<string>();
 						if (_db != null)
 						{
-							if (product.Photos != null && product.Photos.Count > 0) //有新圖片加入
+							if (product.Photos != null && product.Photos.Count > 0) //有新圖片加入時進入
 							{
 								foreach (var photo in product.Photos)
 								{
@@ -1002,18 +954,20 @@ namespace prjDB_GamingForm_Show.Controllers
 										{
 											photo.CopyTo(stream);
 										}
-										MulPic += photoName + "/";
+										MulPic += photoName + "/";  //新加入的圖用"/"做區隔
 
 										string filenames = product.MulEditPic;//將沒有改的圖片存在這
 										filenames += MulPic;
-										MulPic = filenames;
+										
+										MulPic = filenames; //舊圖"/"新圖
+										PicList= MulPic.Split('/').Distinct().ToList();
 									}
 								}
 								if (product.Photos.Count >= 1) ///如果有超過一張圖就執行多餘圖片存取
 								{
-									_db.ProductImages.RemoveRange(_db.ProductImages.Where(p => p.ProductId == x.ProductId));
+									_db.ProductImages.RemoveRange(_db.ProductImages.Where(p => p.ProductId == product.ProductId));
 									var removedImageIds = _db.ProductImages
-										.Where(p => p.ProductId == x.ProductId)
+										.Where(p => p.ProductId == product.ProductId)
 										.Select(p => p.ImageId)
 										.ToList();
 									foreach (var imageId in removedImageIds)
@@ -1022,14 +976,14 @@ namespace prjDB_GamingForm_Show.Controllers
 										if (imageToRemove != null)
 										{
 											_db.Images.Remove(imageToRemove);
-										}
+										}//移除次要圖片
 									}
 
 									// 提交變更
 									_db.SaveChanges();
-									string[] OtherPic = MulPic.Split("/").Skip(1).ToArray();
-
-									foreach (string picpath in OtherPic)
+									//string[] OtherPic = MulPic.Split("/").Skip(1).ToArray();
+									//PicList.Skip(1).ToArray();
+									foreach (string picpath in PicList.Skip(1))
 									{
 										if (!string.IsNullOrEmpty(picpath))
 										{
@@ -1049,10 +1003,10 @@ namespace prjDB_GamingForm_Show.Controllers
 
 								}
 
-								string[] pics = MulPic.Split('/');  ///一長串圖片被我拆分儲存
-								if (pics.Length > 0)
+								//string[] pics = MulPic.Split('/');  ///一長串圖片被我拆分儲存 這這這								
+								if (PicList.Count > 0)
 								{
-									string Mainpic = pics[0];//第一張是主圖存入商品資料行
+									string Mainpic = PicList[0];//第一張是主圖存入商品資料行
 									x.FImagePath = Mainpic;
 								}
 								x.ProductName = product.ProductName;
@@ -1067,7 +1021,8 @@ namespace prjDB_GamingForm_Show.Controllers
 							}
 
 
-							else { //沒有新圖片加入
+							else 
+							{ //沒有新圖片加入
 								string filenames = product.MulEditPic;
 								string[] OtherPic = filenames.Split("/").Skip(1).ToArray();
 								if (OtherPic.Length >= 1) ///如果有超過一張圖就執行多餘圖片存取
@@ -1563,7 +1518,7 @@ namespace prjDB_GamingForm_Show.Controllers
 			public IActionResult OrderDetail()
 			{ 
 				List<COrderViewModel> vm = new List<COrderViewModel>();
-				var order =  _db.Orders.Where(x=>x.MemberId== HttpContext.Session.GetInt32(CDictionary.SK_UserID))
+				var order =  _db.Orders.Where(x=>x.MemberId== 41)//HttpContext.Session.GetInt32(CDictionary.SK_UserID))
 							.OrderByDescending(x => x.OrderId)
 							.Select(x => new { x.OrderId,x.Payment.Name, x.Coupon.Title,x.OrderDate});
 				COrderViewModel n = null;

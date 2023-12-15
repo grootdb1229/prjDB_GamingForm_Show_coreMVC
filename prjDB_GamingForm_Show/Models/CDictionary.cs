@@ -27,5 +27,6 @@ namespace prjDB_GamingForm_Show.Models
         public static string SK_管理者觀看版面清單頁數使用關鍵字 = "SK_管理者觀看版面清單頁數使用關鍵字";
         public static string SK_管理者名稱 = "SK_管理者名稱";
         public static string SK_管理者照片路徑 = "SK_管理者照片路徑";
+        public static string SK_會員狀態編號 = "SK_會員狀態編號";
     }
 }

@@ -25,35 +25,35 @@
             <div class="" id="YourTop5"></div>
         </div>
 
-        <p>
-            @using (Html.BeginForm())
-            {
-                <div class="container-fluid bg-primary mb-5 wow fadeIn" data-wow-delay="0.1s" style="padding: 35px;">
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-md-5">
-                                <div class="row">
-                                    <div class="col-md-4">
-                                        <input type="text" class="form-control border-0" placeholder="Keyword" id="Kw" name="txtKeyword" />
-                                    </div>
-                                    <div class="col-md-2">
-                                        <input id="QueryAjax" type="button" value="查詢" style="padding: 0.375rem 0.75rem" />
-                                    </div>
-                                    <div class="col-md-5">
-                                        <select id="SortControl" class="form-select border-0">
-                                            <option selected>Location</option>
-                                            <option value="1">最熱銷</option>
-                                            <option value="2">最新上架</option>
-                                            <option value="3">價格:高到低</option>
-                                            <option value="4">價格:低到高</option>
-                                        </select>
-                                    </div>
+    <p>
+        @using (Html.BeginForm())
+        {
+            <div class="container-fluid bg-primary mb-5 wow fadeIn" data-wow-delay="0.1s" style="padding: 35px;">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-5">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <input type="text" class="form-control border-0" placeholder="Keyword" id="Kw" name="txtKeyword" />
+                                </div>
+                                <div class="col-md-2">
+                                    <input id="QueryAjax" type="button" value="查詢" style="padding: 0.375rem 0.75rem" />
+                                </div>                           
+                                <div class="col-md-5">
+                                            <select id="SortControl" class="form-select border-0">
+                                                <option selected>請選擇排序</option>
+                                                <option value="1">最熱銷</option>
+                                                <option value="2">最新上架</option>
+                                                <option value="3">價格:高到低</option>
+                                                <option value="4">價格:低到高</option>
+                                            </select>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            }
+            </div>                    
+        }
 
             <!-- Search End -->
         </p>

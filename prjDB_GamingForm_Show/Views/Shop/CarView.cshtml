@@ -116,7 +116,6 @@
 <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 <script src="~/js/sweetalert2.all.js"></script>
 <script>
-    
 
     const btn = document.querySelector('#btnpurchase');
     const payment = document.querySelector('#payment');
@@ -132,19 +131,8 @@
         payment.innerHTML = Payment; 
     }
     LoadPayment();
-    btn.addEventListener('click', () => {
-        const payid = payment.value
 
-        fetch(`@Url.Content("~/Shop/Purchase")?payment=${payid}`)
-            .then(()=>{
-                Swal.fire({
-                    title: "結帳成功!",
-                    text: "訂單已送至電子信箱!",
-                    icon: "success",
-                }).then((result) => {if (result.isConfirmed) { window.location.href = "OrderDetail" }})
-            })
-            .then(() => { fetch(`@Url.Content("~/Shop/orderview")`) })
-    })
+  
     
 
     payment.addEventListener('change', () => { 
@@ -156,6 +144,7 @@
     async function LoadCoupon() {
         const response = await fetch('@Url.Content("~/Shop/Coupon")');
         const data = await response.json();
+        console.log(data)
         const Coupon = data.map(x => `
                             <button type="button" id="${x.couponId}" value="${x.couponId}" onclick="Couponselect1(${x.couponId})">
                                 <div  style="max-width: 18rem;" >
@@ -202,5 +191,17 @@
             
     }
 
-    
+    btn.addEventListener('click', () => {
+        const payid = payment.value
+
+        fetch(`@Url.Content("~/Shop/Purchase")?payment=${payid}`)
+            .then(() => {
+                Swal.fire({
+                    title: "結帳成功!",
+                    text: "訂單已送至電子信箱!",
+                    icon: "success",
+                }).then((result) => { if (result.isConfirmed) { window.location.href = "OrderDetail" } })
+            })
+            .then(() => { fetch(`@Url.Content("~/Shop/orderview")`) })
+    })
 </script>

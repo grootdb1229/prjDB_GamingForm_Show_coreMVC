@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Client;
 using Microsoft.IdentityModel.Tokens;
+using MimeKit;
 using Org.BouncyCastle.Bcpg;
 using prjDB_GamingForm_Show.Models;
 using prjDB_GamingForm_Show.Models.Entities;
@@ -14,7 +15,8 @@ using prjDB_GamingForm_Show.Models.Shop;
 using prjDB_GamingForm_Show.ViewModels;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
+using MailKit;
+using MailKit.Net.Smtp;
 using System.Text.Json;
 using System.Web;
 using static prjDB_GamingForm_Show.Controllers.DeputeController;
@@ -477,39 +479,48 @@ namespace prjDB_GamingForm_Show.Controllers
         [HttpPost]
         public IActionResult Create(CDeputeViewModel vm)
         {
-            Depute n = new Depute()
+            try
             {
-                ProviderId = (int)HttpContext.Session.GetInt32(CDictionary.SK_UserID),
-                StartDate = DateTime.Now,
-                Modifiedate = DateTime.Now,
-                DeputeContent = vm.deputeContent,
-                Salary = vm.salary,
-                StatusId = 18,//懸賞中
-                RegionId = _db.Regions.FirstOrDefault(_ => _.City == vm.region).RegionId,
-                Title = vm.title,
-            };
-            _db.Deputes.Add(n);
-            _db.SaveChanges();
-
-            //存該委託所需的技能(多類別)
-            List<CDeputeSkillViewModel> list = JsonSerializer.Deserialize<List<CDeputeSkillViewModel>>(vm.skilllist);
-
-            DeputeSkill ndsk = new DeputeSkill();
-            foreach (var item in list)
-            {
-                int skillclassID = _db.SkillClasses.FirstOrDefault(_ => _.Name == item.skillclass).SkillClassId;
-                int skillID = _db.Skills.FirstOrDefault(_ => _.SkillClassId == skillclassID && _.Name == item.skill).SkillId;
-                ndsk.Id = 0;
-                ndsk.DeputeId = n.DeputeId;
-                ndsk.SkillId = skillID;
-                _db.DeputeSkills.Add(ndsk);
+                Depute n = new Depute()
+                {
+                    ProviderId = (int)HttpContext.Session.GetInt32(CDictionary.SK_UserID),
+                    StartDate = DateTime.Now,
+                    Modifiedate = DateTime.Now,
+                    DeputeContent = vm.deputeContent,
+                    Salary = vm.salary,
+                    StatusId = 18,//懸賞中
+                    RegionId = _db.Regions.FirstOrDefault(_ => _.City == vm.region).RegionId,
+                    Title = vm.title,
+                };
+                _db.Deputes.Add(n);
                 _db.SaveChanges();
+
+                //存該委託所需的技能(多類別)
+                List<CDeputeSkillViewModel> list = JsonSerializer.Deserialize<List<CDeputeSkillViewModel>>(vm.skilllist);
+
+                DeputeSkill ndsk = new DeputeSkill();
+                foreach (var item in list)
+                {
+                    int skillclassID = _db.SkillClasses.FirstOrDefault(_ => _.Name == item.skillclass).SkillClassId;
+                    int skillID = _db.Skills.FirstOrDefault(_ => _.SkillClassId == skillclassID && _.Name == item.skill).SkillId;
+                    ndsk.Id = 0;
+                    ndsk.DeputeId = n.DeputeId;
+                    ndsk.SkillId = skillID;
+                    _db.DeputeSkills.Add(ndsk);
+                    _db.SaveChanges();
+                }
+                return Json(new { success = true, message = "委託發佈成功" });
             }
-            return RedirectToAction("HomeFrame");
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message });
+            }
         }
         public IActionResult Apply(int id)
         {
             ViewBag.memberid = HttpContext.Session.GetInt32(CDictionary.SK_UserID);
+            int memberStatus = _db.Members.FirstOrDefault(_ => _.MemberId == HttpContext.Session.GetInt32(CDictionary.SK_UserID)).StatusId;
+            HttpContext.Session.SetInt32(CDictionary.SK_會員狀態編號, memberStatus);
             Depute o = _db.Deputes.FirstOrDefault(_ => _.DeputeId == id);
             if (o == null)
                 return RedirectToAction("deputemain");
@@ -642,12 +653,46 @@ namespace prjDB_GamingForm_Show.Controllers
         }
 
         #region API
+
+        public IActionResult SendDeputeEmail(CDeputeViewModel vm)
+        {
+            //
+            string s = "<div class='row'>";
+            s += "測試用信件";
+            //foreach (var item in vm.products)
+            //{
+            //    s += "<div class='col' style='color:black'>商品名稱:" + item.ProductName + "</div>"
+            //        + "<div class='col' style='color:black'>商品價格:" + item.Price.ToString("#0") + "元</div>";
+            //}
+            s += "</div>";
+            var message = new MimeMessage();
+            //寄件者
+            message.From.Add(new MailboxAddress("grootdb1229", "grootdb1229@gmail.com"));
+            //收件者
+            message.To.Add(new MailboxAddress(_db.Members.FirstOrDefault(x => x.MemberId == HttpContext.Session.GetInt32(CDictionary.SK_UserID)).Name, "bute77889@gmail.com"));
+            //標題
+            message.Subject = "委託狀態更新";
+            //內容
+            message.Body = new TextPart("html")
+            {
+                Text = s 
+            };
+
+            using (var client = new SmtpClient())
+            {
+                client.Connect("smtp.gmail.com", 587, false);
+                client.Authenticate("grootdb1229@gmail.com", "fmgx uucs lgkv vqxm");
+                client.Send(message);
+                client.Disconnect(true);
+            }
+            return RedirectToAction("OrderDetail", "Shop");
+        }
         public IActionResult myApplyContent(int id)
         {
             var o = _db.DeputeRecords.Where(_ => _.MemberId == HttpContext.Session.GetInt32(CDictionary.SK_UserID)).Select(_ => new
             {
                 content=_.RecordContent
-            });
+            }).Distinct();
             return Json(o);
         }
         public IActionResult downloadFile(string fileName)

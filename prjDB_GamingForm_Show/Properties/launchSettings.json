@@ -43,5 +43,8 @@
       "applicationUrl": "http://localhost:2061",
       "sslPort": 44344
     }
+  },
+  "env": {
+    "ASPNETCORE_ENVIRONMENT": "Development"
   }
 }
