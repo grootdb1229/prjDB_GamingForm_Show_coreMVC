@@ -23,6 +23,7 @@
         <div class=""  id="Hotproduct"></div>
         <div class="" id="Seenproduct"></div>
         <div class="" id="YourTop5"></div>
+        <div class="" id="LabelProduct"></div>
 </div>
 
     <p>
@@ -203,6 +204,12 @@
             $('#YourTop5').load('@Url.Content("~/shop/YourFavorite")');
         }
         loadFavorite();
+
+        function loasmlcarousel() {
+            $('#LabelProduct').load('@Url.Content("~/shop/SmlCarousel")');
+        }
+        loasmlcarousel();
+      
         //PartialView
 
         var queryButton = document.getElementById('QueryAjax');

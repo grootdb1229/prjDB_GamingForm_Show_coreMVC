@@ -72,7 +72,7 @@ namespace prjDB_GamingForm_Show.Controllers
 
                 List<CShopPageViewModel> List2 = data.Select(item =>
                 {   //將每個字以/串再一起。
-                    string s = string.Join("/", _db.ProductTags.Where(x => x.ProductId == item.ProductId).Select(x => x.SubTag.Name));
+                    string s = string.Join("/", _db.ProductTags.Where(x => x.ProductId == item.ProductId).Select(x => x.SubTag.Name).Take(5));
                     return new CShopPageViewModel //返還這個物件 Lambda多行表達需要加return，不然將會返還錯誤的東西，部分程式碼將不被視為返還值之一
                     {
                         ProductId = item.ProductId,
@@ -250,7 +250,12 @@ namespace prjDB_GamingForm_Show.Controllers
 				return PartialView();
 			}
 
-			public IActionResult SelSubtag()
+            public IActionResult SmlCarousel()//小廣告牆
+            {
+                return PartialView();
+            }
+
+            public IActionResult SelSubtag()//多重篩選格
 			{
 				return PartialView();
 			}
@@ -395,7 +400,7 @@ namespace prjDB_GamingForm_Show.Controllers
 					foreach (var item in data)
 					{
 						string s = "";
-						var tagname = _db.ProductTags.Where(x => x.ProductId == item.ProductId).Select(x => x.SubTag.Name).ToList();
+						var tagname = _db.ProductTags.Where(x => x.ProductId == item.ProductId).Select(x => x.SubTag.Name).ToList().Take(5);
 						foreach (var t in tagname)
 						{
 							s += t.ToString() + "/";
@@ -511,7 +516,7 @@ namespace prjDB_GamingForm_Show.Controllers
 
 				List<CShopPageViewModel> List = data.Select(item =>
 				{   //將每個字以/串再一起。
-					string s = string.Join("/", _db.ProductTags.Where(x => x.ProductId == item.ProductId).Select(x => x.SubTag.Name));
+					string s = string.Join("/", _db.ProductTags.Where(x => x.ProductId == item.ProductId).Select(x => x.SubTag.Name).Take(5));
 					return new CShopPageViewModel //返還這個物件 Lambda多行表達需要加return，不然將會返還錯誤的東西，部分程式碼將不被視為返還值之一
 					{
 						ProductId = item.ProductId,
@@ -559,7 +564,7 @@ namespace prjDB_GamingForm_Show.Controllers
 
 				List<CShopPageViewModel> List = data.Select(item =>
 				{   //將每個字以/串再一起。
-					string s = string.Join("/", _db.ProductTags.Where(x => x.ProductId == item.ProductId).Select(x => x.SubTag.Name));
+					string s = string.Join("/", _db.ProductTags.Where(x => x.ProductId == item.ProductId).Select(x => x.SubTag.Name).Take(5));
 					return new CShopPageViewModel //返還這個物件 Lambda多行表達需要加return，不然將會返還錯誤的東西，部分程式碼將不被視為返還值之一
 					{
 						ProductId = item.ProductId,
@@ -607,7 +612,7 @@ namespace prjDB_GamingForm_Show.Controllers
 
 				List<CShopPageViewModel> List = data.Select(item =>
 				{   //將每個字以/串再一起。
-					string s = string.Join("/", _db.ProductTags.Where(x => x.ProductId == item.ProductId).Select(x => x.SubTag.Name));
+					string s = string.Join("/", _db.ProductTags.Where(x => x.ProductId == item.ProductId).Select(x => x.SubTag.Name).Take(5));
 					return new CShopPageViewModel //返還這個物件 Lambda多行表達需要加return，不然將會返還錯誤的東西，部分程式碼將不被視為返還值之一
 					{
 						ProductId = item.ProductId,
@@ -655,7 +660,7 @@ namespace prjDB_GamingForm_Show.Controllers
 
 				List<CShopPageViewModel> List = data.Select(item =>
 				{   //將每個字以/串再一起。
-					string s = string.Join("/", _db.ProductTags.Where(x => x.ProductId == item.ProductId).Select(x => x.SubTag.Name));
+					string s = string.Join("/", _db.ProductTags.Where(x => x.ProductId == item.ProductId).Select(x => x.SubTag.Name).Take(5));
 					return new CShopPageViewModel  //返還這個物件 Lambda多行表達需要加return，不然將會返還錯誤的東西，部分程式碼將不被視為返還值之一
 					{
 						ProductId = item.ProductId,
@@ -1148,9 +1153,14 @@ namespace prjDB_GamingForm_Show.Controllers
 				 .Where(x => x.ProductId == id)
 				 .Select(x => x.SubTag.Name)
 				 .ToList();
-				string s = string.Join("/", tagNames);
-				
-                string MulPicString = "";
+				var tags = _db.SubTags.Where(x => tagNames.Contains(x.Name)).Select(x => new { x.Name, x.TagId });
+				var Gtag= tags.Where(x => x.TagId == 1).Select(x=>x.Name).ToList();
+				var Ltag = tags.Where(x => x.TagId == 3).Select(x=>x.Name).ToList();
+				string gtag = string.Join("/", Gtag);
+				string ltag = string.Join("/", Ltag);
+				//string s = string.Join("/", tagNames);
+
+				string MulPicString = "";
                 var MulPicsID = _db.ProductImages.Where(x => x.ProductId == id).Select(a=>a.Image.FImagePath).ToList();
                 if (MulPicsID != null)
                 {    
@@ -1166,7 +1176,8 @@ namespace prjDB_GamingForm_Show.Controllers
 					FImagePath = x.FImagePath,
 					Price = x.Price,
 					ProductContent = x.ProductContent,
-					SubTagName = s,
+					SubTagName = gtag,
+					SubTagName_Lan = ltag,
 					favourite = Likestatus,
 					MulPic= MulPicString
 				};
