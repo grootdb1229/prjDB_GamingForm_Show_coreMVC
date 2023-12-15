@@ -11,15 +11,11 @@ public partial class Advertise
 
     public string AdContent { get; set; } = null!;
 
-    public DateTime StartDate { get; set; }
-
-    public DateTime EndDate { get; set; }
+    public string FImagePath { get; set; } = null!;
 
     public int StatusId { get; set; }
 
     public virtual ICollection<JobAdvertise> JobAdvertises { get; set; } = new List<JobAdvertise>();
-
-    public virtual ICollection<ProductAdvertise> ProductAdvertises { get; set; } = new List<ProductAdvertise>();
 
     public virtual Status Status { get; set; } = null!;
 }

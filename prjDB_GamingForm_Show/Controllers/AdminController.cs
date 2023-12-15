@@ -1145,6 +1145,7 @@ namespace prjDB_GamingForm_Show.Controllers
 
             _db.ArticleComplains.Load();  // 使用 Load 方法進行延遲載入
 
+            _db.Articles.Load();
             vm.articleComplain = _db.ArticleComplains.Local;  // 從本地集合中獲取載入的 ArticleComplains
             _db.Articles.Include(p => p.SubBlog).ThenInclude(p => p.Blog).Include(p => p.Member).Load();  // 使用 Load 方法進行延遲載入
             vm.articles = _db.Articles.Local;  // 從本地集合中獲取載入的 Articles
