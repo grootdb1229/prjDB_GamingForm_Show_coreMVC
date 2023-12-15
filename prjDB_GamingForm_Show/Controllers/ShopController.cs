@@ -1677,6 +1677,19 @@ namespace prjDB_GamingForm_Show.Controllers
 				}
 				return RedirectToAction("OrderDetail", "Shop");
 			}
-		}
+            #region 彥霖
+            public IActionResult ShopADShow()
+            {
+                Advertise ad = _db.Advertises.Where(a => a.StatusId == 36).OrderByDescending(a => a.AdvertiseId).FirstOrDefault();
+                CShopUseADViewModel model = new CShopUseADViewModel()
+                {
+                    Title = ad.Title,
+                    Content = ad.AdContent,
+                    ImgPath = ad.FImagePath
+                };
+                return Json(model);
+            }
+            #endregion
+        }
     }
 }
