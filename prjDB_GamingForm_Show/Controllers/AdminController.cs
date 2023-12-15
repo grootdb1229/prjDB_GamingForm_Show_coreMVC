@@ -1,5 +1,4 @@
-﻿using AspNetCore;
-using DB_GamingForm_Show.Job.DeputeClass;
+﻿using DB_GamingForm_Show.Job.DeputeClass;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -1146,21 +1145,22 @@ namespace prjDB_GamingForm_Show.Controllers
             //};
 
             //return View(vm);
-
             CBlogViewModel vm = new CBlogViewModel();
 
-            _db.ArticleComplains.Load();  // 使用 Load 方法進行延遲載入
-
-            _db.Articles.Load();
+            _db.ArticleComplains.Include(p=>p.SubTag).Load();  // 使用 Load 方法進行延遲載入
             vm.articleComplain = _db.ArticleComplains.Local;  // 從本地集合中獲取載入的 ArticleComplains
-            _db.Articles.Include(p => p.SubBlog).ThenInclude(p => p.Blog).Include(p => p.Member).Load();  
-            vm.articles = _db.Articles.Local;  
-            _db.Members.Load(); 
-            vm.members = _db.Members.Local;
-            _db.Statuses.Load(); 
-            vm.status = _db.Statuses.Local;
+
+            _db.Articles.Include(p => p.SubBlog).ThenInclude(p => p.Blog).Include(p => p.Member).Load();  // 使用 Load 方法進行延遲載入
+            vm.articles = _db.Articles.Local;  // 從本地集合中獲取載入的 Articles
+
+            _db.Members.Load();  // 使用 Load 方法進行延遲載入
+            vm.members = _db.Members.Local;  // 從本地集合中獲取載入的 Members
+
+            _db.Statuses.Load();  // 使用 Load 方法進行延遲載入
+            vm.status = _db.Statuses.Local;  // 從本地集合中獲取載入的 Statuses
 
             return View(vm);
+
         }
 
 
@@ -1208,11 +1208,6 @@ namespace prjDB_GamingForm_Show.Controllers
                 mem.StatusId = (int)SId;
                 _db.SaveChanges();
             }
-
-
-
-
-
             return Content("此篇檢舉屬實，已刪除文章，並已移除此篇檢舉");
         }
 
