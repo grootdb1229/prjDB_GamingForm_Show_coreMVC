@@ -494,10 +494,7 @@ namespace prjDB_GamingForm_Show.Controllers
             _db.SaveChanges();
             return RedirectToAction("CouponList");
         }
-        public IActionResult fuck()
-        {
-            return View();
-        }
+        
         public string MessageTime(string time)
         {
             DateTime messagetime = DateTime.Parse(time);            
@@ -1147,18 +1144,20 @@ namespace prjDB_GamingForm_Show.Controllers
             //return View(vm);
             CBlogViewModel vm = new CBlogViewModel();
 
-            _db.ArticleComplains.Load();  // 使用 Load 方法進行延遲載入
-
-            _db.Articles.Load();
+            _db.ArticleComplains.Include(p=>p.SubTag).Load();  // 使用 Load 方法進行延遲載入
             vm.articleComplain = _db.ArticleComplains.Local;  // 從本地集合中獲取載入的 ArticleComplains
+
             _db.Articles.Include(p => p.SubBlog).ThenInclude(p => p.Blog).Include(p => p.Member).Load();  // 使用 Load 方法進行延遲載入
             vm.articles = _db.Articles.Local;  // 從本地集合中獲取載入的 Articles
+
             _db.Members.Load();  // 使用 Load 方法進行延遲載入
             vm.members = _db.Members.Local;  // 從本地集合中獲取載入的 Members
+
             _db.Statuses.Load();  // 使用 Load 方法進行延遲載入
             vm.status = _db.Statuses.Local;  // 從本地集合中獲取載入的 Statuses
 
             return View(vm);
+
         }
 
 
@@ -1177,7 +1176,7 @@ namespace prjDB_GamingForm_Show.Controllers
             return Content("此篇檢舉非屬實，已移除此篇檢舉");
         }
 
-        public IActionResult BlogArticleComplainSusscess(int? APId , int? AFId )
+        public IActionResult BlogArticleComplainSusscess(int? APId , int? AFId ,int? MId, int? SId)
         {
             var q = from n in _db.ArticleComplains
                     where n.Id == APId
@@ -1187,7 +1186,7 @@ namespace prjDB_GamingForm_Show.Controllers
             _db.ArticleComplains.Remove(q1);
             _db.SaveChanges();
 
-            //-----------
+            //-----------//
 
 
             Article art = _db.Articles.FirstOrDefault(a => a.ArticleId == AFId);
@@ -1200,11 +1199,12 @@ namespace prjDB_GamingForm_Show.Controllers
             }
             //-----------
 
-            
-
-
-
-
+            Member mem = _db.Members.FirstOrDefault(p => p.MemberId == MId);
+            if (mem != null)
+            {
+                mem.StatusId = (int)SId;
+                _db.SaveChanges();
+            }
             return Content("此篇檢舉屬實，已刪除文章，並已移除此篇檢舉");
         }
 
@@ -1247,8 +1247,9 @@ namespace prjDB_GamingForm_Show.Controllers
                 x = new CDeputeComplainsWrap();
                 x.Id = item.Id;
                 x.DeputeId = item.DeputeId;
+                x.MemberId = item.MemberId;
                 x.ProviderId = item.Depute.ProviderId;
-                //x.ProviderStatus = item.Depute.Provider;//todo bian先註解
+                x.ProviderStatus = item.Depute.Provider.Status.Name;
                 x.SubTagId = item.SubTag.Name;
                 x.ReportContent = item.ReportContent;
                 x.ReportDate = item.ReportDate;

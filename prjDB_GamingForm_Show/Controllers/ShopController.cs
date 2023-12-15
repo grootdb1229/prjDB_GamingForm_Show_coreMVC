@@ -1518,7 +1518,7 @@ namespace prjDB_GamingForm_Show.Controllers
 			public IActionResult OrderDetail()
 			{ 
 				List<COrderViewModel> vm = new List<COrderViewModel>();
-				var order =  _db.Orders.Where(x=>x.MemberId== HttpContext.Session.GetInt32(CDictionary.SK_UserID))
+				var order =  _db.Orders.Where(x=>x.MemberId== 41)//HttpContext.Session.GetInt32(CDictionary.SK_UserID))
 							.OrderByDescending(x => x.OrderId)
 							.Select(x => new { x.OrderId,x.Payment.Name, x.Coupon.Title,x.OrderDate});
 				COrderViewModel n = null;
