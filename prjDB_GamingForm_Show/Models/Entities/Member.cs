@@ -41,6 +41,12 @@ public partial class Member
 
     public virtual ICollection<Depute> Deputes { get; set; } = new List<Depute>();
 
+    public virtual Gender GenderNavigation { get; set; } = null!;
+
+    public virtual ICollection<MemberChat> MemberChatReceiveMemberNavigations { get; set; } = new List<MemberChat>();
+
+    public virtual ICollection<MemberChat> MemberChatSenderMemberNavigations { get; set; } = new List<MemberChat>();
+
     public virtual ICollection<MemberCollection> MemberCollections { get; set; } = new List<MemberCollection>();
 
     public virtual ICollection<MemberCoupon> MemberCoupons { get; set; } = new List<MemberCoupon>();
