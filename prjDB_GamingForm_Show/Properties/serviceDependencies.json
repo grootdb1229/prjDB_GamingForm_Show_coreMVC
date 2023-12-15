@@ -4,6 +4,11 @@
       "type": "mssql",
       "connectionId": "ConnectionStrings:AzureConnection",
       "dynamicId": null
+    },
+    "signalr1": {
+      "type": "signalr",
+      "connectionId": "Azure:SignalR:ConnectionString",
+      "dynamicId": null
     }
   }
 }
