@@ -403,6 +403,7 @@ namespace prjDB_GamingForm_Show.Controllers
             return Json(datas);
         }
         public IActionResult Region()
+        
         {
             List<string> regions = new List<string>();
             var datas = from n in _db.Regions

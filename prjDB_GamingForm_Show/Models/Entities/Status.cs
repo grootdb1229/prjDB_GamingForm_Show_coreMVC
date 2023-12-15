@@ -19,6 +19,8 @@ public partial class Status
 
     public virtual ICollection<Depute> Deputes { get; set; } = new List<Depute>();
 
+    public virtual ICollection<MemberStatus> MemberStatuses { get; set; } = new List<MemberStatus>();
+
     public virtual ICollection<Member> Members { get; set; } = new List<Member>();
 
     public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
