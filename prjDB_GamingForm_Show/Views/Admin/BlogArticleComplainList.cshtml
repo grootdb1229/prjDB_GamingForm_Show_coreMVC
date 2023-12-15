@@ -48,7 +48,7 @@
     <thead>
         <tr>
             <th>
-                檢舉會員ID
+                檢舉人ID
             </th>
             <th>
                 被檢舉人ID
@@ -70,6 +70,7 @@
     <tbody>
         @foreach (var item in Model.articleComplain)
         {
+            int memberId;
             <input type="hidden" id="@item.Id" name="APId" value="@item.Id" />
             <input type="hidden" name="AFId" id="@item.ArticleId" value="@item.ArticleId" />
 
@@ -79,7 +80,7 @@
                 </td>
                 <td>
                     @{
-                        var memberId = Model.articles
+                         memberId = Model.articles
                         .Where(a => a.ArticleId == item.ArticleId)
                         .Select(a => a.MemberId)
                         .FirstOrDefault();
@@ -141,7 +142,7 @@
                 此檢舉是否屬實
                 <br />
                 如屬實，請選擇懲處
-                <select id="selSta" name="StatusID" style="margin-top:3px;width:200px">
+                <select id="selSta" name="SId" style="margin-top:3px;width:200px">
                     @{
                         foreach (var type in Model.status.Where(s => (s.StatusId >= 32 && s.StatusId <= 34) || s.StatusId == 26))
                         {
@@ -170,14 +171,15 @@
         let Cid
         let AFId
         let MId
-        function test(id, Aid, MId) {
+        function test(id, Aid, Mid) {
             Cid = id
             AFId = Aid
-            MId = MId
+            MId = Mid
         }
-
         const selSta = document.querySelector('#selSta');//--
         const SId = selSta.value;
+
+
         const btnNo = document.querySelector('#btn_No')
         const btnYes = document.querySelector('#btn_Yes')
 
@@ -195,13 +197,12 @@
                     window.location.href = "/Admin/BlogArticleComplainList"
                 }
                 )
-
         })
 
 
 
         btnYes.addEventListener('click', () => {
-
+            
             fetch(`@Url.Content("~/Admin/BlogArticleComplainSusscess")?APId=${Cid}&AFId=${AFId}&MId=${MId}&SId=${SId}`)
                 .then(response => response.text())
                 .then(data => {
