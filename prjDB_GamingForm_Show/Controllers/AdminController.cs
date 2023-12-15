@@ -233,14 +233,14 @@ namespace prjDB_GamingForm_Show.Controllers
             return RedirectToAction("ProductComplain");
         }
         public IActionResult ProductComplain()
-        { 
+        {
             List<CProductComplainViewModel> ProductComplain = new List<CProductComplainViewModel>();
-            var datas = _db.ProductComplains.OrderBy(x=>x.Id).Select(x =>new {x.Id,x.ProductId,x.MemeberId,x.ReplyContent,x.ReportDate ,x.Status.Name,x.SubTagId} );
-            
+            var datas = _db.ProductComplains.OrderBy(x => x.Id).Select(x => new { x.Id, x.ProductId, x.MemeberId, x.ReplyContent, x.ReportDate, x.Status.Name, x.SubTagId });
+
             CProductComplainViewModel pc = new CProductComplainViewModel();
             foreach (var data in datas)
             {
-               var subtag = _db.SubTags.Where(x => x.SubTagId == data.SubTagId).Select(x =>new { x.Name });
+                var subtag = _db.SubTags.Where(x => x.SubTagId == data.SubTagId).Select(x => new { x.Name });
                 foreach (var i in subtag)
                 {
                     pc.Id = data.Id;
@@ -252,7 +252,7 @@ namespace prjDB_GamingForm_Show.Controllers
                     pc.Status = data.Name;
                     ProductComplain.Add(pc);
                 }
-              
+
             }
             return View(ProductComplain);
         }
@@ -349,13 +349,13 @@ namespace prjDB_GamingForm_Show.Controllers
             }
             return count;
         }
-        
+
         public IActionResult NotCheckMessage()
         {
             int reid = _db.Admins.Where(a => a.Name == HttpContext.Session.GetString(CDictionary.SK_管理者名稱)).Select(a => a.AdminId).FirstOrDefault();
             List<CAdminNotCheckMessageViewModel> vm = new List<CAdminNotCheckMessageViewModel>();
             CAdminNotCheckMessageViewModel message = null;
-            foreach(var m in _db.Chats)
+            foreach (var m in _db.Chats)
             {
                 if (m.ReceiveAdmin == reid && m.IsCheck == false)
                 {
@@ -410,7 +410,7 @@ namespace prjDB_GamingForm_Show.Controllers
             }
             else
             {
-                foreach (var m in _db.Coupons.Where(c => c.Title.Contains(kyvm.txtKeyWord)||c.CouponContent.Contains(kyvm.txtKeyWord)))
+                foreach (var m in _db.Coupons.Where(c => c.Title.Contains(kyvm.txtKeyWord) || c.CouponContent.Contains(kyvm.txtKeyWord)))
                 {
                     c = new CAdminCouponViewModel()
                     {
@@ -462,7 +462,7 @@ namespace prjDB_GamingForm_Show.Controllers
             {
                 Title = vm.Title,
                 CouponContent = vm.Content,
-                Discount = vm.Discount,                
+                Discount = vm.Discount,
                 StartDate = vm.StartDate,
                 EndDate = vm.EndDate,
                 StatusId = 24
@@ -483,7 +483,7 @@ namespace prjDB_GamingForm_Show.Controllers
             Coupon coupon = new Coupon()
             {
                 Title = vm.Title,
-                CouponContent = vm.Content,                
+                CouponContent = vm.Content,
                 Reduce = vm.Reduce,
                 StartDate = vm.StartDate,
                 EndDate = vm.EndDate,
@@ -494,13 +494,13 @@ namespace prjDB_GamingForm_Show.Controllers
             _db.SaveChanges();
             return RedirectToAction("CouponList");
         }
-        
+
         public string MessageTime(string time)
         {
-            DateTime messagetime = DateTime.Parse(time);            
+            DateTime messagetime = DateTime.Parse(time);
             DateTime now = DateTime.Now.ToLocalTime();
             TimeSpan timeSpan = now - messagetime;
-            if(timeSpan.TotalDays >= 1)
+            if (timeSpan.TotalDays >= 1)
             {
                 return timeSpan.Days.ToString() + "天前";
             }
@@ -515,7 +515,7 @@ namespace prjDB_GamingForm_Show.Controllers
             else
             {
                 return "現在";
-            }            
+            }
         }
         public IActionResult ShopADSetting()
         {
@@ -1130,21 +1130,12 @@ namespace prjDB_GamingForm_Show.Controllers
 
 
 
-        public IActionResult BlogArticleComplainList()
+        public IActionResult BlogArticleComplainList(CKeyWordViewModel kyvm)
         {
-            //CBlogViewModel vm = null;
-            //vm = new CBlogViewModel
-            //{
-            //    articleComplain = _db.ArticleComplains.Include(p => p.Article).Include(p => p.Member).Include(p => p.SubTag).Select(a => a),
-            //    articles = _db.Articles.Include(p => p.SubBlog).ThenInclude(p => p.Blog).Include(p => p.Member).Select(a => a),
-            //    members = _db.Members,
-            //    status = _db.Statuses,
-            //};
 
-            //return View(vm);
             CBlogViewModel vm = new CBlogViewModel();
 
-            _db.ArticleComplains.Include(p=>p.SubTag).Load();  // 使用 Load 方法進行延遲載入
+            _db.ArticleComplains.Where(a => a.Article.SubBlogId != 191).Include(p => p.SubTag).Load();  // 使用 Load 方法進行延遲載入
             vm.articleComplain = _db.ArticleComplains.Local;  // 從本地集合中獲取載入的 ArticleComplains
 
             _db.Articles.Include(p => p.SubBlog).ThenInclude(p => p.Blog).Include(p => p.Member).Load();  // 使用 Load 方法進行延遲載入
@@ -1162,13 +1153,12 @@ namespace prjDB_GamingForm_Show.Controllers
 
 
 
-
         public IActionResult BlogArticleComplainFail(int? APId)
         {
             var q = from n in _db.ArticleComplains
                     where n.Id == APId
                     select n;
-            var q1=_db.ArticleComplains.First(a => a.Id == APId);
+            var q1 = _db.ArticleComplains.First(a => a.Id == APId);
 
             _db.ArticleComplains.Remove(q1);
             _db.SaveChanges();
@@ -1176,7 +1166,7 @@ namespace prjDB_GamingForm_Show.Controllers
             return Content("此篇檢舉非屬實，已移除此篇檢舉");
         }
 
-        public IActionResult BlogArticleComplainSusscess(int? APId , int? AFId ,int? MId, int? SId)
+        public IActionResult BlogArticleComplainSusscess(int? APId, int? AFId, int? MId, int? SId)
         {
             var q = from n in _db.ArticleComplains
                     where n.Id == APId
@@ -1242,7 +1232,7 @@ namespace prjDB_GamingForm_Show.Controllers
             List<CDeputeComplainsWrap> list = new List<CDeputeComplainsWrap>();
             CDeputeComplainsWrap x = null;
             var datas = _db.DeputeComplains.OrderBy(n => n.Id);
-            foreach (var item in datas) 
+            foreach (var item in datas)
             {
                 x = new CDeputeComplainsWrap();
                 x.Id = item.Id;
@@ -1287,3 +1277,5 @@ namespace prjDB_GamingForm_Show.Controllers
         #endregion
     }
 }
+
+
