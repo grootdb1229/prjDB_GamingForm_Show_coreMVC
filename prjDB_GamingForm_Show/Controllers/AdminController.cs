@@ -495,10 +495,7 @@ namespace prjDB_GamingForm_Show.Controllers
             _db.SaveChanges();
             return RedirectToAction("CouponList");
         }
-        public IActionResult fuck()
-        {
-            return View();
-        }
+        
         public string MessageTime(string time)
         {
             DateTime messagetime = DateTime.Parse(time);            
