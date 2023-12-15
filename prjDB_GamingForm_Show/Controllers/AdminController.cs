@@ -7,6 +7,7 @@ using prjDB_GamingForm_Show.Models.Admin;
 using prjDB_GamingForm_Show.Models.Entities;
 using prjDB_GamingForm_Show.ViewModels;
 using System.Drawing;
+using System.Runtime.Intrinsics.Arm;
 using System.Runtime.Intrinsics.X86;
 using System.Security.Cryptography;
 
@@ -521,6 +522,30 @@ namespace prjDB_GamingForm_Show.Controllers
         {
             return View();
         }
+
+        [HttpPost]
+        public IActionResult ShopADSetting(CShopUseADViewModel vm)
+        {
+            Advertise ad = new Advertise();
+            if (vm != null)
+            {
+                if (vm.Photo != null)
+                {
+                    string photoName = Guid.NewGuid().ToString() + ".jpg";
+                    ad.FImagePath = photoName;
+                    vm.Photo.CopyTo(new FileStream(_enviro.WebRootPath + "/AD/" + photoName, FileMode.Create));
+                }
+                ad.Title = vm.Title;
+                ad.AdContent = vm.Content;
+                ad.StatusId = 36;
+                _db.Advertises.Add(ad);
+                _db.SaveChanges();
+            }
+
+            return RedirectToAction("ShopADSetting");
+        }
+
+        
         //public IActionResult MemberListNexttest()
         //{
         //    if (HttpContext.Session.Keys.Contains(CDictionary.SK_管理者觀看會員清單頁數使用關鍵字))
