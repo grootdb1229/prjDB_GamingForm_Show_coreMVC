@@ -988,7 +988,7 @@ namespace prjDB_GamingForm_Show.Controllers
 						string MulPic = "";
 						if (_db != null)
 						{
-							if (product.Photos != null && product.Photos.Count > 0)
+							if (product.Photos != null && product.Photos.Count > 0) //有新圖片加入
 							{
 								foreach (var photo in product.Photos)
 								{
@@ -1003,8 +1003,52 @@ namespace prjDB_GamingForm_Show.Controllers
 											photo.CopyTo(stream);
 										}
 										MulPic += photoName + "/";
+
+										string filenames = product.MulEditPic;//將沒有改的圖片存在這
+										filenames += MulPic;
+										MulPic = filenames;
 									}
 								}
+								if (product.Photos.Count >= 1) ///如果有超過一張圖就執行多餘圖片存取
+								{
+									_db.ProductImages.RemoveRange(_db.ProductImages.Where(p => p.ProductId == x.ProductId));
+									var removedImageIds = _db.ProductImages
+										.Where(p => p.ProductId == x.ProductId)
+										.Select(p => p.ImageId)
+										.ToList();
+									foreach (var imageId in removedImageIds)
+									{
+										var imageToRemove = _db.Images.FirstOrDefault(i => i.ImageId == imageId);
+										if (imageToRemove != null)
+										{
+											_db.Images.Remove(imageToRemove);
+										}
+									}
+
+									// 提交變更
+									_db.SaveChanges();
+									string[] OtherPic = MulPic.Split("/").Skip(1).ToArray();
+
+									foreach (string picpath in OtherPic)
+									{
+										if (!string.IsNullOrEmpty(picpath))
+										{
+											Image ElsePic = new Image();//裡還外?
+											ElsePic.FImagePath = picpath;
+											_db.Images.Add(ElsePic);
+											_db.SaveChanges();
+											ProductImage productImage = new ProductImage
+											{
+												ProductId = x.ProductId,
+												ImageId = ElsePic.ImageId
+											};
+											_db.ProductImages.Add(productImage);
+											_db.SaveChanges();
+										}
+									}
+
+								}
+
 								string[] pics = MulPic.Split('/');  ///一長串圖片被我拆分儲存
 								if (pics.Length > 0)
 								{
@@ -1021,28 +1065,33 @@ namespace prjDB_GamingForm_Show.Controllers
 
 								_db.SaveChanges();
 							}
-							if (product.Photos.Count >= 1) ///如果有超過一張圖就執行多餘圖片存取
-							{
-								_db.ProductImages.RemoveRange(_db.ProductImages.Where(p => p.ProductId == x.ProductId));
-								var removedImageIds = _db.ProductImages
-									.Where(p => p.ProductId == x.ProductId)
-									.Select(p => p.ImageId)
-									.ToList(); 						
-								foreach (var imageId in removedImageIds)
+
+
+							else { //沒有新圖片加入
+								string filenames = product.MulEditPic;
+								string[] OtherPic = filenames.Split("/").Skip(1).ToArray();
+								if (OtherPic.Length >= 1) ///如果有超過一張圖就執行多餘圖片存取
 								{
-									var imageToRemove = _db.Images.FirstOrDefault(i => i.ImageId == imageId);
-									if (imageToRemove != null)
+									_db.ProductImages.RemoveRange(_db.ProductImages.Where(p => p.ProductId == product.ProductId));
+									var removedImageIds = _db.ProductImages
+										.Where(p => p.ProductId == product.ProductId)
+										.Select(p => p.ImageId)
+										.ToList();
+									foreach (var imageId in removedImageIds)
 									{
-										_db.Images.Remove(imageToRemove);
+										var imageToRemove = _db.Images.FirstOrDefault(i => i.ImageId == imageId);
+										if (imageToRemove != null)
+										{
+											_db.Images.Remove(imageToRemove);
+										}
 									}
-								}
 
-								// 提交變更
-								_db.SaveChanges();
-								string[] OtherPic = MulPic.Split("/").Skip(1).ToArray();
+									// 提交變更
+									_db.SaveChanges();
 
-								foreach (string picpath in OtherPic)
-								{
+
+									foreach (string picpath in OtherPic)
+								
 									if (!string.IsNullOrEmpty(picpath))
 									{
 										Image ElsePic = new Image();//裡還外?
@@ -1058,6 +1107,23 @@ namespace prjDB_GamingForm_Show.Controllers
 										_db.SaveChanges();
 									}
 								}
+
+								string[] pics = filenames.Split('/');  
+								if (pics.Length > 0)
+								{
+									string Mainpic = pics[0];//第一張是主圖存入商品資料行
+									x.FImagePath = Mainpic;
+								}
+								x.ProductName = product.ProductName;
+								x.Price = product.Price;
+								x.AvailableDate = product.AvailableDate;
+								x.ProductContent = product.ProductContent;
+								x.UnitStock = product.UnitStock;
+								x.StatusId = 1;//記得改回7
+								x.MemberId = product.MemberID;
+
+								_db.SaveChanges();
+
 
 							}
 							if (product.GameTagOptions != null)//確保有選標籤
