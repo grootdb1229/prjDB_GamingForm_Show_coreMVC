@@ -21,6 +21,10 @@ using System.Text.Json;
 using System.Web;
 using static prjDB_GamingForm_Show.Controllers.DeputeController;
 using static System.Runtime.InteropServices.JavaScript.JSType;
+using OpenAI_API;
+using OpenAI_API.Models;
+using Azure;
+using OpenAI_API.Chat;
 
 namespace prjDB_GamingForm_Show.Controllers
 {
@@ -471,7 +475,35 @@ namespace prjDB_GamingForm_Show.Controllers
         #endregion
 
         #region 老邊
+        private async Task<string> ChatAsync()
+        {
+        OpenAIAPI api = new OpenAIAPI("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");
+            var chat = api.Chat.CreateConversation();
+            chat.Model = Model.ChatGPTTurbo;
+            chat.RequestParameters.Temperature = 0.6;
 
+            chat.AppendSystemMessage("你將看到包含委託主題及委託內容的委託需求，" +
+                "你的工作是提供以下列表中的一組標籤以JSON形式提供你的答案，" +
+                "僅從此提供的標籤清單中選擇(選擇至少5項skill):\r\n" +
+                "skillclass：程式\r\n繪畫\r\n音樂\r\n動畫" +
+                "skill：Csharp\r\nHtml\r\nCss\r\nLINQ\r\nADONET\r\nSQL\r\nJS\r\n電繪\r\n手繪\r\n水彩\r\n油畫\r\nJava\r\nPython\r\nPHP\r\nRuby\r\nASP.NET\r\nSwift\r\nKotlin\r\nReact\r\nSolidity\r\nSelenium\r\nJUnit\r\n電子\r\n搖滾\r\n古典\r\n爵士\r\n民族\r\n流行\r\n懸疑\r\n環境\r\n8位元\r\n16位元\r\nMaya\r\nPhotoShop\r\nPreminum");
+            chat.AppendUserInput("標題：\r\n12/16 ios app逆向工程\r\n內容：\r\n【幫忙事項】：ios app逆向工程 編碼及轉換16進位碼\r\n【注意事項】： 無");
+            return await chat.GetResponseFromChatbotAsync();
+            //Console.WriteLine(response);
+            //foreach (ChatMessage msg in chat.Messages)
+            //{
+            //    Console.WriteLine($"{msg.Role}: {msg.Content}");
+            //}
+        }
+        public async Task<IActionResult> Test2Async()
+        {
+            var response = await ChatAsync();
+            return Content(response);
+        }
+        public IActionResult test()
+        {
+            return Content("123");
+        }
         public IActionResult Create()
         {
             return View();
@@ -519,8 +551,11 @@ namespace prjDB_GamingForm_Show.Controllers
         public IActionResult Apply(int id)
         {
             ViewBag.memberid = HttpContext.Session.GetInt32(CDictionary.SK_UserID);
-            int memberStatus = _db.Members.FirstOrDefault(_ => _.MemberId == HttpContext.Session.GetInt32(CDictionary.SK_UserID)).StatusId;
-            HttpContext.Session.SetInt32(CDictionary.SK_會員狀態編號, memberStatus);
+            if (HttpContext.Session.GetInt32(CDictionary.SK_UserID) != null)
+            {
+                int memberStatus = _db.Members.FirstOrDefault(_ => _.MemberId == HttpContext.Session.GetInt32(CDictionary.SK_UserID)).StatusId;
+                HttpContext.Session.SetInt32(CDictionary.SK_會員狀態編號, memberStatus);
+            }
             Depute o = _db.Deputes.FirstOrDefault(_ => _.DeputeId == id);
             if (o == null)
                 return RedirectToAction("deputemain");
@@ -656,26 +691,25 @@ namespace prjDB_GamingForm_Show.Controllers
 
         public IActionResult SendDeputeEmail(CDeputeViewModel vm)
         {
-            //
-            string s = "<div class='row'>";
-            s += "測試用信件";
-            //foreach (var item in vm.products)
-            //{
-            //    s += "<div class='col' style='color:black'>商品名稱:" + item.ProductName + "</div>"
-            //        + "<div class='col' style='color:black'>商品價格:" + item.Price.ToString("#0") + "元</div>";
-            //}
-            s += "</div>";
+            
+            string dm = "<div style=\"color:black;\">\r\n<ul style=\"list-style-type: none; padding-left: 0;\">  <li style=\"background-color: #272727; color: #fff; padding: 10px; margin-left: 0px;\">Groot遊戲資源整合平台</li>";
+            dm += $"<li style=\"margin: 10px 0;padding: 10px;\">    <p>memberName　您好，</p>您的委託[deputeTitle]狀態已更新為[deputeStatus]，目前有[0]位會員向您投遞履歷，立即<a href=\"#\" style=\"color: #0d6efd; text-decoration: none;\">查看委託詳情</a>。</li>";
+            dm += "<li style=\"margin: 10px 0;\"><table style=\"width: 100%; border-collapse: collapse;padding: 10px;\"><tbody>";
+            dm += $"<tr><td style=\"border: 1px solid #ccc; padding: 8px;\">標題</td><td style=\"border: 1px solid #ccc; padding: 8px;\">委託狀態</td><td style=\"border: 1px solid #ccc; padding: 8px;\">應徵人數</td></tr>";
+            dm += $"<tr><td style=\"border: 1px solid #ccc; padding: 8px;\">Jacob</td><td style=\"border: 1px solid #ccc; padding: 8px;\">Thornton</td><td style=\"border: 1px solid #ccc; padding: 8px;\">@fat</td></tr>";
+            dm += "</tbody></table></li><li style=\"margin: 10px 0;\"><a href=\"#\" style=\"background-color: #272727; color: #fff; padding: 10px; text-decoration: none; display: inline-block;border-radius:10px\">詳細資訊</a></li><li style=\"margin: 10px 0;\"><div style=\"margin-bottom: 10px;padding: 10px;\">Groot將依個人資料保護法及相關法令之規定下，依隱私權保護政策蒐集、處理及合理利用您的個人資料。</div><div style=\"margin-bottom: 10px;padding: 10px;\">為確保能收到來自Groot的通知信件，強烈建議您將groot1229@gmail.com加入通訊錄。</div></li></ul></div>";
+
             var message = new MimeMessage();
             //寄件者
             message.From.Add(new MailboxAddress("grootdb1229", "grootdb1229@gmail.com"));
             //收件者
             message.To.Add(new MailboxAddress(_db.Members.FirstOrDefault(x => x.MemberId == HttpContext.Session.GetInt32(CDictionary.SK_UserID)).Name, "bute77889@gmail.com"));
             //標題
-            message.Subject = "委託狀態更新";
+            message.Subject = "委託Title狀態更新";
             //內容
             message.Body = new TextPart("html")
             {
-                Text = s 
+                Text = dm 
             };
 
             using (var client = new SmtpClient())

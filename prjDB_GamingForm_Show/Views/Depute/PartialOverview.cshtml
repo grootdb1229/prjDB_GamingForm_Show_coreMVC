@@ -143,7 +143,9 @@
 </div>
 
     <script>
-        function test() {
-            fetch('@Url.Content("~/depute/SendDeputeEmail")');
-        }
+    async function test() {
+        // const response = await fetch('@Url.Content("~/depute/Test2")');
+        // console.log(response.text());
+        fetch('@Url.Content("~/depute/SendDeputeEmail")');
+    }
     </script>
