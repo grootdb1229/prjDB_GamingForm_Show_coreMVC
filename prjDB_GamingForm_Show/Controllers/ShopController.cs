@@ -28,6 +28,7 @@ using MimeKit;
 using NuGet.Protocol.Plugins;
 using Microsoft.AspNetCore.Http;
 using System.Diagnostics.Metrics;
+using static Org.BouncyCastle.Asn1.Cmp.Challenge;
 
 namespace prjDB_GamingForm_Show.Controllers
 {
@@ -255,7 +256,23 @@ namespace prjDB_GamingForm_Show.Controllers
                 return PartialView();
             }
 
-            public IActionResult SelSubtag()//多重篩選格
+			public IActionResult SmlCarouselcontent(int? id)//小廣告牆的方法
+			{
+                var randomTagWithProducts = _db.SubTags
+				.Where(x => x.TagId == 1)
+				 .OrderBy(x => Guid.NewGuid())
+				.Take(id??2)
+				.Select(tag => new
+				{
+				tag.Name,
+				Products = tag.ProductTags.Select(x => x.Product).Take(5).ToList()
+				})
+				.ToList();
+				Trace.WriteLine(randomTagWithProducts);
+                return Json(randomTagWithProducts);
+			}
+
+			public IActionResult SelSubtag()//多重篩選格
 			{
 				return PartialView();
 			}
@@ -1677,19 +1694,19 @@ namespace prjDB_GamingForm_Show.Controllers
 				}
 				return RedirectToAction("OrderDetail", "Shop");
 			}
-            #region 彥霖
-            public IActionResult ShopADShow()
-            {
-                Advertise ad = _db.Advertises.Where(a => a.StatusId == 36).OrderByDescending(a => a.AdvertiseId).FirstOrDefault();
-                CShopUseADViewModel model = new CShopUseADViewModel()
-                {
-                    Title = ad.Title,
-                    Content = ad.AdContent,
-                    ImgPath = ad.FImagePath
-                };
-                return Json(model);
-            }
-            #endregion
-        }
-    }
+			#region 彥霖
+			public IActionResult ShopADShow()
+			{
+				Advertise ad = _db.Advertises.Where(a => a.StatusId == 36).OrderByDescending(a => a.AdvertiseId).FirstOrDefault();
+				CShopUseADViewModel model = new CShopUseADViewModel()
+				{
+					Title = ad.Title,
+					Content = ad.AdContent,
+					ImgPath = ad.FImagePath
+				};
+				return Json(model);
+			}
+			#endregion
+		}
+	}
 }
