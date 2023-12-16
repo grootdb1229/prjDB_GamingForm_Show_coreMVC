@@ -44,6 +44,7 @@
                 <div class="col-md-6">               
                 <h1 class="display-5 fw-bolder">@Html.DisplayFor(model => model.ProductName)</h1>
                 <div>
+                    <div>遊戲類型</div>
                     @{
                         string[] tags = Model.SubTagName.Split('/');
                         foreach (var t in tags)
@@ -52,8 +53,21 @@
                         }
                     }
                 </div>
+                <div>
+                   
+                    @{   
+                        string[] Ltags = Model.SubTagName_Lan.Split('/');
+                        if (Model.SubTagName == "" || string.IsNullOrEmpty(Model.SubTagName_Lan)){
+                     }else{  
+                         <div>支援語言</div>
+                        foreach (var t in Ltags)
+                        {
+                            <span class="badge text-bg-light">@t</span>
+                        }}
+                    }
+                </div>
                 <div class="fs-5 mb-5">
-                    <span class="text-decoration-line-through">@Html.DisplayFor(model => model.Price)</span>
+                    <div>售價</div>
                     <span>@Html.DisplayFor(model => model.Price)</span>
                 </div>
                 <div style="display: flex; align-items: center;">

@@ -4,6 +4,23 @@
 @{
     ViewBag.Title = "產品目錄";
 }
+<style>
+    /* 進版廣告用的 - 彥霖 */
+    .my-custom-image {
+        width: auto !important;
+        height: auto !important;
+        max-width: 100% !important;
+        max-height: 100% !important;
+    }
+    /* 進版廣告用的 - 彥霖 */
+    .my-custom-title {
+        color: #FCFCFC !important;
+    }
+    /* 進版廣告用的 - 彥霖 */
+    .my-custom-content {
+        color: #FCFCFC !important;
+    }
+</style>
 <section>
     <!-- Header-->
     <header class="" id="headerCarousel">
@@ -19,11 +36,12 @@
         </p>
         <div id="Eroor"></div>
 
-        <div class="container px-4 px-lg-5 mt-5">
-            <div class="" id="Hotproduct"></div>
-            <div class="" id="Seenproduct"></div>
-            <div class="" id="YourTop5"></div>
-        </div>
+<div class="container px-4 px-lg-5 mt-5">      
+        <div class=""  id="Hotproduct"></div>
+        <div class="" id="Seenproduct"></div>
+        <div class="" id="YourTop5"></div>
+        <div class="" id="LabelProduct"></div>
+</div>
 
     <p>
         @using (Html.BeginForm())
@@ -162,30 +180,27 @@
 {
     <script>
         // 進版廣告用的 - 彥霖
-
         document.addEventListener("DOMContentLoaded", function () {
             $.ajax('@Url.Content("~/Shop/ShopADShow")', {
                 "type": 'get',
                 "success": function (datas) {   
                     Swal.fire({
                         heightAuto:false,
-                        width:2000,
-                        height:1500,
+                        width:2000,                        
                         title: `${datas.title}`,
-                        text: `${datas.content}`,
-                        imageUrl: `../AD/${datas.imgPath}`,
-                        imageWidth: 1800,
-                        imageHeight: 700,
+                        html: `<div class="my-custom-content">${datas.content}</div>`,
+                        imageUrl: `../AD/${datas.imgPath}`,                        
                         imageAlt: "Custom image",
                         confirmButtonText:'關閉廣告',
-                        background:'#7B7B7B'
-        
-
+                        background: '#272727',
+                        customClass: {
+                            image: 'my-custom-image',// 添加自定義 CSS class
+                            title: 'my-custom-title', // 添加自定義 CSS class
+                            content: 'my-custom-content' // 添加自定義 CSS class
+                        }
                     });
                 }
             })
-
-            
         });
 
         function Addtocar(value) {
@@ -229,6 +244,13 @@
             $('#YourTop5').load('@Url.Content("~/shop/YourFavorite")');
         }
         loadFavorite();
+
+        function loasmlcarousel() {
+            var howmany = 2;
+            $('#LabelProduct').load('@Url.Content("~/shop/SmlCarousel")', { id: howmany });
+        }
+        loasmlcarousel();
+      
         //PartialView
 
         var queryButton = document.getElementById('QueryAjax');

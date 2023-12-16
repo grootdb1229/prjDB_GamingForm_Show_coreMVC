@@ -1,0 +1,82 @@
+﻿<style>
+    .centered-card {
+        display: flex;
+        justify-content: center;
+  
+        margin: auto; 
+    }
+
+    .details-link:hover small.text-body-secondary {
+        color: #750000;
+    }
+     
+</style>
+
+<div id="SmlCarouselcontent">
+
+</div>
+
+<script>
+    async function CallSmlCarouselcontent() {
+        const resopnse = await fetch(`@Url.Content("~/Shop/SmlCarouselcontent")?id=${@ViewBag.howmuch}`);
+        const data = await resopnse.json();
+        // console.log("我是小廣告"+data);
+        const map = data.map((x, index) => {
+            const totalProducts = x.products.length; // 商品總量 有需要可以加在底下。
+            return `
+            <div>
+                <h2>${x.name} </h2>
+            </div>
+            <div id="carouselExample-${index}" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-inner">
+                    ${x.products.map((product, productIndex) => `
+                        <div class="carousel-item ${productIndex === 0 ? 'active' : ''}">
+                            <div class="centered-card card mb-3" style="background-color: #474747;">
+                                <div class="row g-0">
+                                    <div class="col-md-4">
+                                                  <a href="@Url.Content("~/Shop/Details")?id=${product.productId}">
+                                        <img src="/images/shop/${product.fImagePath}" class="img-fluid rounded-start" alt="..." style="max-height:140px; width: 100%; height: 100%;">
+                                        </a>
+                                    </div>
+                                    <div class="col-md-8">
+                                            <div class="card-body"style="background-color: #474747;">
+                                            <h5 class="card-title">${product.productName}</h5>
+                                            <p class="card-text">${truncateText(product.productContent, 60)}</p>
+                                                       <a href="@Url.Content("~/Shop/Details")?id=${product.productId}" class="details-link">
+                                                <p class="card-text">
+                                                    <small class="text-body-secondary">點我看更多</small>
+                                                </p>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample-${index}" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#carouselExample-${index}" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+            </div>`;
+        }).join('');
+
+        document.querySelector(`#SmlCarouselcontent`).innerHTML = map;
+
+
+    }
+
+    function truncateText(text, maxLength) {
+        if (text.length > maxLength) {
+            return text.substring(0, maxLength) + "...";
+        }
+        return text;
+    }
+
+    CallSmlCarouselcontent();
+
+</script>
