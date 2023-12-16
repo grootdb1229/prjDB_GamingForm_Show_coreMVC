@@ -90,6 +90,33 @@
         height: 35px;
     }
 
+    .fixed-div {
+        position: fixed;
+        top: 150px; /* 固定在螢幕頂部 */
+        right: 40px; /* 固定在螢幕右側 */
+        padding: 10px;        
+        width: 400px;
+        max-width: 100%;
+        max-height: 650px;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        border-radius:15px;
+        background-color: #6C6C6C;
+        opacity: 0.95;
+        border: 3px groove #000;
+        border-radius: 15px;
+        color: #FFFFF4;
+        text-align: center;
+    }
+
+    .listtitle{
+        position: fixed;
+        top: 100px; /* 固定在螢幕頂部 */
+        right: 155px; /* 固定在螢幕右側 */
+        padding: 10px;
+    }
+
 </style>
 
 <h2>公開聊天室</h2>
@@ -159,13 +186,16 @@
 </div>
 
 <div class="chat-container"><input type="text" class="text_input" placeholder="請輸入..." /></div>
-<div id="memberList"></div>
+<div class="listtitle">
+    <h2 style="font-size:30px">會員列表</h2>
+</div>
+<div id="memberList" class="fixed-div"></div>
 
 @section Scripts{
     <script>
         var chatContentDiv = document.getElementById("chatContent");
         chatContentDiv.scrollTop = chatContentDiv.scrollHeight;
-
+        $('#memberList').load('@Url.Content("~/Member/ChatMemberList")');
 
     </script>
 }
