@@ -251,8 +251,8 @@ namespace prjDB_GamingForm_Show.Controllers
 				return PartialView();
 			}
 
-            public IActionResult SmlCarousel()//小廣告牆
-            {
+            public IActionResult SmlCarousel(int id)//小廣告牆
+            {ViewBag.howmuch = id;
                 return PartialView();
             }
 

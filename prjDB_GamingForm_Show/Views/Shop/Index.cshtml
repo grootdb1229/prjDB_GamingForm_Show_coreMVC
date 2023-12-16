@@ -246,7 +246,8 @@
         loadFavorite();
 
         function loasmlcarousel() {
-            $('#LabelProduct').load('@Url.Content("~/shop/SmlCarousel")');
+            var howmany = 2;
+            $('#LabelProduct').load('@Url.Content("~/shop/SmlCarousel")', { id: howmany });
         }
         loasmlcarousel();
       

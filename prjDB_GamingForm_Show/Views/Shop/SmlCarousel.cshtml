@@ -18,7 +18,7 @@
 
 <script>
     async function CallSmlCarouselcontent() {
-        const resopnse = await fetch(`@Url.Content("~/Shop/SmlCarouselcontent")?id=2`);
+        const resopnse = await fetch(`@Url.Content("~/Shop/SmlCarouselcontent")?id=${@ViewBag.howmuch}`);
         const data = await resopnse.json();
         // console.log("我是小廣告"+data);
         const map = data.map((x, index) => {
