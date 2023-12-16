@@ -90,7 +90,7 @@ namespace prjDB_GamingForm_Show.Controllers
             var website = $"https://prjdbgamingformshow20231215114758.azurewebsites.net/";
             var order = new Dictionary<string, string>
             {
-                { "MerchantTradeNo",  vm.OrderId.ToString()},
+                { "MerchantTradeNo",  orderId},
                 { "MerchantTradeDate",  DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss")},
                 { "TotalAmount",  vm.Sumprice.ToString()},
                 { "TradeDesc",  "無"},
@@ -131,8 +131,8 @@ namespace prjDB_GamingForm_Show.Controllers
             Orders.PaymentDate = Convert.ToDateTime(id["PaymentDate"]);
             Orders.SimulatePaid = int.Parse(id["SimulatePaid"]);
             db.SaveChanges();
-            //return View("EcpayView", data);
-            return RedirectToAction("Shop","OrderDetail");
+            return View("EcpayView", data);
+            //return RedirectToAction("Shop","OrderDetail");
         }
         /// step5 : 取得虛擬帳號 資訊  ClientRedirectURL
         [HttpPost]
