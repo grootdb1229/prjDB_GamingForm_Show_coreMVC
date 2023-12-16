@@ -479,6 +479,12 @@ namespace prjDB_GamingForm_Show.Controllers
         
         public IActionResult Create()
         {
+            //判斷是否被封鎖
+            if (HttpContext.Session.GetInt32(CDictionary.SK_UserID) != null)
+            {
+                int memberStatus = _db.Members.FirstOrDefault(_ => _.MemberId == HttpContext.Session.GetInt32(CDictionary.SK_UserID)).StatusId;
+                HttpContext.Session.SetInt32(CDictionary.SK_會員狀態編號, memberStatus);
+            }
             return View();
         }
         [HttpPost]
