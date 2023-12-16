@@ -492,5 +492,11 @@ namespace prjDB_GamingForm_Show.Controllers
         //}
         //會員忘記密碼流程
         #endregion
+        #region SignalRChatForMember - 彥霖
+        public IActionResult ChatTest()
+        {
+            return View();
+        }
+        #endregion
     }
 }
