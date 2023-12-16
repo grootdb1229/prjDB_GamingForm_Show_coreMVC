@@ -264,7 +264,7 @@
                         color: "#D0D0D0",
                         background: "#343a40",
                         title: "已取消",
-                        html: `將於5秒後跳轉回委託首頁`,
+                        html: `將於5秒後跳轉前頁`,
                         icon: "error",
                         timer: 5000,
                         timerProgressBar: true,
@@ -286,12 +286,13 @@
         }
 
         function login() {
+            document.cookie = "ppreUrl=" + "@ViewBag.preUrl" + ";  path=/";
             document.cookie = "returnUrl=" + window.location.href + ";  path=/";
             const loginUrl = '@Url.Action("Login", "Home")';
             window.location.href = loginUrl;
         }
         function back() {
-            window.location.href = '@Url.Action("DeputeMain", "depute")';
+            window.location.href = '@ViewBag.preUrl';
         }
     </script>
 </body>

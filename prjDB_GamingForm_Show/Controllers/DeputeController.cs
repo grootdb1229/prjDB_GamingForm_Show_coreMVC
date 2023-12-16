@@ -25,6 +25,7 @@ using OpenAI_API;
 using OpenAI_API.Models;
 using Azure;
 using OpenAI_API.Chat;
+using Microsoft.AspNetCore.Http.Extensions;
 
 namespace prjDB_GamingForm_Show.Controllers
 {
@@ -477,7 +478,7 @@ namespace prjDB_GamingForm_Show.Controllers
         #region 老邊
         private async Task<string> ChatAsync()
         {
-        OpenAIAPI api = new OpenAIAPI("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");
+        OpenAIAPI api = new OpenAIAPI("");
             var chat = api.Chat.CreateConversation();
             chat.Model = Model.ChatGPTTurbo;
             chat.RequestParameters.Temperature = 0.6;
@@ -550,15 +551,24 @@ namespace prjDB_GamingForm_Show.Controllers
         }
         public IActionResult Apply(int id)
         {
-            ViewBag.memberid = HttpContext.Session.GetInt32(CDictionary.SK_UserID);
+            Depute o = _db.Deputes.FirstOrDefault(_ => _.DeputeId == id);
+            if (o == null)
+                return RedirectToAction("deputemain");
+
+            //登入後跳轉前一頁
+            ViewBag.preUrl = HttpContext.Request.Headers["Referer"].ToString();
+            if (!string.IsNullOrEmpty(Request.Cookies["ppreUrl"]))
+            {
+                //如果未登入點選狀態為例外項的應徵時執行此處
+                ViewBag.preUrl = Request.Cookies["ppreUrl"];
+                Response.Cookies.Delete("ppreUrl");
+            }
+            //判斷是否被封鎖
             if (HttpContext.Session.GetInt32(CDictionary.SK_UserID) != null)
             {
                 int memberStatus = _db.Members.FirstOrDefault(_ => _.MemberId == HttpContext.Session.GetInt32(CDictionary.SK_UserID)).StatusId;
                 HttpContext.Session.SetInt32(CDictionary.SK_會員狀態編號, memberStatus);
             }
-            Depute o = _db.Deputes.FirstOrDefault(_ => _.DeputeId == id);
-            if (o == null)
-                return RedirectToAction("deputemain");
             return View(o);
         }
         [HttpPost]
