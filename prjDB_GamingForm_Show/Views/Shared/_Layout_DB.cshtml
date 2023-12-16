@@ -264,7 +264,7 @@
                         color: "#D0D0D0",
                         background: "#343a40",
                         title: "已取消",
-                        html: `將於5秒後跳轉回首頁`,
+                        html: `將於5秒後跳轉回委託首頁`,
                         icon: "error",
                         timer: 5000,
                         timerProgressBar: true,
@@ -291,7 +291,7 @@
             window.location.href = loginUrl;
         }
         function back() {
-            window.location.href = '@Url.Action("homepage", "home")';
+            window.location.href = '@Url.Action("DeputeMain", "depute")';
         }
     </script>
 </body>
