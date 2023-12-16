@@ -27,6 +27,7 @@ app.UseRouting();
 
 app.UseAuthorization();
 app.MapHub<ChatHub>("/chatHub");
+app.MapHub<MemberChatHub>("/memberChatHub");
 app.MapControllerRoute(
     name: "default",
 //pattern: "{controller=depute}/{action=deputemain}/{id?}");
