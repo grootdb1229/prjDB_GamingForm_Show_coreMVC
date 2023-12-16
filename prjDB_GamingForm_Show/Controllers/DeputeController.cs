@@ -550,7 +550,7 @@ namespace prjDB_GamingForm_Show.Controllers
             }
         }
         public IActionResult Apply(int id)
-        {
+        { 
             Depute o = _db.Deputes.FirstOrDefault(_ => _.DeputeId == id);
             if (o == null)
                 return RedirectToAction("deputemain");
