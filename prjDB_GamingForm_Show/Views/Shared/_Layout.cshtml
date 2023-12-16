@@ -46,22 +46,23 @@
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                             <li>@Html.ActionLink("遊戲委託", "DeputeMain", "Depute", null, new { @class = "dropdown-item" })</li>
                             <li><hr class="dropdown-divider" /></li>
-                            <li>@Html.ActionLink("委託管理", "homeframe", "Depute",  null, new { @class = "dropdown-item" })</li>
+                            <li>@Html.ActionLink("委託管理", "homeframe", "Depute", null, new { @class = "dropdown-item" })</li>
                         </ul>
                     </li>
                     <li class="nav-item">
-                            @Html.ActionLink("遊戲商城", "Index", "Shop", null, new { @class = "nav-link" })
+                        @Html.ActionLink("遊戲商城", "Index", "Shop", null, new { @class = "nav-link" })
                     </li>
-                       @* <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <li>
-                                @Html.ActionLink("遊戲商城", "Index", "Shop", null, new { @class = "dropdown-item" })
-                            </li>
-                            <li><hr class="dropdown-divider" /></li>
-                            <li><a class="dropdown-item" href="#!">Popular Items</a></li>
-                            <li><a class="dropdown-item" href="#!">New Arrivals</a></li>
-                        </ul>*@
+                    @* <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                     <li>
-                        @Html.ActionLink("聊天室測試", "ChatTest", "Member", null, new { @class = "nav-link" })
+                    @Html.ActionLink("遊戲商城", "Index", "Shop", null, new { @class = "dropdown-item" })
+                    </li>
+                    <li><hr class="dropdown-divider" /></li>
+                    <li><a class="dropdown-item" href="#!">Popular Items</a></li>
+                    <li><a class="dropdown-item" href="#!">New Arrivals</a></li>
+                    </ul>*@
+
+                    <li id="memberChat" style="display:none">
+                        @Html.ActionLink("聊天室測試", "OpenChat", "Member", null, new { @class = "nav-link" })
                     </li>
                 </ul>
                 <div>
@@ -70,14 +71,14 @@
                         @{
                             if (Context.Session.GetInt32(CDictionary.SK_UserID) == null)
                             {
-                                                <li class="nav-item "> @Html.ActionLink("登入", "Login", "Home", null, new { @class = "nav-link" ,id="lilogin"})</li>
-                                                <li class="nav-item"> @Html.ActionLink("註冊", "Create", "Member", null, new { @class = "nav-link" })</li>
+                                <li class="nav-item "> @Html.ActionLink("登入", "Login", "Home", null, new { @class = "nav-link", id = "lilogin" })</li>
+                                <li class="nav-item"> @Html.ActionLink("註冊", "Create", "Member", null, new { @class = "nav-link" })</li>
                             }
                             else
                             {
-                                                <li class="nav-item" style=" padding: var(--bs-nav-link-padding-y) var(--bs-nav-link-padding-x)">歡迎回來 @Context.Session.GetString(CDictionary.SK_UserName) ID=@Context.Session.GetInt32(CDictionary.SK_UserID)</li>
-                                                <li class="nav-item">@Html.ActionLink("登出", "Logout", "Home", null, new { @class = "nav-link" })</li>
-                                                <li class="nav-item">@Html.ActionLink("會員頁面", "MemberPageTest", "Member", new {id = Context.Session.GetInt32(CDictionary.SK_UserID) }, new { @class = "nav-link" })</li>
+                                <li class="nav-item" style=" padding: var(--bs-nav-link-padding-y) var(--bs-nav-link-padding-x)">歡迎回來 @Context.Session.GetString(CDictionary.SK_UserName) ID=@Context.Session.GetInt32(CDictionary.SK_UserID)</li>
+                                <li class="nav-item">@Html.ActionLink("登出", "Logout", "Home", null, new { @class = "nav-link" })</li>
+                                <li class="nav-item">@Html.ActionLink("會員頁面", "MemberPageTest", "Member", new { id = Context.Session.GetInt32(CDictionary.SK_UserID) }, new { @class = "nav-link" })</li>
                             }
                         }
 
@@ -86,39 +87,39 @@
                 @* 願望清單 *@
 
                 @{
-                                   @inject prjDB_GamingForm_Show.Models.Entities.DbGamingFormTestContext dbContext
+                    @inject prjDB_GamingForm_Show.Models.Entities.DbGamingFormTestContext dbContext
                     int userId = 0;
                     int count = 0;
-                     if (Context.Session.GetInt32(CDictionary.SK_UserID) != null)
-                         {             
-                         userId = (int)Context.Session.GetInt32(CDictionary.SK_UserID);
-                          count = (dbContext.WishLists.Where(x => x.MemberId == userId).Select(a => a)).Count();
-                            }
-                    
+                    if (Context.Session.GetInt32(CDictionary.SK_UserID) != null)
+                    {
+                        userId = (int)Context.Session.GetInt32(CDictionary.SK_UserID);
+                        count = (dbContext.WishLists.Where(x => x.MemberId == userId).Select(a => a)).Count();
+                    }
+
 
                     if (Context.Session.GetInt32(CDictionary.SK_UserID) == null)
                     {
-                                            <form class="d-flex">
-                                             <a href="@Url.Action("LoveList", "Shop", new { id = Context.Session.GetInt32(CDictionary.SK_UserID) })" class="btn btn-outline-dark mt-auto" id="myLink" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-                                                <img src="~/images/shop/blackheart.png" width="16" height="15">
-                                                <span class="badge bg-dark text-white ms-1 rounded-pill" id="lovecount">@count</span>
-                                            </a>
-                                        </form>
+                        <form class="d-flex">
+                            <a href="@Url.Action("LoveList", "Shop", new { id = Context.Session.GetInt32(CDictionary.SK_UserID) })" class="btn btn-outline-dark mt-auto" id="myLink" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                                <img src="~/images/shop/blackheart.png" width="16" height="15">
+                                <span class="badge bg-dark text-white ms-1 rounded-pill" id="lovecount">@count</span>
+                            </a>
+                        </form>
                     }
-                
+
                     else
                     {
-                                        <form class="d-flex">
-                                            <a href="@Url.Action("LoveList", "Shop", new { id = Context.Session.GetInt32(CDictionary.SK_UserID) })" class="btn mt-auto btn-outline-dark  me-1">
-                                        <img src="~/images/shop/blackheart.png" width="16" height="15">
-                                                <span class="badge bg-dark text-white ms-1 rounded-pill" id="lovecount">@count</span>
-                                        </a>
-                                        </form>
+                        <form class="d-flex">
+                            <a href="@Url.Action("LoveList", "Shop", new { id = Context.Session.GetInt32(CDictionary.SK_UserID) })" class="btn mt-auto btn-outline-dark  me-1">
+                                <img src="~/images/shop/blackheart.png" width="16" height="15">
+                                <span class="badge bg-dark text-white ms-1 rounded-pill" id="lovecount">@count</span>
+                            </a>
+                        </form>
                     }
                     // 購物車
                 }
                 @{
-                
+
                     int Ccount = 0;
                     string json = "";
                     List<prjDB_GamingForm_Show.ViewModels.CShoppingCarViewModel> car = null;
@@ -126,16 +127,16 @@
                     {
                         json = Context.Session.GetString(CDictionary.SK_PURCHASED_PRODUCES_LIST);
                         car = System.Text.Json.JsonSerializer.Deserialize<List<prjDB_GamingForm_Show.ViewModels.CShoppingCarViewModel>>(json);
-                        Ccount=car.Count();
+                        Ccount = car.Count();
                     }
 
 
-                                    <form class="d-flex">
-                                        <a href="~/Shop/CarView" class="btn mt-auto btn-outline-dark bi-cart-fill me-1" id="car">
-                                            <span class="badge bg-dark text-white ms-1 rounded-pill" id="carcount">@Ccount</span>
-                                        </a>
-                                    </form>
-                       }
+                    <form class="d-flex">
+                        <a href="~/Shop/CarView" class="btn mt-auto btn-outline-dark bi-cart-fill me-1" id="car">
+                            <span class="badge bg-dark text-white ms-1 rounded-pill" id="carcount">@Ccount</span>
+                        </a>
+                    </form>
+                }
             </div>
         </div>
     </nav>
@@ -155,7 +156,7 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">關閉</button>
                     <button type="button" class="btn btn-primary" , id="btnlogin">登入</button>
-                   @*  @Html.ActionLink("登入", "Login", "Home", null, new { @class = "btn btn-primary", id = "btnlogin" }) *@
+                    @*  @Html.ActionLink("登入", "Login", "Home", null, new { @class = "btn btn-primary", id = "btnlogin" }) *@
                 </div>
             </div>
         </div>
@@ -184,6 +185,15 @@
     <script src="~/js/blogmain.js"></script>*@
 
     <script>
+        //聊天室 - 彥霖
+        $(document).ready(async function () {            
+            const response = await fetch('@Url.Content("~/Member/IsLoginOrNot")')
+            const datas = await response.json()            
+            if(datas == true){
+                $('#memberChat').css('display', 'block');
+            }            
+        });
+
         const button = document.querySelector('#car');
         button.addEventListener('mouseover', () => {
             button.style.backgroundColor = '#a81d1d';
@@ -211,8 +221,7 @@
     <!--圈圈加進來測試用-->
     @await RenderSectionAsync("Scripts", required: false)
     <script>
-        async function getLoveList() 
-        {
+        async function getLoveList() {
             let url = "@Url.Content("~/Shop/getLoveList")";
             const response = await fetch(url);
             const count = await response.text();
