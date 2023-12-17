@@ -7,5 +7,6 @@
         public string? deputeTitle {  get; set; }
         public string? deputeStatus {  get; set; }
         public int deputeRecordCount {  get; set; }
+        public string progress {  get; set; }
     }
 }
