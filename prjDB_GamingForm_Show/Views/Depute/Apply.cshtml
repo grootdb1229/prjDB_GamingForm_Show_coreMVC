@@ -30,7 +30,7 @@
             </div>
             <div class="form-group" hidden>
                 <label class="control-label">會員編號</label>
-                <input name="MemberId" value="@ViewBag.memberid" class="form-control" />
+                <input name="MemberId" value="@Context.Session.GetInt32(CDictionary.SK_UserID)" class="form-control" />
             </div>
             <div class="form-group" hidden>
                 <label class="control-label">ApplyStatusId</label>
@@ -131,7 +131,7 @@
                 status = "該委託已完成無法應徵";
                 changeHref()
             }
-            else if (@Model.ProviderId== @ViewBag.memberid) {
+            else if (@Model.ProviderId== @Context.Session.GetInt32(CDictionary.SK_UserID)) {
                 status = "無法應徵自己的委託";
                 changeHref()
             }
@@ -146,7 +146,7 @@
                     timer: 5000,
                     timerProgressBar: true,
                     title: `${status}`,
-                    html: "將於<b></b>秒跳轉委託首頁",
+                    html: "將於<b></b>秒跳轉前頁",
                     icon: "warning",
                     didOpen: () => {
                         Swal.showLoading();
@@ -159,7 +159,7 @@
                         clearInterval(timerInterval);
                     }
                 }).then(() => {
-                    window.location.href = '@Url.Action("DeputeMain","depute")';
+                    window.location.href = '@ViewBag.preUrl';
                 })
             }
         })

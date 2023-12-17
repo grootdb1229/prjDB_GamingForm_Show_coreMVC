@@ -3,13 +3,14 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
 </head>
 <style>
-    .offline{
+    .offline {
         background-color: #4F4F4F;
         color: #ADADAD;
-        padding:3px;
-        border-radius:5px
+        padding: 3px;
+        border-radius: 5px
     }
-    .online{
+
+    .online {
         background-color: #009100;
         color: #F0FFF0;
         padding: 3px;
@@ -64,14 +65,14 @@
 </table>
 
  <script>
-     $(document).ready(function () {
-        var name = $('#an').text()      
+    $(document).ready(function () {
+        var name = $('#an').text()
         var text = document.createElement("span")
         text.innerText = "使用者"
         document.querySelector(`#sendMessage_${name}`).style.display = "none"
         document.querySelector(`#td_${name}`).appendChild(text)
-         
-     })
+
+    })
 
     var connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
     var notCheckMessage = 0;
@@ -82,7 +83,7 @@
     }).catch(function (err) {
         alert('連線錯誤: ' + err.toString());
     });
-    
+
     connection.on("ReceiverUpdContent", function (message, selfID, senderAdminId, senderimg, sendTime) {
         var div = document.querySelector('#AdminsChat');
         if (div.style.display == "block") {
@@ -107,7 +108,7 @@
         var li = document.createElement("li")
         li.classList.add("nav-item")
         li.setAttribute("data-li-name", "uniqueName");
-        messageBox.insertBefore(li,messageBox.firstChild)
+        messageBox.insertBefore(li, messageBox.firstChild)
 
         // 第二層a
         var a = document.createElement("a")

@@ -493,9 +493,38 @@ namespace prjDB_GamingForm_Show.Controllers
         //會員忘記密碼流程
         #endregion
         #region SignalRChatForMember - 彥霖
-        public IActionResult ChatTest()
+        public IActionResult OpenChat()
         {
             return View();
+        }
+
+        public bool IsLoginOrNot()
+        {
+            if(HttpContext.Session.GetString(CDictionary.SK_UserName) != null)
+            {
+                return true;
+            }
+            else { return false; }
+        }
+
+        public IActionResult ChatMemberList() 
+        {
+            List<CSignalRUseMemberList> members = new List<CSignalRUseMemberList>();
+            var datas = from a in _db.Members
+                        select new
+                        {      
+                            a.MemberId,
+                            a.Name
+                        };
+            foreach (var data in datas)
+            {
+                CSignalRUseMemberList member = new CSignalRUseMemberList();
+                member.MemberId = data.MemberId;
+                member.MemberName = data.Name;
+                members.Add(member);
+            }
+            
+            return PartialView(members);
         }
         #endregion
     }

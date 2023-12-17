@@ -1,0 +1,68 @@
+﻿@model IEnumerable<prjDB_GamingForm_Show.ViewModels.CSignalRUseMemberList>
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+</head>
+<style>
+    .offline {
+        background-color: #4F4F4F;
+        color: #ADADAD;
+        padding: 3px;
+        border-radius: 5px
+    }
+
+    .online {
+        background-color: #009100;
+        color: #F0FFF0;
+        padding: 3px;
+        border-radius: 5px
+    }
+</style>
+<div id="mid" hidden>@Context.Session.GetInt32(CDictionary.SK_UserID)</div>
+<table class="table table-dark table-hover" style="color:cornsilk;font-size:20px;border-radius:15px">
+    <thead>
+        <tr>
+            <th>
+                編號
+            </th>
+            <th>
+                名稱
+            </th>
+            <th>
+                狀態
+            </th>
+            <th>
+                私訊
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MemberId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MemberName)
+                </td>
+                <td id="@($"onlineStatus_{item.MemberId}")">
+                    <!-- 在線狀態將在此處更新 --><span class="offline">離線</span>
+                </td>
+                <td id="@($"td_{item.MemberId}")">
+                    <button style="display:block" id="@($"sendMessage_{item.MemberId}")" @* onclick="openChat(@item.AdminId)" *@ class="btn btn-outline-secondary">開啟</button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+ <script>
+    $(document).ready(function () {
+        var id = $('#mid').text()
+        var text = document.createElement("span")
+        text.innerText = "使用者"
+        document.querySelector(`#sendMessage_${id}`).style.display = "none"
+        document.querySelector(`#td_${id}`).appendChild(text)
+
+    })
+</script>
