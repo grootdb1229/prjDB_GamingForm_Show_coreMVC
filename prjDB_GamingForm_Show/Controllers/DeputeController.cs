@@ -563,9 +563,10 @@ namespace prjDB_GamingForm_Show.Controllers
                     memberName = _db.Members.FirstOrDefault(_ => _.MemberId == currentDepute.ProviderId).Name,
                     email = _db.Members.FirstOrDefault(_ => _.MemberId == currentDepute.ProviderId).Email,
                     deputeTitle = currentDepute.Title,
+                    deputeStartDate = currentDepute.StartDate.ToString("yyyy/MM/dd"),
                     deputeStatus = currentDepute.Status.Name,
                     deputeRecordCount = _db.DeputeRecords.Count(_ => _.DeputeId == currentDepute.DeputeId),
-                    progress=CDictionary.PROGRESS_會員應徵委託
+                    progress = CDictionary.PROGRESS_會員應徵委託
                 };
                 SendDeputeEmail(emaiContent);
                 return Json(new { success = true, message = "履歷投遞成功" });
@@ -665,6 +666,7 @@ namespace prjDB_GamingForm_Show.Controllers
         [HttpPost]
         public IActionResult ReplyDepute(CDeputeViewModel vm,IFormFile formFile)
         {
+            //受委託者完成委託
             try
             {
                 string fileType = formFile.FileName.Split('.')[1];
@@ -684,6 +686,7 @@ namespace prjDB_GamingForm_Show.Controllers
                 CDeputeEmail content = new CDeputeEmail()
                 {
                     memberName=oriDeputRecord.Depute.Provider.Name,
+                    workerName=oriDeputRecord.Member.Name,
                     email=oriDeputRecord.Depute.Provider.Email,
                     deputeTitle= oriDeputRecord.Depute.Title,
                     deputeStatus=oriDeputRecord.ApplyStatus.Name,
@@ -732,21 +735,47 @@ namespace prjDB_GamingForm_Show.Controllers
 
         public IActionResult SendDeputeEmail(CDeputeEmail vm)
         {
+            string diffContent = "";
+            string diffTable = "";
+            string email = "bute77889@gmail.com";
+            switch (vm.progress)
+            {
+                case CDictionary.PROGRESS_會員應徵委託:
+                    diffContent = $"您發佈的委託「{vm.deputeTitle}」有新的應徵者，目前共有　{vm.deputeRecordCount}　位會員向您投遞履歷";
+                    diffTable = "<tr><td style=\"border: 1px solid #ccc; padding: 8px;\">委託標題</td><td style=\"border: 1px solid #ccc; padding: 8px;\">發佈日期</td><td style=\"border: 1px solid #ccc; padding: 8px;\">應徵人數</td></tr>" +
+                        $"<tr><td style=\"border: 1px solid #ccc; padding: 8px;\">{vm.deputeTitle}</td><td style=\"border: 1px solid #ccc; padding: 8px;\">{vm.deputeStartDate}</td><td style=\"border: 1px solid #ccc; padding: 8px;\">{vm.deputeRecordCount}</td></tr></tbody></table></li>";
+                    break;
+                case CDictionary.PROGRESS_委託者決定合作:
+                    diffContent = $"您應徵的委託「{vm.deputeTitle}」委託者已決定與您合作";
+                    diffTable = "<tr><td style=\"border: 1px solid #ccc; padding: 8px;\">委託標題</td><td style=\"border: 1px solid #ccc; padding: 8px;\">委託內容</td><td style=\"border: 1px solid #ccc; padding: 8px;\">目前狀態</td></tr>" +
+                        $"<tr><td style=\"border: 1px solid #ccc; padding: 8px;\">{vm.deputeTitle}</td><td style=\"border: 1px solid #ccc; padding: 8px;\">{vm.deputeContent}</td><td style=\"border: 1px solid #ccc; padding: 8px;\">{vm.recordStatus}</td></tr></tbody></table></li>";
+                    break;
+                case CDictionary.PROGRESS_會員完成委託:
+                    diffContent = $"您發佈的的委託「{vm.deputeTitle}」狀態已更新為「{vm.deputeStatus}」";
+                    diffTable = "<tr><td style=\"border: 1px solid #ccc; padding: 8px;\">委託標題</td><td style=\"border: 1px solid #ccc; padding: 8px;\">執行會員</td><td style=\"border: 1px solid #ccc; padding: 8px;\">目前狀態</td></tr>" +
+                        $"<tr><td style=\"border: 1px solid #ccc; padding: 8px;\">{vm.deputeTitle}</td><td style=\"border: 1px solid #ccc; padding: 8px;\">{vm.workerName}</td><td style=\"border: 1px solid #ccc; padding: 8px;\">{vm.recordStatus}</td></tr></tbody></table></li>";
+                    break;
+                case CDictionary.PROGRESS_委託者確認完成:
+                    diffContent = $"您的委託「{vm.deputeTitle}」委託者已確認完成";
+                    diffTable = "<tr><td style=\"border: 1px solid #ccc; padding: 8px;\">委託標題</td><td style=\"border: 1px solid #ccc; padding: 8px;\">委託內容</td><td style=\"border: 1px solid #ccc; padding: 8px;\">目前狀態</td></tr>" +
+                        $"<tr><td style=\"border: 1px solid #ccc; padding: 8px;\">{vm.deputeTitle}</td><td style=\"border: 1px solid #ccc; padding: 8px;\">{vm.deputeContent}</td><td style=\"border: 1px solid #ccc; padding: 8px;\">{vm.deputeStatus}</td></tr></tbody></table></li>";
+                    break;
+            }
+            //頂標(免改)
             string dm = "<div style=\"color:black;\">\r\n<ul style=\"list-style-type: none; padding-left: 0;\">  <li style=\"background-color: #272727; color: #fff; padding: 10px; margin-left: 0px;\">Groot遊戲資源整合平台</li>";
             //抬頭
-            dm += $"<li style=\"margin: 10px 0;padding: 10px;\">　　<p>{vm.memberName}　您好，</p>您的委託「{vm.deputeTitle}」狀態已更新為「{vm.deputeStatus}」，目前有　{vm.deputeRecordCount}　位會員向您投遞履歷，立即<a href=\"#\" style=\"color: #0d6efd; text-decoration: none;\">查看委託詳情</a>。</li>";
+            dm += $"<li style=\"margin: 10px 0;padding: 10px;\">　　<p>{vm.memberName}　您好，</p>{diffContent}，立即<a href=\"#\" style=\"color: #0d6efd; text-decoration: none;\">查看委託詳情</a>。</li>";
             dm += "<li style=\"margin: 10px 0;\"><table style=\"width: 100%; border-collapse: collapse;padding: 10px;\"><tbody>";
             //表格
-            dm += $"<tr><td style=\"border: 1px solid #ccc; padding: 8px;\">標題</td><td style=\"border: 1px solid #ccc; padding: 8px;\">委託狀態</td><td style=\"border: 1px solid #ccc; padding: 8px;\">應徵人數</td></tr>";
-            dm += $"<tr><td style=\"border: 1px solid #ccc; padding: 8px;\">{vm.deputeTitle}</td><td style=\"border: 1px solid #ccc; padding: 8px;\">{vm.deputeStatus}</td><td style=\"border: 1px solid #ccc; padding: 8px;\">{vm.deputeRecordCount}</td></tr></tbody></table></li>";
-            //頁尾
+            dm += $"{diffTable}";
+            //頁尾(免改)
             dm += "<li style=\"margin: 10px 0;\"><a href=\"#\" style=\"background-color: #272727; color: #fff; padding: 10px; text-decoration: none; display: inline-block;border-radius:10px\">詳細資訊</a></li><li style=\"margin: 10px 0;\"><div style=\"margin-bottom: 10px;padding: 10px;\">Groot將依個人資料保護法及相關法令之規定下，依隱私權保護政策蒐集、處理及合理利用您的個人資料。</div><div style=\"margin-bottom: 10px;padding: 10px;\">為確保能收到來自Groot的通知信件，強烈建議您將groot1229@gmail.com加入通訊錄。</div></li></ul></div>";
 
             var message = new MimeMessage();
             //寄件者
             message.From.Add(new MailboxAddress("grootdb1229", "grootdb1229@gmail.com"));
             //收件者
-            message.To.Add(new MailboxAddress(_db.Members.FirstOrDefault(x => x.MemberId == HttpContext.Session.GetInt32(CDictionary.SK_UserID)).Name, "bute77889@gmail.com"));
+            message.To.Add(new MailboxAddress(_db.Members.FirstOrDefault(x => x.MemberId == HttpContext.Session.GetInt32(CDictionary.SK_UserID)).Name, email));
             //標題
             message.Subject = $"委託[{vm.deputeTitle}]狀態更新";
             //內容
@@ -827,7 +856,8 @@ namespace prjDB_GamingForm_Show.Controllers
                 memberName = deputeRecord.Member.Name,
                 email = deputeRecord.Member.Email,
                 deputeTitle = depute.Title,
-                deputeStatus = deputeRecord.ApplyStatus.Name,
+                deputeContent = depute.DeputeContent,
+                recordStatus = deputeRecord.ApplyStatus.Name,
                 progress = CDictionary.PROGRESS_委託者決定合作
             };
             SendDeputeEmail(content);
