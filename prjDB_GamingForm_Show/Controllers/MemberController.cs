@@ -526,6 +526,12 @@ namespace prjDB_GamingForm_Show.Controllers
             
             return PartialView(members);
         }
+
+        public string GetMemberImg(string name)
+        {
+            string imgPath = _db.Members.Where(m => m.Name == name).Select(m => m.FImagePath).FirstOrDefault();
+            return imgPath;
+        }
         #endregion
     }
 }

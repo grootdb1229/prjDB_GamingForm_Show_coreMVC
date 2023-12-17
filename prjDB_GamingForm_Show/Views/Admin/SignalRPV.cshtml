@@ -162,10 +162,7 @@
             updateUsersList(list);
         }
     });
-    async function updateUsersList(users) {
-        // 更新用戶列表的顯示
-        // $("#test").load('@Url.Content("~/Admin/SignalRPV")');
-
+    async function updateUsersList(users) {     
         // 更新管理者在線狀態
         for (var i = 0; i < users.length; i++) {
             await getAdminOnlineStatus(users[i]);
