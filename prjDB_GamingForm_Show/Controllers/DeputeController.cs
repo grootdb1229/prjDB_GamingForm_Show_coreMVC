@@ -134,68 +134,6 @@ namespace prjDB_GamingForm_Show.Controllers
             return Json(skillname);
 
         }
-        //TODO #2 搜尋
-
-        //public IActionResult Search(CKeyWord vm)
-        // {
-        //    IEnumerable<CDeputeViewModel> datas = null;
-        //    if (string.IsNullOrEmpty(vm.txtKeyword) && (!string.IsNullOrEmpty(vm.txtHotkey)))
-        //        vm.txtKeyword = vm.txtHotkey;
-
-        //    if (string.IsNullOrEmpty(vm.txtKeyword))
-        //    {
-        //        ListLoad();
-        //        datas = from n in List
-        //                select n;
-        //    }
-        //    else
-        //    {
-        //        _db.SerachRecords.Add
-        //                        (new SerachRecord { Name = vm.txtKeyword, CreateDays = (DateTime.Now.Date)});
-        //        _db.SaveChanges();
-
-        //        datas = List.Where(n => (n.deputeContent.Trim().ToLower().Contains(vm.txtKeyword.Trim().ToLower()) ||
-        //                                  n.providername.Trim().ToLower().Contains(vm.txtKeyword.Trim().ToLower()) ||
-        //                                  n.title.Trim().ToLower().Contains(vm.txtKeyword.Trim().ToLower()) ||
-        //                                  n.region.Trim().ToLower().Contains(vm.txtKeyword.Trim().ToLower()))
-        //                                  )
-        //        .OrderByDescending(n => n.modifieddate);
-
-        //    }
-        //    if (datas == null || datas.Count() == 0)
-        //    {
-        //        return Content("No result");
-        //    }
-        //    return Json(datas);
-        //}
-
-        //public IActionResult SearchById(int? id)
-        //{
-        //    IEnumerable<CDeputeViewModel> datas = null;
-        //    IEnumerable<string> keyword = from n in _db.SerachRecords
-        //                  where n.Id == id
-        //                  select n.Name;
-
-        //    foreach (string item in keyword)
-        //    {
-        //        if(string.IsNullOrEmpty(item)) 
-        //            continue;
-        //        datas = List.Where(n => (n.deputeContent.Trim().ToLower().Contains(item.Trim().ToLower()) ||
-        //                                  n.providername.Trim().ToLower().Contains(item.Trim().ToLower()) ||
-        //                                  n.title.Trim().ToLower().Contains(item.Trim().ToLower()) ||
-        //                                  n.region.Trim().ToLower().Contains(item.Trim().ToLower()))
-        //                                  ).OrderByDescending(n => n.modifieddate);
-
-        //    }
-        //    if (datas == null || datas.Count() == 0)
-        //    {
-        //        return Content("No result");
-        //    }
-
-        //    return Json(datas);
-
-
-        //}
         public IActionResult MutipleSearch(CKeyWord vm)
         {
             Temp = List;
@@ -368,7 +306,71 @@ namespace prjDB_GamingForm_Show.Controllers
             return Json(CookieList.Take(5));
         }
 
+        public IActionResult Fav(int? id)
+        {
+            
+            int userid = 0;
+            if (HttpContext.Session.GetInt32(CDictionary.SK_UserID) != null)
+                userid = (int)HttpContext.Session.GetInt32(CDictionary.SK_UserID);
 
+            string record = "";
+            if (HttpContext.Request.Cookies[$"fav{userid}"] != null)
+                record = HttpContext.Request.Cookies[$"fav{userid}"];
+
+            string[] strResult = record.Split(',');
+            if (strResult.Contains(id.ToString()))
+            {
+                record = "";
+                HttpContext.Response.Cookies.Delete($"fav{userid}");
+                var data = strResult.Where(n => n != id.ToString());
+                foreach (var item in data)
+                {
+                    if(!string.IsNullOrEmpty(item))
+                        record += item.ToString() + ",";
+                }
+                CookieOptions options = new CookieOptions();
+                options.Expires = DateTime.Now.AddDays(30);
+                HttpContext.Response.Cookies.Append($"fav{userid}", record, options);//
+                return Content("False");
+            }
+            else
+            { 
+            CookieOptions options = new CookieOptions();
+            options.Expires = DateTime.Now.AddDays(30);
+            record += $"{id},";
+            HttpContext.Response.Cookies.Append($"fav{userid}", record, options);//
+
+            return Content("Succeed");
+            }
+        }
+        public IActionResult GetFav()
+        {
+            CookieList = new List<CDeputeViewModel>();
+            int userid = 0;
+            if (HttpContext.Session.GetInt32(CDictionary.SK_UserID) != null)
+                userid = (int)HttpContext.Session.GetInt32(CDictionary.SK_UserID);
+            string record = "";
+            if (HttpContext.Request.Cookies[$"fav{userid}"] != null)
+                record = HttpContext.Request.Cookies[$"fav{userid}"];
+            string[] strResult = record.Split(',');
+            strResult = strResult.Reverse().Distinct().ToArray();
+            IEnumerable<CDeputeViewModel> datas = null;
+            foreach (var item in strResult)
+            {
+                if (!string.IsNullOrEmpty(item))
+                {
+                    datas = from n in List
+                            where n.id == Convert.ToInt32(item)
+                            select n;
+                    foreach (var data in datas)
+                    {
+                        CookieList.Add(data);
+                    }
+                }
+
+            }
+            return Json(CookieList.Take(5));
+        }
         //TODO #4 熱門關鍵字
         public IActionResult HotKey(int id)
         {
