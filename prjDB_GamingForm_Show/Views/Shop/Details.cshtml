@@ -3,6 +3,12 @@
 @{
     ViewBag.Title = "Details";
 }
+<style>
+    .scrollable-content {
+        max-height: 150px; /* 設定最大高度為150像素 */
+        overflow-y: auto; /* 添加垂直滾軸，僅在內容超過最大高度時顯示 */
+    }
+</style>
 <section class="py-5">
     <div class="container px-4 px-lg-5 my-5">
         <div class="row gx-4 gx-lg-5 align-items-center">
@@ -125,8 +131,10 @@
                     </div>
                 </div>
           
-                    @*------Line按鈕------*@
-                <p class="lead">@Html.DisplayFor(model => model.ProductContent)</p>
+                    @*------內文------*@
+                <div class="scrollable-content">
+                    <p class="lead">@Html.DisplayFor(model => model.ProductContent)</p>
+                </div>
                 @*------檢舉------*@
                 <button type="button" class="btn btn-dark status" style="float:right" onclick="test2(@Html.DisplayFor(model => model.ProductId))">檢舉</button>
                 
