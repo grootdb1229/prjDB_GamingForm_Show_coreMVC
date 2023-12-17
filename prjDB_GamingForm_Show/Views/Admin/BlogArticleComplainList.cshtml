@@ -40,8 +40,25 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-eZt+q1LQ4lO/dZ7JkqUy5m4qGu2zTpuKQFq6wC2FKeWBqy0i+xn2dOQ6BQFuMI6B" crossorigin="anonymous"></script>*@
 </head>
 
+
 <h2>檢舉清單</h2>
 
+
+@*<select id="selCom" name="SCId" style="margin-top:3px;width:200px;" onchange="filterComplains()">
+    <option>請選擇違規分類</option>
+    @{
+        foreach (var type in Model.subTags.Where(s => s.TagId == 6))
+        {
+            <option value="@type.SubTagId"> @type.Name</option>
+        }
+    }
+</select>*@
+
+@using (Html.BeginForm())
+{
+    <p style="display:inline;font-size:25px;margin-left:5px;margin-right:10px">關鍵字查詢 : </p> @Html.TextBox("txtKeyWord",null,new{@class = "col-form-label"})
+    <input type="submit" value="查詢" class="btn btn-dark" />
+}
 
 
 <table class="table table-dark table-hover" style="color:white ; font-size:20px">
@@ -80,7 +97,7 @@
                 </td>
                 <td>
                     @{
-                         memberId = Model.articles
+                        memberId = Model.articles
                         .Where(a => a.ArticleId == item.ArticleId)
                         .Select(a => a.MemberId)
                         .FirstOrDefault();
@@ -103,7 +120,6 @@
                         var StName = Model.status.Where(a => a.StatusId == queryResult.StatusId).Select(a => new { a.Name }).FirstOrDefault();
 
                     }
-                    @queryResult?.StatusId
                     @StName?.Name
                 </td>
 
@@ -117,8 +133,12 @@
                     @Html.DisplayFor(modelItem => item.ReportDate)
                 </td>
                 <td>
-                    @Html.ActionLink("文章內容", "ArticleContent", "Blog", new { AFId = Model.articles.First().ArticleId , FId = Model.articles.First().SubBlog.BlogId}, new { @class = "btn btn-info" })
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop" onclick="test(@item.Id,@item.ArticleId,@memberId)">
+                    @Html.ActionLink("查看文章", "ArticleContent", "Blog", new { AFId = Model.articles.First().ArticleId , FId = Model.articles.First().SubBlog.BlogId}, new { @class = "btn btn-info" })
+                    @*                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop" onclick="test(@item.Id,@item.ArticleId,@memberId)">
+                處理方式
+                </button>*@
+
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop" onclick="test(@item.Id,@item.ArticleId,@memberId, '@StName?.Name')">
                         處理方式
                     </button>
                 </td>
@@ -136,14 +156,18 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h2 class="modal-title fs-5" id="staticBackdropLabel">訊息</h2>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                @*<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>*@
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true"><i class="fas fa-times"></i></span>
+                </button>
             </div>
             <div class="modal-body">
                 此檢舉是否屬實
                 <br />
                 如屬實，請選擇懲處
+                <p id="memberStatus"></p>
                 <select id="selSta" name="SId" style="margin-top:3px;width:200px">
-                    @{
+                    @{                        
                         foreach (var type in Model.status.Where(s => (s.StatusId >= 32 && s.StatusId <= 34) || s.StatusId == 26))
                         {
                             <option value="@type.StatusId">@type.StatusId @type.Name</option>
@@ -153,8 +177,9 @@
             </div>
 
             <div class="modal-footer">
-                <button id="btn_Yes" type="button" class="btn btn-secondary" data-bs-dismiss="modal">是，移除文章並清除檢舉</button>
-                <button id="btn_No" type="button" class="btn btn-primary">否，清除檢舉</button>
+                <button id="btn_Yes" type="button" class="btn btn-danger" data-bs-dismiss="modal">檢舉成立，移除文章並懲處</button>
+                <button id="btn_No" type="button" class="btn btn-primary">檢舉不成立</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
             </div>
         </div>
     </div>
@@ -166,59 +191,54 @@
             <input type="hidden" name="AFId" value=" @Model.articles.First().ArticleId" />*@
 
 
-@section Scripts {
+@section Scripts
+    {
     <script>
         let Cid
         let AFId
         let MId
-        function test(id, Aid, Mid) {
+        let MemberStatus
+
+        function test(id, Aid, Mid, status) {
             Cid = id
             AFId = Aid
             MId = Mid
-        }
-        const selSta = document.querySelector('#selSta');//--
-        const SId = selSta.value;
+            MemberStatus = status;
 
+            // 更新被檢舉會員當前的狀態
+            const statusDisplay = document.getElementById('memberStatus');
+            statusDisplay.innerHTML = `被檢舉會員當前狀態：${MemberStatus}`;
+        }
 
         const btnNo = document.querySelector('#btn_No')
         const btnYes = document.querySelector('#btn_Yes')
 
-        //btnNo.addEventListener('click',()=>{
-        //    test()
-        //})
         btnNo.addEventListener('click', () => {
-
             fetch(`@Url.Content("~/Admin/BlogArticleComplainFail")?APId=${Cid}`)
                 .then(response => response.text())
                 .then(data => {
-
                     $('#staticBackdrop').modal('hide');
                     confirm(`${data}`);
                     window.location.href = "/Admin/BlogArticleComplainList"
-                }
-                )
+                });
         })
-
-
 
         btnYes.addEventListener('click', () => {
-            
-            fetch(`@Url.Content("~/Admin/BlogArticleComplainSusscess")?APId=${Cid}&AFId=${AFId}&MId=${MId}&SId=${SId}`)
+            // 將這一行放到事件監聽器內部
+            const StatusId = selSta.value;
+
+            fetch(`@Url.Content("~/Admin/BlogArticleComplainSusscess")?APId=${Cid}&AFId=${AFId}&MId=${MId}&SId=${StatusId}`)
                 .then(response => response.text())
                 .then(data => {
-
                     $('#staticBackdrop').modal('hide');
                     confirm(`${data}`);
                     window.location.href = "/Admin/BlogArticleComplainList"
-                }
-                )
-
+                });
         })
-
-
-
-
     </script>
-        }
+    }
+
+
+
 
 

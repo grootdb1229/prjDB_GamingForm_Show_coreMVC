@@ -545,7 +545,7 @@ namespace prjDB_GamingForm_Show.Controllers
             return RedirectToAction("ShopADSetting");
         }
 
-        
+
         //public IActionResult MemberListNexttest()
         //{
         //    if (HttpContext.Session.Keys.Contains(CDictionary.SK_管理者觀看會員清單頁數使用關鍵字))
@@ -1158,22 +1158,71 @@ namespace prjDB_GamingForm_Show.Controllers
         public IActionResult BlogArticleComplainList(CKeyWordViewModel kyvm)
         {
 
-            CBlogViewModel vm = new CBlogViewModel();
+            //CBlogViewModel vm = new CBlogViewModel();
 
-            _db.ArticleComplains.Where(a => a.Article.SubBlogId != 191).Include(p => p.SubTag).Load();  // 使用 Load 方法進行延遲載入
-            vm.articleComplain = _db.ArticleComplains.Local;  // 從本地集合中獲取載入的 ArticleComplains
+            //_db.ArticleComplains.Where(a => a.Article.SubBlogId != 191).Include(p => p.SubTag).Load();  // 使用 Load 方法進行延遲載入
+            //vm.articleComplain = _db.ArticleComplains.Local;  // 從本地集合中獲取載入的 ArticleComplains
 
-            _db.Articles.Include(p => p.SubBlog).ThenInclude(p => p.Blog).Include(p => p.Member).Load();  // 使用 Load 方法進行延遲載入
-            vm.articles = _db.Articles.Local;  // 從本地集合中獲取載入的 Articles
+            //_db.Articles.Include(p => p.SubBlog).ThenInclude(p => p.Blog).Include(p => p.Member).Load();  // 使用 Load 方法進行延遲載入
+            //vm.articles = _db.Articles.Local;  // 從本地集合中獲取載入的 Articles
 
-            _db.Members.Load();  // 使用 Load 方法進行延遲載入
-            vm.members = _db.Members.Local;  // 從本地集合中獲取載入的 Members
+            //_db.Members.Load();  // 使用 Load 方法進行延遲載入
+            //vm.members = _db.Members.Local;  // 從本地集合中獲取載入的 Members
 
-            _db.Statuses.Load();  // 使用 Load 方法進行延遲載入
-            vm.status = _db.Statuses.Local;  // 從本地集合中獲取載入的 Statuses
+            //_db.Statuses.Load();  // 使用 Load 方法進行延遲載入
+            //vm.status = _db.Statuses.Local;  // 從本地集合中獲取載入的 Statuses
 
-            return View(vm);
+            //_db.SubTags.Load();
+            //vm.subTags = _db.SubTags.Local;
 
+            //return View(vm);
+
+            HttpContext.Session.Remove(CDictionary.SK_管理者觀看版面清單頁數使用關鍵字);
+            CBlogViewModel vm = null;
+
+            if (string.IsNullOrEmpty(kyvm.txtKeyWord))
+            {
+                vm = new CBlogViewModel();
+
+                _db.ArticleComplains.Where(a => a.Article.SubBlogId != 191).Include(p => p.SubTag).Load();  // 使用 Load 方法進行延遲載入
+                vm.articleComplain = _db.ArticleComplains.Local;  // 從本地集合中獲取載入的 ArticleComplains
+
+                _db.Articles.Include(p => p.SubBlog).ThenInclude(p => p.Blog).Include(p => p.Member).Load();  // 使用 Load 方法進行延遲載入
+                vm.articles = _db.Articles.Local;  // 從本地集合中獲取載入的 Articles
+
+                _db.Members.Load();  // 使用 Load 方法進行延遲載入
+                vm.members = _db.Members.Local;  // 從本地集合中獲取載入的 Members
+
+                _db.Statuses.Load();  // 使用 Load 方法進行延遲載入
+                vm.status = _db.Statuses.Local;  // 從本地集合中獲取載入的 Statuses
+
+                _db.SubTags.Load();
+                vm.subTags = _db.SubTags.Local;
+
+                return View(vm);
+            }
+
+            else 
+            {
+                vm = new CBlogViewModel();
+
+                _db.ArticleComplains.Where(a =>(a.SubTag.Name.Contains(kyvm.txtKeyWord)||a.ReportContent.Contains(kyvm.txtKeyWord)) && a.Article.SubBlogId != 191).Include(p => p.SubTag).Load();  // 使用 Load 方法進行延遲載入
+                vm.articleComplain = _db.ArticleComplains.Local;  // 從本地集合中獲取載入的 ArticleComplains
+
+                _db.Articles.Include(p => p.SubBlog).ThenInclude(p => p.Blog).Include(p => p.Member).Load();  // 使用 Load 方法進行延遲載入
+                vm.articles = _db.Articles.Local;  // 從本地集合中獲取載入的 Articles
+
+                _db.Members.Load();  // 使用 Load 方法進行延遲載入
+                vm.members = _db.Members.Local;  // 從本地集合中獲取載入的 Members
+
+                _db.Statuses.Load();  // 使用 Load 方法進行延遲載入
+                vm.status = _db.Statuses.Local;  // 從本地集合中獲取載入的 Statuses
+
+                _db.SubTags.Load();
+                vm.subTags = _db.SubTags.Local;
+
+                return View(vm);
+            }
         }
 
 
@@ -1188,7 +1237,7 @@ namespace prjDB_GamingForm_Show.Controllers
             _db.ArticleComplains.Remove(q1);
             _db.SaveChanges();
 
-            return Content("此篇檢舉非屬實，已移除此篇檢舉");
+            return Content("此篇檢舉不成立，已移除檢舉。");
         }
 
         public IActionResult BlogArticleComplainSusscess(int? APId, int? AFId, int? MId, int? SId)
@@ -1220,7 +1269,7 @@ namespace prjDB_GamingForm_Show.Controllers
                 mem.StatusId = (int)SId;
                 _db.SaveChanges();
             }
-            return Content("此篇檢舉屬實，已刪除文章，並已移除此篇檢舉");
+            return Content("此篇檢舉成立.，已刪除文章");
         }
 
 
