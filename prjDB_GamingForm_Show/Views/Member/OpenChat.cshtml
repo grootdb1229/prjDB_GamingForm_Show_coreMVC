@@ -1,93 +1,43 @@
 ﻿@* @import url('https://fonts.googleapis.com/css?family=Lato'); *@
 <style>
-
-    * {
-        box-sizing: border-box;
-    }
-
-
-
-    h2 {
-        text-shadow: 1px 1px 2px rgba(0,0,0,1);
-        color: #fff;
-        letter-spacing: 1px;
-        text-transform: uppercase;
-        text-align: center;
-    }
-
-    .chat-container {
-        background-color: rgba(0, 0, 0, 0.4);
+    .sender {
+        text-align: right;
         border-radius: 5px;
-        box-shadow: 0px 0px 10px 5px rgba(0,0,0,0.7);
-        overflow: hidden;
-        padding: 15px;
-        margin-left: 15px;
-        position: relative;
-        width: 1400px;
-        max-width: 100%;
-        max-height: 650px;
-        overflow-y: auto;
+        background-color: #0080FF;
+        color: antiquewhite;
+        margin-left: auto;
+        margin-right: 5px;
+        padding: 5px;
+        margin-bottom: 5px;
         display: flex;
         flex-direction: column;
+        justify-content: space-between;
     }
 
-    .chat {
+    .receiver {
+        text-align: left;
+        border-radius: 5px;
+        background-color: #272727;
+        color: antiquewhite;
+        margin-right: auto;
+        margin-left: 5px;
+        padding: 5px;
+        margin-bottom: 5px;
         display: flex;
         flex-direction: column;
-        justify-content: center;
-        align-items: flex-start;
-        list-style-type: none;
-        padding: 0;
-        margin: 0;
+        justify-content: space-between;
     }
 
-    .message {
-        background-color: rgba(255, 255, 255, 0.9);
-        border-radius: 50px;
-        box-shadow: 0px 15px 5px 0px rgba(0,0,0,0.5);
-        position: relative;
-        margin-bottom: 30px;
+    .messageP {
+        align-self: flex-end;
+        font-size: 20px;
+        margin-top: 8px;
+        margin-bottom: 0px;
+        color: #FCFCFC
     }
 
-        .message.left {
-            padding: 15px 20px 15px 70px;
-        }
-
-        .message.right {
-            align-self: flex-end;
-            padding: 15px 70px 15px 20px;
-        }
-
-    .logo {
-        border-radius: 50%;
-        box-shadow: 0px 10px 10px 0px rgba(0,0,0,0.7);
-        object-fit: cover;
-        position: absolute;
-        left: 10px;
-        top: -10px;
-        width: 50px;
-        height: 50px;
-    }
-
-    .message.right .logo {
-        left: auto;
-        right: 10px;
-    }
-
-    .message p {
-        color: black;
-        margin: 0;
-    }
-
-    .text_input {
-        font-size: 16px;
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        padding: 10px 15px;
-        width: 100%;
-        height: 35px;
+    .messageSpan {
+        color: #BEBEBE
     }
 
     .fixed-div {
@@ -95,8 +45,9 @@
         top: 150px; /* 固定在螢幕頂部 */
         right: 40px; /* 固定在螢幕右側 */
         padding: 10px;        
-        width: 400px;
+        width: 300px;
         max-width: 100%;
+        height:650px;
         max-height: 650px;
         overflow-y: auto;
         display: flex;
@@ -113,89 +64,168 @@
     .listtitle{
         position: fixed;
         top: 100px; /* 固定在螢幕頂部 */
-        right: 155px; /* 固定在螢幕右側 */
+        right: 90px; /* 固定在螢幕右側 */
         padding: 10px;
+    }    
+
+    .chat-container {
+        background-color: rgba(0, 0, 0, 0.4);
+        border-radius: 5px;
+        box-shadow: 0px 0px 10px 5px rgba(0,0,0,0.7);
+        overflow: hidden;
+        padding: 15px;
+        margin-left: 15px;
+        position: relative;
+        width: 1500px;
+        max-width: 100%;
+        height:650px;
+        max-height: 650px;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
     }
-
+    
 </style>
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+</head>
 
-<h2>公開聊天室</h2>
-<div class="chat-container" id="chatContent">
-    <ul class="chat">
-        <li class="message left">
-            <img class="logo" src="https://randomuser.me/api/portraits/women/17.jpg" alt="">
-            <p>I'm hungry!</p>
-        </li>
-        <li class="message right">
-            <img class="logo" src="https://randomuser.me/api/portraits/men/67.jpg" alt="">
-            <p>Hi hungry, nice to meet you. I'm Dad.</p>
-        </li>
-        <li class="message left">
-            <img class="logo" src="https://randomuser.me/api/portraits/women/17.jpg" alt="">
-            <p>DAD! I'm serious!</p>
-        </li>
-        <li class="message right">
-            <img class="logo" src="https://randomuser.me/api/portraits/men/67.jpg" alt="">
-            <p>I thought your name was hungry...?</p>
-        </li>
-        <li class="message left">
-            <img class="logo" src="https://randomuser.me/api/portraits/women/17.jpg" alt="">
-            <p>ARE YOU KIDDING ME?</p>
-        </li>
-        <li class="message right">
-            <img class="logo" src="https://randomuser.me/api/portraits/men/67.jpg" alt="">
-            <p>No, I'm Dad...</p>
-        </li>
-        <li class="message left">
-            <img class="logo" src="https://randomuser.me/api/portraits/women/17.jpg" alt="">
-            <p>I'm hungry!</p>
-        </li>
-        <li class="message left">
-            <img class="logo" src="https://randomuser.me/api/portraits/women/17.jpg" alt="">
-            <p>I'm hungry!</p>
-        </li>
-        <li class="message left">
-            <img class="logo" src="https://randomuser.me/api/portraits/women/17.jpg" alt="">
-            <p>I'm hungry!</p>
-        </li>
-        <li class="message left">
-            <img class="logo" src="https://randomuser.me/api/portraits/women/17.jpg" alt="">
-            <p>I'm hungry!</p>
-        </li>
-        <li class="message left">
-            <img class="logo" src="https://randomuser.me/api/portraits/women/17.jpg" alt="">
-            <p>I'm hungry!</p>
-        </li>
-        <li class="message left">
-            <img class="logo" src="https://randomuser.me/api/portraits/women/17.jpg" alt="">
-            <p>I'm hungry!</p>
-        </li>
-        <li class="message left">
-            <img class="logo" src="https://randomuser.me/api/portraits/women/17.jpg" alt="">
-            <p>I'm hungry!</p>
-        </li>
-        <li class="message left">
-            <img class="logo" src="https://randomuser.me/api/portraits/women/17.jpg" alt="">
-            <p>I'm hungry!</p>
-        </li>
-        <li class="message left">
-            <img class="logo" src="https://randomuser.me/api/portraits/women/17.jpg" alt="">
-            <p>I'm hungry!</p>
-        </li>
-    </ul>
+<h2 style="display: flex;justify-content: center;">公開聊天室</h2>
+<div id="chatContent" class="chat-container">
+
 </div>
-
-<div class="chat-container"><input type="text" class="text_input" placeholder="請輸入..." /></div>
+<div id="username" hidden>@Context.Session.GetString(CDictionary.SK_UserName)</div>
+<div class="form-floating" style="display: flex; align-items: flex-end;margin-top:5px;padding-left:15px;width:1560px">
+    <textarea class="form-control" placeholder="請輸入..." id="message" style="border-radius:5px;background-color:#E0E0E0;"></textarea>
+    <button type="button" class="btn btn-primary" id="sendButton"><i class="fa-solid fa-paper-plane"></i></button>
+</div>
 <div class="listtitle">
-    <h2 style="font-size:30px">會員列表</h2>
+    <h2 style="font-size:30px">在線會員列表</h2>
 </div>
-<div id="memberList" class="fixed-div"></div>
+<div id="memberList" class="fixed-div">
+    <ul class="list-group" id="IDList"></ul>
+</div>
 
 @section Scripts{
     <script>
         var chatContentDiv = document.getElementById("chatContent");
         chatContentDiv.scrollTop = chatContentDiv.scrollHeight;
-        $('#memberList').load('@Url.Content("~/Member/ChatMemberList")');
+        // $('#memberList').load('@Url.Content("~/Member/ChatMemberList")');
+
+        // 更新連線 ID 列表事件
+        connection.on("UpdList", async function (jsonList) {            
+            var list = JSON.parse(jsonList);            
+            $("#IDList li").remove();
+            for (i = 0; i < list.length; i++) {
+                const reseponse = await fetch('@Url.Content("~/Member/GetMemberImg")?name=' + encodeURIComponent(list[i]))
+                const data = await reseponse.text();
+                // $("#IDList").append($("<li></li>").attr("class", "list-group-item").text(list[i]));
+                // 創建新的 li 元素
+                var listItem = $("<li></li>").attr("class", "list-group-item").css("display", "flex").css("align-items", "center");;
+
+                // 如果 data 有效，則添加圖像元素
+                if (data) {
+                    var imgElement = $("<img>").attr("src", `../images/${data}`).attr("alt", "Member Image").css("margin-right", "10px");
+                    listItem.append(imgElement);
+                }
+
+                var p = document.createElement("p")
+                p.innerText = list[i]
+                listItem.append(p);
+
+                // 將新的 li 元素添加到 #IDList
+                $("#IDList").append(listItem);
+            }
+        });
+
+        $('#sendButton').on('click', sendMessageToAllUser);
+
+        $('#message').on('keydown', function (event) {
+            if (event.key === "Enter" && !event.shiftKey) {
+                event.preventDefault();
+                sendMessageToAllUser();
+            }
+        });
+
+        function sendMessageToAllUser() {
+            let selfUserName = $('#username').text()
+            let message = $('#message').val();
+            connection.invoke("SendMessageToAll", selfUserName, message).catch(function (err) {
+                console.error('傳送錯誤: ' + err.toString());
+            });
+            document.querySelector('#message').value = "";
+        }
+
+        connection.on("UpdContent", function (message, senderName) {            
+            var messageBlock = document.getElementById("chatContent");
+            let selfUserName = $('#username').text()
+            
+            // 獲取當前日期時間
+            var currentDate = new Date();
+
+            // 格式化日期時間
+            var formattedDateTime = currentDate.getFullYear() + "/" +
+                (currentDate.getMonth() + 1).toString().padStart(2, '0') + "/" +
+                currentDate.getDate().toString().padStart(2, '0') + " " +
+                currentDate.getHours().toString().padStart(2, '0') + ":" +        
+                currentDate.getMinutes().toString().padStart(2, '0');
+
+            if (senderName == selfUserName) {
+                // 創建一個 <div> 用於分辨發送人或接收人
+                var div = document.createElement("div")
+                div.classList.add("sender")
+                div.innerText = senderName
+                messageBlock.appendChild(div)
+
+                // 創建一個新的 <p> 元素
+                var newMessage = document.createElement("p");
+                newMessage.classList.add("messageP")
+                // 設定新元素的內容為用戶傳遞的訊息
+                newMessage.innerText = message;
+
+                // 將新元素加入訊息區塊
+                div.appendChild(newMessage);
+
+                // 創建一個 <span> 用於顯示時間
+                var timeSpan = document.createElement("span");
+                timeSpan.classList.add("messageSpan")
+                timeSpan.innerText = formattedDateTime;
+
+                // 將 <span> 加入訊息內容
+                div.appendChild(timeSpan);
+
+                // 卷軸捲到最底部
+                messageBlock.scrollTop = messageBlock.scrollHeight;
+            }
+            else {
+                // 創建一個 <div> 用於分辨發送人或接收人
+                var div = document.createElement("div")
+                div.classList.add("receiver")
+                div.innerText = senderName
+                messageBlock.appendChild(div)
+
+                // 創建一個新的 <p> 元素
+                var newMessage = document.createElement("p");
+                newMessage.classList.add("messageP")
+                // 設定新元素的內容為用戶傳遞的訊息
+                newMessage.innerText = message;
+
+                // 將新元素加入訊息區塊
+                div.appendChild(newMessage);
+
+                // 創建一個 <span> 用於顯示時間
+                var timeSpan = document.createElement("span");
+                timeSpan.classList.add("messageSpan")
+                timeSpan.innerText = formattedDateTime;
+
+                // 將 <span> 加入訊息內容
+                div.appendChild(timeSpan);
+
+                // 卷軸捲到最底部
+                messageBlock.scrollTop = messageBlock.scrollHeight;
+            }
+
+        });
 
     </script>
 }

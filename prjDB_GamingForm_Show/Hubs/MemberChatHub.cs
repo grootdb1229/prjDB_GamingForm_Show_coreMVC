@@ -76,6 +76,11 @@ namespace prjDB_GamingForm_Show.Hubs
             await UpdateMemberOnlineStatus(disconnectedUser?.MemberName, false);
 
             await base.OnDisconnectedAsync(ex);
+        }                
+
+        public async Task SendMessageToAll(string senderName, string message)
+        {
+            await Clients.All.SendAsync("UpdContent", message, senderName);
         }
 
         public async Task SendMessage(string senderName, string message, string receiverConnectionId, string receiverName)
@@ -86,7 +91,7 @@ namespace prjDB_GamingForm_Show.Hubs
             var receiveMemberId = _ConnectedMember.FirstOrDefault(m => m.MemberName == receiverName).MemberId;
             var senderimg = _db.Members.FirstOrDefault(a => a.Name == senderName).FImagePath;
             var sendTime = DateTime.UtcNow.ToLocalTime().ToString("yyyy/MM/dd HH:mm");
-
+            
             // 接收人
             if (receiverConnectionId != null)
             {
@@ -119,7 +124,7 @@ namespace prjDB_GamingForm_Show.Hubs
         public async Task UpdateMemberOnlineStatus(string memberName, bool isOnline)
         {
             // 更新在線狀態
-            await Clients.All.SendAsync("UpdAdminOnlineStatus", memberName, isOnline);
+            await Clients.All.SendAsync("UpdMemberOnlineStatus", memberName, isOnline);
         }
 
         public bool GetMemberOnlineStatus(string userName)

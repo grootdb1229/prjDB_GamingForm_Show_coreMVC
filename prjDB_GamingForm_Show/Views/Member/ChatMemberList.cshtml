@@ -45,7 +45,7 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.MemberName)
                 </td>
-                <td id="@($"onlineStatus_{item.MemberId}")">
+                <td id="@($"onlineStatus_{item.MemberName}")">
                     <!-- 在線狀態將在此處更新 --><span class="offline">離線</span>
                 </td>
                 <td id="@($"td_{item.MemberId}")">
@@ -65,4 +65,33 @@
         document.querySelector(`#td_${id}`).appendChild(text)
 
     })
+
+    //更新連線 ID 列表事件
+    connection.on("UpdList", function (jsonList) {
+        var list = JSON.parse(jsonList);
+        $("#IDList li").remove();
+        for (i = 0; i < list.length; i++) {
+
+            updateUsersList(list);
+        }
+    });
+    async function updateUsersList(users) {
+        // 更新在線狀態
+        for (var i = 0; i < users.length; i++) {
+            await getMemberOnlineStatus(users[i]);
+        }
+    }
+
+    async function getMemberOnlineStatus(memberName) {
+        // 呼叫 SignalR Hub 方法獲取在線狀態
+        connection.invoke("GetMemberOnlineStatus", memberName).then(function (isOnline) {
+            // 觸發更新在線狀態的事件
+            connection.invoke("UpdateMemberOnlineStatus", memberName, isOnline);
+        });
+    }
+    connection.on("UpdMemberOnlineStatus", function (memberName, isOnline) {
+        // 根據名稱和在線狀態更新前端顯示
+        var statusId = `#onlineStatus_${memberName}`;
+        $(statusId).html(isOnline ? '<span class="online">在線</span>' : '<span class="offline">離線</span>');       
+    });
 </script>
