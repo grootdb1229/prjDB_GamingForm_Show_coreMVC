@@ -128,7 +128,7 @@ namespace prjDB_GamingForm_Show.Controllers
             var order = db.Orders.Where(x => x.MemberId == 41)//HttpContext.Session.GetInt32(CDictionary.SK_UserID))
                         .OrderByDescending(x => x.OrderId).FirstOrDefault();
             order.PaymentDate= DateTime.Now;
-            order.ECID = id["MerchantTradeNo"];
+            order.Ecid= id["MerchantTradeNo"];
             //var Orders = db.EcpayOrders.ToList().Where(m => m.MerchantTradeNo == id["MerchantTradeNo"]).FirstOrDefault();
             //Orders.RtnCode = int.Parse(id["RtnCode"]);
             //if (id["RtnMsg"] == "Succeeded") Orders.RtnMsg = "已付款";
