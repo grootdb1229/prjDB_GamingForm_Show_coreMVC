@@ -34,4 +34,6 @@ public partial class Article
     public virtual Article? ReplyArticle { get; set; }
 
     public virtual SubBlog SubBlog { get; set; } = null!;
+
+    public bool IsPinned { get; set; }  //1217
 }
