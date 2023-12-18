@@ -861,7 +861,7 @@ namespace prjDB_GamingForm_Show.Controllers
                 deputeContent = depute.DeputeContent,
                 recordStatus = deputeRecord.ApplyStatus.Name,
                 progress = CDictionary.PROGRESS_委託者決定合作
-            };
+            };           
             SendDeputeEmail(content);
             foreach (var item in otherRecords)
             {
