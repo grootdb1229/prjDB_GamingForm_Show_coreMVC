@@ -7,6 +7,7 @@ using prjDB_GamingForm_Show.Models;
 using prjDB_GamingForm_Show.Models.Admin;
 using prjDB_GamingForm_Show.Models.Entities;
 using prjDB_GamingForm_Show.Models.Member;
+using prjDB_GamingForm_Show.Models.Shop;
 using prjDB_GamingForm_Show.ViewModels;
 using System.Drawing;
 using System.Runtime.Intrinsics.Arm;
@@ -267,7 +268,7 @@ namespace prjDB_GamingForm_Show.Controllers
             return View();
         }
         [HttpPost]
-        public IActionResult SendNewsLetter(CEmail email)
+        public IActionResult SendNewsLetter(CNewsLetter NewsLetter)
         {
             //List<string> EmailData = (from E in _db.Members
             //                          where E.Email.Contains("alan")
@@ -276,16 +277,16 @@ namespace prjDB_GamingForm_Show.Controllers
             Emails.Add("alan90306@gmail.com");
             Emails.Add("kakuc0e0ig@gmail.com");
             Emails.Add("iamau3vm0@gmail.com");
-            email.Emails = Emails;
-            foreach (string Address in email.Emails)
+            NewsLetter.Emails = Emails;
+            foreach (string Address in NewsLetter.Emails)
             {
                 var message = new MimeMessage();
                 message.From.Add(new MailboxAddress("grootdb1229", "grootdb1229@gmail.com"));
                 message.To.Add(new MailboxAddress("會員", Address));
-                message.Subject = email.EmailSubject;
+                message.Subject = NewsLetter.Title;
                 message.Body = new TextPart("html")
                 {
-                    Text = email.EmailBody
+                    Text = NewsLetter.HtmlContent
                 };
 
                 using (var client = new SmtpClient())
