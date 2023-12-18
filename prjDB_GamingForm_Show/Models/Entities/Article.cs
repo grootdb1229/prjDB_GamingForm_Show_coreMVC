@@ -21,6 +21,8 @@ public partial class Article
 
     public int ViewCount { get; set; }
 
+    public bool IsPinned { get; set; }
+
     public virtual ICollection<ArticleAction> ArticleActions { get; set; } = new List<ArticleAction>();
 
     public virtual ICollection<ArticleComplain> ArticleComplains { get; set; } = new List<ArticleComplain>();

@@ -7,7 +7,7 @@ public partial class NewsLetter
 {
     public int Id { get; set; }
 
-    public int Title { get; set; }
+    public string Title { get; set; } = null!;
 
-    public int HtmlContent { get; set; }
+    public string HtmlContent { get; set; } = null!;
 }

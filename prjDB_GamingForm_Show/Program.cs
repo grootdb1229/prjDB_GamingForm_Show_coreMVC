@@ -5,7 +5,7 @@ using prjDB_GamingForm_Show.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// Add services to the container.//
 builder.Services.AddControllersWithViews();
 builder.Services.AddSession();
 builder.Services.AddDbContext<DbGamingFormTestContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("SchoolConnection")));
