@@ -129,7 +129,7 @@ namespace prjDB_GamingForm_Show.Models.Shop
 
         public List<IFormFile>? Photos { get; set; }
 
-		public string DelPhotos { get; set; }
+	
 		public string? FImagePath
 		{
 

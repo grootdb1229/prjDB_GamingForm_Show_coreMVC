@@ -958,8 +958,8 @@ namespace prjDB_GamingForm_Show.Controllers
 							return View((超酷warp)product);
 						}
 
-
-						Product x = _db.Products.FirstOrDefault(p => p.ProductId == product.ProductId);
+                        
+                        Product x = _db.Products.FirstOrDefault(p => p.ProductId == product.ProductId);
 						string MulPic = "";
 						List<string> PicList= new List<string>();
 						if (_db != null)
@@ -1003,8 +1003,8 @@ namespace prjDB_GamingForm_Show.Controllers
 										}//移除次要圖片
 									}
 
-									// 提交變更
-									_db.SaveChanges();
+                                    // 提交變更
+                                    _db.SaveChanges();
 									//string[] OtherPic = MulPic.Split("/").Skip(1).ToArray();
 									//PicList.Skip(1).ToArray();
 									foreach (string picpath in PicList.Skip(1))
@@ -1428,11 +1428,13 @@ namespace prjDB_GamingForm_Show.Controllers
 						string jsoncar= JsonSerializer.Serialize(car);
                         HttpContext.Session.SetString(CDictionary.SK_PURCHASED_PRODUCES_LIST, jsoncar);
                         TempData["SuccessMessage"] = "這是重複商品！"; //即使返回，要用特殊資料做出判斷差異
-						return View(car);
+						ViewBag.repet = "這是重複商品！";
+
+                        return View(car);
                     }           
                
 				}
-
+                ViewBag.repet = "";
                 return View(car);
 
             }
