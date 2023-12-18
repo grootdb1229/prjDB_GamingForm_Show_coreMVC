@@ -37,5 +37,5 @@ public partial class Article
 
     public virtual SubBlog SubBlog { get; set; } = null!;
 
-    public bool IsPinned { get; set; }  //1217
+    
 }
