@@ -296,9 +296,9 @@
 .testimonial-carousel .owl-item.center .testimonial-item * {
     transition: .5s;
 }
-
+/*DeputeDetails變色*/
 .testimonial-carousel .owl-item.center .testimonial-item {
-    background: var(--primary) !important;
+    background: #a81d1d !important;
 }
 
 .testimonial-carousel .owl-item.center .testimonial-item * {
@@ -311,22 +311,22 @@
     align-items: flex-end;
     justify-content: center;
 }
-
+/*DeputeDetails變色*/
 .testimonial-carousel .owl-dot {
     position: relative;
     display: inline-block;
     margin: 0 5px;
     width: 15px;
     height: 15px;
-    border: 5px solid var(--primary);
+    border: 5px solid #FFFFFF;
     border-radius: 2px;
     transition: .5s;
 }
-
-.testimonial-carousel .owl-dot.active {
-    background: var(--dark);
-    border-color: var(--primary);
-}
+    /*DeputeDetails變色*/
+    .testimonial-carousel .owl-dot.active {
+        background: var(--dark);
+        border-color: #a81d1d;
+    }
 
 
 /*** Footer ***/
