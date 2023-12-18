@@ -773,11 +773,11 @@ namespace prjDB_GamingForm_Show.Controllers
         //    //    Console.WriteLine($"{msg.Role}: {msg.Content}");
         //    //}
         //}
-        public async Task<IActionResult> Test2Async()
-        {
-            var response = await ChatAsync();
-            return Content(response);
-        }
+        //public async Task<IActionResult> Test2Async()
+        //{
+        //    var response = await ChatAsync();
+        //    return Content(response);
+        //}
         public IActionResult test()
         {
             return Content("123");
