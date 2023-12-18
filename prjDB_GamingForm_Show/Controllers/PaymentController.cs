@@ -131,8 +131,8 @@ namespace prjDB_GamingForm_Show.Controllers
             Orders.PaymentDate = Convert.ToDateTime(id["PaymentDate"]);
             Orders.SimulatePaid = int.Parse(id["SimulatePaid"]);
             db.SaveChanges();
-            //return View("EcpayView", data);
-            return RedirectToAction("Shop","OrderDetail");
+            return View("EcpayView", data);
+            //return RedirectToAction("Shop","OrderDetail");
         }
         /// step5 : 取得虛擬帳號 資訊  ClientRedirectURL
         [HttpPost]

@@ -7,6 +7,7 @@ using prjDB_GamingForm_Show.Models.Admin;
 using prjDB_GamingForm_Show.Models.Entities;
 using prjDB_GamingForm_Show.ViewModels;
 using System.Drawing;
+using System.Runtime.Intrinsics.Arm;
 using System.Runtime.Intrinsics.X86;
 using System.Security.Cryptography;
 
@@ -233,14 +234,14 @@ namespace prjDB_GamingForm_Show.Controllers
             return RedirectToAction("ProductComplain");
         }
         public IActionResult ProductComplain()
-        { 
+        {
             List<CProductComplainViewModel> ProductComplain = new List<CProductComplainViewModel>();
-            var datas = _db.ProductComplains.OrderBy(x=>x.Id).Select(x =>new {x.Id,x.ProductId,x.MemeberId,x.ReplyContent,x.ReportDate ,x.Status.Name,x.SubTagId} );
-            
+            var datas = _db.ProductComplains.OrderBy(x => x.Id).Select(x => new { x.Id, x.ProductId, x.MemeberId, x.ReplyContent, x.ReportDate, x.Status.Name, x.SubTagId });
+
             CProductComplainViewModel pc = new CProductComplainViewModel();
             foreach (var data in datas)
             {
-               var subtag = _db.SubTags.Where(x => x.SubTagId == data.SubTagId).Select(x =>new { x.Name });
+                var subtag = _db.SubTags.Where(x => x.SubTagId == data.SubTagId).Select(x => new { x.Name });
                 foreach (var i in subtag)
                 {
                     pc.Id = data.Id;
@@ -252,7 +253,7 @@ namespace prjDB_GamingForm_Show.Controllers
                     pc.Status = data.Name;
                     ProductComplain.Add(pc);
                 }
-              
+
             }
             return View(ProductComplain);
         }
@@ -349,13 +350,13 @@ namespace prjDB_GamingForm_Show.Controllers
             }
             return count;
         }
-        
+
         public IActionResult NotCheckMessage()
         {
             int reid = _db.Admins.Where(a => a.Name == HttpContext.Session.GetString(CDictionary.SK_管理者名稱)).Select(a => a.AdminId).FirstOrDefault();
             List<CAdminNotCheckMessageViewModel> vm = new List<CAdminNotCheckMessageViewModel>();
             CAdminNotCheckMessageViewModel message = null;
-            foreach(var m in _db.Chats)
+            foreach (var m in _db.Chats)
             {
                 if (m.ReceiveAdmin == reid && m.IsCheck == false)
                 {
@@ -410,7 +411,7 @@ namespace prjDB_GamingForm_Show.Controllers
             }
             else
             {
-                foreach (var m in _db.Coupons.Where(c => c.Title.Contains(kyvm.txtKeyWord)||c.CouponContent.Contains(kyvm.txtKeyWord)))
+                foreach (var m in _db.Coupons.Where(c => c.Title.Contains(kyvm.txtKeyWord) || c.CouponContent.Contains(kyvm.txtKeyWord)))
                 {
                     c = new CAdminCouponViewModel()
                     {
@@ -462,7 +463,7 @@ namespace prjDB_GamingForm_Show.Controllers
             {
                 Title = vm.Title,
                 CouponContent = vm.Content,
-                Discount = vm.Discount,                
+                Discount = vm.Discount,
                 StartDate = vm.StartDate,
                 EndDate = vm.EndDate,
                 StatusId = 24
@@ -483,7 +484,7 @@ namespace prjDB_GamingForm_Show.Controllers
             Coupon coupon = new Coupon()
             {
                 Title = vm.Title,
-                CouponContent = vm.Content,                
+                CouponContent = vm.Content,
                 Reduce = vm.Reduce,
                 StartDate = vm.StartDate,
                 EndDate = vm.EndDate,
@@ -494,13 +495,13 @@ namespace prjDB_GamingForm_Show.Controllers
             _db.SaveChanges();
             return RedirectToAction("CouponList");
         }
-        
+
         public string MessageTime(string time)
         {
-            DateTime messagetime = DateTime.Parse(time);            
+            DateTime messagetime = DateTime.Parse(time);
             DateTime now = DateTime.Now.ToLocalTime();
             TimeSpan timeSpan = now - messagetime;
-            if(timeSpan.TotalDays >= 1)
+            if (timeSpan.TotalDays >= 1)
             {
                 return timeSpan.Days.ToString() + "天前";
             }
@@ -515,12 +516,36 @@ namespace prjDB_GamingForm_Show.Controllers
             else
             {
                 return "現在";
-            }            
+            }
         }
         public IActionResult ShopADSetting()
         {
             return View();
         }
+
+        [HttpPost]
+        public IActionResult ShopADSetting(CShopUseADViewModel vm)
+        {
+            Advertise ad = new Advertise();
+            if (vm != null)
+            {
+                if (vm.Photo != null)
+                {
+                    string photoName = Guid.NewGuid().ToString() + ".jpg";
+                    ad.FImagePath = photoName;
+                    vm.Photo.CopyTo(new FileStream(_enviro.WebRootPath + "/AD/" + photoName, FileMode.Create));
+                }
+                ad.Title = vm.Title;
+                ad.AdContent = vm.Content;
+                ad.StatusId = 36;
+                _db.Advertises.Add(ad);
+                _db.SaveChanges();
+            }
+
+            return RedirectToAction("ShopADSetting");
+        }
+
+
         //public IActionResult MemberListNexttest()
         //{
         //    if (HttpContext.Session.Keys.Contains(CDictionary.SK_管理者觀看會員清單頁數使用關鍵字))
@@ -1130,36 +1155,75 @@ namespace prjDB_GamingForm_Show.Controllers
 
 
 
-        public IActionResult BlogArticleComplainList()
+        public IActionResult BlogArticleComplainList(CKeyWordViewModel kyvm)
         {
-            //CBlogViewModel vm = null;
-            //vm = new CBlogViewModel
-            //{
-            //    articleComplain = _db.ArticleComplains.Include(p => p.Article).Include(p => p.Member).Include(p => p.SubTag).Select(a => a),
-            //    articles = _db.Articles.Include(p => p.SubBlog).ThenInclude(p => p.Blog).Include(p => p.Member).Select(a => a),
-            //    members = _db.Members,
-            //    status = _db.Statuses,
-            //};
+
+            //CBlogViewModel vm = new CBlogViewModel();
+
+            //_db.ArticleComplains.Where(a => a.Article.SubBlogId != 191).Include(p => p.SubTag).Load();  // 使用 Load 方法進行延遲載入
+            //vm.articleComplain = _db.ArticleComplains.Local;  // 從本地集合中獲取載入的 ArticleComplains
+
+            //_db.Articles.Include(p => p.SubBlog).ThenInclude(p => p.Blog).Include(p => p.Member).Load();  // 使用 Load 方法進行延遲載入
+            //vm.articles = _db.Articles.Local;  // 從本地集合中獲取載入的 Articles
+
+            //_db.Members.Load();  // 使用 Load 方法進行延遲載入
+            //vm.members = _db.Members.Local;  // 從本地集合中獲取載入的 Members
+
+            //_db.Statuses.Load();  // 使用 Load 方法進行延遲載入
+            //vm.status = _db.Statuses.Local;  // 從本地集合中獲取載入的 Statuses
+
+            //_db.SubTags.Load();
+            //vm.subTags = _db.SubTags.Local;
 
             //return View(vm);
-            CBlogViewModel vm = new CBlogViewModel();
 
-            _db.ArticleComplains.Include(p=>p.SubTag).Load();  // 使用 Load 方法進行延遲載入
-            vm.articleComplain = _db.ArticleComplains.Local;  // 從本地集合中獲取載入的 ArticleComplains
+            HttpContext.Session.Remove(CDictionary.SK_管理者觀看版面清單頁數使用關鍵字);
+            CBlogViewModel vm = null;
 
-            _db.Articles.Include(p => p.SubBlog).ThenInclude(p => p.Blog).Include(p => p.Member).Load();  // 使用 Load 方法進行延遲載入
-            vm.articles = _db.Articles.Local;  // 從本地集合中獲取載入的 Articles
+            if (string.IsNullOrEmpty(kyvm.txtKeyWord))
+            {
+                vm = new CBlogViewModel();
 
-            _db.Members.Load();  // 使用 Load 方法進行延遲載入
-            vm.members = _db.Members.Local;  // 從本地集合中獲取載入的 Members
+                _db.ArticleComplains.Where(a => a.Article.SubBlogId != 191).Include(p => p.SubTag).Load();  // 使用 Load 方法進行延遲載入
+                vm.articleComplain = _db.ArticleComplains.Local;  // 從本地集合中獲取載入的 ArticleComplains
 
-            _db.Statuses.Load();  // 使用 Load 方法進行延遲載入
-            vm.status = _db.Statuses.Local;  // 從本地集合中獲取載入的 Statuses
+                _db.Articles.Include(p => p.SubBlog).ThenInclude(p => p.Blog).Include(p => p.Member).Load();  // 使用 Load 方法進行延遲載入
+                vm.articles = _db.Articles.Local;  // 從本地集合中獲取載入的 Articles
 
-            return View(vm);
+                _db.Members.Load();  // 使用 Load 方法進行延遲載入
+                vm.members = _db.Members.Local;  // 從本地集合中獲取載入的 Members
 
+                _db.Statuses.Load();  // 使用 Load 方法進行延遲載入
+                vm.status = _db.Statuses.Local;  // 從本地集合中獲取載入的 Statuses
+
+                _db.SubTags.Load();
+                vm.subTags = _db.SubTags.Local;
+
+                return View(vm);
+            }
+
+            else 
+            {
+                vm = new CBlogViewModel();
+
+                _db.ArticleComplains.Where(a =>(a.SubTag.Name.Contains(kyvm.txtKeyWord)||a.ReportContent.Contains(kyvm.txtKeyWord)) && a.Article.SubBlogId != 191).Include(p => p.SubTag).Load();  // 使用 Load 方法進行延遲載入
+                vm.articleComplain = _db.ArticleComplains.Local;  // 從本地集合中獲取載入的 ArticleComplains
+
+                _db.Articles.Include(p => p.SubBlog).ThenInclude(p => p.Blog).Include(p => p.Member).Load();  // 使用 Load 方法進行延遲載入
+                vm.articles = _db.Articles.Local;  // 從本地集合中獲取載入的 Articles
+
+                _db.Members.Load();  // 使用 Load 方法進行延遲載入
+                vm.members = _db.Members.Local;  // 從本地集合中獲取載入的 Members
+
+                _db.Statuses.Load();  // 使用 Load 方法進行延遲載入
+                vm.status = _db.Statuses.Local;  // 從本地集合中獲取載入的 Statuses
+
+                _db.SubTags.Load();
+                vm.subTags = _db.SubTags.Local;
+
+                return View(vm);
+            }
         }
-
 
 
 
@@ -1168,15 +1232,15 @@ namespace prjDB_GamingForm_Show.Controllers
             var q = from n in _db.ArticleComplains
                     where n.Id == APId
                     select n;
-            var q1=_db.ArticleComplains.First(a => a.Id == APId);
+            var q1 = _db.ArticleComplains.First(a => a.Id == APId);
 
             _db.ArticleComplains.Remove(q1);
             _db.SaveChanges();
 
-            return Content("此篇檢舉非屬實，已移除此篇檢舉");
+            return Content("此篇檢舉不成立，已移除檢舉。");
         }
 
-        public IActionResult BlogArticleComplainSusscess(int? APId , int? AFId ,int? MId, int? SId)
+        public IActionResult BlogArticleComplainSusscess(int? APId, int? AFId, int? MId, int? SId)
         {
             var q = from n in _db.ArticleComplains
                     where n.Id == APId
@@ -1205,7 +1269,7 @@ namespace prjDB_GamingForm_Show.Controllers
                 mem.StatusId = (int)SId;
                 _db.SaveChanges();
             }
-            return Content("此篇檢舉屬實，已刪除文章，並已移除此篇檢舉");
+            return Content("此篇檢舉成立.，已刪除文章");
         }
 
 
@@ -1242,7 +1306,7 @@ namespace prjDB_GamingForm_Show.Controllers
             List<CDeputeComplainsWrap> list = new List<CDeputeComplainsWrap>();
             CDeputeComplainsWrap x = null;
             var datas = _db.DeputeComplains.OrderBy(n => n.Id);
-            foreach (var item in datas) 
+            foreach (var item in datas)
             {
                 x = new CDeputeComplainsWrap();
                 x.Id = item.Id;
@@ -1287,3 +1351,5 @@ namespace prjDB_GamingForm_Show.Controllers
         #endregion
     }
 }
+
+

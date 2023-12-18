@@ -39,7 +39,12 @@
                 </li>
                 <li class="nav-item">
                     <a class="d-flex align-items-center text-start mx-3 me-0 pb-3" data-bs-toggle="pill" href="#tab-3">
-                        <h6 id="title3" class="mt-n1 mb-0">最近瀏覽...</h6>
+                        <h6 id="fav" class="mt-n1 mb-0">我的最愛</h6>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="d-flex align-items-center text-start mx-3 me-0 pb-3" data-bs-toggle="pill" href="#tab-4">
+                        <h6 id="record" class="mt-n1 mb-0">最近瀏覽</h6>
                     </a>
                 </li>
             </ul>
@@ -99,7 +104,7 @@
                 </div>
                 <div id="tab-3" class="tab-pane fade show p-0">
                     <div class="job-item p-4 mb-4">
-                        <div id="history" class="row g-4">
+                        <div id="favorite" class="row g-4">
                             <div class="col-sm-12 col-md-8 d-flex align-items-center">
                                 <img class="flex-shrink-0 img-fluid border rounded" src="~/images/noimage.jpg" alt="" style="width: 80px; height: 80px;">
                                 <div class="text-start ps-4">
@@ -120,6 +125,31 @@
                         </div>
                     </div>
                     
+                    @Html.ActionLink("前往所有委託", "DeputeList", "Depute", null, new { @class = "btn btn-primary py-3 px-5" })
+                </div>
+                <div id="tab-4" class="tab-pane fade show p-0">
+                    <div class="job-item p-4 mb-4">
+                        <div id="history" class="row g-4">
+                            <div class="col-sm-12 col-md-8 d-flex align-items-center">
+                                <img class="flex-shrink-0 img-fluid border rounded" src="~/images/noimage.jpg" alt="" style="width: 80px; height: 80px;">
+                                <div class="text-start ps-4">
+                                    <h5 class="mb-3">尚無資料</h5>
+                                    <span class="text-truncate me-3"><i class="fa fa-map-marker-alt text-primary me-2"></i>尚無資料</span>
+                                    <span class="text-truncate me-3"><i class="far fa-clock text-primary me-2"></i>尚無資料</span>
+                                    <span class="text-truncate me-0"><i class="far fa-money-bill-alt text-primary me-2"></i>尚無資料</span>
+                                </div>
+                            </div>
+                            <div class="col-sm-12 col-md-4 d-flex flex-column align-items-start align-items-md-end justify-content-center">
+                                <div class="d-flex mb-3">
+                                    <a class="btn btn-light btn-square me-3" href=""><i class="far fa-heart text-primary"></i></a>
+                                    <a href="/Depute/DeputeDetails/${list.id}" class="btn btn-primary id=" btndp"">詳細...</a>
+                                    <a href="/Depute/Apply/${list.id}" class="btn btn-primary id=" btndp"">我要應徵...</a>
+                                </div>
+                                <small class="text-truncate"><i class="far fa-calendar-alt text-primary me-2"></i>尚無資料</small>
+                            </div>
+                        </div>
+                    </div>
+
                     @Html.ActionLink("前往所有委託", "DeputeList", "Depute", null, new { @class = "btn btn-primary py-3 px-5" })
                 </div>
                 <input type="hidden" name="txtCategory" value="" />
@@ -154,12 +184,14 @@
                     $('#category').html(ctgFrag)
                     getFive(1, "newfive");
                     getFive(2, "topfive");
+                    
                 })
         }
         
         $('#title1').click(() => { getFive(1, "newfive") });
         $('#title2').click(() => { getFive(2, "topfive") });
-        $('#title3').click(() => { Cookie() });
+        $('#fav').click(() => { GetFav() });
+        $('#record').click(() => { GetCookie() });
         function getFive(id, tag) {
             $.ajax('@Url.Content("~/Depute/GetFive")', {
                 "type": 'POST', //POST、PUT、DELETE//
@@ -183,7 +215,7 @@
                         </div>
                         <div class="col-sm-12 col-md-4 d-flex flex-column align-items-start align-items-md-end justify-content-center">
                         <div class="d-flex mb-3">
-                        <a class="btn btn-light btn-square me-3" href=""><i class="far fa-heart text-primary"></i></a>
+                        <a class="btn btn-light btn-square me-3" href="#" onclick=SetFav(${list.id})><i class="far fa-heart text-primary"></i></a>
                         <a href="/Depute/DeputeDetails/${list.id}" class="btn btn-primary id=" btndp"">詳細...</a>
                         <a href="/Depute/Apply/${list.id}" class="btn btn-primary id=" btndp"">我要應徵...</a>
                         </div>
@@ -195,12 +227,10 @@
                 )
                 lstFrag.append(list);
                 $(`#${tag}`).html(lstFrag);
-                    Cookie();
+                GetCookie();
             })
         }
-
-
-        function Cookie() {
+        function GetCookie() {
             $.ajax('@Url.Content("~/Depute/GetCookie")', {
                 "type": 'Get', //POST、PUT、DELETE
                 "dataType": "json"
@@ -222,7 +252,7 @@
                                 </div>
                                 <div class="col-sm-12 col-md-4 d-flex flex-column align-items-start align-items-md-end justify-content-center">
                                 <div class="d-flex mb-3">
-                                <a class="btn btn-light btn-square me-3" href=""><i class="far fa-heart text-primary"></i></a>
+                                <a class="btn btn-light btn-square me-3" href="#" onclick=SetFav(${list.id})><i class="far fa-heart text-primary"></i></a>
                                 <a href="/Depute/DeputeDetails/${list.id}" class="btn btn-primary id=" btndp"">詳細...</a>
                                 <a href="/Depute/Apply/${list.id}" class="btn btn-primary id=" btndp"">我要應徵...</a>
                                 </div>
@@ -234,6 +264,71 @@
                     )
                     lstFrag.append(list);
                     $('#history').html(lstFrag);
+                    GetFav();
+                })
+        }
+        function SetFav(value) {
+            $.ajax('@Url.Content("~/Depute/Fav")', {
+                "type": 'Post', //POST、PUT、DELETE
+                "data": { "id": value },
+                "dataType": "text"
+            }).done((data) => {
+                if (data == "Succeed") {
+                    Swal.fire({
+                        icon: "success",
+                        title: "已加入我的最愛",
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                    GetFav();
+                }
+                else {
+                    Swal.fire({
+                        icon: "success",
+                        title: "已從我的最愛移除",
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                    GetFav();
+
+                }
+
+            })
+        }
+        function GetFav() {
+            $.ajax('@Url.Content("~/Depute/GetFav")', {
+                "type": 'Get', //POST、PUT、DELETE
+                "dataType": "json"
+            })
+                .done((data) => {
+                    const lstFrag = $(document.createDocumentFragment());
+                    const list = data.map(list =>
+                        `
+                                        <div  class="col-sm-12 col-md-8 d-flex align-items-center">
+                                        <img class="flex-shrink-0 img-fluid border rounded" src="/images/${list.imgfilepath}" alt="" style="width: 80px; height: 80px;">
+                                        <div class="text-start ps-4">
+                                        <h5 class="mb-3">${list.title}</h5>
+                                        <span class="text-truncate me-3"><i class="fa fa-map-marker-alt text-primary me-2"></i>${list.region}</span>
+                                        <span class="text-truncate me-3"><i class="fa fa-user-tie text-primary me-2"></i>${list.providername}</span>
+                                        <span class="text-truncate me-3"><i class="far fa-clock text-primary me-2"></i>${list.startdate}</span>
+                                        <span class="text-truncate me-3"><i class="far fa-money-bill-alt text-primary me-2"></i>${list.salary}</span>
+                                        <span class="text-truncate me-3"><i class="far fa-solid fa-eye text-primary me-2"></i>${list.viewcount}</span>
+                                        </div>
+                                        </div>
+                                        <div class="col-sm-12 col-md-4 d-flex flex-column align-items-start align-items-md-end justify-content-center">
+                                        <div class="d-flex mb-3">
+                                        <a class="btn btn-light btn-square me-3" href="#" onclick=SetFav(${list.id})><i class="far fa-heart text-primary"></i></a>
+                                        <a href="/Depute/DeputeDetails/${list.id}" class="btn btn-primary id=" btndp"">詳細...</a>
+                                        <a href="/Depute/Apply/${list.id}" class="btn btn-primary id=" btndp"">我要應徵...</a>
+                                        </div>
+                                                <small class="text-truncate"><i class="far fa-regular fa-chart-bar text-primary me-2"></i>狀態 : ${list.status}</small>
+                                                <small class="text-truncate"><i class="far fa-calendar-alt text-primary me-2"></i>Last Update : ${list.modifieddate}</small>
+                                        </div>
+
+                                                `
+                    )
+                    lstFrag.append(list);
+                    $('#favorite').html(lstFrag);
 
                 })
         }

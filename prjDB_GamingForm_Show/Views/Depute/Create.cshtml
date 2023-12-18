@@ -98,7 +98,7 @@
 
             <div class="form-floating mb-3">
                 <a asp-action="homeframe" class="btn btn-secondary" >取消</a>
-                <input type="submit" value="送出並發佈" class="btn btn-success" onclick="prepareAndSubmit()"/>
+                <input type="button" value="送出並發佈" class="btn btn-success" onclick="prepareAndSubmit()"/>
             </div>
         </form>
     </div>
@@ -109,6 +109,35 @@
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
     <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            var status = "";
+            if (@Context.Session.GetInt32(CDictionary.SK_會員狀態編號) == 26) {
+                status = "被封鎖會員無法進行此操作";
+                Swal.fire({
+                    color: "#D0D0D0",
+                    background: "#343a40",
+                    timer: 5000,
+                    timerProgressBar: true,
+                    title: `${status}`,
+                    html: "將於<b></b>秒跳轉首頁",
+                    icon: "warning",
+                    didOpen: () => {
+                        Swal.showLoading();
+                        const timer = Swal.getPopup().querySelector("b");
+                        timerInterval = setInterval(() => {
+                            timer.textContent = `${(Swal.getTimerLeft() / 1000).toFixed(0)}`;
+                        }, 100);
+                    },
+                    willClose: () => {
+                        clearInterval(timerInterval);
+                    }
+                }).then(() => {
+                    window.location.href = '@Url.Action("HomePage","home")';
+                })
+            }
+        })
+
+
         const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]');
         const popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl));
         const selSkills = [];
@@ -328,9 +357,38 @@
         loadRegions();
 
         const inputSkill = document.getElementById('select-skills');
-        function prepareAndSubmit() {
+        async function prepareAndSubmit() {
             inputSkill.value = JSON.stringify(selSkills);
-            document.forms.submit();
+            const formData = new FormData(document.querySelector('form'));
+            const response = await fetch('@Url.Content("~/depute/create")', {
+                method: 'POST',
+                body: formData
+            });
+            const result = await response.json();
+            const icon = result.success ? "success" : "error";
+            if (result.success) {
+                Swal.fire({
+                    color: "#D0D0D0",
+                    background: "#343a40",
+                    timer: 5000,
+                    timerProgressBar: true,
+                    title: `${result.message}`,
+                    html: "將於<b></b>秒跳轉委託首頁",
+                    icon: `${icon}`,
+                    didOpen: () => {
+                        Swal.showLoading();
+                        const timer = Swal.getPopup().querySelector("b");
+                        timerInterval = setInterval(() => {
+                            timer.textContent = `${(Swal.getTimerLeft() / 1000).toFixed(0)}`;
+                        }, 100);
+                    },
+                    willClose: () => {
+                        clearInterval(timerInterval);
+                    }
+                }).then(() => {
+                    window.location.href = '@Url.Action("homeframe","depute")';
+                })
+            };
         }
     </script>
 

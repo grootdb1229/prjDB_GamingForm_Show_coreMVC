@@ -3,24 +3,32 @@
 @{
     ViewBag.Title = "Details";
 }
+<style>
+    .scrollable-content {
+        max-height: 150px; /* 設定最大高度為150像素 */
+        overflow-y: auto; /* 添加垂直滾軸，僅在內容超過最大高度時顯示 */
+    }
+</style>
 <section class="py-5">
     <div class="container px-4 px-lg-5 my-5">
-        <div class="row gx-4 gx-lg-5 align-items-center">
+        <div class="row align-items-center">
+            <!-- 左側：圖片輪播 -->
             <div class="col-md-6">
-                <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
+                <div id="carouselExampleControls" class="carousel slide">
                     <div class="carousel-inner">
                         <div class="carousel-item active">
-                            <img src="~/images/shop/@Model.FImagePath" class="d-block w-100" alt="..."style="max-width: 600px; max-height: 340px">
+                            <img src="~/images/shop/@Model.FImagePath" class="d-block w-100" alt="..." style="max-width: 600px; max-height: 340px">
                         </div>
                         @{
                             string[] mulpics = Model.MulPic.Split('/');
                             int loopCount = 0;
                             foreach (var item in mulpics)
-                            {if (!string.IsNullOrEmpty(item))
+                            {
+                                if (!string.IsNullOrEmpty(item))
                                 {
-                                            <div class="carousel-item">
-                                                <img src="~/images/shop/@item" class="d-block w-100" alt="..." style="max-width: 600px; max-height: 340px">
-                                            </div>
+                                    <div class="carousel-item">
+                                        <img src="~/images/shop/@item" class="d-block w-100" alt="..." style="max-width: 600px; max-height: 340px">
+                                    </div>
                                     loopCount++;
                                 }
                             }
@@ -29,99 +37,94 @@
                     @{
                         if (loopCount != 0)
                         {
-                                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
-                                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                        <span class="visually-hidden">Previous</span>
-                                    </button>
-                                    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
-                                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                <span class="visually-hidden">Next</span>
-                            </button>}
+                            <button class="carousel-control-prev" type="button" data-target="#carouselExampleControls" data-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="sr-only">Previous</span>
+                            </button>
+                            <button class="carousel-control-next" type="button" data-target="#carouselExampleControls" data-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="sr-only">Next</span>
+                            </button>
+                        }
                     }
                 </div>
-                </div>
+                <div class="row mt-3">
+                    @{
+                        string[] mulpicss = Model.MulPic.Split('/');
+                        List<string> mulpicList = new List<string>(mulpicss);
 
-                <div class="col-md-6">               
+                        // 在最前端插入 @Model.FImagePath
+                        mulpicList.Insert(0, @Model.FImagePath);
+                        // 將 List 轉換回 string[]
+                        mulpicss = mulpicList.ToArray();
+
+                        int loopCounts = 0;
+                        foreach (var item in mulpicss)
+                        {
+                            if (!string.IsNullOrEmpty(item))
+                            {
+                                <!-- 每個圖片區域，固定大小 -->
+                                <div class="col-md-2">
+                                    <img src="~/images/shop/@item" class="img-thumbnail d-block w-100" alt="..."
+                                         style="max-width: 65px; max-height: 50px; cursor: pointer;"
+                                         onclick="moveToSlide(@loopCounts)">
+                                </div>
+                                loopCounts++;
+                            }
+                        }
+                    }
+                </div>
+            </div>
+
+            <!-- 右側：文字和按鈕 -->
+            <div class="col-md-6">
                 <h1 class="display-5 fw-bolder">@Html.DisplayFor(model => model.ProductName)</h1>
                 <div>
+                    <div>遊戲類型</div>
                     @{
                         string[] tags = Model.SubTagName.Split('/');
                         foreach (var t in tags)
                         {
-                                    <span class="badge text-bg-light">@t</span>
+                            <span class="badge text-bg-light">@t</span>
+                        }
+                    }
+                </div>
+                <div>
+                    @{
+                        string[] Ltags = Model.SubTagName_Lan.Split('/');
+                        if (Model.SubTagName == "" || string.IsNullOrEmpty(Model.SubTagName_Lan))
+                        {
+                        }
+                        else
+                        {
+                            <div>支援語言</div>
+                            foreach (var t in Ltags)
+                            {
+                                <span class="badge text-bg-light">@t</span>
+                            }
                         }
                     }
                 </div>
                 <div class="fs-5 mb-5">
-                    <span class="text-decoration-line-through">@Html.DisplayFor(model => model.Price)</span>
+                    <div>售價</div>
                     <span>@Html.DisplayFor(model => model.Price)</span>
                 </div>
                 <div style="display: flex; align-items: center;">
-
                     <!-- 右側的按鈕和其他內容 -->
                     <div style="margin-left: auto;">
-                        <!-- 收藏按鈕 -->
-                        @if (Context.Session.GetInt32(CDictionary.SK_UserID) == null)
-                        {
-                            <button type="button" class="btn btn-info" id="btnLike" data-bs-toggle="modal" data-bs-target="#staticBackdrop" style="float:right;margin:0 5px">
-                                <img src="~/images/shop/hollowheart.png" width="20px" height="20px" />
-                        </button>
-                        }
-                        else
-                        {
-                            if (Model.favourite == "你收藏過了")
-                            {
-                            <button type="button" class="btn btn-info" id="btnLike" style="float:right;margin:0 5px">
-                                <img src="~/images/shop/heart.png" width="20px" height="20px" id="clicked" />
-                             </button>
-                            }
-                            else if (Model.favourite == "你還沒收藏過")
-                            {
-                                <button type="button" class="btn btn-info" id="btnLike" style="float:right;margin:0 5px">
-                                    <img src="~/images/shop/hollowheart.png" width="20px" height="20px" id="unclicked" />
-                                </button>
-                            }
-                        }
-                        <!-- HTML 中的按鈕 -->
-                        <button id="copyButton" class="btn btn-info" data-clipboard-target="#urlToCopy" style="float:right;margin:0 5px">分享</button>
-                        <!-- 網址藏在這 -->
-                        <input type="hidden" id="urlToCopy" value="" readonly>
-
-                        <!-- FB按鈕 -->
-                        <img src="~/images/fbicon.png" onclick="shareOnFacebook()" alt="Like" width="45px" height="45px" style="float:right;margin:0 5px" />
-                        <script>
-                            function shareOnFacebook() {
-                                window.open('https://www.facebook.com/sharer.php?u=https://localhost:7056/Shop/Details?FId=@(Model.ProductId)', '_blank');
-                            }
-                        </script>
-
-                        <!-- Line按鈕 -->
-                        <div class="line-it-button"
-                             data-lang="zh_Hant"
-                             data-type="share-c"
-                             data-env="REAL"
-                             data-url="https://localhost:7056/Shop/Details?FId=@(Model.ProductId)"
-                             data-color="default"
-                             data-size="large"
-                             data-count="false"
-                             data-ver="3"
-                             style="float:right ;margin:5px">
-                        </div>
-                        <script src="https://www.line-website.com/social-plugins/js/thirdparty/loader.min.js" async="async" defer="defer"></script>
+                        <!-- 其他按鈕和內容，您的現有代碼... -->
                     </div>
                 </div>
-          
-                    @*------Line按鈕------*@
-                <p class="lead">@Html.DisplayFor(model => model.ProductContent)</p>
+                @*------內文------*@
+                <div class="scrollable-content">
+                    <p class="lead">@Html.DisplayFor(model => model.ProductContent)</p>
+                </div>
                 @*------檢舉------*@
                 <button type="button" class="btn btn-dark status" style="float:right" onclick="test2(@Html.DisplayFor(model => model.ProductId))">檢舉</button>
-                
-
                 @using (Html.BeginForm("AddToCar", "Shop", FormMethod.Post, new { id = "addToCartForm" }))
                 {
                     <input type="hidden" name="ProductID" value="@Model.ProductId" />
                     <div class="d-flex">
-                        
                         <i class="bi-cart-fill me-1"></i>
                         <input type="submit" value="加入購物車" class="btn btn-outline-dark mt-auto" id="addToCartButton" />
                     </div>
@@ -135,6 +138,11 @@
 </section>
 @section Scripts {
     <script>
+        function moveToSlide(index) {
+            // 使用JavaScript觸發輪播牆移動到指定索引的圖片
+            $('#carouselExampleControls').carousel(index);
+        }
+
         //
         document.getElementById('addToCartForm').addEventListener('submit', async function (event) {
             event.preventDefault(); 
