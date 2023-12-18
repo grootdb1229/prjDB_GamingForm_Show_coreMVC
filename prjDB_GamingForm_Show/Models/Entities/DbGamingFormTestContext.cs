@@ -83,6 +83,8 @@ public partial class DbGamingFormTestContext : DbContext
 
     public virtual DbSet<ProductTag> ProductTags { get; set; }
 
+    public virtual DbSet<PublicChat> PublicChats { get; set; }
+
     public virtual DbSet<Region> Regions { get; set; }
 
     public virtual DbSet<RegionDistrict> RegionDistricts { get; set; }
@@ -627,6 +629,7 @@ public partial class DbGamingFormTestContext : DbContext
             entity.Property(e => e.OrderId).HasColumnName("OrderID");
             entity.Property(e => e.CompletedDate).HasColumnType("date");
             entity.Property(e => e.CouponId).HasColumnName("CouponID");
+            entity.Property(e => e.Ecid).HasColumnName("ECID");
             entity.Property(e => e.MemberId).HasColumnName("MemberID");
             entity.Property(e => e.Note).HasMaxLength(50);
             entity.Property(e => e.OrderDate).HasColumnType("date");
@@ -795,6 +798,19 @@ public partial class DbGamingFormTestContext : DbContext
                 .HasForeignKey(d => d.SubTagId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_ProductAction_SubTag");
+        });
+
+        modelBuilder.Entity<PublicChat>(entity =>
+        {
+            entity.ToTable("PublicChat");
+
+            entity.Property(e => e.Id).HasColumnName("ID");
+            entity.Property(e => e.SenderId).HasColumnName("SenderID");
+
+            entity.HasOne(d => d.Sender).WithMany(p => p.PublicChats)
+                .HasForeignKey(d => d.SenderId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_PublicChat_Member");
         });
 
         modelBuilder.Entity<Region>(entity =>

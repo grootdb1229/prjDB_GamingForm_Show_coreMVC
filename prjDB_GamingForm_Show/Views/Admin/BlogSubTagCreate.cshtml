@@ -9,7 +9,7 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="BlogSubTagCreate" method="post">
+        <form id="myForm" asp-action="BlogSubTagCreate" method="post" onsubmit="return validateForm()">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" name="TagID" value="4" />
             <div class="form-group">
@@ -21,12 +21,27 @@
                 <input type="submit" value="新增" class="btn btn-danger" style="margin:3px" />
                 <a asp-action="BlogCategoryList" class="btn btn-info" style="margin:3px">返回</a>
             </span>
-
         </form>
-
     </div>
 </div>
 
+<script>
+    function validateForm() {
+        // 取得輸入的值
+        var nameInput = document.getElementsByName('Name')[0].value;
+
+        // 檢查是否為空
+        if (nameInput.trim() === '') {
+            // 顯示警告訊息
+            alert('請輸入分類名稱');
+            // 阻止表單提交
+            return false;
+        }
+
+        // 如果都符合，允許表單提交
+        return true;
+    }
+</script>
 
 
 @section Scripts {

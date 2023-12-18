@@ -9,9 +9,9 @@
 
 <p>
     @Html.ActionLink("繼續購物", "Index", "Shop",null, new { @class = "btn btn-outline-dark mt-auto" })
-   
 </p>
-<table class="table">
+<div class="container px-4 px-lg-5 mt-7" >
+    <table class="table">
     <thead>
         <tr class="textcolor">
             <th>
@@ -27,13 +27,20 @@
         </tr>
     </thead>
     <tbody>
-@{
-     int count = 0;
-        decimal pay = 0;
-        decimal sum = 0;
-    foreach (var item in Model) {
-        count++;
-                var successMessage = TempData["SuccessMessage"] as string;
+            @{
+                if (!string.IsNullOrEmpty(ViewBag.repet))
+                {
+                    <div class="alert alert-danger">以偵測到重覆商品，為您移除</div>
+                }
+            }
+            @{
+                int count = 0;
+                decimal pay = 0;
+                decimal sum = 0;
+                foreach (var item in Model) {
+                    count++;
+
+                    var successMessage = TempData["SuccessMessage"] as string;
                 <tr class="textcolor">
                 <td>
                    <img class="card-img-top" src="~/images/shop/@item.FImagePath" alt="..." style="height:120px; width=80px;" />
@@ -42,7 +49,8 @@
                         @Html.DisplayFor(modelItem => item.ProductName)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.Price)
+                        @Html.DisplayFor(modelItem => item.Price) 
+              
                     </td>
 
                             <td>
@@ -50,18 +58,37 @@
                                 @Html.ActionLink("刪除購物車", "DeleteFromCar", "Shop", new { id = item.ProductID }, new { @class = "btn btn-outline-dark mt-auto", onclick = "return confirm('確定要刪除嗎?')" })
                             </td>
                 </tr>
-         sum += item.total;
-}
+                    sum += item.Price;
+                }
+                    pay = sum;
 
-        pay =  sum;
+            <tr style="color:wheat;border-bottom-style:hidden">
+                    <td>總計金額:</td>
+                    <td></td>
+                    <td>@sum.ToString("#0")元</td>
+                    <td>
+                       
+                    </td>
+            </tr>
+                <tr style="color:wheat; border-top-style:hidden">
+                    <td>應付金額:</td>
+                    <td></td>
+                    <td id="pay">@pay.ToString("#0")元</td>
+                    <td>
+                        <p>
+                            <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample" style="background-color:#a81d1d; border-color: #272727">
+                                選擇優惠卷
+                            </button>
+                        </p>
+                    </td>
+                </tr>      
+
 }
     </tbody>
 </table>
-<p>
-    <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample" style="background-color:#a81d1d; border-color: #272727">
-        選擇優惠卷
-    </button>
-</p>
+
+
+
 <div class="collapse" id="collapseExample">
     <div style="border:solid 2px  #a81d1d ; margin-bottom:20px;">
         <div class="form-group" id="Coupon" style="background-color:#4F4F4F">
@@ -81,14 +108,13 @@
     </div>
 
 </div>
-<li>交易金額:@sum.ToString("#0")元</li>
+@* <li>交易金額:@sum.ToString("#0")元</li>
 <div id="pay">
     <li>應付金額:@pay.ToString("#0")元</li>
-</div>
+</div> *@
 
-
-<div class="container" style="margin-left:-10px">
-    
+    <div style="position: relative;>
+        <div class="container" style="margin-left:-10px ; position: absolute;top:0;right:0;">
     <label for="payment">請選擇付款方式</label>
     <select id="payment" name="payment">
         <option value="apple">Apple</option>
@@ -98,16 +124,17 @@
     </select>
     @if (Context.Session.GetInt32(CDictionary.SK_UserID) == null)
     {
-        <input type="button" value="結帳" class="btn btn-outline-dark mt-auto" id="btnLike" data-bs-toggle="modal" data-bs-target="#staticBackdrop" style="margin-left:30px">
+        <input type="button" value="結帳" class="btn btn-outline-dark mt-auto" id="btnLike" data-bs-toggle="modal" data-bs-target="#staticBackdrop" style="margin-left:550px">
        
     }else{
 
-        <input type="button" value="結帳" class="btn btn-outline-dark mt-auto" id="btnpurchase" style="margin-left:30px" /> 
-     @Html.ActionLink("綠界測試", "Index", "Payment",null, null)
+                <input type="button" value="結帳" class="btn btn-outline-dark mt-auto" id="btnpurchase" style="margin-left:550px" />
+            @Html.ActionLink("綠界測試", "Index", "Payment",null, null)
     }
     @* @Html.DropDownListFor(m => m.payment, new SelectList(ViewBag.Items, "Value", "Text")) *@
 </div>
-
+    </div>
+</div>
 <style>
     .textcolor {
         color:white
@@ -184,7 +211,7 @@
         })
             .done((data) => {
                 const CouponFrag = $(document.createDocumentFragment());
-                const Coupons = `<li>應付金額:${data}元</li>`
+                const Coupons = `<p>${data}元</p>`
                 CouponFrag.append(Coupons);
                 $('#pay').html(CouponFrag)
             })

@@ -29,6 +29,7 @@ using NuGet.Protocol.Plugins;
 using Microsoft.AspNetCore.Http;
 using System.Diagnostics.Metrics;
 using static Org.BouncyCastle.Asn1.Cmp.Challenge;
+using prjDB_GamingForm_Show.Models.Member;
 
 namespace prjDB_GamingForm_Show.Controllers
 {
@@ -102,7 +103,7 @@ namespace prjDB_GamingForm_Show.Controllers
                     _db.ProductComplains.Add(
                         new ProductComplain
                         {
-                            Id = vm.txtID,
+                            ProductId = vm.txtID,
                             MemeberId = (int)HttpContext.Session.GetInt32(CDictionary.SK_UserID),
                             ReplyContent = vm.txtReportContent,
                             ReportDate = (DateTime.Now),
@@ -113,6 +114,7 @@ namespace prjDB_GamingForm_Show.Controllers
                 }
                 return View();
             }
+
             public IActionResult MutipleSearch_Shop(string txtMutiKeywords)
 			{
                 
@@ -956,8 +958,8 @@ namespace prjDB_GamingForm_Show.Controllers
 							return View((超酷warp)product);
 						}
 
-
-						Product x = _db.Products.FirstOrDefault(p => p.ProductId == product.ProductId);
+                        
+                        Product x = _db.Products.FirstOrDefault(p => p.ProductId == product.ProductId);
 						string MulPic = "";
 						List<string> PicList= new List<string>();
 						if (_db != null)
@@ -1001,8 +1003,8 @@ namespace prjDB_GamingForm_Show.Controllers
 										}//移除次要圖片
 									}
 
-									// 提交變更
-									_db.SaveChanges();
+                                    // 提交變更
+                                    _db.SaveChanges();
 									//string[] OtherPic = MulPic.Split("/").Skip(1).ToArray();
 									//PicList.Skip(1).ToArray();
 									foreach (string picpath in PicList.Skip(1))
@@ -1426,11 +1428,13 @@ namespace prjDB_GamingForm_Show.Controllers
 						string jsoncar= JsonSerializer.Serialize(car);
                         HttpContext.Session.SetString(CDictionary.SK_PURCHASED_PRODUCES_LIST, jsoncar);
                         TempData["SuccessMessage"] = "這是重複商品！"; //即使返回，要用特殊資料做出判斷差異
-						return View(car);
+						ViewBag.repet = "這是重複商品！";
+
+                        return View(car);
                     }           
                
 				}
-
+                ViewBag.repet = "";
                 return View(car);
 
             }
@@ -1694,8 +1698,48 @@ namespace prjDB_GamingForm_Show.Controllers
 				}
 				return RedirectToAction("OrderDetail", "Shop");
 			}
-			#region 彥霖
-			public IActionResult ShopADShow()
+
+            #region SendEmailByModel
+            public IActionResult SendEmailByModel()
+            {
+                return View();
+            }
+            [HttpPost]
+            public IActionResult SendEmailByModel(CEmail email)
+            {
+                //List<string> EmailData = (from E in _db.Members
+                //                          where E.Email.Contains("alan")
+                //                          select E.Email).ToList();
+                List<string> Emails = new List<string>();
+                Emails.Add("alan90306@gmail.com");
+                Emails.Add("kakuc0e0ig@gmail.com");
+                Emails.Add("iamau3vm0@gmail.com");
+                email.Emails = Emails;
+                foreach (string Address in email.Emails)
+                {
+                    var message = new MimeMessage();
+                    message.From.Add(new MailboxAddress("grootdb1229", "grootdb1229@gmail.com"));
+                    message.To.Add(new MailboxAddress("會員", Address));
+                    message.Subject = email.EmailSubject;
+                    message.Body = new TextPart("html")
+                    {
+                        Text = email.EmailBody
+                    };
+
+                    using (var client = new SmtpClient())
+                    {
+                        client.Connect("smtp.gmail.com", 587, false);
+                        client.Authenticate("grootdb1229@gmail.com", "fmgx uucs lgkv vqxm");
+                        client.Send(message);
+                        client.Disconnect(true);
+                    }
+                }
+                return RedirectToAction("HomePage", "Admin");
+            }
+            #endregion
+
+            #region 彥霖
+            public IActionResult ShopADShow()
 			{
 				Advertise ad = _db.Advertises.Where(a => a.StatusId == 36).OrderByDescending(a => a.AdvertiseId).FirstOrDefault();
 				CShopUseADViewModel model = new CShopUseADViewModel()
