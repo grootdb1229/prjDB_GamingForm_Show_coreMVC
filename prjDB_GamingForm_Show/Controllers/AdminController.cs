@@ -262,7 +262,36 @@ namespace prjDB_GamingForm_Show.Controllers
             return View(ProductComplain);
         }
 
-        #region SendEmailByModel
+        #region Newsletter
+        public IActionResult Newsletter()
+        { 
+            List<CNewsLetter> cNewsLetter =new List<CNewsLetter>();
+            var datas = _db.NewsLetters.OrderByDescending(x => x.Id).Select(x => x);
+            foreach (var data in datas)
+            {
+                CNewsLetter NewsLetter = new CNewsLetter()
+                {
+                    Id = data.Id,
+                    Title = data.Title,
+                    HtmlContent = data.HtmlContent
+                };
+                cNewsLetter.Add(NewsLetter);
+            }
+            
+            return View(cNewsLetter);
+        }
+
+        public IActionResult NewsletterEdit(int? id)
+        {
+            var data = _db.NewsLetters.Where(x => x.Id == id).FirstOrDefault();
+            CNewsLetter NewsLetter = new CNewsLetter()
+            {
+                Id = data.Id,
+                Title = data.Title,
+                HtmlContent = data.HtmlContent
+            };
+            return View(NewsLetter);
+        }
         public IActionResult SendNewsLetter()
         {
             return View();
@@ -297,6 +326,13 @@ namespace prjDB_GamingForm_Show.Controllers
                     client.Disconnect(true);
                 }
             }
+            NewsLetter dbn = new NewsLetter()
+            {
+                Title = NewsLetter.Title,
+                HtmlContent = NewsLetter.HtmlContent
+            };
+            _db.NewsLetters.Add(dbn);
+            _db.SaveChanges();
             return RedirectToAction("SendNewsLetter", "Admin");
         }
         #endregion
