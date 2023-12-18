@@ -87,7 +87,7 @@ namespace prjDB_GamingForm_Show.Controllers
             COrderViewModel vm = orderview();
             var orderId = Guid.NewGuid().ToString().Replace("-", "").Substring(0, 20);
             //需填入你的網址
-            var website = $"https://b7c7-1-160-32-217.ngrok-free.app/";
+            var website = $"https://prjdbgamingformshow20231215114758.azurewebsites.net/";
             var order = new Dictionary<string, string>
             {
                 { "MerchantTradeNo",  orderId},
@@ -125,14 +125,15 @@ namespace prjDB_GamingForm_Show.Controllers
                 data.Add(key, id[key]);
             }
             DbGamingFormTestContext db = new DbGamingFormTestContext();
-            var Orders = db.EcpayOrders.ToList().Where(m => m.MerchantTradeNo == id["MerchantTradeNo"]).FirstOrDefault();
-            Orders.RtnCode = int.Parse(id["RtnCode"]);
-            if (id["RtnMsg"] == "Succeeded") Orders.RtnMsg = "已付款";
-            Orders.PaymentDate = Convert.ToDateTime(id["PaymentDate"]);
-            Orders.SimulatePaid = int.Parse(id["SimulatePaid"]);
-            db.SaveChanges();
-            return View("EcpayView", data);
-            //return RedirectToAction("Shop","OrderDetail");
+
+            //var Orders = db.EcpayOrders.ToList().Where(m => m.MerchantTradeNo == id["MerchantTradeNo"]).FirstOrDefault();
+            //Orders.RtnCode = int.Parse(id["RtnCode"]);
+            //if (id["RtnMsg"] == "Succeeded") Orders.RtnMsg = "已付款";
+            //Orders.PaymentDate = Convert.ToDateTime(id["PaymentDate"]);
+            //Orders.SimulatePaid = int.Parse(id["SimulatePaid"]);
+            //db.SaveChanges();
+            //return View("EcpayView", data);
+            return RedirectToAction("Shop","OrderDetail");
         }
         /// step5 : 取得虛擬帳號 資訊  ClientRedirectURL
         [HttpPost]
