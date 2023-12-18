@@ -87,10 +87,10 @@ namespace prjDB_GamingForm_Show.Controllers
             COrderViewModel vm = orderview();
             var orderId = Guid.NewGuid().ToString().Replace("-", "").Substring(0, 20);
             //需填入你的網址
-            var website = $"https://prjdbgamingformshow20231215114758.azurewebsites.net/";
+            var website = $"https://b7c7-1-160-32-217.ngrok-free.app/";
             var order = new Dictionary<string, string>
             {
-                { "MerchantTradeNo",  vm.OrderId.ToString()},
+                { "MerchantTradeNo",  orderId},
                 { "MerchantTradeDate",  DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss")},
                 { "TotalAmount",  vm.Sumprice.ToString()},
                 { "TradeDesc",  "無"},
