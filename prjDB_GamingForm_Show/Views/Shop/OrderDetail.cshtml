@@ -4,39 +4,56 @@
     ViewData["Title"] = "OrderDetail";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
+<style>
+    .accordion-button {
+        background-color: transparent !important;
+        color: black !important;
+}
+</style>
 <h2>訂單管理</h2>
+<div class="container-fluid">
+    <div class="row justify-content-center align-items-center min-vh-100">
+        <div class="col-lg-7">
+            <div class="container-xxl py-5">
+                <div id="popmenu" class="container" style="margin-bottom:10px">
+                    <div class="accordion accordion-flush" id="accordionFlushExample">
 
-@foreach (var item in Model) {
-<div class="container-xxl py-5">
-    <div id="popmenu" class="container" style="margin-bottom:10px">
-        <div class="accordion accordion-flush" id="accordionFlushExample">
-            <div class="accordion-item">
-                <h2 class="accordion-header">
-                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
-                            訂單編號:@Html.DisplayFor(modelItem => item.OrderId)
-                            下單日期:@Html.DisplayFor(modelItem => item.OrderDate)
-                            付款金額:@item.Sumprice.ToString("#0")元
-                            付款方式:@Html.DisplayFor(modelItem => item.PaymentName)
-                                
-                    </button>
-                </h2>
-                <div id="flush-collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
-                    <div class="accordion-body">
+                        @{
+                            if (!string.IsNullOrEmpty(ViewBag.Buylist))
+                            {
+                                <div class="alert alert-danger">您目前沒有任何紀錄</div>
+                            }
+                        }
+                        @foreach (var item in Model)
+                        {
+                            string CountString = "flush-collapseOne" + item.OrderId.ToString();
 
-                        @foreach (var p in item.products)
-                           {
-                            <div class="row">
-                            <div class="col" style="color:black"> @p.ProductName</div>
-                            <div class="col" style="color:black">@p.Price.ToString("#0")元</div>
+                            <div class="accordion-item">
+                                <h2 class="accordion-header">
+                                    <button class="accordion-button " type="button" data-bs-toggle="collapse" data-bs-target="#@CountString" aria-expanded="true" aria-controls="@CountString">
+                                        訂單編號:@Html.DisplayFor(modelItem => item.OrderId)
+                                        下單日期:@Html.DisplayFor(modelItem => item.OrderDate)
+                                        付款金額:@item.Sumprice.ToString("#0")元
+                                        付款方式:@Html.DisplayFor(modelItem => item.PaymentName)
+                                    </button>
+                                </h2>
+                                <div id="@CountString" class="accordion-collapse collapse  " data-bs-parent="#accordionFlushExample">
+                                    <div class="accordion-body">
+                                        @foreach (var p in item.products)
+                                        {
+                                            <div class="row">
+                                                <div class="col" style="color:black"> @p.ProductName</div>
+                                                <div class="col" style="color:black">@p.Price.ToString("#0")元</div>
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
                             </div>
-                           }
-                                    
-                        
-                     </div>
+                        }
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-}
+

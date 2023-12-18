@@ -45,6 +45,7 @@ namespace prjDB_GamingForm_Show.Controllers
             var data = from m in _db.Members
                        where m.MemberId == MemberID
                        select m;
+            
             return View(data);
         }
         public IActionResult Create()
