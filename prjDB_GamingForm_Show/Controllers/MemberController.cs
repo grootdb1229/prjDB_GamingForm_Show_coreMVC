@@ -532,6 +532,141 @@ namespace prjDB_GamingForm_Show.Controllers
             string imgPath = _db.Members.Where(m => m.Name == name).Select(m => m.FImagePath).FirstOrDefault();
             return imgPath;
         }
+        public IActionResult ChatPV(string recevier)
+        {
+            var senderid = _db.Members.Where(a => a.Name == HttpContext.Session.GetString(CDictionary.SK_UserName)).Select(a => a.MemberId).FirstOrDefault();
+            var recevierid = _db.Members.Where(a => a.Name == recevier).Select(a => a.MemberId).FirstOrDefault();
+            List<CMemberChatUseViewModel> chats = new List<CMemberChatUseViewModel>();
+            ViewBag.SendToName = recevier;
+            foreach (var chat in _db.MemberChats)
+            {
+                if (chat.SenderMember == senderid && chat.ReceiveMember == recevierid)
+                {
+                    CMemberChatUseViewModel ori = new CMemberChatUseViewModel()
+                    {
+                        SenderName = HttpContext.Session.GetString(CDictionary.SK_UserName),
+                        ReceiverName = recevier,
+                        SenderId = senderid,
+                        ReceiverId = recevierid,
+                        SenderImg = _db.Members.Where(a => a.MemberId == senderid).Select(a => a.FImagePath).FirstOrDefault(),
+                        ReceiverImg = _db.Members.Where(a => a.MemberId == recevierid).Select(a => a.FImagePath).FirstOrDefault(),
+                        ChatContent = chat.ChatContent,
+                        ModefiedDate = chat.ModefiedDate,
+                        IsCheck = chat.IsCheck
+                    };
+                    chats.Add(ori);
+                }
+                else if (chat.SenderMember == recevierid && chat.ReceiveMember == senderid)
+                {
+                    CMemberChatUseViewModel ori = new CMemberChatUseViewModel()
+                    {
+                        SenderName = recevier,
+                        ReceiverName = HttpContext.Session.GetString(CDictionary.SK_UserName),
+                        SenderId = recevierid,
+                        ReceiverId = senderid,
+                        SenderImg = _db.Members.Where(a => a.MemberId == senderid).Select(a => a.FImagePath).FirstOrDefault(),
+                        ReceiverImg = _db.Members.Where(a => a.MemberId == recevierid).Select(a => a.FImagePath).FirstOrDefault(),
+                        ChatContent = chat.ChatContent,
+                        ModefiedDate = chat.ModefiedDate,
+                        IsCheck = chat.IsCheck
+                    };
+                    chats.Add(ori);
+                }
+            }
+            if (chats != null && chats.Count > 0)
+            {
+                return PartialView(chats);
+            }
+            else
+            {
+                CMemberChatUseViewModel newchat = new CMemberChatUseViewModel()
+                {
+                    SenderName = HttpContext.Session.GetString(CDictionary.SK_UserName),
+                    ReceiverName = recevier,
+                    SenderId = senderid,
+                    ReceiverId = recevierid,
+                    SenderImg = _db.Members.Where(a => a.MemberId == senderid).Select(a => a.FImagePath).FirstOrDefault(),
+                    ReceiverImg = _db.Members.Where(a => a.MemberId == recevierid).Select(a => a.FImagePath).FirstOrDefault(),
+                };
+                chats.Add(newchat);
+                return PartialView(chats);
+            }
+        }
+
+        [HttpPost]
+        public int HowMuchMessageNotCheck()
+        {
+            int count = 0;
+            int reid = _db.Members.Where(a => a.Name == HttpContext.Session.GetString(CDictionary.SK_UserName)).Select(a => a.MemberId).FirstOrDefault();
+            foreach (var m in _db.MemberChats)
+            {
+                if (m.ReceiveMember == reid && m.IsCheck == false)
+                {
+                    count++;
+                }
+            }
+            return count;
+        }
+
+        public IActionResult NotCheckMessage()
+        {
+            int reid = _db.Members.Where(a => a.Name == HttpContext.Session.GetString(CDictionary.SK_UserName)).Select(a => a.MemberId).FirstOrDefault();
+            List<CAdminNotCheckMessageViewModel> vm = new List<CAdminNotCheckMessageViewModel>();
+            CAdminNotCheckMessageViewModel message = null;
+            foreach (var m in _db.MemberChats)
+            {
+                if (m.ReceiveMember == reid && m.IsCheck == false)
+                {
+                    message = new CAdminNotCheckMessageViewModel()
+                    {
+                        senderName = _db.Members.Where(a => a.MemberId == m.SenderMember).Select(a => a.Name).FirstOrDefault(),
+                        senderImgPath = _db.Members.Where(a => a.MemberId == m.SenderMember).Select(a => a.FImagePath).FirstOrDefault(),
+                        message = m.ChatContent,
+                        sendTime = MessageTime(m.ModefiedDate),
+                        senderId = _db.Members.Where(a => a.MemberId == m.SenderMember).Select(a => a.MemberId).FirstOrDefault()
+                    };
+                    vm.Add(message);
+                }
+            }
+            return Json(vm);
+        }
+
+        public string MessageTime(string time)
+        {
+            DateTime messagetime = DateTime.Parse(time);
+            DateTime now = DateTime.Now.ToLocalTime();
+            TimeSpan timeSpan = now - messagetime;
+            if (timeSpan.TotalDays >= 1)
+            {
+                return timeSpan.Days.ToString() + "天前";
+            }
+            else if (timeSpan.TotalHours >= 1)
+            {
+                return timeSpan.Hours.ToString() + "小時前";
+            }
+            else if (timeSpan.TotalMinutes >= 1)
+            {
+                return timeSpan.Minutes.ToString() + "分鐘前";
+            }
+            else
+            {
+                return "現在";
+            }
+        }
+
+        [HttpPost]
+        public void CheckAllMessage(int senderid)
+        {
+            int reid = _db.Members.Where(a => a.Name == HttpContext.Session.GetString(CDictionary.SK_UserName)).Select(a => a.MemberId).FirstOrDefault();
+            foreach (var m in _db.MemberChats)
+            {
+                if (m.ReceiveMember == reid && m.SenderMember == senderid && m.IsCheck == false)
+                {
+                    m.IsCheck = true;
+                }
+            }
+            _db.SaveChanges();
+        }
         #endregion
     }
 }

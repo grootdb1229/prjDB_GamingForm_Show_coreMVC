@@ -106,7 +106,7 @@
                                 <a href="quote.html" class="dropdown-item">我的願望清單</a>
                             </div>
                         </div>
-                        <a href="contact.html" class="nav-item nav-link">聯絡我</a>
+                        <a class="nav-item nav-link">聯絡我</a>
                     </div>
                     <butaton type="button" class="btn text-primary ms-3" data-bs-toggle="modal" data-bs-target="#searchModal"><i class="fa fa-search"></i></butaton>
                 </nav>
@@ -132,7 +132,7 @@
                                 </div>
                             </div>
                         </div>
-                        <a href="contact.html" class="nav-item nav-link">聯絡我</a>
+                        <a class="nav-item nav-link" onclick="openChat(@Model.FirstOrDefault().MemberId)" style="cursor: pointer;">聯絡我</a>
                     </div>
                     <butaton type="button" class="btn text-primary ms-3" data-bs-toggle="modal" data-bs-target="#searchModal"><i class="fa fa-search"></i></butaton>
                 </nav>
@@ -854,6 +854,7 @@
 
     <!-- Back to Top -->
     <a href="#" class="btn btn-lg btn-primary btn-lg-square rounded back-to-top"><i class="bi bi-arrow-up"></i></a>
+    <div id="MemberChat" style="display:none;position: absolute; bottom: 10px; right: 300px; z-index: 999;background-color:#6C6C6C ; opacity:0.95; border: 3px groove #000;border-radius:15px;color:#FFFFF4"></div>
 
 
     <!-- JavaScript Libraries -->
@@ -873,7 +874,7 @@
 
 <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 <script>
-    
+    var name = "";
     $(document).ready(function () 
     {
         const mId=document.querySelector('#MId')
@@ -881,6 +882,7 @@
         .then(response => response.json())
             .then(data => 
             { 
+                name = data[0].name
                 console.log(data)
                 var genderName;
                 var howOld = (@DateTime.Now.Year - data[0].year)
@@ -905,7 +907,7 @@
                      </div>
                      <div class="row g-0 mb-3">
                          <div class="col-sm-6 wow zoomIn" data-wow-delay="0.2s">
-                             <h5 class="mb-3"><i class="fa fa-check text-primary me-3"></i>姓名:${data[0].name}</h5>
+                             <h5 class="mb-3" id="membername"><i class="fa fa-check text-primary me-3"></i>姓名:${data[0].name}</h5>
                              <h5 class="mb-3"><i class="fa fa-check text-primary me-3"></i>性別:${genderName}</h5>
                          </div>
                          <div class="col-sm-6 wow zoomIn" data-wow-delay="0.4s">
@@ -933,7 +935,84 @@
              </div>
          </div>`
             ;
-            $('#divInfo').append(DivHtml)
-            })
+            $('#divInfo').append(DivHtml)                
+            })        
     })
+    // 彥霖
+    function openChat(id) {
+        var div = document.querySelector('#MemberChat');
+        if (div.style.display === "none") {
+            $('#MemberChat').load(`@Url.Content("~/Member/ChatPV")?recevier=${name}`);
+            div.style.display = "block"; // 顯示
+            $.ajax({
+                type: 'post',
+                url: '/Member/CheckAllMessage',
+                data: { senderid: id }
+            });
+            isChatOpen = true;
+        }
+        else {
+            div.style.display = "none"; // 隱藏
+            isChatOpen = false;
+        }
+    }
+    connection.on("ReceiverUpdContent", function (message, selfID, senderAdminId, senderimg, sendTime) {
+        var div = document.querySelector('#MemberChat');
+        if (div.style.display == "block") {
+            var chatWho = $('#rn').text()
+            if (chatWho == selfID) {
+                $.ajax({
+                    type: 'post',
+                    url: '/Member/CheckAllMessage',
+                    data: { senderid: senderAdminId }
+                })
+            }
+            else {
+                updateNotificationCount();
+            }
+        }
+        else {
+            updateNotificationCount();
+        }
+        var messageBox = document.querySelector('#messageBox')
+
+        // 最外層li
+        var li = document.createElement("li")
+        li.classList.add("nav-item")
+        li.setAttribute("data-li-name", "uniqueName");
+        messageBox.insertBefore(li, messageBox.firstChild)
+
+        // 第二層a
+        var a = document.createElement("a")
+        a.classList.add("dropdown-item")
+        li.appendChild(a)
+
+        // 第三層名字、時間span
+        var spanforname = document.createElement("span")
+        a.appendChild(spanforname)
+
+        // 第三層訊息span
+        var spanformessage = document.createElement("span")
+        spanformessage.classList.add("message")
+        spanformessage.innerHTML = `${message}`
+        a.appendChild(spanformessage)
+
+        //第四層名字span
+        var name = document.createElement("span")
+        name.innerHTML = `${selfID}`
+        spanforname.appendChild(name)
+
+        //第四層時間span
+        var time = document.createElement("span")
+        time.classList.add("time")
+        time.innerHTML = `${sendTime}`
+        spanforname.appendChild(time)
+
+    })
+    function updateNotificationCount() {
+        notCheckMessage = $('#notCheckMessageCount').text()
+        notCheckMessage++;
+        $('#notCheckMessageCount').text(notCheckMessage)
+    }
+    
 </script>

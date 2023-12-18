@@ -87,8 +87,8 @@ namespace prjDB_GamingForm_Show.Hubs
         {
             var senderMemberName = _ConnectedMember.FirstOrDefault(u => u.MemberName == senderName)?.MemberName;
             var senderConnectionId = _ConnectedMember.FirstOrDefault(u => u.MemberName == senderName)?.ConnectionId;
-            var senderMemberId = _ConnectedMember.FirstOrDefault(m => m.MemberName == senderName).MemberId;
-            var receiveMemberId = _ConnectedMember.FirstOrDefault(m => m.MemberName == receiverName).MemberId;
+            var senderMemberId = _db.Members.FirstOrDefault(m => m.Name == senderName).MemberId;
+            var receiveMemberId = _db.Members.FirstOrDefault(m => m.Name == receiverName).MemberId;
             var senderimg = _db.Members.FirstOrDefault(a => a.Name == senderName).FImagePath;
             var sendTime = DateTime.UtcNow.ToLocalTime().ToString("yyyy/MM/dd HH:mm");
             
