@@ -2,12 +2,13 @@
 {
     public class CDeputeOverViewModel
     {
-        public int ApplyCount { get; set; }
-        public int ReplyCount { get; set; }
-        public int ComCount { get; set; }
-        public int NewCount { get; set; }
-        public int RunCount { get; set; }
-        public int CofirmCount { get; set; }
-        public int MemberComCount { get; set; }
+        public int applyCount { get; set; }
+        public int runCount {  get; set; }
+        public int replyCount { get; set; }
+        public int comCount { get; set; }
+        public int workerNewCount { get; set; }
+        public int workerRunCount { get; set; }
+        public int workerCofirmCount { get; set; }
+        public int workerComCount { get; set; }
     }
 }

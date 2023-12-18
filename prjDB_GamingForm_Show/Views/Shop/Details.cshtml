@@ -180,6 +180,13 @@
             </div>
         </div>
     </div>
+    <div class="container px-4 px-lg-5 mt-5">
+        <div class="" id="Hotproduct"></div>
+        <div class="" id="LabelProduct"></div>
+    </div>
+
+
+
         <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.8/clipboard.min.js"></script>
         <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
           <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -337,7 +344,15 @@
 
 
         }
-       
+        function loadHotProduct() {
+            $('#Hotproduct').load('@Url.Content("~/shop/HotProduct")');
+        }
+        loadHotProduct();
+        function loasmlcarousel() {
+            var howmany = 1;
+            $('#LabelProduct').load('@Url.Content("~/shop/SmlCarousel")', { id: howmany });
+        }
+        loasmlcarousel();
 
     </script>
 }

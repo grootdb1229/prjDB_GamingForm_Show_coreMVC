@@ -1,7 +1,7 @@
 ﻿<div id="carouselExampleFadeForFav" class="carousel slide carousel-fade" style="height:188px;margin-bottom:20px;">
 
     <div class="carousel-inner" style="border:solid 2px black;background-color:#474747;margin-bottom:20px; ">
-        <div><label style="margin:3px;">在您願望清單上的商品</label></div>
+        <div><label style="margin:3px;">在您的最愛上的商品</label></div>
         <div id="Love5">
         </div>
     </div>
@@ -41,6 +41,7 @@
                 `).join('');
             document.querySelector('#Love5').style.display = 'flex';
             document.querySelector('#Love5').innerHTML = MapPic;
+
             function truncateText(text, maxLength) {
                 return text.length > maxLength ? text.substring(0, maxLength) + '...' : text;
             }

@@ -40,7 +40,7 @@
                 foreach (var item in Model) {
                     count++;
 
-                    var successMessage = TempData["SuccessMessage"] as string;
+             
                 <tr class="textcolor">
                 <td>
                    <img class="card-img-top" src="~/images/shop/@item.FImagePath" alt="..." style="height:120px; width=80px;" />
@@ -135,7 +135,14 @@
 </div>
     </div>
 </div>
-<style>
+
+<div class="container px-4 px-lg-5 mt-5">
+    <h2>其他在您的最愛中的商品....</h2>
+    <div class="" id="YourTop5"></div>
+    </div>
+    
+    
+    <style>
     .textcolor {
         color:white
      }
@@ -231,4 +238,9 @@
             })
             .then(() => { fetch(`@Url.Content("~/Shop/orderview")`) })
     })
+
+    function loadFavorite() {
+        $('#YourTop5').load('@Url.Content("~/shop/YourFavorite")');
+    }
+    loadFavorite();
 </script>

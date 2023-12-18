@@ -1,4 +1,4 @@
-﻿@model prjDB_GamingForm_Show.Models.Entities.NewsLetter
+﻿@model prjDB_GamingForm_Show.Models.Shop.CNewsLetter
 
 @{
     ViewData["Title"] = "SendNewsLetter";
@@ -26,8 +26,7 @@
         }
     </style>
 }
-<h2>電子報設定</h2>
-<h4>信件資料</h4>
+<h2 style="margin-left:5px ; font-size:45px">電子報設定</h2>
 <div class="row">
     <div class="col-md-4">
         <form asp-action="SendNewsLetter">
@@ -39,22 +38,21 @@
             </div>
             <div class="form-group">
                 <label asp-for="HtmlContent" class="control-label">電子報內容</label>
-                <textarea id="editor" name="HtmlContent"></textarea>
+                <textarea asp-for="HtmlContent" id="editor" name="HtmlContent"></textarea>
             </div>
             <div class="form-group">
-                <input type="submit" value="送出信件" class="btn btn-default" />
+                <input type="submit" class="text-center btn btn-dark" onclick="send()"></input>
+                @Html.ActionLink("取消", "Newsletter", "Admin", null, new {@class="text-center btn btn-dark"})
             </div>
         </form>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">取消送信</a>
-</div>
 
 @section Scripts {
-
     <script>
+        
+        
 
         document.addEventListener('DOMContentLoaded', (event) => {
             ClassicEditor
@@ -238,5 +236,33 @@
                 reader.readAsDataURL(input.files[0]);
             }
         }
+
+        async function send(){
+            
+            const formData = new FormData(document.querySelector('form'));
+            //formData.set('HtmlContent', CKEDITOR.instances.editor.getData());
+            const response = await fetch('@Url.Content("~/Admin/SendNewsLetter")', {
+                method: 'POST',
+                body: formData
+            });
+            const resultData = await response.json();
+            if (resultData.success) {
+                Swal.fire({
+                    title: resultData.message,
+                    icon: 'success',
+                    confirmButtonText: '回列表',
+                    confirmButtonColor: '#3085d6',
+                }).then((confirmResult) => {
+
+                    if (confirmResult.isConfirmed) {
+                        // 使用者按下確認按鈕後的處理邏輯
+                        window.location.replace('@Url.Action("Newsletter", "Admin")');
+                    }
+                })
+            } else {
+                // 如果失敗，顯示後端返回的錯誤提示
+                Swal.fire('發生錯誤', result.message, 'error');
+            }
+        };
     </script>
 }
