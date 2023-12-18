@@ -16,6 +16,7 @@ using prjDB_GamingForm_Show.Models.Shop;
 using Microsoft.AspNetCore.Components.Web;
 using System.Net.Mail;
 using SmtpClient = MailKit.Net.Smtp.SmtpClient;
+using static prjDB_GamingForm_Show.Hubs.MemberChatHub;
 
 namespace prjDB_GamingForm_Show.Controllers
 {
@@ -317,13 +318,21 @@ namespace prjDB_GamingForm_Show.Controllers
                        select c;
             return View(data);
         }
-        public IActionResult MyCollection(int? id)
+        public IActionResult MyCollection(int? id) 
+        {
+            var data = from mc in _db.MemberCollections
+                       where mc.MemberId == id
+                       select new { mc.Title, mc.FImagePath, mc.Intro, mc.ModifiedDate };
+            return Json(data);  
+        }
+        public IActionResult MyCollectionView(int? id)
         {
             var data = from c in _db.MemberCollections
                        where c.Id == id
                        select new { c.Title, c.ModifiedDate, c.FImagePath, c.Intro , c.MyCollection};
             return View(data);
         }
+        #region CollectionCRUD
         public IActionResult CreateCollection()
         {
             return View();
@@ -351,7 +360,7 @@ namespace prjDB_GamingForm_Show.Controllers
                 CW.photo.CopyTo(new FileStream(_host.WebRootPath + "/images/MemberCollectionPreView/" + photoName, FileMode.Create));
                 _db.Add(MC);
                 _db.SaveChanges();
-                return RedirectToAction("MyCollections", "Member");
+                return RedirectToAction("MyCollectionList", "Member" , new {id=MC.MemberId});
             }
         }
         public IActionResult EditCollection(int? CId)
@@ -364,24 +373,35 @@ namespace prjDB_GamingForm_Show.Controllers
             return View(memberCollection);
         }
         [HttpPost]
-        public IActionResult EditCollection(MemberCollection memberCollection , int? CId)
+        public IActionResult EditCollection(MemberCollection memberCollection)
         {
-                            memberCollection = _db.MemberCollections.FirstOrDefault
-                            (mc => mc.Id == CId);
-            if (memberCollection == null)
+            MemberCollection MC = _db.MemberCollections.First(c => c.Id == memberCollection.Id);
+            if (MC == null)
             {
                 return RedirectToAction("CreateCollection", "Member");
             }
             if (memberCollection != null)
             {
-                memberCollection.Title = memberCollection.Title;
-                memberCollection.Intro = memberCollection.Intro;
-                memberCollection.MyCollection = memberCollection.MyCollection;
-                memberCollection.ModifiedDate = (DateTime.Now).ToString();
+                MC.Title = memberCollection.Title;
+                MC.Intro = memberCollection.Intro;
+                MC.MyCollection = memberCollection.MyCollection;
+                MC.ModifiedDate = (DateTime.Now).ToString();
                 _db.SaveChanges();
             }
-            return RedirectToAction("MyCollections", "Member");
+            return RedirectToAction("MyCollectionList", "Member", new {id=memberCollection.MemberId});
         }
+        public IActionResult DeleteCollection(int? CId)
+        {
+            MemberCollection MC = _db.MemberCollections.First(c => c.Id == CId);
+            if (MC != null) 
+            { 
+               _db.MemberCollections.Remove(MC);
+               _db.SaveChanges();
+            }
+            return RedirectToAction("MyCollectionList", "Member", new { id = MC.MemberId });
+        }
+        #endregion
+        #region MyHistoryRecord
         public IActionResult MyWorks()
         {
             return View();
@@ -406,6 +426,7 @@ namespace prjDB_GamingForm_Show.Controllers
         {
             return View();
         }
+        #endregion
         #endregion
         #region Tests
         //public IActionResult Test(int? id)
