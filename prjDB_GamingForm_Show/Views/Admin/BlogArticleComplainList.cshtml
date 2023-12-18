@@ -44,15 +44,15 @@
 <h2>檢舉清單</h2>
 
 
-@*<select id="selCom" name="SCId" style="margin-top:3px;width:200px;" onchange="filterComplains()">
+<select id="sel_Com" style="margin-top:3px;width:200px;" onchange="updateComplainList()">
     <option>請選擇違規分類</option>
     @{
         foreach (var type in Model.subTags.Where(s => s.TagId == 6))
         {
-            <option value="@type.SubTagId"> @type.Name</option>
+            <option value="@type.SubTagId"> @type.Name</option> 
         }
     }
-</select>*@
+</select>
 
 @using (Html.BeginForm())
 {
@@ -167,7 +167,7 @@
                 如屬實，請選擇懲處
                 <p id="memberStatus"></p>
                 <select id="selSta" name="SId" style="margin-top:3px;width:200px">
-                    @{                        
+                    @{
                         foreach (var type in Model.status.Where(s => (s.StatusId >= 32 && s.StatusId <= 34) || s.StatusId == 26))
                         {
                             <option value="@type.StatusId">@type.StatusId @type.Name</option>
@@ -224,7 +224,6 @@
         })
 
         btnYes.addEventListener('click', () => {
-            // 將這一行放到事件監聽器內部
             const StatusId = selSta.value;
 
             fetch(`@Url.Content("~/Admin/BlogArticleComplainSusscess")?APId=${Cid}&AFId=${AFId}&MId=${MId}&SId=${StatusId}`)
@@ -235,6 +234,26 @@
                     window.location.href = "/Admin/BlogArticleComplainList"
                 });
         })
+
+        //----
+        const selCom = document.getElementById('sel_Com');
+        selCom.addEventListener('change', () => {
+            // 獲取選中的選項值
+            const selectedValue = selCom.value;
+
+            // 使用 fetch 發送 AJAX 請求
+            fetch(`@Url.Content("~/Admin/BlogComplaintsByTag")?STId=${selectedValue}`)
+                .then(response => response.text())
+                .then(data => {
+                    
+
+                    console.log(selectedValue);
+
+                })
+                .catch(error => console.error('Error:', error));
+        });
+
+                
     </script>
     }
 

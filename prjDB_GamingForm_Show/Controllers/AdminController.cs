@@ -1155,7 +1155,7 @@ namespace prjDB_GamingForm_Show.Controllers
 
 
 
-        public IActionResult BlogArticleComplainList(CKeyWordViewModel kyvm)
+        public IActionResult BlogArticleComplainList(CKeyWordViewModel kyvm )
         {
 
             //CBlogViewModel vm = new CBlogViewModel();
@@ -1187,14 +1187,14 @@ namespace prjDB_GamingForm_Show.Controllers
                 _db.ArticleComplains.Where(a => a.Article.SubBlogId != 191).Include(p => p.SubTag).Load();  // 使用 Load 方法進行延遲載入
                 vm.articleComplain = _db.ArticleComplains.Local;  // 從本地集合中獲取載入的 ArticleComplains
 
-                _db.Articles.Include(p => p.SubBlog).ThenInclude(p => p.Blog).Include(p => p.Member).Load();  // 使用 Load 方法進行延遲載入
-                vm.articles = _db.Articles.Local;  // 從本地集合中獲取載入的 Articles
+                _db.Articles.Include(p => p.SubBlog).ThenInclude(p => p.Blog).Include(p => p.Member).Load();  
+                vm.articles = _db.Articles.Local; 
 
-                _db.Members.Load();  // 使用 Load 方法進行延遲載入
-                vm.members = _db.Members.Local;  // 從本地集合中獲取載入的 Members
+                _db.Members.Load();  
+                vm.members = _db.Members.Local; 
 
-                _db.Statuses.Load();  // 使用 Load 方法進行延遲載入
-                vm.status = _db.Statuses.Local;  // 從本地集合中獲取載入的 Statuses
+                _db.Statuses.Load();  
+                vm.status = _db.Statuses.Local;  
 
                 _db.SubTags.Load();
                 vm.subTags = _db.SubTags.Local;
@@ -1206,17 +1206,17 @@ namespace prjDB_GamingForm_Show.Controllers
             {
                 vm = new CBlogViewModel();
 
-                _db.ArticleComplains.Where(a =>(a.SubTag.Name.Contains(kyvm.txtKeyWord)||a.ReportContent.Contains(kyvm.txtKeyWord)) && a.Article.SubBlogId != 191).Include(p => p.SubTag).Load();  // 使用 Load 方法進行延遲載入
-                vm.articleComplain = _db.ArticleComplains.Local;  // 從本地集合中獲取載入的 ArticleComplains
+                _db.ArticleComplains.Where(a =>(a.SubTag.Name.Contains(kyvm.txtKeyWord)||a.ReportContent.Contains(kyvm.txtKeyWord)) && a.Article.SubBlogId != 191).Include(p => p.SubTag).Load(); 
+                vm.articleComplain = _db.ArticleComplains.Local;  
 
-                _db.Articles.Include(p => p.SubBlog).ThenInclude(p => p.Blog).Include(p => p.Member).Load();  // 使用 Load 方法進行延遲載入
-                vm.articles = _db.Articles.Local;  // 從本地集合中獲取載入的 Articles
+                _db.Articles.Include(p => p.SubBlog).ThenInclude(p => p.Blog).Include(p => p.Member).Load();  
+                vm.articles = _db.Articles.Local;  
 
-                _db.Members.Load();  // 使用 Load 方法進行延遲載入
-                vm.members = _db.Members.Local;  // 從本地集合中獲取載入的 Members
+                _db.Members.Load(); 
+                vm.members = _db.Members.Local; 
 
-                _db.Statuses.Load();  // 使用 Load 方法進行延遲載入
-                vm.status = _db.Statuses.Local;  // 從本地集合中獲取載入的 Statuses
+                _db.Statuses.Load();  
+                vm.status = _db.Statuses.Local;  
 
                 _db.SubTags.Load();
                 vm.subTags = _db.SubTags.Local;
@@ -1272,6 +1272,64 @@ namespace prjDB_GamingForm_Show.Controllers
             return Content("此篇檢舉成立.，已刪除文章");
         }
 
+        public IActionResult BlogArticleTop(int? AFId)
+        {
+            Article art = _db.Articles.FirstOrDefault(a => a.ArticleId == AFId);
+
+            if (art != null)
+            {
+
+                art.IsPinned = true; 
+                art.Title = "【置頂文章】" + art.Title;
+                _db.SaveChanges();
+            }
+            return RedirectToAction("BlogArticleList");
+
+        }
+
+        public IActionResult BlogArticleTopCancel(int? AFId)
+        {
+            Article art = _db.Articles.FirstOrDefault(a => a.ArticleId == AFId);
+
+            if (art != null)
+            {
+
+                art.IsPinned = false;
+                art.Title = art.Title.Replace("【置頂文章】", "");
+                _db.SaveChanges();
+            }
+            return RedirectToAction("BlogArticleList");
+
+        }
+
+        public IActionResult BlogComplaintsByTag(int? STId) 
+        {
+            _db.ChangeTracker.Entries().ToList().ForEach(entry => entry.State = EntityState.Detached);
+
+
+            CBlogViewModel vm = new CBlogViewModel();
+
+            _db.ArticleComplains.Where(a => a.Article.SubBlogId != 191 && a.SubTagId ==STId).Include(p => p.SubTag).Load();  // 使用 Load 方法進行延遲載入
+            vm.articleComplain = _db.ArticleComplains.Local;  // 從本地集合中獲取載入的 ArticleComplains
+
+            _db.Articles.Include(p => p.SubBlog).ThenInclude(p => p.Blog).Include(p => p.Member).Load();
+            vm.articles = _db.Articles.Local;
+
+            _db.Members.Load();
+            vm.members = _db.Members.Local;
+
+            _db.Statuses.Load();
+            vm.status = _db.Statuses.Local;
+
+            _db.SubTags.Load();
+            vm.subTags = _db.SubTags.Local;
+
+
+            return View(vm);
+
+        }
+
+        
 
         #endregion
         //---------------------------論壇---------------------------

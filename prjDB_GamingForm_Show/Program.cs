@@ -5,7 +5,7 @@ using prjDB_GamingForm_Show.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// Add services to the container.//
 builder.Services.AddControllersWithViews();
 builder.Services.AddSession();
 builder.Services.AddDbContext<DbGamingFormTestContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("SchoolConnection")));
@@ -32,8 +32,8 @@ app.MapControllerRoute(
     name: "default",
 //pattern: "{controller=depute}/{action=homeframe}/{id?}");
 //pattern: "{controller=Blog}/{action=List}/{id?}");
-pattern: "{controller=Shop}/{action=Index}/{id?}");
+//pattern: "{controller=Shop}/{action=Index}/{id?}");
 //pattern: "{controller=Depute}/{action=DeputeList}/{id?}");
-//pattern: "{controller=Admin}/{action=Index}/{id?}");
+pattern: "{controller=Admin}/{action=Index}/{id?}");
 
 app.Run();

@@ -167,7 +167,7 @@ namespace prjDB_GamingForm_Show.Controllers
             Emails.Add("alan90306@gmail.com");
             Emails.Add("alan90306@gmail.com");
             email.Emails = Emails;
-            foreach ( string Address in email.Emails)
+            foreach (string Address in email.Emails)
             {
                 var message = new MimeMessage();
                 message.From.Add(new MailboxAddress("grootdb1229", "grootdb1229@gmail.com"));

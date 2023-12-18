@@ -21,11 +21,13 @@ using System.Text.Json;
 using System.Web;
 using static prjDB_GamingForm_Show.Controllers.DeputeController;
 using static System.Runtime.InteropServices.JavaScript.JSType;
-using OpenAI_API;
-using OpenAI_API.Models;
+//using OpenAI_API;
+//using OpenAI_API.Models;
 using Azure;
-using OpenAI_API.Chat;
+//using OpenAI_API.Chat;
 using Microsoft.AspNetCore.Http.Extensions;
+using Org.BouncyCastle.Ocsp;
+using System.Collections;
 
 namespace prjDB_GamingForm_Show.Controllers
 {
@@ -372,6 +374,50 @@ namespace prjDB_GamingForm_Show.Controllers
             return Json(CookieList.Take(5));
         }
         //TODO #4 熱門關鍵字
+
+        public IActionResult Recommand(int id)
+        {
+            var value = (from n in _db.DeputeSkills.AsEnumerable()
+                         where n.DeputeId == id
+                         select new { n.Skill.Name }).Distinct();
+            List< CDeputeViewModel> Rcolist = new List< CDeputeViewModel>();
+            CDeputeViewModel data = null;
+            foreach(var item in value)
+            {
+                  var  RecoData = from n in _db.DeputeSkills.AsEnumerable()
+                               where n.Skill.Name.Contains(item.Name)
+                               select new {n.DeputeId,n.Depute.Title, n.Depute.DeputeContent, n.Depute.Provider.Name, n.Depute.Provider.FImagePath };
+                CDeputeViewModel x = null;
+                foreach (var item2 in RecoData)
+                {
+
+                        x = new CDeputeViewModel()
+                        {
+                            id = item2.DeputeId,
+                            title = item2.Title,
+                            providername = item2.Name,
+                            deputeContent = item2.DeputeContent,
+                            imgfilepath = item2.FImagePath
+                        };
+                    Rcolist.Add(x);
+                }
+
+            }
+
+            Random rnd = new Random();
+            int count = rnd.Next(0, 50);
+            List<CDeputeViewModel> Rcolist2 = new List<CDeputeViewModel>();
+            for (int i = 1; i <= 6; i++)
+            {
+                Rcolist2.Add(Rcolist[count]);
+                Rcolist.RemoveAt(count);
+                count = rnd.Next(0, Rcolist.Count);
+
+            }
+            return Json(Rcolist2);
+
+
+        }
         public IActionResult HotKey(int id)
         {
             var value = (from n in _db.SerachRecords.AsEnumerable()
@@ -705,31 +751,31 @@ namespace prjDB_GamingForm_Show.Controllers
 
         #region API
 
-        private async Task<string> ChatAsync()
-        {
-            OpenAIAPI api = new OpenAIAPI("");
-            var chat = api.Chat.CreateConversation();
-            chat.Model = Model.ChatGPTTurbo;
-            chat.RequestParameters.Temperature = 0.6;
+        //private async Task<string> ChatAsync()
+        //{
+        //    OpenAIAPI api = new OpenAIAPI("");
+        //    var chat = api.Chat.CreateConversation();
+        //    chat.Model = Model.ChatGPTTurbo;
+        //    chat.RequestParameters.Temperature = 0.6;
 
-            chat.AppendSystemMessage("你將看到包含委託主題及委託內容的委託需求，" +
-                "你的工作是提供以下列表中的一組標籤以JSON形式提供你的答案，" +
-                "僅從此提供的標籤清單中選擇(選擇至少5項skill):\r\n" +
-                "skillclass：程式\r\n繪畫\r\n音樂\r\n動畫" +
-                "skill：Csharp\r\nHtml\r\nCss\r\nLINQ\r\nADONET\r\nSQL\r\nJS\r\n電繪\r\n手繪\r\n水彩\r\n油畫\r\nJava\r\nPython\r\nPHP\r\nRuby\r\nASP.NET\r\nSwift\r\nKotlin\r\nReact\r\nSolidity\r\nSelenium\r\nJUnit\r\n電子\r\n搖滾\r\n古典\r\n爵士\r\n民族\r\n流行\r\n懸疑\r\n環境\r\n8位元\r\n16位元\r\nMaya\r\nPhotoShop\r\nPreminum");
-            chat.AppendUserInput("標題：\r\n12/16 ios app逆向工程\r\n內容：\r\n【幫忙事項】：ios app逆向工程 編碼及轉換16進位碼\r\n【注意事項】： 無");
-            return await chat.GetResponseFromChatbotAsync();
-            //Console.WriteLine(response);
-            //foreach (ChatMessage msg in chat.Messages)
-            //{
-            //    Console.WriteLine($"{msg.Role}: {msg.Content}");
-            //}
-        }
-        public async Task<IActionResult> Test2Async()
-        {
-            var response = await ChatAsync();
-            return Content(response);
-        }
+        //    chat.AppendSystemMessage("你將看到包含委託主題及委託內容的委託需求，" +
+        //        "你的工作是提供以下列表中的一組標籤以JSON形式提供你的答案，" +
+        //        "僅從此提供的標籤清單中選擇(選擇至少5項skill):\r\n" +
+        //        "skillclass：程式\r\n繪畫\r\n音樂\r\n動畫" +
+        //        "skill：Csharp\r\nHtml\r\nCss\r\nLINQ\r\nADONET\r\nSQL\r\nJS\r\n電繪\r\n手繪\r\n水彩\r\n油畫\r\nJava\r\nPython\r\nPHP\r\nRuby\r\nASP.NET\r\nSwift\r\nKotlin\r\nReact\r\nSolidity\r\nSelenium\r\nJUnit\r\n電子\r\n搖滾\r\n古典\r\n爵士\r\n民族\r\n流行\r\n懸疑\r\n環境\r\n8位元\r\n16位元\r\nMaya\r\nPhotoShop\r\nPreminum");
+        //    chat.AppendUserInput("標題：\r\n12/16 ios app逆向工程\r\n內容：\r\n【幫忙事項】：ios app逆向工程 編碼及轉換16進位碼\r\n【注意事項】： 無");
+        //    return await chat.GetResponseFromChatbotAsync();
+        //    //Console.WriteLine(response);
+        //    //foreach (ChatMessage msg in chat.Messages)
+        //    //{
+        //    //    Console.WriteLine($"{msg.Role}: {msg.Content}");
+        //    //}
+        //}
+        //public async Task<IActionResult> Test2Async()
+        //{
+        //    var response = await ChatAsync();
+        //    return Content(response);
+        //}
         public IActionResult test()
         {
             return Content("123");
@@ -861,7 +907,7 @@ namespace prjDB_GamingForm_Show.Controllers
                 deputeContent = depute.DeputeContent,
                 recordStatus = deputeRecord.ApplyStatus.Name,
                 progress = CDictionary.PROGRESS_委託者決定合作
-            };
+            };           
             SendDeputeEmail(content);
             foreach (var item in otherRecords)
             {
