@@ -21,10 +21,10 @@ using System.Text.Json;
 using System.Web;
 using static prjDB_GamingForm_Show.Controllers.DeputeController;
 using static System.Runtime.InteropServices.JavaScript.JSType;
-//using OpenAI_API;
-//using OpenAI_API.Models;
+using OpenAI_API;
+using OpenAI_API.Models;
 using Azure;
-//using OpenAI_API.Chat;
+using OpenAI_API.Chat;
 using Microsoft.AspNetCore.Http.Extensions;
 using Org.BouncyCastle.Ocsp;
 using System.Collections;
@@ -753,34 +753,38 @@ namespace prjDB_GamingForm_Show.Controllers
 
         #region API
 
-        //private async Task<string> ChatAsync()
-        //{
-        //    OpenAIAPI api = new OpenAIAPI("");
-        //    var chat = api.Chat.CreateConversation();
-        //    chat.Model = Model.ChatGPTTurbo;
-        //    chat.RequestParameters.Temperature = 0.6;
-
-        //    chat.AppendSystemMessage("你將看到包含委託主題及委託內容的委託需求，" +
-        //        "你的工作是提供以下列表中的一組標籤以JSON形式提供你的答案，" +
-        //        "僅從此提供的標籤清單中選擇(選擇至少5項skill):\r\n" +
-        //        "skillclass：程式\r\n繪畫\r\n音樂\r\n動畫" +
-        //        "skill：Csharp\r\nHtml\r\nCss\r\nLINQ\r\nADONET\r\nSQL\r\nJS\r\n電繪\r\n手繪\r\n水彩\r\n油畫\r\nJava\r\nPython\r\nPHP\r\nRuby\r\nASP.NET\r\nSwift\r\nKotlin\r\nReact\r\nSolidity\r\nSelenium\r\nJUnit\r\n電子\r\n搖滾\r\n古典\r\n爵士\r\n民族\r\n流行\r\n懸疑\r\n環境\r\n8位元\r\n16位元\r\nMaya\r\nPhotoShop\r\nPreminum");
-        //    chat.AppendUserInput("標題：\r\n12/16 ios app逆向工程\r\n內容：\r\n【幫忙事項】：ios app逆向工程 編碼及轉換16進位碼\r\n【注意事項】： 無");
-        //    return await chat.GetResponseFromChatbotAsync();
-        //    //Console.WriteLine(response);
-        //    //foreach (ChatMessage msg in chat.Messages)
-        //    //{
-        //    //    Console.WriteLine($"{msg.Role}: {msg.Content}");
-        //    //}
-        //}
-        //public async Task<IActionResult> Test2Async()
-        //{
-        //    var response = await ChatAsync();
-        //    return Content(response);
-        //}
-        public IActionResult test()
+        private async Task<string> ChatAsync(string system,string user,double temp)
         {
-            return Content("123");
+            OpenAIAPI api = new OpenAIAPI("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");
+            var chat = api.Chat.CreateConversation();
+            chat.Model = Model.ChatGPTTurbo;
+            chat.RequestParameters.Temperature = temp;
+
+            chat.AppendSystemMessage($"{system}");
+            chat.AppendUserInput($"{user}");
+            return await chat.GetResponseFromChatbotAsync();
+            //Console.WriteLine(response);
+            //foreach (ChatMessage msg in chat.Messages)
+            //{
+            //    Console.WriteLine($"{msg.Role}: {msg.Content}");
+            //}
+        }
+        public async Task<IActionResult> createContentAsync(string title)
+        {
+            string systemRule = "你將看到遊戲製作委託平台上的委託主題，你的工作是根據主題創造一篇50字左右的徵才委託。";
+            var response = await ChatAsync(systemRule, title, 1.0);
+            return Content(response);
+        }
+        public async Task<IActionResult> selectSkillAsync(string title,string content)
+        {
+            string systemRule = "你將看到一件委託主題及委託內容，" +
+                "你的工作是根據以下列表中的技能，以JSON形式提供你的答案，" +
+                "只能從此提供的技能清單中選擇最多5項skill(嚴禁新建任何skill):\r\n" +
+                "skill：Csharp\r\nHtml\r\nCss\r\nLINQ\r\nADONET\r\nSQL\r\nJS\r\n電繪\r\n手繪\r\n水彩\r\n油畫\r\nJava\r\nPython\r\nPHP\r\nRuby\r\nASP.NET\r\nSwift\r\nKotlin\r\nReact\r\nSolidity\r\nSelenium\r\nJUnit\r\n電子\r\n搖滾\r\n古典\r\n爵士\r\n民族\r\n流行\r\n懸疑\r\n環境\r\n8位元\r\n16位元\r\nMaya\r\nPhotoShop\r\nPreminum";
+            string userContent = "主題:" + title + "，" + "內容:" + content;
+            var response = await ChatAsync(systemRule, userContent, 0);
+            
+            return Content(response);
         }
 
         public IActionResult SendDeputeEmail(CDeputeEmail vm)

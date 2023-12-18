@@ -4,13 +4,13 @@
     ViewData["Title"] = "Create";
     Layout = "~/Views/Shared/_Layout_DB.cshtml";
 }
-@section styles{
+@section styles {
 
     <style>
         .custom-popover {
             --bs-popover-max-width: 200px;
             /* --bs-popover-border-color: var(--bd-violet-bg);
-          --bs-popover-header-bg: var(--bd-violet-bg); */
+                  --bs-popover-header-bg: var(--bd-violet-bg); */
             --bs-popover-header-color: var(--bs-black);
             --bs-popover-body-padding-x: 1rem;
             --bs-popover-body-padding-y: .5rem;
@@ -20,7 +20,7 @@
 <h2 class="mt-5">發佈委託</h2>
 
 <h4>請輸入委託資訊</h4>
-<hr class="col-10"/>
+<hr class="col-10" />
 <div class="row">
     <div class="col-md-10">
         <form asp-action="Create">
@@ -42,44 +42,60 @@
                 <input asp-for="ProviderId" class="form-control" />
                 <span asp-validation-for="ProviderId" class="text-danger"></span>
             </div>
-            <div class="form-floating mb-3">
-                <input name="title" class="form-control" id="Title" placeholder="" required/>
-                <label asp-for="Title" for="Title">委託主題</label>
-                <span asp-validation-for="Title" class="text-danger"></span>
+            <div class="row g-2">
+                <div class="col-md">
+                    <div class="form-floating mb-3">
+                        <input name="title" class="form-control" id="Title" placeholder="" required />
+                        <label asp-for="Title" for="Title">委託主題</label>
+                        <span asp-validation-for="Title" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md d-flex align-items-center">
+                    <button class="btn btn-primary m-2" type="button" id="btnCreate" onclick="createContent()" disabled>
+                        <span class="spinner-border spinner-border-sm" aria-hidden="true" id="spanSpin" hidden></span>
+                        <span role="status" id="spanCreate">生成委託資訊</span>
+                    </button>
+                    <button class="btn btn-primary m-2" type="button" id="btnSelSkill" onclick="selectSkill()" disabled>
+                        <span class="spinner-border spinner-border-sm" aria-hidden="true" id="spanSkillSpin" hidden></span>
+                        <span role="status" id="spanSelSkill">依主題及內容選擇技能</span>
+                    </button>
+                </div>
             </div>
             <div class="form-floating mb-3" hidden>
-                <input name="開始日期" value="@DateTime.Now" class="form-control"  />
+                <input name="開始日期" value="@DateTime.Now" class="form-control" />
                 <label asp-for="StartDate" class="control-label">開始時間</label>
                 <span asp-validation-for="StartDate" class="text-danger"></span>
             </div>
             <div class="form-floating mb-3" hidden>
-                <input name="更新日期" value="@DateTime.Now" class="form-control"  />
+                <input name="更新日期" value="@DateTime.Now" class="form-control" />
                 <label asp-for="Modifiedate" class="control-label">更新時間</label>
                 <span asp-validation-for="Modifiedate" class="text-danger"></span>
-            </div>
-            <div class="form-floating mb-3">
-                <input name="salary" class="form-control" id="Salary" placeholder="" required />
-                <label asp-for="Salary" class="control-label" for="Salary">提供報酬</label>
-                <span asp-validation-for="Salary" class="text-danger"></span>
-            </div>
-            <div>
             </div>
             <div class="form-floating mb-3" hidden>
                 <input name="StatusId" class="form-control" id="StatusId" placeholder="statusid" value="18" />
             </div>
-            <div class="form-floating  mb-3">
-                <select name="region" class="form-select" id="selRegions" aria-label="Default select example">
-                   
-                </select>
-                <label asp-for="RegionId" class="control-label" id="RegionId" placeholder="">地區</label>
-
+            <div class="row g-2">
+                <div class="col-md">
+                    <div class="form-floating mb-3">
+                        <input name="salary" class="form-control" id="Salary" placeholder="" required />
+                        <label asp-for="Salary" class="control-label" for="Salary">提供報酬</label>
+                        <span asp-validation-for="Salary" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md">
+                    <div class="form-floating  mb-3">
+                        <select name="region" class="form-select" id="selRegions" aria-label="Default select example">
+                        </select>
+                        <label asp-for="RegionId" class="control-label" id="RegionId" placeholder="">地區</label>
+                    </div>
+                </div>
             </div>
             <div class="form-floating mb-3">
                 <textarea asp-for="DeputeContent" class="form-control" style="height:200px" placeholder="在這裡輸入您的委託資訊..." id="DeputeContent" placeholder="" required></textarea>
                 <label asp-for="DeputeContent" class="control-label" for="DeputeContent">委託資訊</label>
                 <span asp-validation-for="DeputeContent" class="text-danger"></span>
             </div>
-            
+
             <span id="skillCount" hidden></span>
             <a class="btn btn-secondary mb-3" id="aSkillList"
                tabindex="0"
@@ -92,13 +108,12 @@
                hidden>
                 檢視所選技能
             </a>
-            <button type="button" class="btn btn-info mb-3" onclick="openSkillBrowser()">編輯所需技能</button>
-
+            <button type="button" class="btn btn-info mb-3" onclick="openSkillBrowser()">編輯技能</button>
             <input name="skilllist" id="select-skills" hidden>
 
             <div class="form-floating mb-3">
-                <a asp-action="homeframe" class="btn btn-secondary" >取消</a>
-                <input type="button" value="送出並發佈" class="btn btn-success" onclick="prepareAndSubmit()"/>
+                <a asp-action="homeframe" class="btn btn-secondary">取消</a>
+                <input type="button" value="送出並發佈" class="btn btn-success" onclick="prepareAndSubmit()" />
             </div>
         </form>
     </div>
@@ -132,10 +147,79 @@
                         clearInterval(timerInterval);
                     }
                 }).then(() => {
-                    window.location.href = '@Url.Action("HomePage","home")';
+                    window.location.href = '@Url.Action("HomePage", "home")';
                 })
             }
+
+            const deputeTitle = document.querySelector('#Title');
+            const btnCreate = document.querySelector('#btnCreate');
+            const btnSelSkill = document.querySelector('#btnSelSkill');
+            const content = document.querySelector('#DeputeContent');
+            deputeTitle.addEventListener('change', () => {
+                deputeTitle.value == "" ? btnCreate.disabled = true : btnCreate.disabled = false;
+                content.value == "" || deputeTitle.value == "" ? btnSelSkill.disabled = true : btnSelSkill.disabled = false;
+            })
+            content.addEventListener('change', () => {
+                content.value == "" || deputeTitle.value == "" ? btnSelSkill.disabled = true : btnSelSkill.disabled = false;
+            })
         })
+
+        async function selectSkill() {
+            const btnSelSkill = document.querySelector('#btnSelSkill');
+            const spanSkillSpin = document.querySelector('#spanSkillSpin');
+            const spanSelSkill = document.querySelector('#spanSelSkill');
+            btnSelSkill.disabled = true;
+            spanSkillSpin.hidden = false;
+            spanSelSkill.textContent = "篩選中...";
+
+
+            const refTitle = document.querySelector('#Title');
+            const content = document.querySelector('#DeputeContent');
+            const response = await fetch(`@Url.Content("~/depute/selectSkill")?title=${refTitle.value}&content=${content.value}`);
+            const datas = await response.text();
+            console.log(response);
+            console.log(datas);
+            const skills = JSON.parse(datas).skill;
+            console.log(skills);
+            const responseSkill = await fetch(`@Url.Content("~/depute/SkillClasses")`)
+            const dataSkills = await responseSkill.json();
+
+            const fetchSkillClassPromises = skills.map(function (skill) {
+                var skillClassId = dataSkills.skills.find(_ => _.name == skill).skillClassId;
+                selSkills.push({ skillclass: dataSkills.skillclasses.find(_ => _.skillClassId == skillClassId).name, skill: skill });
+
+                skillsCount();
+
+            })
+            await Promise.all(fetchSkillClassPromises);
+
+            btnSelSkill.disabled = false;
+            spanSkillSpin.hidden = true;
+            spanSelSkill.textContent = "依主題及內容選擇技能";
+        }
+
+        async function createContent() {
+            const btnCreate = document.querySelector('#btnCreate');
+            const spanSpin = document.querySelector('#spanSpin');
+            const spanCreate = document.querySelector('#spanCreate');
+            btnCreate.disabled = true;
+            spanSpin.hidden = false;
+            spanCreate.textContent = "產生中...";
+
+            const refTitle = document.querySelector('#Title');
+            if (refTitle.value == "")
+                return;
+
+            console.log(refTitle.value);
+            const response = await fetch(`@Url.Content("~/depute/createContent")?title=${refTitle.value}`);
+            const data = await response.text();
+            const content = document.querySelector('#DeputeContent');
+            content.value = data;
+
+            btnCreate.disabled = false;
+            spanSpin.hidden = true;
+            spanCreate.textContent = "生成委託資訊";
+        }
 
 
         const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]');
@@ -171,20 +255,20 @@
                 title: selectedCount == 0 ? `請選擇所需技能` : `請選擇所需技能(${selectedCount})`,
                 width: '50rem',
                 html: `<div class="accordion text-start" id="accordionExample" >
-                           <div class="accordion-item">
-                               <h2 class="accordion-header">
-                                  <button class="accordion-button collapsed" id="divaccordionbtn" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
-                                      已選擇技能(${selSkills.length}/5)
-                                  </button>
-                               </h2>
-                                  <div id="collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionExample" style="">
-                                      <div class="accordion-body"  style="color:black" id="divaccordion">
-                                          
-                                      </div>
-                                  </div>
-                           </div>
-                       </div>
-                       <div class="row">
+                            <div class="accordion-item">
+                                <h2 class="accordion-header">
+                                    <button class="accordion-button collapsed" id="divaccordionbtn" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                                        已選擇技能(${selSkills.length}/5)
+                                    </button>
+                                </h2>
+                                    <div id="collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionExample" style="">
+                                        <div class="accordion-body"  style="color:black" id="divaccordion">
+
+                                        </div>
+                                    </div>
+                            </div>
+                        </div>
+                        <div class="row">
                             <div class="col-6">
                                 <div class="list-group" id="list-tab" role="tablist">
                                 </div>
@@ -195,18 +279,19 @@
                                 <ul class="list-group col-6">
                                 </ul>
                             </div>
-                       </div>
-                           <div aria-live="polite" aria-atomic="true" class="d-flex justify-content-center align-items-center w-100" style="position:fixed;top: 65%; left: 50%; transform: translate(-50%, -50%);">
-                           <div class="toast fade hide" role="alert" aria-live="assertive" aria-atomic="true" id="liveToast">
-                               <div class="toast-body" style="color:black">
-                                   選項已滿，最多選擇5個
-                               </div>
-                           </div>
-                       </div>`
+                        </div>
+                            <div aria-live="polite" aria-atomic="true" class="d-flex justify-content-center align-items-center w-100" style="position:fixed;top: 65%; left: 50%; transform: translate(-50%, -50%);">
+                            <div class="toast fade hide" role="alert" aria-live="assertive" aria-atomic="true" id="liveToast">
+                                <div class="toast-body" style="color:black">
+                                    選項已滿，最多選擇5個
+                                </div>
+                            </div>
+                        </div>`
             });
             loadSkillClasses();
             refreshAccordion();
             skillsCount();
+            refreshSwalTitle();
         }
 
         async function loadSkillClasses() {
@@ -226,7 +311,7 @@
                 loadSkills();
             }
         }
-        
+
         async function loadSkills() {
             const response = await fetch(`@Url.Content("~/depute/skillss")?skillClass=${chooseClass}`);
             const datas = await response.json();
@@ -239,7 +324,7 @@
             document.querySelector(`#${chooseClassID}`).innerHTML = skills.join("");
 
             const divSkills = document.getElementsByClassName('me-1');
-            
+
             Array.from(divSkills).forEach(divSkill => {
                 divSkill.addEventListener('change', function (event) {
                     var selSK = event.target.labels[0].textContent;
@@ -258,6 +343,7 @@
                     console.log(selSkills);
                     refreshAccordion();
                     skillsCount();
+                    refreshSwalTitle();
                 })
             })
         }
@@ -277,6 +363,7 @@
             loadSkills();
             refreshAccordion();
             skillsCount();
+            refreshSwalTitle();
         }
 
         function overfive() {
@@ -294,16 +381,14 @@
             return count;
         }
 
-
         function skillsCount() {
             selectedCount = selSkills.length;
-
-            const divSkillTitle = document.querySelector('#swal2-title');
+            
             const spanCount = document.querySelector('#skillCount');
             const aChoiceSkillList = document.querySelector('#aSkillList');
 
             var boolanyselected = selectedCount == 0;
-            divSkillTitle.innerHTML = boolanyselected ? `請選擇所需技能` : `請選擇所需技能(${selectedCount})<buuton class="btn btn-secondary" onclick="removeSkill()">清除全部</button>`;
+            
             spanCount.textContent = boolanyselected ? "" : `已選擇${selectedCount}項技能`;
             spanCount.hidden = boolanyselected;
             aChoiceSkillList.hidden = boolanyselected;
@@ -328,7 +413,7 @@
 
         function refreshChoiceSkillList() {
             var popover = bootstrap.Popover.getOrCreateInstance('#aSkillList');
-            const choiceskill = selSkills.map((skills, index) => `<li class='list-group-item'>${index+1}.${skills.skillclass}-${skills.skill}</li>`);
+            const choiceskill = selSkills.map((skills, index) => `<li class='list-group-item'>${index + 1}.${skills.skillclass}-${skills.skill}</li>`);
             var newContent = `<ul class='list-group'>${choiceskill.join('')}</ul>`;
             popover.setContent({
                 '.popover-header': '已選技能',
@@ -336,10 +421,17 @@
             });
         }
 
+        function refreshSwalTitle() {
+            selectedCount = selSkills.length;
+            const divSkillTitle = document.querySelector('#swal2-title');
+            var boolanyselected = selectedCount == 0;
+            divSkillTitle.innerHTML = boolanyselected ? `請選擇所需技能` : `請選擇所需技能(${selectedCount})<buuton class="btn btn-secondary" onclick="removeSkill()">清除全部</button>`;
+        }
+
         function refreshAccordion() {
             const divAccordion = document.querySelector('#divaccordion'),
                 divAccordionBnt = document.querySelector('#divaccordionbtn');
-            
+
             const skills = selSkills.map(skill => `<span class="badge rounded-pill text-bg-secondary m-1">${skill.skillclass}-${skill.skill}<button type="button" class="btn-close" aria-label="Close" onclick="removeSkill(event)"></button></span>`);
             var boolSkillCountZero = selSkills.length == 0;
             divAccordionBnt.disabled = boolSkillCountZero;
@@ -386,7 +478,7 @@
                         clearInterval(timerInterval);
                     }
                 }).then(() => {
-                    window.location.href = '@Url.Action("homeframe","depute")';
+                    window.location.href = '@Url.Action("homeframe", "depute")';
                 })
             };
         }
