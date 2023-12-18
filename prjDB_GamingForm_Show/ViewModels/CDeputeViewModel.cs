@@ -42,6 +42,7 @@ namespace DB_GamingForm_Show.Job.DeputeClass
         public string memberName {  get; set; }
         public string imgfilepath { get; set; }
         public int count { get; set; }
+        public int workerId {  get; set; }
 
         public string? skilllist { get; set; }
         public string? applyerPhone { get; set; }
