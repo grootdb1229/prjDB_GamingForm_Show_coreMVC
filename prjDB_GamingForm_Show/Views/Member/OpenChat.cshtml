@@ -1,4 +1,4 @@
-﻿@* @import url('https://fonts.googleapis.com/css?family=Lato'); *@
+﻿@model IEnumerable<prjDB_GamingForm_Show.ViewModels.CPublicChatUseViewModel>
 <style>
     .sender {
         text-align: right;
@@ -92,7 +92,23 @@
 
 <h2 style="display: flex;justify-content: center;">公開聊天室</h2>
 <div id="chatContent" class="chat-container">
-
+    @foreach (var chat in Model)
+    {
+        if (chat.SenderName == Context.Session.GetString(CDictionary.SK_UserName))
+        {
+            <div class="sender">
+                <span class="messageSpan">@chat.ModefiedDate</span>
+                <p class="messageP">@chat.Content</p>
+            </div>
+        }
+        else
+        {
+            <div class="receiver">
+                <span class="messageSpan">@chat.ModefiedDate</span>
+                <p class="messageP">@chat.Content</p>
+            </div>
+        }
+    }
 </div>
 <div id="username" hidden>@Context.Session.GetString(CDictionary.SK_UserName)</div>
 <div class="form-floating" style="display: flex; align-items: flex-end;margin-top:5px;padding-left:15px;width:1560px">

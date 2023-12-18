@@ -43,32 +43,28 @@
         <div class="spinner"></div>
     </div>
     <!-- Spinner End -->
-
-
     <!-- Topbar Start -->
-   @* <div class="container-fluid bg-dark px-5 d-none d-lg-block">
-        <div class="row gx-0">
-            <div class="col-lg-8 text-center text-lg-start mb-2 mb-lg-0">
-                <div class="d-inline-flex align-items-center" style="height: 45px;">
-                    <small class="me-3 text-light"><i class="fa fa-map-marker-alt me-2"></i>123 Street, New York, USA</small>
-                    <small class="me-3 text-light"><i class="fa fa-phone-alt me-2"></i>+012 345 6789</small>
-                    <small class="text-light"><i class="fa fa-envelope-open me-2"></i>info@example.com</small>
-                </div>
-            </div>
-            <div class="col-lg-4 text-center text-lg-end">
-                <div class="d-inline-flex align-items-center" style="height: 45px;">
-                    <a class="btn btn-sm btn-outline-light btn-sm-square rounded-circle me-2" href=""><i class="fab fa-twitter fw-normal"></i></a>
-                    <a class="btn btn-sm btn-outline-light btn-sm-square rounded-circle me-2" href=""><i class="fab fa-facebook-f fw-normal"></i></a>
-                    <a class="btn btn-sm btn-outline-light btn-sm-square rounded-circle me-2" href=""><i class="fab fa-linkedin-in fw-normal"></i></a>
-                    <a class="btn btn-sm btn-outline-light btn-sm-square rounded-circle me-2" href=""><i class="fab fa-instagram fw-normal"></i></a>
-                    <a class="btn btn-sm btn-outline-light btn-sm-square rounded-circle" href=""><i class="fab fa-youtube fw-normal"></i></a>
-                </div>
-            </div>
-        </div>
+    @* <div class="container-fluid bg-dark px-5 d-none d-lg-block">
+    <div class="row gx-0">
+    <div class="col-lg-8 text-center text-lg-start mb-2 mb-lg-0">
+    <div class="d-inline-flex align-items-center" style="height: 45px;">
+    <small class="me-3 text-light"><i class="fa fa-map-marker-alt me-2"></i>123 Street, New York, USA</small>
+    <small class="me-3 text-light"><i class="fa fa-phone-alt me-2"></i>+012 345 6789</small>
+    <small class="text-light"><i class="fa fa-envelope-open me-2"></i>info@example.com</small>
+    </div>
+    </div>
+    <div class="col-lg-4 text-center text-lg-end">
+    <div class="d-inline-flex align-items-center" style="height: 45px;">
+    <a class="btn btn-sm btn-outline-light btn-sm-square rounded-circle me-2" href=""><i class="fab fa-twitter fw-normal"></i></a>
+    <a class="btn btn-sm btn-outline-light btn-sm-square rounded-circle me-2" href=""><i class="fab fa-facebook-f fw-normal"></i></a>
+    <a class="btn btn-sm btn-outline-light btn-sm-square rounded-circle me-2" href=""><i class="fab fa-linkedin-in fw-normal"></i></a>
+    <a class="btn btn-sm btn-outline-light btn-sm-square rounded-circle me-2" href=""><i class="fab fa-instagram fw-normal"></i></a>
+    <a class="btn btn-sm btn-outline-light btn-sm-square rounded-circle" href=""><i class="fab fa-youtube fw-normal"></i></a>
+    </div>
+    </div>
+    </div>
     </div>*@
     <!-- Topbar End -->
-
-
     <!-- Navbar & Carousel Start -->
     <div class="container-fluid position-relative p-0">
         @{
@@ -113,29 +109,29 @@
             }
             else
             {
-                                                <nav class="navbar navbar-expand-lg navbar-dark px-5 py-3 py-lg-0">
-                                                    <a href="@Url.Action("MemberPageTest" , "Member")" class="navbar-brand p-0">
-                                                        <h1 class="m-0"><i class="fa fa-user-tie me-2"></i>會員中心</h1>
-                                                        <input type="hidden" name="MemberId" value=@Context.Session.GetInt32(CDictionary.SK_UserID) />
-                                                    </a>
-                                                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
-                                                        <span class="fa fa-bars"></span>
-                                                    </button>
-                                                    <div class="collapse navbar-collapse" id="navbarCollapse">
-                                                        <div class="navbar-nav ms-auto py-0">
-                                                            <a href="@Url.Action("MemberPageTest" , "Member" , new{id=Model.First().MemberId})" class="nav-item nav-link active">我的首頁</a>
-                                                            <a href="@Url.Action("MyBlog" , "Member")" class="nav-item nav-link">我的部落格</a>
-                                                            <div class="nav-item dropdown">
-                                                                <a href="@Url.Action("MyCollectionList" , "Member")" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">我的作品</a>
-                                                                <div class="dropdown-menu m-0">
-                                                                    <a href="@Url.Action("MyCollectionList" ,"Member" ,new{id=Model.First().MemberId})" class="dropdown-item">我的作品集</a>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <a href="contact.html" class="nav-item nav-link">聯絡我</a>
-                                                    </div>
-                                                    <butaton type="button" class="btn text-primary ms-3" data-bs-toggle="modal" data-bs-target="#searchModal"><i class="fa fa-search"></i></butaton>
-                                                </nav>
+                <nav class="navbar navbar-expand-lg navbar-dark px-5 py-3 py-lg-0">
+                    <a href="@Url.Action("MemberPageTest" , "Member")" class="navbar-brand p-0">
+                        <h1 class="m-0"><i class="fa fa-user-tie me-2"></i>會員中心</h1>
+                        <input type="hidden" name="MemberId" value=@Context.Session.GetInt32(CDictionary.SK_UserID) />
+                    </a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+                        <span class="fa fa-bars"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarCollapse">
+                        <div class="navbar-nav ms-auto py-0">
+                            <a href="@Url.Action("MemberPageTest" , "Member" , new{id=Model.First().MemberId})" class="nav-item nav-link active">我的首頁</a>
+                            <a href="@Url.Action("MyBlog" , "Member")" class="nav-item nav-link">我的部落格</a>
+                            <div class="nav-item dropdown">
+                                <a href="@Url.Action("MyCollectionList" , "Member")" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">我的作品</a>
+                                <div class="dropdown-menu m-0">
+                                    <a href="@Url.Action("MyCollectionList" ,"Member" ,new{id=Model.First().MemberId})" class="dropdown-item">我的作品集</a>
+                                </div>
+                            </div>
+                        </div>
+                        <a class="nav-item nav-link" onclick="openChat(@Model.FirstOrDefault().MemberId)" style="cursor: pointer;">聯絡我</a>
+                    </div>
+                    <butaton type="button" class="btn text-primary ms-3" data-bs-toggle="modal" data-bs-target="#searchModal"><i class="fa fa-search"></i></butaton>
+                </nav>
             }
 
         }
@@ -165,20 +161,18 @@
                 </div>
             </div>
             <button class="carousel-control-prev" type="button" data-bs-target="#header-carousel"
-                data-bs-slide="prev">
+                    data-bs-slide="prev">
                 <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                 <span class="visually-hidden">Previous</span>
             </button>
             <button class="carousel-control-next" type="button" data-bs-target="#header-carousel"
-                data-bs-slide="next">
+                    data-bs-slide="next">
                 <span class="carousel-control-next-icon" aria-hidden="true"></span>
                 <span class="visually-hidden">Next</span>
             </button>
         </div>
     </div>
     <!-- Navbar & Carousel End -->
-
-
     <!-- Full Screen Search Start -->
     <div class="modal fade" id="searchModal" tabindex="-1">
         <div class="modal-dialog modal-fullscreen">
@@ -196,8 +190,6 @@
         </div>
     </div>
     <!-- Full Screen Search End -->
-
-
     <!-- Facts Start -->
     <div class="container-fluid facts py-5 pt-lg-0">
         <div class="container py-5 pt-lg-0">
@@ -239,69 +231,63 @@
         </div>
     </div>
     <!-- Facts Start -->
-
-
     <!-- About Start -->
     <div class="container-fluid py-5 wow fadeInUp" data-wow-delay="0.1s" id="divInfo">
     </div>
     <!-- About End -->
-
-
     <!-- Features Start -->
     @*<div class="container-fluid py-5 wow fadeInUp" data-wow-delay="0.1s">
-        <div class="container py-5">
-            <div class="section-title text-center position-relative pb-3 mb-5 mx-auto" style="max-width: 600px;">
-                <h5 class="fw-bold text-primary text-uppercase">Why Choose Us</h5>
-                <h1 class="mb-0">We Are Here to Grow Your Business Exponentially</h1>
-            </div>
-            <div class="row g-5">
-                <div class="col-lg-4">
-                    <div class="row g-5">
-                        <div class="col-12 wow zoomIn" data-wow-delay="0.2s">
-                            <div class="bg-primary rounded d-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
-                                <i class="fa fa-cubes text-white"></i>
-                            </div>
-                            <h4>Best In Industry</h4>
-                            <p class="mb-0">Magna sea eos sit dolor, ipsum amet lorem diam dolor eos et diam dolor</p>
-                        </div>
-                        <div class="col-12 wow zoomIn" data-wow-delay="0.6s">
-                            <div class="bg-primary rounded d-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
-                                <i class="fa fa-award text-white"></i>
-                            </div>
-                            <h4>Award Winning</h4>
-                            <p class="mb-0">Magna sea eos sit dolor, ipsum amet lorem diam dolor eos et diam dolor</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4  wow zoomIn" data-wow-delay="0.9s" style="min-height: 350px;">
-                    <div class="position-relative h-100">
-                        <img class="position-absolute w-100 h-100 rounded wow zoomIn" data-wow-delay="0.1s" src="~/Layout/startup2-1.0.0/img/feature.jpg" style="object-fit: cover;">
-                    </div>
-                </div>
-                <div class="col-lg-4">
-                    <div class="row g-5">
-                        <div class="col-12 wow zoomIn" data-wow-delay="0.4s">
-                            <div class="bg-primary rounded d-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
-                                <i class="fa fa-users-cog text-white"></i>
-                            </div>
-                            <h4>Professional Staff</h4>
-                            <p class="mb-0">Magna sea eos sit dolor, ipsum amet lorem diam dolor eos et diam dolor</p>
-                        </div>
-                        <div class="col-12 wow zoomIn" data-wow-delay="0.8s">
-                            <div class="bg-primary rounded d-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
-                                <i class="fa fa-phone-alt text-white"></i>
-                            </div>
-                            <h4>24/7 Support</h4>
-                            <p class="mb-0">Magna sea eos sit dolor, ipsum amet lorem diam dolor eos et diam dolor</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <div class="container py-5">
+    <div class="section-title text-center position-relative pb-3 mb-5 mx-auto" style="max-width: 600px;">
+    <h5 class="fw-bold text-primary text-uppercase">Why Choose Us</h5>
+    <h1 class="mb-0">We Are Here to Grow Your Business Exponentially</h1>
+    </div>
+    <div class="row g-5">
+    <div class="col-lg-4">
+    <div class="row g-5">
+    <div class="col-12 wow zoomIn" data-wow-delay="0.2s">
+    <div class="bg-primary rounded d-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
+    <i class="fa fa-cubes text-white"></i>
+    </div>
+    <h4>Best In Industry</h4>
+    <p class="mb-0">Magna sea eos sit dolor, ipsum amet lorem diam dolor eos et diam dolor</p>
+    </div>
+    <div class="col-12 wow zoomIn" data-wow-delay="0.6s">
+    <div class="bg-primary rounded d-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
+    <i class="fa fa-award text-white"></i>
+    </div>
+    <h4>Award Winning</h4>
+    <p class="mb-0">Magna sea eos sit dolor, ipsum amet lorem diam dolor eos et diam dolor</p>
+    </div>
+    </div>
+    </div>
+    <div class="col-lg-4  wow zoomIn" data-wow-delay="0.9s" style="min-height: 350px;">
+    <div class="position-relative h-100">
+    <img class="position-absolute w-100 h-100 rounded wow zoomIn" data-wow-delay="0.1s" src="~/Layout/startup2-1.0.0/img/feature.jpg" style="object-fit: cover;">
+    </div>
+    </div>
+    <div class="col-lg-4">
+    <div class="row g-5">
+    <div class="col-12 wow zoomIn" data-wow-delay="0.4s">
+    <div class="bg-primary rounded d-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
+    <i class="fa fa-users-cog text-white"></i>
+    </div>
+    <h4>Professional Staff</h4>
+    <p class="mb-0">Magna sea eos sit dolor, ipsum amet lorem diam dolor eos et diam dolor</p>
+    </div>
+    <div class="col-12 wow zoomIn" data-wow-delay="0.8s">
+    <div class="bg-primary rounded d-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
+    <i class="fa fa-phone-alt text-white"></i>
+    </div>
+    <h4>24/7 Support</h4>
+    <p class="mb-0">Magna sea eos sit dolor, ipsum amet lorem diam dolor eos et diam dolor</p>
+    </div>
+    </div>
+    </div>
+    </div>
+    </div>
     </div>*@
     <!-- Features Start -->
-
-
     <!-- Service Start -->
     <div class="container-fluid py-5 wow fadeInUp" data-wow-delay="0.1s">
         <div class="container py-5">
@@ -310,341 +296,332 @@
                 <h1 class="mb-0">作品</h1>
             </div>
             <div class="card-group" id="Collection">
-</div>
+            </div>
 
             @*<div class="row g-5">
-                <div class="col-lg-4 col-md-6 wow zoomIn" data-wow-delay="0.3s">
-                    <div class="service-item bg-light rounded d-flex flex-column align-items-center justify-content-center text-center">
-                        <div class="service-icon">
-                            <i class="fa fa-shield-alt text-white"></i>
-                        </div>
-                        <h4 class="mb-3">Cyber Security</h4>
-                        <p class="m-0">Amet justo dolor lorem kasd amet magna sea stet eos vero lorem ipsum dolore sed</p>
-                        <a class="btn btn-lg btn-primary rounded" href="">
-                            <i class="bi bi-arrow-right"></i>
-                        </a>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6 wow zoomIn" data-wow-delay="0.6s">
-                    <div class="service-item bg-light rounded d-flex flex-column align-items-center justify-content-center text-center">
-                        <div class="service-icon">
-                            <i class="fa fa-chart-pie text-white"></i>
-                        </div>
-                        <h4 class="mb-3">Data Analytics</h4>
-                        <p class="m-0">Amet justo dolor lorem kasd amet magna sea stet eos vero lorem ipsum dolore sed</p>
-                        <a class="btn btn-lg btn-primary rounded" href="">
-                            <i class="bi bi-arrow-right"></i>
-                        </a>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6 wow zoomIn" data-wow-delay="0.9s">
-                    <div class="service-item bg-light rounded d-flex flex-column align-items-center justify-content-center text-center">
-                        <div class="service-icon">
-                            <i class="fa fa-code text-white"></i>
-                        </div>
-                        <h4 class="mb-3">Web Development</h4>
-                        <p class="m-0">Amet justo dolor lorem kasd amet magna sea stet eos vero lorem ipsum dolore sed</p>
-                        <a class="btn btn-lg btn-primary rounded" href="">
-                            <i class="bi bi-arrow-right"></i>
-                        </a>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6 wow zoomIn" data-wow-delay="0.3s">
-                    <div class="service-item bg-light rounded d-flex flex-column align-items-center justify-content-center text-center">
-                        <div class="service-icon">
-                            <i class="fab fa-android text-white"></i>
-                        </div>
-                        <h4 class="mb-3">Apps Development</h4>
-                        <p class="m-0">Amet justo dolor lorem kasd amet magna sea stet eos vero lorem ipsum dolore sed</p>
-                        <a class="btn btn-lg btn-primary rounded" href="">
-                            <i class="bi bi-arrow-right"></i>
-                        </a>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6 wow zoomIn" data-wow-delay="0.6s">
-                    <div class="service-item bg-light rounded d-flex flex-column align-items-center justify-content-center text-center">
-                        <div class="service-icon">
-                            <i class="fa fa-search text-white"></i>
-                        </div>
-                        <h4 class="mb-3">SEO Optimization</h4>
-                        <p class="m-0">Amet justo dolor lorem kasd amet magna sea stet eos vero lorem ipsum dolore sed</p>
-                        <a class="btn btn-lg btn-primary rounded" href="">
-                            <i class="bi bi-arrow-right"></i>
-                        </a>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6 wow zoomIn" data-wow-delay="0.9s">
-                    <div class="position-relative bg-primary rounded h-100 d-flex flex-column align-items-center justify-content-center text-center p-5">
-                        <h3 class="text-white mb-3">Call Us For Quote</h3>
-                        <p class="text-white mb-3">Clita ipsum magna kasd rebum at ipsum amet dolor justo dolor est magna stet eirmod</p>
-                        <h2 class="text-white mb-0">+012 345 6789</h2>
-                    </div>
-                </div>
+            <div class="col-lg-4 col-md-6 wow zoomIn" data-wow-delay="0.3s">
+            <div class="service-item bg-light rounded d-flex flex-column align-items-center justify-content-center text-center">
+            <div class="service-icon">
+            <i class="fa fa-shield-alt text-white"></i>
+            </div>
+            <h4 class="mb-3">Cyber Security</h4>
+            <p class="m-0">Amet justo dolor lorem kasd amet magna sea stet eos vero lorem ipsum dolore sed</p>
+            <a class="btn btn-lg btn-primary rounded" href="">
+            <i class="bi bi-arrow-right"></i>
+            </a>
+            </div>
+            </div>
+            <div class="col-lg-4 col-md-6 wow zoomIn" data-wow-delay="0.6s">
+            <div class="service-item bg-light rounded d-flex flex-column align-items-center justify-content-center text-center">
+            <div class="service-icon">
+            <i class="fa fa-chart-pie text-white"></i>
+            </div>
+            <h4 class="mb-3">Data Analytics</h4>
+            <p class="m-0">Amet justo dolor lorem kasd amet magna sea stet eos vero lorem ipsum dolore sed</p>
+            <a class="btn btn-lg btn-primary rounded" href="">
+            <i class="bi bi-arrow-right"></i>
+            </a>
+            </div>
+            </div>
+            <div class="col-lg-4 col-md-6 wow zoomIn" data-wow-delay="0.9s">
+            <div class="service-item bg-light rounded d-flex flex-column align-items-center justify-content-center text-center">
+            <div class="service-icon">
+            <i class="fa fa-code text-white"></i>
+            </div>
+            <h4 class="mb-3">Web Development</h4>
+            <p class="m-0">Amet justo dolor lorem kasd amet magna sea stet eos vero lorem ipsum dolore sed</p>
+            <a class="btn btn-lg btn-primary rounded" href="">
+            <i class="bi bi-arrow-right"></i>
+            </a>
+            </div>
+            </div>
+            <div class="col-lg-4 col-md-6 wow zoomIn" data-wow-delay="0.3s">
+            <div class="service-item bg-light rounded d-flex flex-column align-items-center justify-content-center text-center">
+            <div class="service-icon">
+            <i class="fab fa-android text-white"></i>
+            </div>
+            <h4 class="mb-3">Apps Development</h4>
+            <p class="m-0">Amet justo dolor lorem kasd amet magna sea stet eos vero lorem ipsum dolore sed</p>
+            <a class="btn btn-lg btn-primary rounded" href="">
+            <i class="bi bi-arrow-right"></i>
+            </a>
+            </div>
+            </div>
+            <div class="col-lg-4 col-md-6 wow zoomIn" data-wow-delay="0.6s">
+            <div class="service-item bg-light rounded d-flex flex-column align-items-center justify-content-center text-center">
+            <div class="service-icon">
+            <i class="fa fa-search text-white"></i>
+            </div>
+            <h4 class="mb-3">SEO Optimization</h4>
+            <p class="m-0">Amet justo dolor lorem kasd amet magna sea stet eos vero lorem ipsum dolore sed</p>
+            <a class="btn btn-lg btn-primary rounded" href="">
+            <i class="bi bi-arrow-right"></i>
+            </a>
+            </div>
+            </div>
+            <div class="col-lg-4 col-md-6 wow zoomIn" data-wow-delay="0.9s">
+            <div class="position-relative bg-primary rounded h-100 d-flex flex-column align-items-center justify-content-center text-center p-5">
+            <h3 class="text-white mb-3">Call Us For Quote</h3>
+            <p class="text-white mb-3">Clita ipsum magna kasd rebum at ipsum amet dolor justo dolor est magna stet eirmod</p>
+            <h2 class="text-white mb-0">+012 345 6789</h2>
+            </div>
+            </div>
             </div>*@
         </div>
     </div>
     <!-- Service End -->
-
-
     <!-- Pricing Plan Start -->
-   @* <div class="container-fluid py-5 wow fadeInUp" data-wow-delay="0.1s">
-        <div class="container py-5">
-            <div class="section-title text-center position-relative pb-3 mb-5 mx-auto" style="max-width: 600px;">
-                <h5 class="fw-bold text-primary text-uppercase">Pricing Plans</h5>
-                <h1 class="mb-0">We are Offering Competitive Prices for Our Clients</h1>
-            </div>
-            <div class="row g-0">
-                <div class="col-lg-4 wow slideInUp" data-wow-delay="0.6s">
-                    <div class="bg-light rounded">
-                        <div class="border-bottom py-4 px-5 mb-4">
-                            <h4 class="text-primary mb-1">Basic Plan</h4>
-                            <small class="text-uppercase">For Small Size Business</small>
-                        </div>
-                        <div class="p-5 pt-0">
-                            <h1 class="display-5 mb-3">
-                                <small class="align-top" style="font-size: 22px; line-height: 45px;">$</small>49.00<small
-                                    class="align-bottom" style="font-size: 16px; line-height: 40px;">/ Month</small>
-                            </h1>
-                            <div class="d-flex justify-content-between mb-3"><span>HTML5 & CSS3</span><i class="fa fa-check text-primary pt-1"></i></div>
-                            <div class="d-flex justify-content-between mb-3"><span>Bootstrap v5</span><i class="fa fa-check text-primary pt-1"></i></div>
-                            <div class="d-flex justify-content-between mb-3"><span>Responsive Layout</span><i class="fa fa-times text-danger pt-1"></i></div>
-                            <div class="d-flex justify-content-between mb-2"><span>Cross-browser Support</span><i class="fa fa-times text-danger pt-1"></i></div>
-                            <a href="" class="btn btn-primary py-2 px-4 mt-4">Order Now</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4 wow slideInUp" data-wow-delay="0.3s">
-                    <div class="bg-white rounded shadow position-relative" style="z-index: 1;">
-                        <div class="border-bottom py-4 px-5 mb-4">
-                            <h4 class="text-primary mb-1">Standard Plan</h4>
-                            <small class="text-uppercase">For Medium Size Business</small>
-                        </div>
-                        <div class="p-5 pt-0">
-                            <h1 class="display-5 mb-3">
-                                <small class="align-top" style="font-size: 22px; line-height: 45px;">$</small>99.00<small
-                                    class="align-bottom" style="font-size: 16px; line-height: 40px;">/ Month</small>
-                            </h1>
-                            <div class="d-flex justify-content-between mb-3"><span>HTML5 & CSS3</span><i class="fa fa-check text-primary pt-1"></i></div>
-                            <div class="d-flex justify-content-between mb-3"><span>Bootstrap v5</span><i class="fa fa-check text-primary pt-1"></i></div>
-                            <div class="d-flex justify-content-between mb-3"><span>Responsive Layout</span><i class="fa fa-check text-primary pt-1"></i></div>
-                            <div class="d-flex justify-content-between mb-2"><span>Cross-browser Support</span><i class="fa fa-times text-danger pt-1"></i></div>
-                            <a href="" class="btn btn-primary py-2 px-4 mt-4">Order Now</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4 wow slideInUp" data-wow-delay="0.9s">
-                    <div class="bg-light rounded">
-                        <div class="border-bottom py-4 px-5 mb-4">
-                            <h4 class="text-primary mb-1">Advanced Plan</h4>
-                            <small class="text-uppercase">For Large Size Business</small>
-                        </div>
-                        <div class="p-5 pt-0">
-                            <h1 class="display-5 mb-3">
-                                <small class="align-top" style="font-size: 22px; line-height: 45px;">$</small>149.00<small
-                                    class="align-bottom" style="font-size: 16px; line-height: 40px;">/ Month</small>
-                            </h1>
-                            <div class="d-flex justify-content-between mb-3"><span>HTML5 & CSS3</span><i class="fa fa-check text-primary pt-1"></i></div>
-                            <div class="d-flex justify-content-between mb-3"><span>Bootstrap v5</span><i class="fa fa-check text-primary pt-1"></i></div>
-                            <div class="d-flex justify-content-between mb-3"><span>Responsive Layout</span><i class="fa fa-check text-primary pt-1"></i></div>
-                            <div class="d-flex justify-content-between mb-2"><span>Cross-browser Support</span><i class="fa fa-check text-primary pt-1"></i></div>
-                            <a href="" class="btn btn-primary py-2 px-4 mt-4">Order Now</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+    @* <div class="container-fluid py-5 wow fadeInUp" data-wow-delay="0.1s">
+    <div class="container py-5">
+    <div class="section-title text-center position-relative pb-3 mb-5 mx-auto" style="max-width: 600px;">
+    <h5 class="fw-bold text-primary text-uppercase">Pricing Plans</h5>
+    <h1 class="mb-0">We are Offering Competitive Prices for Our Clients</h1>
+    </div>
+    <div class="row g-0">
+    <div class="col-lg-4 wow slideInUp" data-wow-delay="0.6s">
+    <div class="bg-light rounded">
+    <div class="border-bottom py-4 px-5 mb-4">
+    <h4 class="text-primary mb-1">Basic Plan</h4>
+    <small class="text-uppercase">For Small Size Business</small>
+    </div>
+    <div class="p-5 pt-0">
+    <h1 class="display-5 mb-3">
+    <small class="align-top" style="font-size: 22px; line-height: 45px;">$</small>49.00<small
+    class="align-bottom" style="font-size: 16px; line-height: 40px;">/ Month</small>
+    </h1>
+    <div class="d-flex justify-content-between mb-3"><span>HTML5 & CSS3</span><i class="fa fa-check text-primary pt-1"></i></div>
+    <div class="d-flex justify-content-between mb-3"><span>Bootstrap v5</span><i class="fa fa-check text-primary pt-1"></i></div>
+    <div class="d-flex justify-content-between mb-3"><span>Responsive Layout</span><i class="fa fa-times text-danger pt-1"></i></div>
+    <div class="d-flex justify-content-between mb-2"><span>Cross-browser Support</span><i class="fa fa-times text-danger pt-1"></i></div>
+    <a href="" class="btn btn-primary py-2 px-4 mt-4">Order Now</a>
+    </div>
+    </div>
+    </div>
+    <div class="col-lg-4 wow slideInUp" data-wow-delay="0.3s">
+    <div class="bg-white rounded shadow position-relative" style="z-index: 1;">
+    <div class="border-bottom py-4 px-5 mb-4">
+    <h4 class="text-primary mb-1">Standard Plan</h4>
+    <small class="text-uppercase">For Medium Size Business</small>
+    </div>
+    <div class="p-5 pt-0">
+    <h1 class="display-5 mb-3">
+    <small class="align-top" style="font-size: 22px; line-height: 45px;">$</small>99.00<small
+    class="align-bottom" style="font-size: 16px; line-height: 40px;">/ Month</small>
+    </h1>
+    <div class="d-flex justify-content-between mb-3"><span>HTML5 & CSS3</span><i class="fa fa-check text-primary pt-1"></i></div>
+    <div class="d-flex justify-content-between mb-3"><span>Bootstrap v5</span><i class="fa fa-check text-primary pt-1"></i></div>
+    <div class="d-flex justify-content-between mb-3"><span>Responsive Layout</span><i class="fa fa-check text-primary pt-1"></i></div>
+    <div class="d-flex justify-content-between mb-2"><span>Cross-browser Support</span><i class="fa fa-times text-danger pt-1"></i></div>
+    <a href="" class="btn btn-primary py-2 px-4 mt-4">Order Now</a>
+    </div>
+    </div>
+    </div>
+    <div class="col-lg-4 wow slideInUp" data-wow-delay="0.9s">
+    <div class="bg-light rounded">
+    <div class="border-bottom py-4 px-5 mb-4">
+    <h4 class="text-primary mb-1">Advanced Plan</h4>
+    <small class="text-uppercase">For Large Size Business</small>
+    </div>
+    <div class="p-5 pt-0">
+    <h1 class="display-5 mb-3">
+    <small class="align-top" style="font-size: 22px; line-height: 45px;">$</small>149.00<small
+    class="align-bottom" style="font-size: 16px; line-height: 40px;">/ Month</small>
+    </h1>
+    <div class="d-flex justify-content-between mb-3"><span>HTML5 & CSS3</span><i class="fa fa-check text-primary pt-1"></i></div>
+    <div class="d-flex justify-content-between mb-3"><span>Bootstrap v5</span><i class="fa fa-check text-primary pt-1"></i></div>
+    <div class="d-flex justify-content-between mb-3"><span>Responsive Layout</span><i class="fa fa-check text-primary pt-1"></i></div>
+    <div class="d-flex justify-content-between mb-2"><span>Cross-browser Support</span><i class="fa fa-check text-primary pt-1"></i></div>
+    <a href="" class="btn btn-primary py-2 px-4 mt-4">Order Now</a>
+    </div>
+    </div>
+    </div>
+    </div>
+    </div>
     </div>*@
     <!-- Pricing Plan End -->
-
-
     <!-- Quote Start -->
-   @* <div class="container-fluid py-5 wow fadeInUp" data-wow-delay="0.1s">
-        <div class="container py-5">
-            <div class="row g-5">
-                <div class="col-lg-7">
-                    <div class="section-title position-relative pb-3 mb-5">
-                        <h5 class="fw-bold text-primary text-uppercase">Request A Quote</h5>
-                        <h1 class="mb-0">Need A Free Quote? Please Feel Free to Contact Us</h1>
-                    </div>
-                    <div class="row gx-3">
-                        <div class="col-sm-6 wow zoomIn" data-wow-delay="0.2s">
-                            <h5 class="mb-4"><i class="fa fa-reply text-primary me-3"></i>Reply within 24 hours</h5>
-                        </div>
-                        <div class="col-sm-6 wow zoomIn" data-wow-delay="0.4s">
-                            <h5 class="mb-4"><i class="fa fa-phone-alt text-primary me-3"></i>24 hrs telephone support</h5>
-                        </div>
-                    </div>
-                    <p class="mb-4">Eirmod sed tempor lorem ut dolores. Aliquyam sit sadipscing kasd ipsum. Dolor ea et dolore et at sea ea at dolor, justo ipsum duo rebum sea invidunt voluptua. Eos vero eos vero ea et dolore eirmod et. Dolores diam duo invidunt lorem. Elitr ut dolores magna sit. Sea dolore sanctus sed et. Takimata takimata sanctus sed.</p>
-                    <div class="d-flex align-items-center mt-2 wow zoomIn" data-wow-delay="0.6s">
-                        <div class="bg-primary d-flex align-items-center justify-content-center rounded" style="width: 60px; height: 60px;">
-                            <i class="fa fa-phone-alt text-white"></i>
-                        </div>
-                        <div class="ps-4">
-                            <h5 class="mb-2">Call to ask any question</h5>
-                            <h4 class="text-primary mb-0">+012 345 6789</h4>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-5">
-                    <div class="bg-primary rounded h-100 d-flex align-items-center p-5 wow zoomIn" data-wow-delay="0.9s">
-                        <form>
-                            <div class="row g-3">
-                                <div class="col-xl-12">
-                                    <input type="text" class="form-control bg-light border-0" placeholder="Your Name" style="height: 55px;">
-                                </div>
-                                <div class="col-12">
-                                    <input type="email" class="form-control bg-light border-0" placeholder="Your Email" style="height: 55px;">
-                                </div>
-                                <div class="col-12">
-                                    <select class="form-select bg-light border-0" style="height: 55px;">
-                                        <option selected>Select A Service</option>
-                                        <option value="1">Service 1</option>
-                                        <option value="2">Service 2</option>
-                                        <option value="3">Service 3</option>
-                                    </select>
-                                </div>
-                                <div class="col-12">
-                                    <textarea class="form-control bg-light border-0" rows="3" placeholder="Message"></textarea>
-                                </div>
-                                <div class="col-12">
-                                    <button class="btn btn-dark w-100 py-3" type="submit">Request A Quote</button>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
+    @* <div class="container-fluid py-5 wow fadeInUp" data-wow-delay="0.1s">
+    <div class="container py-5">
+    <div class="row g-5">
+    <div class="col-lg-7">
+    <div class="section-title position-relative pb-3 mb-5">
+    <h5 class="fw-bold text-primary text-uppercase">Request A Quote</h5>
+    <h1 class="mb-0">Need A Free Quote? Please Feel Free to Contact Us</h1>
+    </div>
+    <div class="row gx-3">
+    <div class="col-sm-6 wow zoomIn" data-wow-delay="0.2s">
+    <h5 class="mb-4"><i class="fa fa-reply text-primary me-3"></i>Reply within 24 hours</h5>
+    </div>
+    <div class="col-sm-6 wow zoomIn" data-wow-delay="0.4s">
+    <h5 class="mb-4"><i class="fa fa-phone-alt text-primary me-3"></i>24 hrs telephone support</h5>
+    </div>
+    </div>
+    <p class="mb-4">Eirmod sed tempor lorem ut dolores. Aliquyam sit sadipscing kasd ipsum. Dolor ea et dolore et at sea ea at dolor, justo ipsum duo rebum sea invidunt voluptua. Eos vero eos vero ea et dolore eirmod et. Dolores diam duo invidunt lorem. Elitr ut dolores magna sit. Sea dolore sanctus sed et. Takimata takimata sanctus sed.</p>
+    <div class="d-flex align-items-center mt-2 wow zoomIn" data-wow-delay="0.6s">
+    <div class="bg-primary d-flex align-items-center justify-content-center rounded" style="width: 60px; height: 60px;">
+    <i class="fa fa-phone-alt text-white"></i>
+    </div>
+    <div class="ps-4">
+    <h5 class="mb-2">Call to ask any question</h5>
+    <h4 class="text-primary mb-0">+012 345 6789</h4>
+    </div>
+    </div>
+    </div>
+    <div class="col-lg-5">
+    <div class="bg-primary rounded h-100 d-flex align-items-center p-5 wow zoomIn" data-wow-delay="0.9s">
+    <form>
+    <div class="row g-3">
+    <div class="col-xl-12">
+    <input type="text" class="form-control bg-light border-0" placeholder="Your Name" style="height: 55px;">
+    </div>
+    <div class="col-12">
+    <input type="email" class="form-control bg-light border-0" placeholder="Your Email" style="height: 55px;">
+    </div>
+    <div class="col-12">
+    <select class="form-select bg-light border-0" style="height: 55px;">
+    <option selected>Select A Service</option>
+    <option value="1">Service 1</option>
+    <option value="2">Service 2</option>
+    <option value="3">Service 3</option>
+    </select>
+    </div>
+    <div class="col-12">
+    <textarea class="form-control bg-light border-0" rows="3" placeholder="Message"></textarea>
+    </div>
+    <div class="col-12">
+    <button class="btn btn-dark w-100 py-3" type="submit">Request A Quote</button>
+    </div>
+    </div>
+    </form>
+    </div>
+    </div>
+    </div>
+    </div>
     </div>*@
     <!-- Quote End -->
-
     <!-- Testimonial Start -->
     @*<div class="container-fluid py-5 wow fadeInUp" data-wow-delay="0.1s">
-        <div class="container py-5">
-            <div class="section-title text-center position-relative pb-3 mb-4 mx-auto" style="max-width: 600px;">
-                <h5 class="fw-bold text-primary text-uppercase">Testimonial</h5>
-                <h1 class="mb-0">What Our Clients Say About Our Digital Services</h1>
-            </div>
-            <div class="owl-carousel testimonial-carousel wow fadeInUp" data-wow-delay="0.6s">
-                <div class="testimonial-item bg-light my-4">
-                    <div class="d-flex align-items-center border-bottom pt-5 pb-4 px-5">
-                        <img class="img-fluid rounded" src="~/Layout/startup2-1.0.0/img/testimonial-1.jpg" style="width: 60px; height: 60px;" >
-                        <div class="ps-4">
-                            <h4 class="text-primary mb-1">Client Name</h4>
-                            <small class="text-uppercase">Profession</small>
-                        </div>
-                    </div>
-                    <div class="pt-4 pb-5 px-5">
-                        Dolor et eos labore, stet justo sed est sed. Diam sed sed dolor stet amet eirmod eos labore diam
-                    </div>
-                </div>
-                <div class="testimonial-item bg-light my-4">
-                    <div class="d-flex align-items-center border-bottom pt-5 pb-4 px-5">
-                        <img class="img-fluid rounded" src="~/Layout/startup2-1.0.0/img/testimonial-2.jpg" style="width: 60px; height: 60px;" >
-                        <div class="ps-4">
-                            <h4 class="text-primary mb-1">Client Name</h4>
-                            <small class="text-uppercase">Profession</small>
-                        </div>
-                    </div>
-                    <div class="pt-4 pb-5 px-5">
-                        Dolor et eos labore, stet justo sed est sed. Diam sed sed dolor stet amet eirmod eos labore diam
-                    </div>
-                </div>
-                <div class="testimonial-item bg-light my-4">
-                    <div class="d-flex align-items-center border-bottom pt-5 pb-4 px-5">
-                        <img class="img-fluid rounded" src="~/Layout/startup2-1.0.0/img/testimonial-3.jpg" style="width: 60px; height: 60px;" >
-                        <div class="ps-4">
-                            <h4 class="text-primary mb-1">Client Name</h4>
-                            <small class="text-uppercase">Profession</small>
-                        </div>
-                    </div>
-                    <div class="pt-4 pb-5 px-5">
-                        Dolor et eos labore, stet justo sed est sed. Diam sed sed dolor stet amet eirmod eos labore diam
-                    </div>
-                </div>
-                <div class="testimonial-item bg-light my-4">
-                    <div class="d-flex align-items-center border-bottom pt-5 pb-4 px-5">
-                        <img class="img-fluid rounded" src="~/Layout/startup2-1.0.0/img/testimonial-4.jpg" style="width: 60px; height: 60px;" >
-                        <div class="ps-4">
-                            <h4 class="text-primary mb-1">Client Name</h4>
-                            <small class="text-uppercase">Profession</small>
-                        </div>
-                    </div>
-                    <div class="pt-4 pb-5 px-5">
-                        Dolor et eos labore, stet justo sed est sed. Diam sed sed dolor stet amet eirmod eos labore diam
-                    </div>
-                </div>
-            </div>
-        </div>
+    <div class="container py-5">
+    <div class="section-title text-center position-relative pb-3 mb-4 mx-auto" style="max-width: 600px;">
+    <h5 class="fw-bold text-primary text-uppercase">Testimonial</h5>
+    <h1 class="mb-0">What Our Clients Say About Our Digital Services</h1>
+    </div>
+    <div class="owl-carousel testimonial-carousel wow fadeInUp" data-wow-delay="0.6s">
+    <div class="testimonial-item bg-light my-4">
+    <div class="d-flex align-items-center border-bottom pt-5 pb-4 px-5">
+    <img class="img-fluid rounded" src="~/Layout/startup2-1.0.0/img/testimonial-1.jpg" style="width: 60px; height: 60px;" >
+    <div class="ps-4">
+    <h4 class="text-primary mb-1">Client Name</h4>
+    <small class="text-uppercase">Profession</small>
+    </div>
+    </div>
+    <div class="pt-4 pb-5 px-5">
+    Dolor et eos labore, stet justo sed est sed. Diam sed sed dolor stet amet eirmod eos labore diam
+    </div>
+    </div>
+    <div class="testimonial-item bg-light my-4">
+    <div class="d-flex align-items-center border-bottom pt-5 pb-4 px-5">
+    <img class="img-fluid rounded" src="~/Layout/startup2-1.0.0/img/testimonial-2.jpg" style="width: 60px; height: 60px;" >
+    <div class="ps-4">
+    <h4 class="text-primary mb-1">Client Name</h4>
+    <small class="text-uppercase">Profession</small>
+    </div>
+    </div>
+    <div class="pt-4 pb-5 px-5">
+    Dolor et eos labore, stet justo sed est sed. Diam sed sed dolor stet amet eirmod eos labore diam
+    </div>
+    </div>
+    <div class="testimonial-item bg-light my-4">
+    <div class="d-flex align-items-center border-bottom pt-5 pb-4 px-5">
+    <img class="img-fluid rounded" src="~/Layout/startup2-1.0.0/img/testimonial-3.jpg" style="width: 60px; height: 60px;" >
+    <div class="ps-4">
+    <h4 class="text-primary mb-1">Client Name</h4>
+    <small class="text-uppercase">Profession</small>
+    </div>
+    </div>
+    <div class="pt-4 pb-5 px-5">
+    Dolor et eos labore, stet justo sed est sed. Diam sed sed dolor stet amet eirmod eos labore diam
+    </div>
+    </div>
+    <div class="testimonial-item bg-light my-4">
+    <div class="d-flex align-items-center border-bottom pt-5 pb-4 px-5">
+    <img class="img-fluid rounded" src="~/Layout/startup2-1.0.0/img/testimonial-4.jpg" style="width: 60px; height: 60px;" >
+    <div class="ps-4">
+    <h4 class="text-primary mb-1">Client Name</h4>
+    <small class="text-uppercase">Profession</small>
+    </div>
+    </div>
+    <div class="pt-4 pb-5 px-5">
+    Dolor et eos labore, stet justo sed est sed. Diam sed sed dolor stet amet eirmod eos labore diam
+    </div>
+    </div>
+    </div>
+    </div>
     </div>*@
     <!-- Testimonial End -->
-    
-
     <!-- Team Start -->
     @*<div class="container-fluid py-5 wow fadeInUp" data-wow-delay="0.1s">
-        <div class="container py-5">
-            <div class="section-title text-center position-relative pb-3 mb-5 mx-auto" style="max-width: 600px;">
-                <h5 class="fw-bold text-primary text-uppercase">Team Members</h5>
-                <h1 class="mb-0">Professional Stuffs Ready to Help Your Business</h1>
-            </div>
-            <div class="row g-5">
-                <div class="col-lg-4 wow slideInUp" data-wow-delay="0.3s">
-                    <div class="team-item bg-light rounded overflow-hidden">
-                        <div class="team-img position-relative overflow-hidden">
-                            <img class="img-fluid w-100" src="img/team-1.jpg" alt="">
-                            <div class="team-social">
-                                <a class="btn btn-lg btn-primary btn-lg-square rounded" href=""><i class="fab fa-twitter fw-normal"></i></a>
-                                <a class="btn btn-lg btn-primary btn-lg-square rounded" href=""><i class="fab fa-facebook-f fw-normal"></i></a>
-                                <a class="btn btn-lg btn-primary btn-lg-square rounded" href=""><i class="fab fa-instagram fw-normal"></i></a>
-                                <a class="btn btn-lg btn-primary btn-lg-square rounded" href=""><i class="fab fa-linkedin-in fw-normal"></i></a>
-                            </div>
-                        </div>
-                        <div class="text-center py-4">
-                            <h4 class="text-primary">Full Name</h4>
-                            <p class="text-uppercase m-0">Designation</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4 wow slideInUp" data-wow-delay="0.6s">
-                    <div class="team-item bg-light rounded overflow-hidden">
-                        <div class="team-img position-relative overflow-hidden">
-                            <img class="img-fluid w-100" src="~/Layout/startup2-1.0.0/img/team-2.jpg" alt="">
-                            <div class="team-social">
-                                <a class="btn btn-lg btn-primary btn-lg-square rounded" href=""><i class="fab fa-twitter fw-normal"></i></a>
-                                <a class="btn btn-lg btn-primary btn-lg-square rounded" href=""><i class="fab fa-facebook-f fw-normal"></i></a>
-                                <a class="btn btn-lg btn-primary btn-lg-square rounded" href=""><i class="fab fa-instagram fw-normal"></i></a>
-                                <a class="btn btn-lg btn-primary btn-lg-square rounded" href=""><i class="fab fa-linkedin-in fw-normal"></i></a>
-                            </div>
-                        </div>
-                        <div class="text-center py-4">
-                            <h4 class="text-primary">Full Name</h4>
-                            <p class="text-uppercase m-0">Designation</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4 wow slideInUp" data-wow-delay="0.9s">
-                    <div class="team-item bg-light rounded overflow-hidden">
-                        <div class="team-img position-relative overflow-hidden">
-                            <img class="img-fluid w-100" src="~/Layout/startup2-1.0.0/img/team-3.jpg" alt="">
-                            <div class="team-social">
-                                <a class="btn btn-lg btn-primary btn-lg-square rounded" href=""><i class="fab fa-twitter fw-normal"></i></a>
-                                <a class="btn btn-lg btn-primary btn-lg-square rounded" href=""><i class="fab fa-facebook-f fw-normal"></i></a>
-                                <a class="btn btn-lg btn-primary btn-lg-square rounded" href=""><i class="fab fa-instagram fw-normal"></i></a>
-                                <a class="btn btn-lg btn-primary btn-lg-square rounded" href=""><i class="fab fa-linkedin-in fw-normal"></i></a>
-                            </div>
-                        </div>
-                        <div class="text-center py-4">
-                            <h4 class="text-primary">Full Name</h4>
-                            <p class="text-uppercase m-0">Designation</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <div class="container py-5">
+    <div class="section-title text-center position-relative pb-3 mb-5 mx-auto" style="max-width: 600px;">
+    <h5 class="fw-bold text-primary text-uppercase">Team Members</h5>
+    <h1 class="mb-0">Professional Stuffs Ready to Help Your Business</h1>
+    </div>
+    <div class="row g-5">
+    <div class="col-lg-4 wow slideInUp" data-wow-delay="0.3s">
+    <div class="team-item bg-light rounded overflow-hidden">
+    <div class="team-img position-relative overflow-hidden">
+    <img class="img-fluid w-100" src="img/team-1.jpg" alt="">
+    <div class="team-social">
+    <a class="btn btn-lg btn-primary btn-lg-square rounded" href=""><i class="fab fa-twitter fw-normal"></i></a>
+    <a class="btn btn-lg btn-primary btn-lg-square rounded" href=""><i class="fab fa-facebook-f fw-normal"></i></a>
+    <a class="btn btn-lg btn-primary btn-lg-square rounded" href=""><i class="fab fa-instagram fw-normal"></i></a>
+    <a class="btn btn-lg btn-primary btn-lg-square rounded" href=""><i class="fab fa-linkedin-in fw-normal"></i></a>
+    </div>
+    </div>
+    <div class="text-center py-4">
+    <h4 class="text-primary">Full Name</h4>
+    <p class="text-uppercase m-0">Designation</p>
+    </div>
+    </div>
+    </div>
+    <div class="col-lg-4 wow slideInUp" data-wow-delay="0.6s">
+    <div class="team-item bg-light rounded overflow-hidden">
+    <div class="team-img position-relative overflow-hidden">
+    <img class="img-fluid w-100" src="~/Layout/startup2-1.0.0/img/team-2.jpg" alt="">
+    <div class="team-social">
+    <a class="btn btn-lg btn-primary btn-lg-square rounded" href=""><i class="fab fa-twitter fw-normal"></i></a>
+    <a class="btn btn-lg btn-primary btn-lg-square rounded" href=""><i class="fab fa-facebook-f fw-normal"></i></a>
+    <a class="btn btn-lg btn-primary btn-lg-square rounded" href=""><i class="fab fa-instagram fw-normal"></i></a>
+    <a class="btn btn-lg btn-primary btn-lg-square rounded" href=""><i class="fab fa-linkedin-in fw-normal"></i></a>
+    </div>
+    </div>
+    <div class="text-center py-4">
+    <h4 class="text-primary">Full Name</h4>
+    <p class="text-uppercase m-0">Designation</p>
+    </div>
+    </div>
+    </div>
+    <div class="col-lg-4 wow slideInUp" data-wow-delay="0.9s">
+    <div class="team-item bg-light rounded overflow-hidden">
+    <div class="team-img position-relative overflow-hidden">
+    <img class="img-fluid w-100" src="~/Layout/startup2-1.0.0/img/team-3.jpg" alt="">
+    <div class="team-social">
+    <a class="btn btn-lg btn-primary btn-lg-square rounded" href=""><i class="fab fa-twitter fw-normal"></i></a>
+    <a class="btn btn-lg btn-primary btn-lg-square rounded" href=""><i class="fab fa-facebook-f fw-normal"></i></a>
+    <a class="btn btn-lg btn-primary btn-lg-square rounded" href=""><i class="fab fa-instagram fw-normal"></i></a>
+    <a class="btn btn-lg btn-primary btn-lg-square rounded" href=""><i class="fab fa-linkedin-in fw-normal"></i></a>
+    </div>
+    </div>
+    <div class="text-center py-4">
+    <h4 class="text-primary">Full Name</h4>
+    <p class="text-uppercase m-0">Designation</p>
+    </div>
+    </div>
+    </div>
+    </div>
+    </div>
     </div>*@
     <!-- Team End -->
-
-
     <!-- Blog Start -->
     <div class="container-fluid py-5 wow fadeInUp" data-wow-delay="0.1s">
         <div class="container py-5">
@@ -708,124 +685,118 @@
         </div>
     </div>
     <!-- Blog Start -->
-
-
     <!-- Vendor Start -->
-  @*  <div class="container-fluid py-5 wow fadeInUp" data-wow-delay="0.1s">
-        <div class="container py-5 mb-5">
-            <div class="bg-white">
-                <div class="owl-carousel vendor-carousel">
-                    <img src="~/Layout/startup2-1.0.0/img/vendor-1.jpg" alt="">
-                    <img src="~/Layout/startup2-1.0.0/img/vendor-2.jpg" alt="">
-                    <img src="~/Layout/startup2-1.0.0/img/vendor-3.jpg" alt="">
-                    <img src="~/Layout/startup2-1.0.0/img/vendor-4.jpg" alt="">
-                    <img src="~/Layout/startup2-1.0.0/img/vendor-5.jpg" alt="">
-                    <img src="~/Layout/startup2-1.0.0/img/vendor-6.jpg" alt="">
-                    <img src="~/Layout/startup2-1.0.0/img/vendor-7.jpg" alt="">
-                    <img src="~/Layout/startup2-1.0.0/img/vendor-8.jpg" alt="">
-                    <img src="~/Layout/startup2-1.0.0/img/vendor-9.jpg" alt="">
-                </div>
-            </div>
-        </div>
+    @*  <div class="container-fluid py-5 wow fadeInUp" data-wow-delay="0.1s">
+    <div class="container py-5 mb-5">
+    <div class="bg-white">
+    <div class="owl-carousel vendor-carousel">
+    <img src="~/Layout/startup2-1.0.0/img/vendor-1.jpg" alt="">
+    <img src="~/Layout/startup2-1.0.0/img/vendor-2.jpg" alt="">
+    <img src="~/Layout/startup2-1.0.0/img/vendor-3.jpg" alt="">
+    <img src="~/Layout/startup2-1.0.0/img/vendor-4.jpg" alt="">
+    <img src="~/Layout/startup2-1.0.0/img/vendor-5.jpg" alt="">
+    <img src="~/Layout/startup2-1.0.0/img/vendor-6.jpg" alt="">
+    <img src="~/Layout/startup2-1.0.0/img/vendor-7.jpg" alt="">
+    <img src="~/Layout/startup2-1.0.0/img/vendor-8.jpg" alt="">
+    <img src="~/Layout/startup2-1.0.0/img/vendor-9.jpg" alt="">
+    </div>
+    </div>
+    </div>
     </div>*@
     <!-- Vendor End -->
-
-
     <!-- Footer Start -->
     @*<div class="container-fluid bg-dark text-light mt-5 wow fadeInUp" data-wow-delay="0.1s">
-        <div class="container">
-            <div class="row gx-5">
-                <div class="col-lg-4 col-md-6 footer-about">
-                    <div class="d-flex flex-column align-items-center justify-content-center text-center h-100 bg-primary p-4">
-                        <a href="index.html" class="navbar-brand">
-                            <h1 class="m-0 text-white"><i class="fa fa-user-tie me-2"></i>Startup</h1>
-                        </a>
-                        <p class="mt-3 mb-4">Lorem diam sit erat dolor elitr et, diam lorem justo amet clita stet eos sit. Elitr dolor duo lorem, elitr clita ipsum sea. Diam amet erat lorem stet eos. Diam amet et kasd eos duo.</p>
-                        <form action="">
-                            <div class="input-group">
-                                <input type="text" class="form-control border-white p-3" placeholder="Your Email">
-                                <button class="btn btn-dark">Sign Up</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-                <div class="col-lg-8 col-md-6">
-                    <div class="row gx-5">
-                        <div class="col-lg-4 col-md-12 pt-5 mb-5">
-                            <div class="section-title section-title-sm position-relative pb-3 mb-4">
-                                <h3 class="text-light mb-0">Get In Touch</h3>
-                            </div>
-                            <div class="d-flex mb-2">
-                                <i class="bi bi-geo-alt text-primary me-2"></i>
-                                <p class="mb-0">123 Street, New York, USA</p>
-                            </div>
-                            <div class="d-flex mb-2">
-                                <i class="bi bi-envelope-open text-primary me-2"></i>
-                                <p class="mb-0">info@example.com</p>
-                            </div>
-                            <div class="d-flex mb-2">
-                                <i class="bi bi-telephone text-primary me-2"></i>
-                                <p class="mb-0">+012 345 67890</p>
-                            </div>
-                            <div class="d-flex mt-4">
-                                <a class="btn btn-primary btn-square me-2" href="#"><i class="fab fa-twitter fw-normal"></i></a>
-                                <a class="btn btn-primary btn-square me-2" href="#"><i class="fab fa-facebook-f fw-normal"></i></a>
-                                <a class="btn btn-primary btn-square me-2" href="#"><i class="fab fa-linkedin-in fw-normal"></i></a>
-                                <a class="btn btn-primary btn-square" href="#"><i class="fab fa-instagram fw-normal"></i></a>
-                            </div>
-                        </div>
-                        <div class="col-lg-4 col-md-12 pt-0 pt-lg-5 mb-5">
-                            <div class="section-title section-title-sm position-relative pb-3 mb-4">
-                                <h3 class="text-light mb-0">Quick Links</h3>
-                            </div>
-                            <div class="link-animated d-flex flex-column justify-content-start">
-                                <a class="text-light mb-2" href="#"><i class="bi bi-arrow-right text-primary me-2"></i>Home</a>
-                                <a class="text-light mb-2" href="#"><i class="bi bi-arrow-right text-primary me-2"></i>About Us</a>
-                                <a class="text-light mb-2" href="#"><i class="bi bi-arrow-right text-primary me-2"></i>Our Services</a>
-                                <a class="text-light mb-2" href="#"><i class="bi bi-arrow-right text-primary me-2"></i>Meet The Team</a>
-                                <a class="text-light mb-2" href="#"><i class="bi bi-arrow-right text-primary me-2"></i>Latest Blog</a>
-                                <a class="text-light" href="#"><i class="bi bi-arrow-right text-primary me-2"></i>Contact Us</a>
-                            </div>
-                        </div>
-                        <div class="col-lg-4 col-md-12 pt-0 pt-lg-5 mb-5">
-                            <div class="section-title section-title-sm position-relative pb-3 mb-4">
-                                <h3 class="text-light mb-0">Popular Links</h3>
-                            </div>
-                            <div class="link-animated d-flex flex-column justify-content-start">
-                                <a class="text-light mb-2" href="#"><i class="bi bi-arrow-right text-primary me-2"></i>Home</a>
-                                <a class="text-light mb-2" href="#"><i class="bi bi-arrow-right text-primary me-2"></i>About Us</a>
-                                <a class="text-light mb-2" href="#"><i class="bi bi-arrow-right text-primary me-2"></i>Our Services</a>
-                                <a class="text-light mb-2" href="#"><i class="bi bi-arrow-right text-primary me-2"></i>Meet The Team</a>
-                                <a class="text-light mb-2" href="#"><i class="bi bi-arrow-right text-primary me-2"></i>Latest Blog</a>
-                                <a class="text-light" href="#"><i class="bi bi-arrow-right text-primary me-2"></i>Contact Us</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <div class="container">
+    <div class="row gx-5">
+    <div class="col-lg-4 col-md-6 footer-about">
+    <div class="d-flex flex-column align-items-center justify-content-center text-center h-100 bg-primary p-4">
+    <a href="index.html" class="navbar-brand">
+    <h1 class="m-0 text-white"><i class="fa fa-user-tie me-2"></i>Startup</h1>
+    </a>
+    <p class="mt-3 mb-4">Lorem diam sit erat dolor elitr et, diam lorem justo amet clita stet eos sit. Elitr dolor duo lorem, elitr clita ipsum sea. Diam amet erat lorem stet eos. Diam amet et kasd eos duo.</p>
+    <form action="">
+    <div class="input-group">
+    <input type="text" class="form-control border-white p-3" placeholder="Your Email">
+    <button class="btn btn-dark">Sign Up</button>
+    </div>
+    </form>
+    </div>
+    </div>
+    <div class="col-lg-8 col-md-6">
+    <div class="row gx-5">
+    <div class="col-lg-4 col-md-12 pt-5 mb-5">
+    <div class="section-title section-title-sm position-relative pb-3 mb-4">
+    <h3 class="text-light mb-0">Get In Touch</h3>
+    </div>
+    <div class="d-flex mb-2">
+    <i class="bi bi-geo-alt text-primary me-2"></i>
+    <p class="mb-0">123 Street, New York, USA</p>
+    </div>
+    <div class="d-flex mb-2">
+    <i class="bi bi-envelope-open text-primary me-2"></i>
+    <p class="mb-0">info@example.com</p>
+    </div>
+    <div class="d-flex mb-2">
+    <i class="bi bi-telephone text-primary me-2"></i>
+    <p class="mb-0">+012 345 67890</p>
+    </div>
+    <div class="d-flex mt-4">
+    <a class="btn btn-primary btn-square me-2" href="#"><i class="fab fa-twitter fw-normal"></i></a>
+    <a class="btn btn-primary btn-square me-2" href="#"><i class="fab fa-facebook-f fw-normal"></i></a>
+    <a class="btn btn-primary btn-square me-2" href="#"><i class="fab fa-linkedin-in fw-normal"></i></a>
+    <a class="btn btn-primary btn-square" href="#"><i class="fab fa-instagram fw-normal"></i></a>
+    </div>
+    </div>
+    <div class="col-lg-4 col-md-12 pt-0 pt-lg-5 mb-5">
+    <div class="section-title section-title-sm position-relative pb-3 mb-4">
+    <h3 class="text-light mb-0">Quick Links</h3>
+    </div>
+    <div class="link-animated d-flex flex-column justify-content-start">
+    <a class="text-light mb-2" href="#"><i class="bi bi-arrow-right text-primary me-2"></i>Home</a>
+    <a class="text-light mb-2" href="#"><i class="bi bi-arrow-right text-primary me-2"></i>About Us</a>
+    <a class="text-light mb-2" href="#"><i class="bi bi-arrow-right text-primary me-2"></i>Our Services</a>
+    <a class="text-light mb-2" href="#"><i class="bi bi-arrow-right text-primary me-2"></i>Meet The Team</a>
+    <a class="text-light mb-2" href="#"><i class="bi bi-arrow-right text-primary me-2"></i>Latest Blog</a>
+    <a class="text-light" href="#"><i class="bi bi-arrow-right text-primary me-2"></i>Contact Us</a>
+    </div>
+    </div>
+    <div class="col-lg-4 col-md-12 pt-0 pt-lg-5 mb-5">
+    <div class="section-title section-title-sm position-relative pb-3 mb-4">
+    <h3 class="text-light mb-0">Popular Links</h3>
+    </div>
+    <div class="link-animated d-flex flex-column justify-content-start">
+    <a class="text-light mb-2" href="#"><i class="bi bi-arrow-right text-primary me-2"></i>Home</a>
+    <a class="text-light mb-2" href="#"><i class="bi bi-arrow-right text-primary me-2"></i>About Us</a>
+    <a class="text-light mb-2" href="#"><i class="bi bi-arrow-right text-primary me-2"></i>Our Services</a>
+    <a class="text-light mb-2" href="#"><i class="bi bi-arrow-right text-primary me-2"></i>Meet The Team</a>
+    <a class="text-light mb-2" href="#"><i class="bi bi-arrow-right text-primary me-2"></i>Latest Blog</a>
+    <a class="text-light" href="#"><i class="bi bi-arrow-right text-primary me-2"></i>Contact Us</a>
+    </div>
+    </div>
+    </div>
+    </div>
+    </div>
+    </div>
     </div>
     <div class="container-fluid text-white" style="background: #061429;">
-        <div class="container text-center">
-            <div class="row justify-content-end">
-                <div class="col-lg-8 col-md-6">
-                    <div class="d-flex align-items-center justify-content-center" style="height: 75px;">
-                        <p class="mb-0">&copy; <a class="text-white border-bottom" href="#">Your Site Name</a>. All Rights Reserved. 
+    <div class="container text-center">
+    <div class="row justify-content-end">
+    <div class="col-lg-8 col-md-6">
+    <div class="d-flex align-items-center justify-content-center" style="height: 75px;">
+    <p class="mb-0">&copy; <a class="text-white border-bottom" href="#">Your Site Name</a>. All Rights Reserved.
 
-                        <!--/*** This template is free as long as you keep the footer author’s credit link/attribution link/backlink. If you'd like to use the template without the footer author’s credit link/attribution link/backlink, you can purchase the Credit Removal License from "https://htmlcodex.com/credit-removal". Thank you for your support. ***/-->
-                        Designed by <a class="text-white border-bottom" href="https://htmlcodex.com">HTML Codex</a></p>
-                        <br>Distributed By: <a class="border-bottom" href="https://themewagon.com" target="_blank">ThemeWagon</a>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <!--/*** This template is free as long as you keep the footer author’s credit link/attribution link/backlink. If you'd like to use the template without the footer author’s credit link/attribution link/backlink, you can purchase the Credit Removal License from "https://htmlcodex.com/credit-removal". Thank you for your support. ***/-->
+    Designed by <a class="text-white border-bottom" href="https://htmlcodex.com">HTML Codex</a></p>
+    <br>Distributed By: <a class="border-bottom" href="https://themewagon.com" target="_blank">ThemeWagon</a>
+    </div>
+    </div>
+    </div>
+    </div>
     </div>*@
     <!-- Footer End -->
-
-
     <!-- Back to Top -->
     <a href="#" class="btn btn-lg btn-primary btn-lg-square rounded back-to-top"><i class="bi bi-arrow-up"></i></a>
-    <div id="MemberChat" style="display:none;position: absolute; bottom: 10px; right: 300px; z-index: 999;background-color:#6C6C6C ; opacity:0.95; border: 3px groove #000;border-radius:15px;color:#FFFFF4"></div>
+    <div id="MemberChat" style="display:none;position: fixed; bottom: 10px; right: 10px; z-index: 999;background-color:#6C6C6C ; opacity:0.95; border: 3px groove #000;border-radius:15px;color:#FFFFF4"></div>
 
 
     <!-- JavaScript Libraries -->
@@ -846,68 +817,63 @@
 <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 <script>
     var name = "";
-    $(document).ready(function () 
-    {   
-        const mId=document.querySelector('#MId')
+    $(document).ready(function () {
+        const mId = document.querySelector('#MId')
         fetch('@Url.Content("~/Member/MyInfo")?id=@Model.First().MemberId')
-        .then(response => response.json())
-            .then(data => 
-            { 
+            .then(response => response.json())
+            .then(data => {
                 name = data[0].name
                 console.log(data)
                 var genderName;
                 var howOld = (@DateTime.Now.Year - data[0].year)
-                if(data.gender = 1)
-                    {
-                        genderName = "男性";
-                    }
-                else if(data.gender =2)
-                {
+                if (data.gender = 1) {
+                    genderName = "男性";
+                }
+                else if (data.gender = 2) {
                     genderName = "女性";
                 }
-                else
-                {
+                else {
                     genderName = "其他";
                 }
                 var DivHtml = `<div class="container py-5">
-             <div class="row g-5">
-                 <div class="col-lg-7">
-                     <div class="section-title position-relative pb-3 mb-5">
-                         <h5 class="fw-bold text-primary text-uppercase">我的資料</h5>
-                         <h1 class="mb-0">${data[0].mycomment}</h1>
-                     </div>
-                     <div class="row g-0 mb-3">
-                         <div class="col-sm-6 wow zoomIn" data-wow-delay="0.2s">
-                             <h5 class="mb-3" id="membername"><i class="fa fa-check text-primary me-3"></i>姓名:${data[0].name}</h5>
-                             <h5 class="mb-3"><i class="fa fa-check text-primary me-3"></i>性別:${genderName}</h5>
+                 <div class="row g-5">
+                     <div class="col-lg-7">
+                         <div class="section-title position-relative pb-3 mb-5">
+                             <h5 class="fw-bold text-primary text-uppercase">我的資料</h5>
+                             <h1 class="mb-0">${data[0].mycomment}</h1>
                          </div>
-                         <div class="col-sm-6 wow zoomIn" data-wow-delay="0.4s">
-                             <h5 class="mb-3"><i class="fa fa-check text-primary me-3"></i>年紀:${howOld}</h5>
-                             <h5 class="mb-3"><i class="fa fa-check text-primary me-3"></i>電話:${data[0].phone}</h5>
-                         </div>
+                         <div class="row g-0 mb-3">
+                             <div class="col-sm-6 wow zoomIn" data-wow-delay="0.2s">
+                                 <h5 class="mb-3" id="membername"><i class="fa fa-check text-primary me-3"></i>姓名:${data[0].name}</h5>
+                                 <h5 class="mb-3"><i class="fa fa-check text-primary me-3"></i>性別:${genderName}</h5>
+                             </div>
+                             <div class="col-sm-6 wow zoomIn" data-wow-delay="0.4s">
+                                 <h5 class="mb-3"><i class="fa fa-check text-primary me-3"></i>年紀:${howOld}</h5>
+                                 <h5 class="mb-3"><i class="fa fa-check text-primary me-3"></i>電話:${data[0].phone}</h5>
+                             </div>
 
-                     </div>
-                     <div class="d-flex align-items-center mb-4 wow fadeIn" data-wow-delay="0.6s">
-                         <div class="bg-primary d-flex align-items-center justify-content-center rounded" style="width: 60px; height: 60px;">
-                             <i class="fa fa-phone-alt text-white"></i>
                          </div>
-                         <div class="ps-4">
-                             <h5 class="mb-2">歡迎來信詢問</h5>
-                             <h4 class="text-primary mb-0">${data[0].email}</h4>
+                         <div class="d-flex align-items-center mb-4 wow fadeIn" data-wow-delay="0.6s">
+                             <div class="bg-primary d-flex align-items-center justify-content-center rounded" style="width: 60px; height: 60px;">
+                                 <i class="fa fa-phone-alt text-white"></i>
+                             </div>
+                             <div class="ps-4">
+                                 <h5 class="mb-2">歡迎來信詢問</h5>
+                                 <h4 class="text-primary mb-0">${data[0].email}</h4>
+                             </div>
+                         </div>
+                         <a href="quote.html" class="btn btn-primary py-3 px-5 mt-3 wow zoomIn" data-wow-delay="0.9s">寫信</a>
+                     </div>
+                     <div class="col-lg-5" style="min-height: 500px;">
+                         <div class="position-relative h-100">
+                             <img class="position-absolute w-100 h-100 rounded wow zoomIn" data-wow-delay="0.9s" src="/MemberPhoto/${data[0].fImagePath}" style="object-fit: cover;">
                          </div>
                      </div>
-                     <a href="quote.html" class="btn btn-primary py-3 px-5 mt-3 wow zoomIn" data-wow-delay="0.9s">寫信</a>
                  </div>
-                 <div class="col-lg-5" style="min-height: 500px;">
-                     <div class="position-relative h-100">
-                         <img class="position-absolute w-100 h-100 rounded wow zoomIn" data-wow-delay="0.9s" src="/MemberPhoto/${data[0].fImagePath}" style="object-fit: cover;">
-                     </div>
-                 </div>
-             </div>
-         </div>`
-            ;
-            $('#divInfo').append(DivHtml)                
-            })        
+             </div>`
+                    ;
+                $('#divInfo').append(DivHtml)
+            })
     })
     // 彥霖
     function openChat(id) {
@@ -985,5 +951,5 @@
         notCheckMessage++;
         $('#notCheckMessageCount').text(notCheckMessage)
     }
-    
+
 </script>
