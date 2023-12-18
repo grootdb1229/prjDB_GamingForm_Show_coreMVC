@@ -5,10 +5,11 @@
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
-<h2>電子報</h2>
+<h2 style="margin-left:5px ; font-size:45px">電子報</h2>
 
 <p>
-    @Html.ActionLink("新增電子報", "SendNewsLetter", "Admin", null, new { @style = "font-size:15px" })
+    @*<button class="btn btn-dark" type="button" onclick="CreateNewsletter()">新增電子報</button>*@
+    @Html.ActionLink("新增電子報", "SendNewsLetter", "Admin", null, new {@class="text-center btn btn-dark"})
 </p>
 <table class="table table-dark table-hover" style="color:white ; font-size:20px">
     <thead>
@@ -39,10 +40,39 @@
             </td>
             <td>
                     @Html.ActionLink("修改", "NewsletterEdit", new { id=item.Id },new{ @class="btn btn-dark status"})
-                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+                    <button type="button" class="btn btn-dark status" onclick="NewsletterInfo(@Html.DisplayFor(modelItem => item.Id))">電子報內容</button>
+                    @Html.ActionLink("再發送", "Resend", new { id=item.Id},new{ @class="btn btn-dark status"})
             </td>
         </tr>
 }
     </tbody>
 </table>
+<script>
+    async function NewsletterInfo(value) {
+
+        // Swal.fire(`You selected: ${status}`);
+        $.ajax('@Url.Content("~/Admin/NewsletterInfo")', {
+            "type": 'post', //POST、PUT、DELETE//
+            "data": {
+                "id": value,
+            },
+            "dataType": "json"
+        })
+            .done((data) => {
+                Swal.fire({
+                    title: `<strong>電子報詳細:</strong>`,
+                    html: `
+                                        <b>電子報編號:</b><p>${data.id}</p></br>
+                                        <b>電子報標題:</b><p>${data.title}</p></br>
+                                        <b>電子報內容:</b><p>${data.htmlContent}</p></br>
+
+                              `,
+                    showCloseButton: true,
+                    showCancelButton: true,
+
+                });
+
+            })
+    }
+
+</script>

@@ -292,6 +292,21 @@ namespace prjDB_GamingForm_Show.Controllers
             };
             return View(NewsLetter);
         }
+        [HttpPost]
+        public IActionResult NewsletterEdit(CNewsLetter NewsLetter)
+        {
+            var data = _db.NewsLetters.Where(x => x.Id == NewsLetter.Id).FirstOrDefault();
+            data.Title = NewsLetter.Title;
+            data.HtmlContent = NewsLetter.HtmlContent;
+            _db.SaveChanges();
+            return RedirectToAction("Newsletter");
+        }
+
+        public IActionResult NewsletterInfo(int? id)
+        {
+            var data = _db.NewsLetters.Where(x => x.Id == id).FirstOrDefault();
+            return Json(data);
+        }
         public IActionResult SendNewsLetter()
         {
             return View();
@@ -303,9 +318,9 @@ namespace prjDB_GamingForm_Show.Controllers
             //                          where E.Email.Contains("alan")
             //                          select E.Email).ToList();
             List<string> Emails = new List<string>();
-            Emails.Add("alan90306@gmail.com");
+            //Emails.Add("alan90306@gmail.com");
             Emails.Add("kakuc0e0ig@gmail.com");
-            Emails.Add("iamau3vm0@gmail.com");
+            //Emails.Add("iamau3vm0@gmail.com");
             NewsLetter.Emails = Emails;
             foreach (string Address in NewsLetter.Emails)
             {
@@ -333,7 +348,41 @@ namespace prjDB_GamingForm_Show.Controllers
             };
             _db.NewsLetters.Add(dbn);
             _db.SaveChanges();
-            return RedirectToAction("SendNewsLetter", "Admin");
+            return Json(new { success = true, message = "電子報已成功發送！"});
+        }
+        public IActionResult Resend(int? id)
+        {
+            var data = _db.NewsLetters.Where(x => x.Id == id).FirstOrDefault();
+            List<string> Emails = new List<string>();
+            Emails.Add("alan90306@gmail.com");
+            Emails.Add("kakuc0e0ig@gmail.com");
+            Emails.Add("iamau3vm0@gmail.com");
+            CNewsLetter newsLetters = new CNewsLetter()
+            {
+                Title = data.Title,
+                HtmlContent = data.HtmlContent,
+                Emails = Emails
+            };
+            foreach (string Address in newsLetters.Emails)
+            {
+                var message = new MimeMessage();
+                message.From.Add(new MailboxAddress("grootdb1229", "grootdb1229@gmail.com"));
+                message.To.Add(new MailboxAddress("會員", Address));
+                message.Subject = newsLetters.Title;
+                message.Body = new TextPart("html")
+                {
+                    Text = newsLetters.HtmlContent
+                };
+
+                using (var client = new SmtpClient())
+                {
+                    client.Connect("smtp.gmail.com", 587, false);
+                    client.Authenticate("grootdb1229@gmail.com", "fmgx uucs lgkv vqxm");
+                    client.Send(message);
+                    client.Disconnect(true);
+                }
+            }
+            return RedirectToAction("Newsletter", "Admin");
         }
         #endregion
         #endregion

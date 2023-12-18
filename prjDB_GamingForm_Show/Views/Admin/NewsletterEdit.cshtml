@@ -1,12 +1,11 @@
 ﻿@model prjDB_GamingForm_Show.Models.Shop.CNewsLetter
-<h2>NewsletterEdit</h2>
 
 @{
     ViewData["Title"] = "NewsletterEdit";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 <script src="~/ckeditor5-build-classic/ckeditor.js"></script>
-<link rel="stylesheet" href="~/css/blogstyle.css" type="text/css">
+@*<link rel="stylesheet" href="~/css/blogstyle.css" type="text/css">*@
 @section Styles {
     <style>
         input {
@@ -34,25 +33,6 @@
         }
     </style>
 }
-<header class="header-section">
-    <div class="nav-options">
-        <div class="container">
-            <div class="nav-menu">
-                <ul>
-                    <li>
-                        @Html.ActionLink("取消", "Newsletter", "Admin", null, null)
-                        @*   @Html.ActionLink("回到文章", "ArticleContent", "Blog", new { AFId = Model.articles.FirstOrDefault().ArticleId, FId = Model.blogs.FirstOrDefault().BlogId }, new
-                        {
-                        @class = "btn btn-warning"
-                        })
-                        *@
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </div>
-
-</header>
 
 
 <div class="row" style="margin:10px auto;width:650px;background-color:#4F4F4F">
@@ -76,14 +56,9 @@
             </textarea>
 
             <div class="form-group column" style="margin-top:4px;display: flex; justify-content: space-between;">
-               @* <span style="margin-top:3px">
-                    @Html.ActionLink("回到文章", "ArticleContent", "Blog", new { AFId = Model.articles.FirstOrDefault().ArticleId, FId = Model.blogs.FirstOrDefault().BlogId }, new
-                    {
-                    @class = "btn btn-warning"
-                    })
-                </span>*@
                 <span>
-                    <input type="submit" value="修改" class="btn btn-default" />
+                    @Html.ActionLink("取消", "Newsletter", "Admin", null, new {@class="text-center btn btn-dark"})
+                    <input type="submit" value="修改" class="text-center btn btn-dark" />
                 </span>
 
             </div>
