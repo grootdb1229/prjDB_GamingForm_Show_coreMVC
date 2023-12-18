@@ -21,11 +21,13 @@ using System.Text.Json;
 using System.Web;
 using static prjDB_GamingForm_Show.Controllers.DeputeController;
 using static System.Runtime.InteropServices.JavaScript.JSType;
-using OpenAI_API;
-using OpenAI_API.Models;
+//using OpenAI_API;
+//using OpenAI_API.Models;
 using Azure;
-using OpenAI_API.Chat;
+//using OpenAI_API.Chat;
 using Microsoft.AspNetCore.Http.Extensions;
+using Org.BouncyCastle.Ocsp;
+using System.Collections;
 
 namespace prjDB_GamingForm_Show.Controllers
 {
@@ -134,68 +136,6 @@ namespace prjDB_GamingForm_Show.Controllers
             return Json(skillname);
 
         }
-        //TODO #2 搜尋
-
-        //public IActionResult Search(CKeyWord vm)
-        // {
-        //    IEnumerable<CDeputeViewModel> datas = null;
-        //    if (string.IsNullOrEmpty(vm.txtKeyword) && (!string.IsNullOrEmpty(vm.txtHotkey)))
-        //        vm.txtKeyword = vm.txtHotkey;
-
-        //    if (string.IsNullOrEmpty(vm.txtKeyword))
-        //    {
-        //        ListLoad();
-        //        datas = from n in List
-        //                select n;
-        //    }
-        //    else
-        //    {
-        //        _db.SerachRecords.Add
-        //                        (new SerachRecord { Name = vm.txtKeyword, CreateDays = (DateTime.Now.Date)});
-        //        _db.SaveChanges();
-
-        //        datas = List.Where(n => (n.deputeContent.Trim().ToLower().Contains(vm.txtKeyword.Trim().ToLower()) ||
-        //                                  n.providername.Trim().ToLower().Contains(vm.txtKeyword.Trim().ToLower()) ||
-        //                                  n.title.Trim().ToLower().Contains(vm.txtKeyword.Trim().ToLower()) ||
-        //                                  n.region.Trim().ToLower().Contains(vm.txtKeyword.Trim().ToLower()))
-        //                                  )
-        //        .OrderByDescending(n => n.modifieddate);
-
-        //    }
-        //    if (datas == null || datas.Count() == 0)
-        //    {
-        //        return Content("No result");
-        //    }
-        //    return Json(datas);
-        //}
-
-        //public IActionResult SearchById(int? id)
-        //{
-        //    IEnumerable<CDeputeViewModel> datas = null;
-        //    IEnumerable<string> keyword = from n in _db.SerachRecords
-        //                  where n.Id == id
-        //                  select n.Name;
-
-        //    foreach (string item in keyword)
-        //    {
-        //        if(string.IsNullOrEmpty(item)) 
-        //            continue;
-        //        datas = List.Where(n => (n.deputeContent.Trim().ToLower().Contains(item.Trim().ToLower()) ||
-        //                                  n.providername.Trim().ToLower().Contains(item.Trim().ToLower()) ||
-        //                                  n.title.Trim().ToLower().Contains(item.Trim().ToLower()) ||
-        //                                  n.region.Trim().ToLower().Contains(item.Trim().ToLower()))
-        //                                  ).OrderByDescending(n => n.modifieddate);
-
-        //    }
-        //    if (datas == null || datas.Count() == 0)
-        //    {
-        //        return Content("No result");
-        //    }
-
-        //    return Json(datas);
-
-
-        //}
         public IActionResult MutipleSearch(CKeyWord vm)
         {
             Temp = List;
@@ -368,8 +308,116 @@ namespace prjDB_GamingForm_Show.Controllers
             return Json(CookieList.Take(5));
         }
 
+        public IActionResult Fav(int? id)
+        {
+            
+            int userid = 0;
+            if (HttpContext.Session.GetInt32(CDictionary.SK_UserID) != null)
+                userid = (int)HttpContext.Session.GetInt32(CDictionary.SK_UserID);
 
+            string record = "";
+            if (HttpContext.Request.Cookies[$"fav{userid}"] != null)
+                record = HttpContext.Request.Cookies[$"fav{userid}"];
+
+            string[] strResult = record.Split(',');
+            if (strResult.Contains(id.ToString()))
+            {
+                record = "";
+                HttpContext.Response.Cookies.Delete($"fav{userid}");
+                var data = strResult.Where(n => n != id.ToString());
+                foreach (var item in data)
+                {
+                    if(!string.IsNullOrEmpty(item))
+                        record += item.ToString() + ",";
+                }
+                CookieOptions options = new CookieOptions();
+                options.Expires = DateTime.Now.AddDays(30);
+                HttpContext.Response.Cookies.Append($"fav{userid}", record, options);////
+                return Content("False");
+            }
+            else
+            { 
+            CookieOptions options = new CookieOptions();
+            options.Expires = DateTime.Now.AddDays(30);
+            record += $"{id},";
+            HttpContext.Response.Cookies.Append($"fav{userid}", record, options);//
+
+            return Content("Succeed");
+            }
+        }
+        public IActionResult GetFav()
+        {
+            CookieList = new List<CDeputeViewModel>();
+            int userid = 0;
+            if (HttpContext.Session.GetInt32(CDictionary.SK_UserID) != null)
+                userid = (int)HttpContext.Session.GetInt32(CDictionary.SK_UserID);
+            string record = "";
+            if (HttpContext.Request.Cookies[$"fav{userid}"] != null)
+                record = HttpContext.Request.Cookies[$"fav{userid}"];
+            string[] strResult = record.Split(',');
+            strResult = strResult.Reverse().Distinct().ToArray();
+            IEnumerable<CDeputeViewModel> datas = null;
+            foreach (var item in strResult)
+            {
+                if (!string.IsNullOrEmpty(item))
+                {
+                    datas = from n in List
+                            where n.id == Convert.ToInt32(item)
+                            select n;
+                    foreach (var data in datas)
+                    {
+                        CookieList.Add(data);
+                    }
+                }
+
+            }
+            return Json(CookieList.Take(5));
+        }
         //TODO #4 熱門關鍵字
+
+        public IActionResult Recommand(int id)
+        {
+            var value = (from n in _db.DeputeSkills.AsEnumerable()
+                         where n.DeputeId == id
+                         select new { n.Skill.Name }).Distinct();
+            List< CDeputeViewModel> Rcolist = new List< CDeputeViewModel>();
+            CDeputeViewModel data = null;
+            foreach(var item in value)
+            {
+                  var  RecoData = from n in _db.DeputeSkills.AsEnumerable()
+                               where n.Skill.Name.Contains(item.Name)
+                               select new {n.DeputeId,n.Depute.Title, n.Depute.DeputeContent, n.Depute.Provider.Name, n.Depute.Provider.FImagePath };
+                CDeputeViewModel x = null;
+                foreach (var item2 in RecoData)
+                {
+
+                        x = new CDeputeViewModel()
+                        {
+                            id = item2.DeputeId,
+                            title = item2.Title,
+                            providername = item2.Name,
+                            deputeContent = item2.DeputeContent,
+                            imgfilepath = item2.FImagePath
+                        };
+                    Rcolist.Add(x);
+                }
+
+            }
+
+            Random rnd = new Random();
+            int count = rnd.Next(0, 50);
+            List<CDeputeViewModel> Rcolist2 = new List<CDeputeViewModel>();
+            for (int i = 1; i <= 6; i++)
+            {
+                Rcolist2.Add(Rcolist[count]);
+                Rcolist.RemoveAt(count);
+                count = rnd.Next(0, Rcolist.Count);
+
+            }
+            return Json(Rcolist2);
+
+
+        }
         public IActionResult HotKey(int id)
         {
             var value = (from n in _db.SerachRecords.AsEnumerable()
@@ -563,8 +611,10 @@ namespace prjDB_GamingForm_Show.Controllers
                     memberName = _db.Members.FirstOrDefault(_ => _.MemberId == currentDepute.ProviderId).Name,
                     email = _db.Members.FirstOrDefault(_ => _.MemberId == currentDepute.ProviderId).Email,
                     deputeTitle = currentDepute.Title,
+                    deputeStartDate = currentDepute.StartDate.ToString("yyyy/MM/dd"),
                     deputeStatus = currentDepute.Status.Name,
-                    deputeRecordCount = _db.DeputeRecords.Count(_ => _.DeputeId == currentDepute.DeputeId)
+                    deputeRecordCount = _db.DeputeRecords.Count(_ => _.DeputeId == currentDepute.DeputeId),
+                    progress = CDictionary.PROGRESS_會員應徵委託
                 };
                 SendDeputeEmail(emaiContent);
                 return Json(new { success = true, message = "履歷投遞成功" });
@@ -664,6 +714,7 @@ namespace prjDB_GamingForm_Show.Controllers
         [HttpPost]
         public IActionResult ReplyDepute(CDeputeViewModel vm,IFormFile formFile)
         {
+            //受委託者完成委託
             try
             {
                 string fileType = formFile.FileName.Split('.')[1];
@@ -683,9 +734,11 @@ namespace prjDB_GamingForm_Show.Controllers
                 CDeputeEmail content = new CDeputeEmail()
                 {
                     memberName=oriDeputRecord.Depute.Provider.Name,
+                    workerName=oriDeputRecord.Member.Name,
                     email=oriDeputRecord.Depute.Provider.Email,
                     deputeTitle= oriDeputRecord.Depute.Title,
-                    deputeStatus=oriDeputRecord.ApplyStatus.Name
+                    deputeStatus=oriDeputRecord.ApplyStatus.Name,
+                    progress=CDictionary.PROGRESS_會員完成委託
                 };
                 SendDeputeEmail(content);
                 return Json(new { success = true, message = "案件已提交" });
@@ -698,31 +751,31 @@ namespace prjDB_GamingForm_Show.Controllers
 
         #region API
 
-        private async Task<string> ChatAsync()
-        {
-            OpenAIAPI api = new OpenAIAPI("");
-            var chat = api.Chat.CreateConversation();
-            chat.Model = Model.ChatGPTTurbo;
-            chat.RequestParameters.Temperature = 0.6;
+        //private async Task<string> ChatAsync()
+        //{
+        //    OpenAIAPI api = new OpenAIAPI("");
+        //    var chat = api.Chat.CreateConversation();
+        //    chat.Model = Model.ChatGPTTurbo;
+        //    chat.RequestParameters.Temperature = 0.6;
 
-            chat.AppendSystemMessage("你將看到包含委託主題及委託內容的委託需求，" +
-                "你的工作是提供以下列表中的一組標籤以JSON形式提供你的答案，" +
-                "僅從此提供的標籤清單中選擇(選擇至少5項skill):\r\n" +
-                "skillclass：程式\r\n繪畫\r\n音樂\r\n動畫" +
-                "skill：Csharp\r\nHtml\r\nCss\r\nLINQ\r\nADONET\r\nSQL\r\nJS\r\n電繪\r\n手繪\r\n水彩\r\n油畫\r\nJava\r\nPython\r\nPHP\r\nRuby\r\nASP.NET\r\nSwift\r\nKotlin\r\nReact\r\nSolidity\r\nSelenium\r\nJUnit\r\n電子\r\n搖滾\r\n古典\r\n爵士\r\n民族\r\n流行\r\n懸疑\r\n環境\r\n8位元\r\n16位元\r\nMaya\r\nPhotoShop\r\nPreminum");
-            chat.AppendUserInput("標題：\r\n12/16 ios app逆向工程\r\n內容：\r\n【幫忙事項】：ios app逆向工程 編碼及轉換16進位碼\r\n【注意事項】： 無");
-            return await chat.GetResponseFromChatbotAsync();
-            //Console.WriteLine(response);
-            //foreach (ChatMessage msg in chat.Messages)
-            //{
-            //    Console.WriteLine($"{msg.Role}: {msg.Content}");
-            //}
-        }
-        public async Task<IActionResult> Test2Async()
-        {
-            var response = await ChatAsync();
-            return Content(response);
-        }
+        //    chat.AppendSystemMessage("你將看到包含委託主題及委託內容的委託需求，" +
+        //        "你的工作是提供以下列表中的一組標籤以JSON形式提供你的答案，" +
+        //        "僅從此提供的標籤清單中選擇(選擇至少5項skill):\r\n" +
+        //        "skillclass：程式\r\n繪畫\r\n音樂\r\n動畫" +
+        //        "skill：Csharp\r\nHtml\r\nCss\r\nLINQ\r\nADONET\r\nSQL\r\nJS\r\n電繪\r\n手繪\r\n水彩\r\n油畫\r\nJava\r\nPython\r\nPHP\r\nRuby\r\nASP.NET\r\nSwift\r\nKotlin\r\nReact\r\nSolidity\r\nSelenium\r\nJUnit\r\n電子\r\n搖滾\r\n古典\r\n爵士\r\n民族\r\n流行\r\n懸疑\r\n環境\r\n8位元\r\n16位元\r\nMaya\r\nPhotoShop\r\nPreminum");
+        //    chat.AppendUserInput("標題：\r\n12/16 ios app逆向工程\r\n內容：\r\n【幫忙事項】：ios app逆向工程 編碼及轉換16進位碼\r\n【注意事項】： 無");
+        //    return await chat.GetResponseFromChatbotAsync();
+        //    //Console.WriteLine(response);
+        //    //foreach (ChatMessage msg in chat.Messages)
+        //    //{
+        //    //    Console.WriteLine($"{msg.Role}: {msg.Content}");
+        //    //}
+        //}
+        //public async Task<IActionResult> Test2Async()
+        //{
+        //    var response = await ChatAsync();
+        //    return Content(response);
+        //}
         public IActionResult test()
         {
             return Content("123");
@@ -730,18 +783,47 @@ namespace prjDB_GamingForm_Show.Controllers
 
         public IActionResult SendDeputeEmail(CDeputeEmail vm)
         {
+            string diffContent = "";
+            string diffTable = "";
+            string email = "bute77889@gmail.com";
+            switch (vm.progress)
+            {
+                case CDictionary.PROGRESS_會員應徵委託:
+                    diffContent = $"您發佈的委託「{vm.deputeTitle}」有新的應徵者，目前共有　{vm.deputeRecordCount}　位會員向您投遞履歷";
+                    diffTable = "<tr><td style=\"border: 1px solid #ccc; padding: 8px;\">委託標題</td><td style=\"border: 1px solid #ccc; padding: 8px;\">發佈日期</td><td style=\"border: 1px solid #ccc; padding: 8px;\">應徵人數</td></tr>" +
+                        $"<tr><td style=\"border: 1px solid #ccc; padding: 8px;\">{vm.deputeTitle}</td><td style=\"border: 1px solid #ccc; padding: 8px;\">{vm.deputeStartDate}</td><td style=\"border: 1px solid #ccc; padding: 8px;\">{vm.deputeRecordCount}</td></tr></tbody></table></li>";
+                    break;
+                case CDictionary.PROGRESS_委託者決定合作:
+                    diffContent = $"您應徵的委託「{vm.deputeTitle}」委託者已決定與您合作";
+                    diffTable = "<tr><td style=\"border: 1px solid #ccc; padding: 8px;\">委託標題</td><td style=\"border: 1px solid #ccc; padding: 8px;\">委託內容</td><td style=\"border: 1px solid #ccc; padding: 8px;\">目前狀態</td></tr>" +
+                        $"<tr><td style=\"border: 1px solid #ccc; padding: 8px;\">{vm.deputeTitle}</td><td style=\"border: 1px solid #ccc; padding: 8px;\">{vm.deputeContent}</td><td style=\"border: 1px solid #ccc; padding: 8px;\">{vm.recordStatus}</td></tr></tbody></table></li>";
+                    break;
+                case CDictionary.PROGRESS_會員完成委託:
+                    diffContent = $"您發佈的的委託「{vm.deputeTitle}」狀態已更新為「{vm.deputeStatus}」";
+                    diffTable = "<tr><td style=\"border: 1px solid #ccc; padding: 8px;\">委託標題</td><td style=\"border: 1px solid #ccc; padding: 8px;\">執行會員</td><td style=\"border: 1px solid #ccc; padding: 8px;\">目前狀態</td></tr>" +
+                        $"<tr><td style=\"border: 1px solid #ccc; padding: 8px;\">{vm.deputeTitle}</td><td style=\"border: 1px solid #ccc; padding: 8px;\">{vm.workerName}</td><td style=\"border: 1px solid #ccc; padding: 8px;\">{vm.recordStatus}</td></tr></tbody></table></li>";
+                    break;
+                case CDictionary.PROGRESS_委託者確認完成:
+                    diffContent = $"您的委託「{vm.deputeTitle}」委託者已確認完成";
+                    diffTable = "<tr><td style=\"border: 1px solid #ccc; padding: 8px;\">委託標題</td><td style=\"border: 1px solid #ccc; padding: 8px;\">委託內容</td><td style=\"border: 1px solid #ccc; padding: 8px;\">目前狀態</td></tr>" +
+                        $"<tr><td style=\"border: 1px solid #ccc; padding: 8px;\">{vm.deputeTitle}</td><td style=\"border: 1px solid #ccc; padding: 8px;\">{vm.deputeContent}</td><td style=\"border: 1px solid #ccc; padding: 8px;\">{vm.deputeStatus}</td></tr></tbody></table></li>";
+                    break;
+            }
+            //頂標(免改)
             string dm = "<div style=\"color:black;\">\r\n<ul style=\"list-style-type: none; padding-left: 0;\">  <li style=\"background-color: #272727; color: #fff; padding: 10px; margin-left: 0px;\">Groot遊戲資源整合平台</li>";
-            dm += $"<li style=\"margin: 10px 0;padding: 10px;\">　　<p>{vm.memberName}　您好，</p>您的委託「{vm.deputeTitle}」狀態已更新為「{vm.deputeStatus}」，目前有　{vm.deputeRecordCount}　位會員向您投遞履歷，立即<a href=\"#\" style=\"color: #0d6efd; text-decoration: none;\">查看委託詳情</a>。</li>";
+            //抬頭
+            dm += $"<li style=\"margin: 10px 0;padding: 10px;\">　　<p>{vm.memberName}　您好，</p>{diffContent}，立即<a href=\"#\" style=\"color: #0d6efd; text-decoration: none;\">查看委託詳情</a>。</li>";
             dm += "<li style=\"margin: 10px 0;\"><table style=\"width: 100%; border-collapse: collapse;padding: 10px;\"><tbody>";
-            dm += $"<tr><td style=\"border: 1px solid #ccc; padding: 8px;\">標題</td><td style=\"border: 1px solid #ccc; padding: 8px;\">委託狀態</td><td style=\"border: 1px solid #ccc; padding: 8px;\">應徵人數</td></tr>";
-            dm += $"<tr><td style=\"border: 1px solid #ccc; padding: 8px;\">{vm.deputeTitle}</td><td style=\"border: 1px solid #ccc; padding: 8px;\">{vm.deputeStatus}</td><td style=\"border: 1px solid #ccc; padding: 8px;\">{vm.deputeRecordCount}</td></tr>";
-            dm += "</tbody></table></li><li style=\"margin: 10px 0;\"><a href=\"#\" style=\"background-color: #272727; color: #fff; padding: 10px; text-decoration: none; display: inline-block;border-radius:10px\">詳細資訊</a></li><li style=\"margin: 10px 0;\"><div style=\"margin-bottom: 10px;padding: 10px;\">Groot將依個人資料保護法及相關法令之規定下，依隱私權保護政策蒐集、處理及合理利用您的個人資料。</div><div style=\"margin-bottom: 10px;padding: 10px;\">為確保能收到來自Groot的通知信件，強烈建議您將groot1229@gmail.com加入通訊錄。</div></li></ul></div>";
+            //表格
+            dm += $"{diffTable}";
+            //頁尾(免改)
+            dm += "<li style=\"margin: 10px 0;\"><a href=\"#\" style=\"background-color: #272727; color: #fff; padding: 10px; text-decoration: none; display: inline-block;border-radius:10px\">詳細資訊</a></li><li style=\"margin: 10px 0;\"><div style=\"margin-bottom: 10px;padding: 10px;\">Groot將依個人資料保護法及相關法令之規定下，依隱私權保護政策蒐集、處理及合理利用您的個人資料。</div><div style=\"margin-bottom: 10px;padding: 10px;\">為確保能收到來自Groot的通知信件，強烈建議您將groot1229@gmail.com加入通訊錄。</div></li></ul></div>";
 
             var message = new MimeMessage();
             //寄件者
             message.From.Add(new MailboxAddress("grootdb1229", "grootdb1229@gmail.com"));
             //收件者
-            message.To.Add(new MailboxAddress(_db.Members.FirstOrDefault(x => x.MemberId == HttpContext.Session.GetInt32(CDictionary.SK_UserID)).Name, "bute77889@gmail.com"));
+            message.To.Add(new MailboxAddress(_db.Members.FirstOrDefault(x => x.MemberId == HttpContext.Session.GetInt32(CDictionary.SK_UserID)).Name, email));
             //標題
             message.Subject = $"委託[{vm.deputeTitle}]狀態更新";
             //內容
@@ -792,40 +874,61 @@ namespace prjDB_GamingForm_Show.Controllers
 
             var deputeRecord = _db.DeputeRecords.FirstOrDefault(_ => _.Id == vm.id);
             var depute = _db.Deputes.FirstOrDefault(_ => _.DeputeId == deputeRecord.DeputeId);
-            var otherRecords = _db.DeputeRecords.Where(_ => _.DeputeId == depute.DeputeId && _.Id != vm.id).Select(_ => _);
+            var otherRecords = _db.DeputeRecords.Where(_ => _.DeputeId == depute.DeputeId && _.Id != vm.id).ToList();
 
             //修改該會員應徵狀態
             deputeRecord.ApplyStatusId = vm.statusid;
 
-            //若與該會員合作，則此委託狀態一併改為合作中，且其他會員的應徵狀態改為備選
-            if (vm.statusid == 10)
+            switch (vm.statusid)
             {
-                depute.StatusId = 10;
-                deputeRecord.ApplyStatusId = 10;
-
-                CDeputeEmail content = new CDeputeEmail()
-                {
-                    memberName = deputeRecord.Member.Name,
-                    email = deputeRecord.Member.Email,
-                    deputeTitle = depute.Title,
-                    deputeStatus = deputeRecord.ApplyStatus.Name
-                };
-                SendDeputeEmail(content);
-                foreach (var item in otherRecords)
-                {
-                    item.ApplyStatusId = 11;
-                }
-            }
-            //完成委託、委託紀錄
-            if (vm.statusid == 16)
-            {
-                depute.StatusId = 16;
-                deputeRecord.ApplyStatusId = 16;
+                case 10:
+                    handleStatus10(depute, deputeRecord, otherRecords);
+                    break;
+                case 16:
+                    handleStatus16(depute, deputeRecord);
+                    break;
             }
 
             _db.SaveChanges();
-            var statusName = _db.Statuses.FirstOrDefault(_ => _.StatusId == vm.statusid).Name;
+            var statusName = deputeRecord.ApplyStatus.Name;
             return Content(statusName);
+        }
+        private void handleStatus10(Depute depute,DeputeRecord deputeRecord,List<DeputeRecord> otherRecords)
+        {
+            //若與該會員合作，則此委託狀態一併改為合作中，且其他會員的應徵狀態改為備選
+            depute.StatusId = 10;
+            deputeRecord.ApplyStatusId = 10;
+
+            CDeputeEmail content = new CDeputeEmail()
+            {
+                memberName = deputeRecord.Member.Name,
+                email = deputeRecord.Member.Email,
+                deputeTitle = depute.Title,
+                deputeContent = depute.DeputeContent,
+                recordStatus = deputeRecord.ApplyStatus.Name,
+                progress = CDictionary.PROGRESS_委託者決定合作
+            };
+            SendDeputeEmail(content);
+            foreach (var item in otherRecords)
+            {
+                item.ApplyStatusId = 11;
+            }
+        }
+        private void handleStatus16(Depute depute, DeputeRecord deputeRecord)
+        {
+            //完成委託、委託紀錄
+            depute.StatusId = 16;
+            deputeRecord.ApplyStatusId = 16;
+
+            CDeputeEmail content = new CDeputeEmail()
+            {
+                memberName = deputeRecord.Member.Name,
+                email = deputeRecord.Member.Email,
+                deputeTitle = depute.Title,
+                deputeStatus = deputeRecord.ApplyStatus.Name,
+                progress = CDictionary.PROGRESS_委託者確認完成
+            };
+            SendDeputeEmail(content);
         }
         public IActionResult individualDetials(int id)
         {
