@@ -224,7 +224,7 @@
             </div>
         </div>
     </div>
-    <div id="MemberChat" style="display:none; position: fixed; top: 10px; right: 10px; z-index: 999; background-color: #6C6C6C; opacity: 0.95; border: 3px groove #000; border-radius: 15px; color: #FFFFF4;"></div>
+    <div id="MemberChat" style="display:none;position: fixed; bottom: 10px; right: 10px; z-index: 999;background-color:#6C6C6C ; opacity:0.95; border: 3px groove #000;border-radius:15px;color:#FFFFF4"></div>
 
     <!-- Footer-->
     <footer class="py-5 bg-dark" style="position:relative;bottom:0;width:100%;z-index:-1 ">
@@ -334,6 +334,65 @@
                 div.style.display = "none"; // 隱藏
                 isChatOpen = false;
             }
+        }
+
+        connection.on("ReceiverUpdContent", function (message, selfID, senderAdminId, senderimg, sendTime) {
+            var div = document.querySelector('#MemberChat');
+            if (div.style.display == "block") {
+                var chatWho = $('#rn').text()
+                if (chatWho == selfID) {
+                    $.ajax({
+                        type: 'post',
+                        url: '/Member/CheckAllMessage',
+                        data: { senderid: senderAdminId }
+                    })
+                }
+                else {
+                    updateNotificationCount();
+                }
+            }
+            else {
+                updateNotificationCount();
+            }
+            var messageBox = document.querySelector('#messageBox')
+
+            // 最外層li
+            var li = document.createElement("li")
+            li.classList.add("nav-item")
+            li.setAttribute("data-li-name", "uniqueName");
+            messageBox.insertBefore(li, messageBox.firstChild)
+
+            // 第二層a
+            var a = document.createElement("a")
+            a.classList.add("dropdown-item")
+            li.appendChild(a)
+
+            // 第三層名字、時間span
+            var spanforname = document.createElement("span")
+            a.appendChild(spanforname)
+
+            // 第三層訊息span
+            var spanformessage = document.createElement("span")
+            spanformessage.classList.add("message")
+            spanformessage.innerHTML = `${message}`
+            a.appendChild(spanformessage)
+
+            //第四層名字span
+            var name = document.createElement("span")
+            name.innerHTML = `${selfID}`
+            spanforname.appendChild(name)
+
+            //第四層時間span
+            var time = document.createElement("span")
+            time.classList.add("time")
+            time.innerHTML = `${sendTime}`
+            spanforname.appendChild(time)
+
+        })
+        function updateNotificationCount() {
+            notCheckMessage = $('#notCheckMessageCount').text()
+            notCheckMessage++;
+            $('#notCheckMessageCount').text(notCheckMessage)
         }
         //往上-聊天室區域 - 彥霖
         const button = document.querySelector('#car');

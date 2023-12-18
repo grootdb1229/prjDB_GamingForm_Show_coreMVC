@@ -80,7 +80,20 @@ namespace prjDB_GamingForm_Show.Hubs
 
         public async Task SendMessageToAll(string senderName, string message)
         {
+            var senderId = _db.Members.FirstOrDefault(m => m.Name == senderName).MemberId;
+
             await Clients.All.SendAsync("UpdContent", message, senderName);
+
+            if(senderId != null)
+            {
+                PublicChat chat = new PublicChat();
+                chat.SenderId = senderId;
+                chat.ChatContent = message;
+                chat.Modifiedate = DateTime.UtcNow.ToLocalTime().ToString("yyyy/MM/dd HH:mm");
+
+                _db.PublicChats.Add(chat);
+                await _db.SaveChangesAsync();
+            }
         }
 
         public async Task SendMessage(string senderName, string message, string receiverConnectionId, string receiverName)
