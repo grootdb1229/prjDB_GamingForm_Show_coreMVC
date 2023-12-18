@@ -290,10 +290,12 @@
                 input: "select",
                 inputOptions: {
                     原因: {
-                        60: "與本主題無關",
-                        61: "洗版",
-                        62: "辱罵",
+                        63: "盜版",
                         67: "不當內容",
+                        69: "敘述內容不妥",
+                        70: "遊戲圖片不符",
+                        65: "其他理由"
+                        
                     }
                 },
                 inputPlaceholder: "選擇檢舉原因",
@@ -319,7 +321,7 @@
                     showCancelButton: true
                 });
                 if (text !== undefined) {
-                    $.ajax('@Url.Content("~/Depute/DeputeComplain")', {
+                    $.ajax('@Url.Content("~/Shop/ProductComplain")', {
                         "type": 'post', //POST、PUT、DELETE//
                         "data": {
                             "txtID": value,

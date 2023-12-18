@@ -71,59 +71,139 @@ namespace prjDB_GamingForm_Show.Controllers
             ViewBag.SelectedSubTagId = FId;
             return View(vm);
         }
+
+        //-------ArticleList原版------
+        //public ActionResult ArticleList(CKeyWordViewModel kw, int? FId, int? SFId)
+        //{
+        //    CBlogViewModel vm = new CBlogViewModel();
+        //    if (!string.IsNullOrEmpty(kw.txtKeyWord))
+        //    {
+        //        vm = new CBlogViewModel
+        //        {
+        //            //tags = _db.Tags.Select(p => p),
+        //            //subTags = _db.SubTags.Where(s => s.TagId == 4 && s.SubTagId != 14).Select(p => p),
+        //            blogs = _db.Blogs.Where(b => b.BlogId == FId).Select(p => p),
+        //            subBlogs = _db.SubBlogs.Where(s => s.BlogId == FId).Select(p => p),
+        //            articles = _db.Articles.Include(a => a.Replies).Include(a => a.Member).Where(a => a.SubBlog.BlogId == FId && (a.Title.Contains(kw.txtKeyWord) || a.ArticleContent.Contains(kw.txtKeyWord))).OrderByDescending(a => a.ModifiedDate).Select(p => p),
+        //            //replies = _db.Replies.Include(r => r.Member),
+        //            members = _db.Members,
+        //            subtagTitle=_db.Blogs.Where(b => b.BlogId == FId).Select(_ => _.SubTag.Name).FirstOrDefault()
+        //        };
+        //    }
+        //    else
+        //    {
+        //        if (FId == null)
+        //            return RedirectToAction("List");
+        //        if (SFId == null)
+        //        {
+        //            vm = new CBlogViewModel
+        //            {
+        //                //tags = _db.Tags.Select(p => p),
+        //                //subTags = _db.SubTags.Where(s => s.TagId == 4 && s.SubTagId != 14).Select(p => p),
+        //                blogs = _db.Blogs.Where(b => b.BlogId == FId).Select(p => p),
+        //                subBlogs = _db.SubBlogs.Where(s => s.BlogId == FId).Select(p => p),
+        //                articles = _db.Articles.Include(a => a.Replies).Include(a => a.Member).Where(a => a.SubBlog.BlogId == FId).OrderByDescending(a => a.ModifiedDate).Select(p => p),
+        //                //replies = _db.Replies.Include(r => r.Member),
+        //                members = _db.Members,
+        //                subtagTitle = _db.Blogs.Where(b=>b.BlogId==FId).Select(_ => _.SubTag.Name).FirstOrDefault(),
+        //            };
+        //        }
+        //        else
+        //        {
+        //            vm = new CBlogViewModel
+        //            {
+        //                //tags = _db.Tags.Select(p => p),
+        //                //subTags = _db.SubTags.Where(s => s.TagId == 4 && s.SubTagId != 14).Select(p => p),
+        //                blogs = _db.Blogs.Where(b => b.BlogId == FId).Select(p => p),
+        //                subBlogs = _db.SubBlogs.Where(s => s.BlogId == FId).Select(p => p),
+        //                articles = _db.Articles.Include(a => a.Replies).Include(a => a.Member).Where(a => a.SubBlogId == SFId).OrderByDescending(a => a.ModifiedDate).Select(p => p),
+        //                //replies = _db.Replies.Include(r => r.Member),
+        //                members = _db.Members,
+        //                subtagTitle = _db.SubTags.Where(s => s.Blogs.FirstOrDefault().BlogId == FId).Select(s => s.Name).FirstOrDefault()
+        //            };
+        //        }
+        //    }
+        //    ViewBag.SelectedSubBlogId = SFId;
+        //    return View(vm);
+        //}
+
+        //-------ArticleList原版------
+
+
+        //-------1217測試------
+
         public ActionResult ArticleList(CKeyWordViewModel kw, int? FId, int? SFId)
         {
             CBlogViewModel vm = new CBlogViewModel();
+
             if (!string.IsNullOrEmpty(kw.txtKeyWord))
             {
                 vm = new CBlogViewModel
                 {
-                    //tags = _db.Tags.Select(p => p),
-                    //subTags = _db.SubTags.Where(s => s.TagId == 4 && s.SubTagId != 14).Select(p => p),
                     blogs = _db.Blogs.Where(b => b.BlogId == FId).Select(p => p),
                     subBlogs = _db.SubBlogs.Where(s => s.BlogId == FId).Select(p => p),
-                    articles = _db.Articles.Include(a => a.Replies).Include(a => a.Member).Where(a => a.SubBlog.BlogId == FId && (a.Title.Contains(kw.txtKeyWord) || a.ArticleContent.Contains(kw.txtKeyWord))).OrderByDescending(a => a.ModifiedDate).Select(p => p),
-                    //replies = _db.Replies.Include(r => r.Member),
+                    articles = _db.Articles
+                        .Include(a => a.Replies)
+                        .Include(a => a.Member)
+                        .Where(a => a.SubBlog.BlogId == FId && (a.Title.Contains(kw.txtKeyWord) || a.ArticleContent.Contains(kw.txtKeyWord)))
+                        .OrderByDescending(a => a.IsPinned)  
+                        .ThenByDescending(a => a.ModifiedDate)
+                        .Select(p => p),
                     members = _db.Members,
-                    subtagTitle=_db.Blogs.Where(b => b.BlogId == FId).Select(_ => _.SubTag.Name).FirstOrDefault()
+                    subtagTitle = _db.Blogs.Where(b => b.BlogId == FId).Select(_ => _.SubTag.Name).FirstOrDefault(),
                 };
             }
             else
             {
                 if (FId == null)
+                {
                     return RedirectToAction("List");
+                }
+
                 if (SFId == null)
                 {
                     vm = new CBlogViewModel
                     {
-                        //tags = _db.Tags.Select(p => p),
-                        //subTags = _db.SubTags.Where(s => s.TagId == 4 && s.SubTagId != 14).Select(p => p),
                         blogs = _db.Blogs.Where(b => b.BlogId == FId).Select(p => p),
                         subBlogs = _db.SubBlogs.Where(s => s.BlogId == FId).Select(p => p),
-                        articles = _db.Articles.Include(a => a.Replies).Include(a => a.Member).Where(a => a.SubBlog.BlogId == FId).OrderByDescending(a => a.ModifiedDate).Select(p => p),
-                        //replies = _db.Replies.Include(r => r.Member),
+                        articles = _db.Articles
+                            .Include(a => a.Replies)
+                            .Include(a => a.Member)
+                            .Where(a => a.SubBlog.BlogId == FId)
+                            .OrderByDescending(a => a.IsPinned)  
+                            .ThenByDescending(a => a.ModifiedDate)
+                            .Select(p => p),
                         members = _db.Members,
-                        subtagTitle = _db.Blogs.Where(b=>b.BlogId==FId).Select(_ => _.SubTag.Name).FirstOrDefault(),
+                        subtagTitle = _db.Blogs.Where(b => b.BlogId == FId).Select(_ => _.SubTag.Name).FirstOrDefault(),
                     };
                 }
                 else
                 {
                     vm = new CBlogViewModel
                     {
-                        //tags = _db.Tags.Select(p => p),
-                        //subTags = _db.SubTags.Where(s => s.TagId == 4 && s.SubTagId != 14).Select(p => p),
                         blogs = _db.Blogs.Where(b => b.BlogId == FId).Select(p => p),
                         subBlogs = _db.SubBlogs.Where(s => s.BlogId == FId).Select(p => p),
-                        articles = _db.Articles.Include(a => a.Replies).Include(a => a.Member).Where(a => a.SubBlogId == SFId).OrderByDescending(a => a.ModifiedDate).Select(p => p),
-                        //replies = _db.Replies.Include(r => r.Member),
+                        articles = _db.Articles
+                            .Include(a => a.Replies)
+                            .Include(a => a.Member)
+                            .Where(a => a.SubBlogId == SFId)
+                            .OrderByDescending(a => a.IsPinned)  // 先顯示置頂的文章
+                            .ThenByDescending(a => a.ModifiedDate)
+                            .Select(p => p),
                         members = _db.Members,
-                        subtagTitle = _db.SubTags.Where(s => s.Blogs.FirstOrDefault().BlogId == FId).Select(s => s.Name).FirstOrDefault()
+                        subtagTitle = _db.SubTags.Where(s => s.Blogs.FirstOrDefault().BlogId == FId).Select(s => s.Name).FirstOrDefault(),
                     };
                 }
             }
+
             ViewBag.SelectedSubBlogId = SFId;
             return View(vm);
         }
+
+
+
+        //-------1217測試------
+
 
         public ActionResult ArticleContent(int? FId, int? AFId)            
         {
