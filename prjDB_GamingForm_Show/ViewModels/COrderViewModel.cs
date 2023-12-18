@@ -19,6 +19,7 @@ namespace prjDB_GamingForm_Show.ViewModels
 
         public double Sumprice { get; set; }
 
+        public string MemberName { get; set; }
         public List<CProductNamePrice> products { get; set; }
 
         public virtual Payment Payment { get; set; } = null!;

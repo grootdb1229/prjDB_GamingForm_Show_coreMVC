@@ -30,7 +30,7 @@ namespace prjDB_GamingForm_Show.Controllers
             COrderViewModel vm = new COrderViewModel();
             var order = _db.Orders.Where(x => x.MemberId == 41)//HttpContext.Session.GetInt32(CDictionary.SK_UserID))
                         .OrderByDescending(x => x.OrderId).Take(1)
-                        .Select(x => new { x.OrderId, x.Payment.Name, x.Coupon.Title, x.OrderDate });
+                        .Select(x => new { x.OrderId, x.Payment.Name, x.Coupon.Title, x.OrderDate, MemberName = x.Member.Name});
             COrderViewModel n = null;
 
             foreach (var i in order)
@@ -41,6 +41,7 @@ namespace prjDB_GamingForm_Show.Controllers
                     CouponTitle = i.Title,
                     OrderDate = i.OrderDate,
                     PaymentName = i.Name,
+                    MemberName = i.MemberName,
                     products = new List<CProductNamePrice>()
                 };
 
@@ -96,8 +97,8 @@ namespace prjDB_GamingForm_Show.Controllers
                 { "TradeDesc",  "無"},
                 { "ItemName",  "Groot"},
                 { "ExpireDate",  "3"},
-                { "CustomField1",  ""},
-                { "CustomField2",  ""},
+                { "CustomField1", vm.MemberName },
+                { "CustomField2",  vm.OrderId.ToString()},
                 { "CustomField3",  ""},
                 { "CustomField4",  ""},
                 { "ReturnURL",  $"{website}Ecpay/AddPayInfo"},
@@ -128,7 +129,8 @@ namespace prjDB_GamingForm_Show.Controllers
             var order = db.Orders.Where(x => x.MemberId == 41)//HttpContext.Session.GetInt32(CDictionary.SK_UserID))
                         .OrderByDescending(x => x.OrderId).FirstOrDefault();
             order.PaymentDate= DateTime.Now;
-            order.Ecid= id["MerchantTradeNo"];
+            order.Ecid = id["MerchantTradeNo"];
+            db.SaveChanges();
             //var Orders = db.EcpayOrders.ToList().Where(m => m.MerchantTradeNo == id["MerchantTradeNo"]).FirstOrDefault();
             //Orders.RtnCode = int.Parse(id["RtnCode"]);
             //if (id["RtnMsg"] == "Succeeded") Orders.RtnMsg = "已付款";

@@ -6,9 +6,9 @@ namespace prjDB_GamingForm_Show.Models.Shop
     {
         public int Id { get; set; }
 
-        public int Title { get; set; }
+        public string Title { get; set; }
 
-        public int HtmlContent { get; set; }
+        public string HtmlContent { get; set; }
         public List<string> Emails { get; set; }
         public View EmailView { get; set; }
     }
