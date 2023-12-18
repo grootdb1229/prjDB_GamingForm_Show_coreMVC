@@ -2,14 +2,17 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using MimeKit;
 using prjDB_GamingForm_Show.Models;
 using prjDB_GamingForm_Show.Models.Admin;
 using prjDB_GamingForm_Show.Models.Entities;
+using prjDB_GamingForm_Show.Models.Member;
 using prjDB_GamingForm_Show.ViewModels;
 using System.Drawing;
 using System.Runtime.Intrinsics.Arm;
 using System.Runtime.Intrinsics.X86;
 using System.Security.Cryptography;
+using SmtpClient = MailKit.Net.Smtp.SmtpClient;
 
 namespace prjDB_GamingForm_Show.Controllers
 {
@@ -257,7 +260,46 @@ namespace prjDB_GamingForm_Show.Controllers
             }
             return View(ProductComplain);
         }
-        #endregion 
+
+        #region SendEmailByModel
+        public IActionResult SendNewsLetter()
+        {
+            return View();
+        }
+        [HttpPost]
+        public IActionResult SendNewsLetter(CEmail email)
+        {
+            //List<string> EmailData = (from E in _db.Members
+            //                          where E.Email.Contains("alan")
+            //                          select E.Email).ToList();
+            List<string> Emails = new List<string>();
+            Emails.Add("alan90306@gmail.com");
+            Emails.Add("kakuc0e0ig@gmail.com");
+            Emails.Add("iamau3vm0@gmail.com");
+            email.Emails = Emails;
+            foreach (string Address in email.Emails)
+            {
+                var message = new MimeMessage();
+                message.From.Add(new MailboxAddress("grootdb1229", "grootdb1229@gmail.com"));
+                message.To.Add(new MailboxAddress("會員", Address));
+                message.Subject = email.EmailSubject;
+                message.Body = new TextPart("html")
+                {
+                    Text = email.EmailBody
+                };
+
+                using (var client = new SmtpClient())
+                {
+                    client.Connect("smtp.gmail.com", 587, false);
+                    client.Authenticate("grootdb1229@gmail.com", "fmgx uucs lgkv vqxm");
+                    client.Send(message);
+                    client.Disconnect(true);
+                }
+            }
+            return RedirectToAction("SendNewsLetter", "Admin");
+        }
+        #endregion
+        #endregion
         public IActionResult SignalRPV()
         {
             List<CSignalRUseAdminList> Admins = new List<CSignalRUseAdminList>();
