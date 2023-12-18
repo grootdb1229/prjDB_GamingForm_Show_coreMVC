@@ -110,9 +110,57 @@
                     <span>@Html.DisplayFor(model => model.Price)</span>
                 </div>
                 <div style="display: flex; align-items: center;">
+
                     <!-- 右側的按鈕和其他內容 -->
                     <div style="margin-left: auto;">
-                        <!-- 其他按鈕和內容，您的現有代碼... -->
+                        <!-- 收藏按鈕 -->
+                        @if (Context.Session.GetInt32(CDictionary.SK_UserID) == null)
+                        {
+                            <button type="button" class="btn btn-info" id="btnLike" data-bs-toggle="modal" data-bs-target="#staticBackdrop" style="float:right;margin:0 5px">
+                                <img src="~/images/shop/hollowheart.png" width="20px" height="20px" />
+                            </button>
+                        }
+                        else
+                        {
+                            if (Model.favourite == "你收藏過了")
+                            {
+                                <button type="button" class="btn btn-info" id="btnLike" style="float:right;margin:0 5px">
+                                    <img src="~/images/shop/heart.png" width="20px" height="20px" id="clicked" />
+                                </button>
+                            }
+                            else if (Model.favourite == "你還沒收藏過")
+                            {
+                                <button type="button" class="btn btn-info" id="btnLike" style="float:right;margin:0 5px">
+                                    <img src="~/images/shop/hollowheart.png" width="20px" height="20px" id="unclicked" />
+                                </button>
+                            }
+                        }
+                        <!-- HTML 中的按鈕 -->
+                        <button id="copyButton" class="btn btn-info" data-clipboard-target="#urlToCopy" style="float:right;margin:0 5px">分享</button>
+                        <!-- 網址藏在這 -->
+                        <input type="hidden" id="urlToCopy" value="" readonly>
+
+                        <!-- FB按鈕 -->
+                        <img src="~/images/fbicon.png" onclick="shareOnFacebook()" alt="Like" width="45px" height="45px" style="float:right;margin:0 5px" />
+                        <script>
+                            function shareOnFacebook() {
+                                window.open('https://www.facebook.com/sharer.php?u=https://localhost:7056/Shop/Details?FId=@(Model.ProductId)', '_blank');
+                            }
+                        </script>
+
+                        <!-- Line按鈕 -->
+                        <div class="line-it-button"
+                             data-lang="zh_Hant"
+                             data-type="share-c"
+                             data-env="REAL"
+                             data-url="https://localhost:7056/Shop/Details?FId=@(Model.ProductId)"
+                             data-color="default"
+                             data-size="large"
+                             data-count="false"
+                             data-ver="3"
+                             style="float:right ;margin:5px">
+                        </div>
+                        <script src="https://www.line-website.com/social-plugins/js/thirdparty/loader.min.js" async="async" defer="defer"></script>
                     </div>
                 </div>
                 @*------內文------*@
