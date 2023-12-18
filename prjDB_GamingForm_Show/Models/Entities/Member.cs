@@ -61,6 +61,8 @@ public partial class Member
 
     public virtual ICollection<Product> Products { get; set; } = new List<Product>();
 
+    public virtual ICollection<PublicChat> PublicChats { get; set; } = new List<PublicChat>();
+
     public virtual ICollection<Reply> Replies { get; set; } = new List<Reply>();
 
     public virtual Status Status { get; set; } = null!;

@@ -36,6 +36,4 @@ public partial class Article
     public virtual Article? ReplyArticle { get; set; }
 
     public virtual SubBlog SubBlog { get; set; } = null!;
-
-    
 }

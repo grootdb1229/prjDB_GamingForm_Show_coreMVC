@@ -335,7 +335,7 @@
                           <td class="align-middle" style="color:black">${applyer.applyerEmail}</td>
                           <td class="align-middle" style="color:black">${applyer.applyerPhone}</td>
                           <td class="align-middle" style="color:black">${applyer.applyerBirth}</td>
-                          <td class="align-middle" style="color:black"><a href="#">${applyer.memberName}</a></td>
+                          <td class="align-middle" style="color:black"><a href="#" id="testname">${applyer.memberName}</a></td>                          
                           <td class="align-middle" style="color:black" id="currentStatus">${applyer.status}</td>
                           <td class="align-middle" style="color:black">
                              <select class="form-select" aria-label="Default select example" ${canChangeStatus}>
@@ -360,8 +360,10 @@
                  </div>`});
         const titleapplyer = await document.querySelector('#accordionExample');
         titleapplyer.innerHTML = applyers.join("");
+        var test = $('#testname').val()
+        console.log(test)
     }
-
+    
     async function readed(deputeRecordID,event) {
         if (event.target.lastElementChild.innerHTML != "已投遞")
             return;
@@ -375,6 +377,8 @@
 
     async function changeStatus(deputeRecordID, event) {
         const applystatus = event.target.parentNode.previousSibling.previousSibling.childNodes[1].value;
+        const workerName = event.target.parentNode.previousSibling.previousSibling.previousSibling.previousSibling.previousSibling.previousSibling.textContent;
+        console.log(workerName);
         const viewstatus = event.target.parentNode.previousSibling.previousSibling.previousSibling.previousSibling;
         if (applystatus == "請選擇欲修改的狀態" || applystatus == "7")
             return;
@@ -386,6 +390,7 @@
         viewstatus.innerHTML = statusname;
         badgestatus.innerHTML = statusname;
         if (statusname == "合作中") {
+            connection.on()
             const allbadge = badgestatus.parentNode.parentNode.parentNode.parentNode.querySelectorAll('span');
             const allbadgeArray = Array.from(allbadge);
             allbadgeArray.forEach(badges => {
