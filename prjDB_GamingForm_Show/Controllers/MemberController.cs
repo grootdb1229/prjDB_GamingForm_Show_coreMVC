@@ -39,7 +39,7 @@ namespace prjDB_GamingForm_Show.Controllers
             if (id == null)
                 MemberID = (int)HttpContext.Session.GetInt32(CDictionary.SK_UserID);
             else
-                MemberID = (int)id;
+            MemberID = (int)id;
             _db.Members.Load();
             IEnumerable<Member> datas = null;
             var data = from m in _db.Members
@@ -354,27 +354,30 @@ namespace prjDB_GamingForm_Show.Controllers
                 return RedirectToAction("MyCollections", "Member");
             }
         }
-        //public IActionResult EditCollection(int? id)
-        //{
-        //    var data = from C in _db.MemberCollections 
-        //               where C.Id == id
-
-        //}
-        [HttpPost]
-        public IActionResult EditCollection(CMemberCollectionWrap memberCollection)
+        public IActionResult EditCollection(int? CId)
         {
-            MemberCollection dbCollection = _db.MemberCollections.FirstOrDefault
-                            (mc => mc.Id == memberCollection.ID);
+            MemberCollection memberCollection = _db.MemberCollections.First(m => m.Id == CId);
+                //new MemberCollection()
+            //{
+            //    MyCollection = _db.MemberCollections.Where(a => a.Id == CId).FirstOrDefault().
+            //};
+            return View(memberCollection);
+        }
+        [HttpPost]
+        public IActionResult EditCollection(MemberCollection memberCollection , int? CId)
+        {
+                            memberCollection = _db.MemberCollections.FirstOrDefault
+                            (mc => mc.Id == CId);
             if (memberCollection == null)
             {
                 return RedirectToAction("CreateCollection", "Member");
             }
             if (memberCollection != null)
             {
-                dbCollection.Title = memberCollection.Title;
-                dbCollection.Intro = memberCollection.Intro;
-                dbCollection.MyCollection = memberCollection.MyCollection;
-                dbCollection.ModifiedDate = (DateTime.Now).ToString();
+                memberCollection.Title = memberCollection.Title;
+                memberCollection.Intro = memberCollection.Intro;
+                memberCollection.MyCollection = memberCollection.MyCollection;
+                memberCollection.ModifiedDate = (DateTime.Now).ToString();
                 _db.SaveChanges();
             }
             return RedirectToAction("MyCollections", "Member");
