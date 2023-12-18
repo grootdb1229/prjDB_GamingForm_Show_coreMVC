@@ -862,9 +862,11 @@ namespace prjDB_GamingForm_Show.Controllers
         [HttpPost]
         public IActionResult BlogSubTagCreate(SubTag sub)
         {
-            _db.SubTags.Add(sub);
-            _db.SaveChanges();
-            return RedirectToAction("BlogCategoryList");
+
+                _db.SubTags.Add(sub);
+                _db.SaveChanges();
+                return RedirectToAction("BlogCategoryList");
+
         }
 
 
@@ -909,7 +911,26 @@ namespace prjDB_GamingForm_Show.Controllers
             _db.SubBlogs.Add(subblog);
             _db.SaveChanges();
 
+            //var art = new Article
+            //{
+            //    SubBlogId = subblog.SubBlogId,
+            //    Title = "歡迎來到" + bg.Title + "版",
+            //    ArticleContent = "歡迎來到此版，請理性討論，謝謝！",
+            //    ModifiedDate = DateTime.Now,
+            //    //MemberId = 
+            //    ViewCount = 1,
+            //    IsPinned = true,
+            //};
+
+
+
             return RedirectToAction("BlogList");
+        }
+
+        public IActionResult Blogsel(int? id) 
+        {
+            var blog = _db.Blogs.Where(b => b.SubTagId == id);
+            return Json(blog);
         }
 
 
@@ -1155,7 +1176,7 @@ namespace prjDB_GamingForm_Show.Controllers
 
 
 
-        public IActionResult BlogArticleComplainList(CKeyWordViewModel kyvm )
+        public IActionResult BlogArticleComplainList(CKeyWordViewModel kyvm, int? STId)
         {
 
             //CBlogViewModel vm = new CBlogViewModel();
@@ -1182,24 +1203,48 @@ namespace prjDB_GamingForm_Show.Controllers
 
             if (string.IsNullOrEmpty(kyvm.txtKeyWord))
             {
-                vm = new CBlogViewModel();
+                if (STId == null)
+                {
+                    vm = new CBlogViewModel();
 
-                _db.ArticleComplains.Where(a => a.Article.SubBlogId != 191).Include(p => p.SubTag).Load();  // 使用 Load 方法進行延遲載入
-                vm.articleComplain = _db.ArticleComplains.Local;  // 從本地集合中獲取載入的 ArticleComplains
+                    _db.ArticleComplains.Where(a => a.Article.SubBlogId != 191).Include(p => p.SubTag).Load();  // 使用 Load 方法進行延遲載入
+                    vm.articleComplain = _db.ArticleComplains.Local;  // 從本地集合中獲取載入的 ArticleComplains
 
-                _db.Articles.Include(p => p.SubBlog).ThenInclude(p => p.Blog).Include(p => p.Member).Load();  
-                vm.articles = _db.Articles.Local; 
+                    _db.Articles.Include(p => p.SubBlog).ThenInclude(p => p.Blog).Include(p => p.Member).Load();
+                    vm.articles = _db.Articles.Local;
 
-                _db.Members.Load();  
-                vm.members = _db.Members.Local; 
+                    _db.Members.Load();
+                    vm.members = _db.Members.Local;
 
-                _db.Statuses.Load();  
-                vm.status = _db.Statuses.Local;  
+                    _db.Statuses.Load();
+                    vm.status = _db.Statuses.Local;
 
-                _db.SubTags.Load();
-                vm.subTags = _db.SubTags.Local;
+                    _db.SubTags.Load();
+                    vm.subTags = _db.SubTags.Local;
 
-                return View(vm);
+                    return View(vm);
+                }
+                else 
+                {
+                    vm = new CBlogViewModel();
+
+                    _db.ArticleComplains.Where(a => a.Article.SubBlogId != 191 && a.SubTagId==STId).Include(p => p.SubTag).Load();  // 使用 Load 方法進行延遲載入
+                    vm.articleComplain = _db.ArticleComplains.Local;  // 從本地集合中獲取載入的 ArticleComplains
+
+                    _db.Articles.Include(p => p.SubBlog).ThenInclude(p => p.Blog).Include(p => p.Member).Load();
+                    vm.articles = _db.Articles.Local;
+
+                    _db.Members.Load();
+                    vm.members = _db.Members.Local;
+
+                    _db.Statuses.Load();
+                    vm.status = _db.Statuses.Local;
+
+                    _db.SubTags.Load();
+                    vm.subTags = _db.SubTags.Local;
+
+                    return View(vm);
+                }
             }
 
             else 
@@ -1304,13 +1349,13 @@ namespace prjDB_GamingForm_Show.Controllers
 
         public IActionResult BlogComplaintsByTag(int? STId) 
         {
-            _db.ChangeTracker.Entries().ToList().ForEach(entry => entry.State = EntityState.Detached);
+            //_db.ChangeTracker.Entries().ToList().ForEach(entry => entry.State = EntityState.Detached);
 
 
             CBlogViewModel vm = new CBlogViewModel();
 
-            _db.ArticleComplains.Where(a => a.Article.SubBlogId != 191 && a.SubTagId ==STId).Include(p => p.SubTag).Load();  // 使用 Load 方法進行延遲載入
-            vm.articleComplain = _db.ArticleComplains.Local;  // 從本地集合中獲取載入的 ArticleComplains
+            _db.ArticleComplains.Where(a => a.Article.SubBlogId != 191 && a.SubTagId ==STId).Include(p => p.SubTag).Load();  
+            vm.articleComplain = _db.ArticleComplains.Local;  
 
             _db.Articles.Include(p => p.SubBlog).ThenInclude(p => p.Blog).Include(p => p.Member).Load();
             vm.articles = _db.Articles.Local;

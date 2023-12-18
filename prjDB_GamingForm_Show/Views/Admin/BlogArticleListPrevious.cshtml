@@ -47,8 +47,27 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.SubBlog.Blog.Title)
                 </td>
+
                 <td>
-                    @Html.ActionLink("查看文章內容", "ArticleContent", "Blog", new { FId = item.SubBlog.Blog.BlogId , AFId = item.ArticleId}, new { @class = "btn btn-dark", target = "_blank" })
+                    @Html.ActionLink("查看文章內容", "ArticleContent", "Blog", new { FId = item.SubBlog.Blog.BlogId , AFId = item.ArticleId}, new { @class = "btn btn-dark" , target = "_blank"})
+                </td>
+                @{
+                    if (item.IsPinned == false)
+                    {
+                        <td>
+                            @Html.ActionLink("設為置頂", "BlogArticleTop", "Admin", new { AFId = item.ArticleId}, new { @class = "btn btn-info" })
+                        </td>
+                    }
+                    else
+                    {
+                        <td>
+                            @Html.ActionLink("取消置頂", "BlogArticleTopCancel", "Admin", new { AFId = item.ArticleId}, new { @class = "btn btn-warning" })
+                        </td>
+                    }
+
+                }
+                <td>
+                    @Html.ActionLink("刪除", "BlogArticleDelete", "Admin", new { AFId = item.ArticleId}, new { @class = "btn btn-danger" })
                 </td>
             </tr>
         }
