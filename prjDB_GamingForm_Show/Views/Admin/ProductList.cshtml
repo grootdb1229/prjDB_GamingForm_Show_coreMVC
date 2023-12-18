@@ -33,9 +33,6 @@
                 最後更新日期
             </th>
             <th>
-                商品庫存
-            </th>
-            <th>
                 商品狀態
             </th>
             <th>
@@ -77,9 +74,6 @@
                         @d
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.UnitStock)
-                    </td>
-                    <td>
                         @s
                     </td>
                     <td>
@@ -87,10 +81,42 @@
                     </td>
                     <td>
                         @Html.ActionLink("商品上/下架", "ProductStatusEdit", "Admin", new {  id=item.ProductId  }, new {onclick = "return confirm('確定上/下架嗎?')",@class = "btn btn-dark" })
-                        @Html.ActionLink("詳細資料", "ProsuctDetails","Admin", new { /* id=item.PrimaryKey */ },new  { @class = "btn btn-dark" } )
+                        <button type="button" class="btn btn-dark status" onclick="ProductDetail(@Html.DisplayFor(modelItem => item.ProductId))">商品詳情</button>
                     </td>
                 </tr>
             }
         }
     </tbody>
 </table>
+<script>
+
+    async function ProductDetail(value) {
+
+        // Swal.fire(`You selected: ${status}`);
+        $.ajax('@Url.Content("~/Shop/ProductInfo")', {
+            "type": 'post', //POST、PUT、DELETE//
+            "data": {
+                "id": value,
+            },
+            "dataType": "json"
+        })
+            .done((data) => {
+                Swal.fire({
+                    title: `<strong>商品詳細資訊:</strong>`,
+                    html: `
+                                        <img src="../images/shop/${data[0].fImagePath}" alt="..." style="height:25vh; " /></br>
+                                        <b>商品編號:</b><p>${data[0].productId}</p></br>
+                                        <b>商品名稱:</b><p>${data[0].productName}</p></br>
+                                        <b>上架會員編號:</b><p>${data[0].memberId}</p></br>
+                                        <b>價格:</b><p>${data[0].price}</p></br>
+                                        <b>商品描述:</b><p>${data[0].productContent}</p></br>
+
+                              `,
+                    showCloseButton: true,
+                    showCancelButton: true,
+
+                });
+
+            })
+    }
+</script>

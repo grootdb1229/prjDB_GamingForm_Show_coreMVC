@@ -28,6 +28,8 @@ using Azure;
 using Microsoft.AspNetCore.Http.Extensions;
 using Org.BouncyCastle.Ocsp;
 using System.Collections;
+using OpenAI_API;
+using OpenAI_API.Models;
 
 namespace prjDB_GamingForm_Show.Controllers
 {
@@ -524,7 +526,8 @@ namespace prjDB_GamingForm_Show.Controllers
         #endregion
 
         #region 老邊
-        
+
+        #region notAPI
         public IActionResult Create()
         {
             //判斷是否被封鎖
@@ -748,34 +751,35 @@ namespace prjDB_GamingForm_Show.Controllers
                 return Json(new { success = false, message = ex.Message });
             }
         }
+        #endregion
 
         #region API
 
-        //private async Task<string> ChatAsync()
-        //{
-        //    OpenAIAPI api = new OpenAIAPI("");
-        //    var chat = api.Chat.CreateConversation();
-        //    chat.Model = Model.ChatGPTTurbo;
-        //    chat.RequestParameters.Temperature = 0.6;
+        private async Task<string> ChatAsync()
+        {
+            OpenAIAPI api = new OpenAIAPI("");
+            var chat = api.Chat.CreateConversation();
+            chat.Model = Model.ChatGPTTurbo;
+            chat.RequestParameters.Temperature = 0.6;
 
-        //    chat.AppendSystemMessage("你將看到包含委託主題及委託內容的委託需求，" +
-        //        "你的工作是提供以下列表中的一組標籤以JSON形式提供你的答案，" +
-        //        "僅從此提供的標籤清單中選擇(選擇至少5項skill):\r\n" +
-        //        "skillclass：程式\r\n繪畫\r\n音樂\r\n動畫" +
-        //        "skill：Csharp\r\nHtml\r\nCss\r\nLINQ\r\nADONET\r\nSQL\r\nJS\r\n電繪\r\n手繪\r\n水彩\r\n油畫\r\nJava\r\nPython\r\nPHP\r\nRuby\r\nASP.NET\r\nSwift\r\nKotlin\r\nReact\r\nSolidity\r\nSelenium\r\nJUnit\r\n電子\r\n搖滾\r\n古典\r\n爵士\r\n民族\r\n流行\r\n懸疑\r\n環境\r\n8位元\r\n16位元\r\nMaya\r\nPhotoShop\r\nPreminum");
-        //    chat.AppendUserInput("標題：\r\n12/16 ios app逆向工程\r\n內容：\r\n【幫忙事項】：ios app逆向工程 編碼及轉換16進位碼\r\n【注意事項】： 無");
-        //    return await chat.GetResponseFromChatbotAsync();
-        //    //Console.WriteLine(response);
-        //    //foreach (ChatMessage msg in chat.Messages)
-        //    //{
-        //    //    Console.WriteLine($"{msg.Role}: {msg.Content}");
-        //    //}
-        //}
-        //public async Task<IActionResult> Test2Async()
-        //{
-        //    var response = await ChatAsync();
-        //    return Content(response);
-        //}
+            chat.AppendSystemMessage("你將看到包含委託主題及委託內容的委託需求，" +
+                "你的工作是提供以下列表中的一組標籤以JSON形式提供你的答案，" +
+                "僅從此提供的標籤清單中選擇(選擇至少5項skill):\r\n" +
+                "skillclass：程式\r\n繪畫\r\n音樂\r\n動畫" +
+                "skill：Csharp\r\nHtml\r\nCss\r\nLINQ\r\nADONET\r\nSQL\r\nJS\r\n電繪\r\n手繪\r\n水彩\r\n油畫\r\nJava\r\nPython\r\nPHP\r\nRuby\r\nASP.NET\r\nSwift\r\nKotlin\r\nReact\r\nSolidity\r\nSelenium\r\nJUnit\r\n電子\r\n搖滾\r\n古典\r\n爵士\r\n民族\r\n流行\r\n懸疑\r\n環境\r\n8位元\r\n16位元\r\nMaya\r\nPhotoShop\r\nPreminum");
+            chat.AppendUserInput("標題：\r\n12/16 ios app逆向工程\r\n內容：\r\n【幫忙事項】：ios app逆向工程 編碼及轉換16進位碼\r\n【注意事項】： 無");
+            return await chat.GetResponseFromChatbotAsync();
+            //Console.WriteLine(response);
+            //foreach (ChatMessage msg in chat.Messages)
+            //{
+            //    Console.WriteLine($"{msg.Role}: {msg.Content}");
+            //}
+        }
+        public async Task<IActionResult> Test2Async()
+        {
+            var response = await ChatAsync();
+            return Content(response);
+        }
         public IActionResult test()
         {
             return Content("123");
@@ -870,6 +874,7 @@ namespace prjDB_GamingForm_Show.Controllers
 
         public IActionResult changeDeputeRecordStatus(string jsonString)
         {
+            //partialrelease使用3處
             CDeputeViewModel vm = JsonSerializer.Deserialize<CDeputeViewModel>(jsonString);
 
             var deputeRecord = _db.DeputeRecords.FirstOrDefault(_ => _.Id == vm.id);
@@ -907,7 +912,7 @@ namespace prjDB_GamingForm_Show.Controllers
                 deputeContent = depute.DeputeContent,
                 recordStatus = deputeRecord.ApplyStatus.Name,
                 progress = CDictionary.PROGRESS_委託者決定合作
-            };           
+            };
             SendDeputeEmail(content);
             foreach (var item in otherRecords)
             {
@@ -939,6 +944,7 @@ namespace prjDB_GamingForm_Show.Controllers
             {
                 CDeputeViewModel n = new CDeputeViewModel();
                 n.id = item.Id;
+                n.workerId = item.MemberId;
                 n.title = item.Depute.Title;
                 n.count = o.Count();
                 n.status = item.ApplyStatus.Name;
@@ -1047,6 +1053,7 @@ namespace prjDB_GamingForm_Show.Controllers
                 .Where(_ => _.ProviderId == HttpContext.Session.GetInt32(CDictionary.SK_UserID))
                 .Select(depute => new
                 {
+                    RunCount = depute.DeputeRecords.Count(_ => _.ApplyStatusId == 10),
                     ApplyCount = depute.DeputeRecords.Count(_ => _.ApplyStatusId == 5),
                     ReplyCount = depute.DeputeRecords.Count(_ => _.ApplyStatusId == 25),
                     ComCount = depute.DeputeRecords.Count(_ => _.ApplyStatusId == 16),
@@ -1062,14 +1069,15 @@ namespace prjDB_GamingForm_Show.Controllers
             var datas = new CDeputeOverViewModel();
             foreach (var item in release)
             {
-                datas.ApplyCount += item.ApplyCount;
-                datas.ReplyCount += item.ReplyCount;
-                datas.ComCount += item.ComCount;
+                datas.runCount += item.RunCount;
+                datas.applyCount += item.ApplyCount;
+                datas.replyCount += item.ReplyCount;
+                datas.comCount += item.ComCount;
             }
-            datas.NewCount = receive.Count(_ => _.ApplyStatusId == 9);
-            datas.RunCount = receive.Count(_ => _.ApplyStatusId == 10 || _.ApplyStatusId == 20);
-            datas.CofirmCount = receive.Count(_ => _.ApplyStatusId == 25);
-            datas.MemberComCount = receive.Count(_ => _.ApplyStatusId == 16);
+            datas.workerNewCount = receive.Count(_ => _.ApplyStatusId == 9);
+            datas.workerRunCount = receive.Count(_ => _.ApplyStatusId == 10 || _.ApplyStatusId == 20);
+            datas.workerCofirmCount = receive.Count(_ => _.ApplyStatusId == 25);
+            datas.workerComCount = receive.Count(_ => _.ApplyStatusId == 16);
 
             return PartialView(datas);
         }

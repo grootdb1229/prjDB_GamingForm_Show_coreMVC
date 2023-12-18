@@ -25,6 +25,8 @@ public partial class Order
 
     public decimal SumPrice { get; set; }
 
+    public string? Ecid { get; set; }
+
     public virtual Coupon? Coupon { get; set; }
 
     public virtual Member? Member { get; set; }

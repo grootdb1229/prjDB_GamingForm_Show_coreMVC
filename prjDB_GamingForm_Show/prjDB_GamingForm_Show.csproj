@@ -4,6 +4,7 @@
     <TargetFramework>net7.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>cbdb79cd-6497-41e2-b31e-ca8a2ba38e91</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -27,6 +28,14 @@
     <Content Remove="C:\Users\User\.nuget\packages\bootstrap\5.3.2\contentFiles\any\any\wwwroot\js\bootstrap.min.js" />
     <Content Remove="C:\Users\User\.nuget\packages\bootstrap\5.3.2\contentFiles\any\any\wwwroot\js\bootstrap.min.js.map" />
     <Content Remove="wwwroot\js\bootstrap.min.js" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Properties\serviceDependencies.json" />
+    <None Remove="Properties\serviceDependencies.local.json" />
+    <None Remove="Properties\serviceDependencies.prjDBGamingFormShow20231215114758 - Web Deploy.json" />
+    <None Remove="Properties\serviceDependencies.prjDBGamingFormShow20231216150037 - Web Deploy.json" />
+    <None Remove="Properties\serviceDependencies.prjDBGamingFormShow20231218161049 - Web Deploy.json" />
   </ItemGroup>
 
   <ItemGroup>

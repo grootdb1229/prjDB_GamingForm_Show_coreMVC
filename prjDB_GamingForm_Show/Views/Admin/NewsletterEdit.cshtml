@@ -1,63 +1,96 @@
-﻿@model prjDB_GamingForm_Show.Models.Entities.MemberCollection
+﻿@model prjDB_GamingForm_Show.Models.Shop.CNewsLetter
+<h2>NewsletterEdit</h2>
 
 @{
-    ViewData["Title"] = "EditCollection";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "NewsletterEdit";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 <script src="~/ckeditor5-build-classic/ckeditor.js"></script>
-
-@section Styles
-{
+<link rel="stylesheet" href="~/css/blogstyle.css" type="text/css">
+@section Styles {
     <style>
+        input {
+            margin: 3px 0px;
+        }
+
+        label {
+            margin: 3px 0px;
+        }
+
+        a {
+            text-decoration: none
+        }
+
         .ck {
             height: 400px;
         }
 
-        .ck-content {
+        .ck-editor__editable {
             color: black
+        }
+
+        input {
+            margin: 3px
         }
     </style>
 }
-<h2>修改作品</h2>
+<header class="header-section">
+    <div class="nav-options">
+        <div class="container">
+            <div class="nav-menu">
+                <ul>
+                    <li>
+                        @Html.ActionLink("取消", "Newsletter", "Admin", null, null)
+                        @*   @Html.ActionLink("回到文章", "ArticleContent", "Blog", new { AFId = Model.articles.FirstOrDefault().ArticleId, FId = Model.blogs.FirstOrDefault().BlogId }, new
+                        {
+                        @class = "btn btn-warning"
+                        })
+                        *@
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
 
-<h4>請輸入新的資料</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-       @*  <input type="hidden" name="CId" value=@Model.Id /> *@
-        <form asp-action="EditCollection">
-            <input type="hidden" name="Id" value=@Model.Id />
-            <input type="hidden" name="MemberId" value=@Model.MemberId />
+</header>
+
+
+<div class="row" style="margin:10px auto;width:650px;background-color:#4F4F4F">
+    <div class="col-md-12" style="background-color:#4F4F4F;border-radius:8px;box-shadow:0px 0px 8px 8px #cccccc">
+        <div>
+            <h2 style="text-align:center;margin:10px auto;color:whitesmoke;border-bottom:dotted">更改電子報</h2>
+        </div>
+        <form asp-action="NewsletterEdit" method="post" onsubmit="return validateForm()">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <input type="hidden" name="Id" value="@Model.Id" />
+
             <div class="form-group">
-                <label asp-for="Title" class="control-label"></label>
-                <input asp-for="Title" class="form-control" />
+                <label class="control-label">電子報標題</label>
+                <input asp-for="Title" class="form-control" id="articleTitle" />
                 <span asp-validation-for="Title" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Intro" class="control-label"></label>
-                <input asp-for="Intro" class="form-control" />
-                <span asp-validation-for="Intro" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="MyCollection" class="control-label"></label>
-                <textarea id="editor" name="MyCollection">@Model.MyCollection</textarea>
-            </div>
-            <div class="form-group">
-                <label asp-for="ModifiedDate" class="control-label"></label>
-                <input asp-for="ModifiedDate" class="form-control" />
-                <span asp-validation-for="ModifiedDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="修改並送出" class="btn btn-default" />
+            <label>文章內容</label>
+            <textarea asp-for="HtmlContent" name="HtmlContent" id="editor" style="resize:none; height:700px; width: 100%;color:black">
+
+            </textarea>
+
+            <div class="form-group column" style="margin-top:4px;display: flex; justify-content: space-between;">
+               @* <span style="margin-top:3px">
+                    @Html.ActionLink("回到文章", "ArticleContent", "Blog", new { AFId = Model.articles.FirstOrDefault().ArticleId, FId = Model.blogs.FirstOrDefault().BlogId }, new
+                    {
+                    @class = "btn btn-warning"
+                    })
+                </span>*@
+                <span>
+                    <input type="submit" value="修改" class="btn btn-default" />
+                </span>
+
             </div>
         </form>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">回到會員首頁</a>
-</div>
 
 @section Scripts {
 
@@ -70,10 +103,9 @@
                     mediaEmbed: {
                         previewsInData: true
                     }
-
                 }).then(editor => {
-                    // 在控制台中輸出所有可用的工具列項目名稱
-                    console.log(Array.from(editor.ui.componentFactory.names()));
+                    // 獲取 CKEditor 實例，你可以在這裡保存或使用它
+                    window.ckeditorInstance = editor;
                 })
                 .catch(error => {
                     console.log(error);
@@ -218,12 +250,14 @@
                 return new MyUploadAdapter(loader);
             };
         }
-
         function validateForm() {
             var title = document.getElementById('articleTitle').value;
-            var content = document.querySelector('textarea').value;
+            var editor = window.ckeditorInstance;
 
-            if (title == '' || content == '') {
+            // 獲取編輯器內容
+            var content = editor.getData();
+
+            if (title.trim() == '' || content.trim() == '') {
                 alert('文章標題和內容不能為空！');
                 return false; // 取消表單提交
             }
@@ -231,19 +265,5 @@
             return true; // 允許表單提交
         }
 
-        function previewImage(input) {
-            var imagePreview = document.getElementById('imagePreview');
-
-            if (input.files[0]) {
-                var reader = new FileReader();
-
-                reader.onload = function (e) {
-                    imagePreview.src = e.target.result;
-                    imagePreview.style.display = 'block';
-                };
-
-                reader.readAsDataURL(input.files[0]);
-            }
-        }
     </script>
 }
