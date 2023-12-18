@@ -217,11 +217,16 @@
                         confirmButtonColor: '#3085d6',
                         cancelButtonText: '留在本頁',
                         cancelButtonColor: '#d33'
-                    }).then(() => { window.location.href = "/Shop/CarView" })
+                    }).then((result) => {
+                        // 根据用户的选择进行跳转
+                        if (result.isConfirmed) {
+                            window.location.href = "/Shop/CarView";
+                        }
+                    });
                 },
                 "error": function (xhr) { Swal.fire('已有此商品', result.message, 'error'); }
-            })
-
+            });
+            getcarList();
         }
         //PartialView
         function loadCarousel() {

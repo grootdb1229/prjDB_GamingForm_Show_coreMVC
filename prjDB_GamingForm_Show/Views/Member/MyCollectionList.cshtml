@@ -25,8 +25,11 @@
                         </div>
                         <div class="card-footer">
                             <small class="text-muted">@Html.DisplayFor(modelItem => item.ModifiedDate)</small>
-                            <button class="btn-bd-primary">修改作品</button>
-                            <button class="btn-bd-primary">刪除作品</button>
+                            <a class="btn btn-warning" href="/Member/EditCollection?Cid=@item.Id" >修改作品</a>
+                            @Html.ActionLink("修改作品", "EditCollection", "Member", new { CId = item.Id }, new { @class ="btn btn-warning" })
+                            <button class="btn btn-warning" href="@Url.Action("EditCollection","Member" , new{CId =item.Id} ,null)">修改作品</button>
+                            <button class="btn btn-danger">刪除作品</button>
+                            <button class="btn btn-info">作品資料</button>
                         </div>
                     </div>
                 </div>
@@ -39,8 +42,9 @@
                         </div>
                         <div class="card-footer">
                             <small class="text-muted">@Html.DisplayFor(modelItem => item.ModifiedDate)</small>
-                            <button class="btn-bd-primary">修改作品</button>
-                            <button class="btn-bd-primary">刪除作品</button>
+                            <button class="btn btn-warning">修改作品</button>
+                            <button class="btn btn-danger">刪除作品</button>
+                            <button class="btn btn-info">作品資料</button>
                         </div>
                     </div>
                 </div>
@@ -53,8 +57,9 @@
                         </div>
                         <div class="card-footer">
                             <small class="text-muted">@Html.DisplayFor(modelItem => item.ModifiedDate)</small>
-                            <button class="btn-bd-primary">修改作品</button>
-                            <button class="btn-bd-primary">刪除作品</button>
+                            <button class="btn btn-warning">修改作品</button>
+                            <button class="btn btn-danger">刪除作品</button>
+                            <button class="btn btn-info">作品資料</button>
                         </div>
                     </div>
                 </div>
@@ -67,8 +72,9 @@
                         </div>
                         <div class="card-footer">
                             <small class="text-muted">@Html.DisplayFor(modelItem => item.ModifiedDate)</small>
-                            <button class="btn-bd-primary">修改作品</button>
-                            <button class="btn-bd-primary">刪除作品</button>
+                            <button class="btn btn-warning">修改作品</button>
+                            <button class="btn btn-danger">刪除作品</button>
+                            <button class="btn btn-info">作品資料</button>
                         </div>
                     </div>
                 </div>
@@ -81,8 +87,9 @@
                         </div>
                         <div class="card-footer">
                             <small class="text-muted">@Html.DisplayFor(modelItem => item.ModifiedDate)</small>
-                            <button class="btn-bd-primary">修改作品</button>
-                            <button class="btn-bd-primary">刪除作品</button>
+                            <button class="btn btn-warning">修改作品</button>
+                            <button class="btn btn-danger">刪除作品</button>
+                            <button class="btn btn-info">作品資料</button>
                         </div>
                     </div>
                 </div>
@@ -95,8 +102,9 @@
                         </div>
                         <div class="card-footer">
                             <small class="text-muted">@Html.DisplayFor(modelItem => item.ModifiedDate)</small>
-                            <button class="btn-bd-primary">修改作品</button>
-                            <button class="btn-bd-primary">刪除作品</button>
+                            <button class="btn btn-warning">修改作品</button>
+                            <button class="btn btn-danger">刪除作品</button>
+                            <button class="btn btn-info">作品資料</button>
                         </div>
                     </div>
                 </div>
@@ -109,8 +117,9 @@
                         </div>
                         <div class="card-footer">
                             <small class="text-muted">@Html.DisplayFor(modelItem => item.ModifiedDate)</small>
-                            <button class="btn-bd-primary">修改作品</button>
-                            <button class="btn-bd-primary">刪除作品</button>
+                            <button class="btn btn-warning">修改作品</button>
+                            <button class="btn btn-danger">刪除作品</button>
+                            <button class="btn btn-info">作品資料</button>
                         </div>
                     </div>
                 </div>
