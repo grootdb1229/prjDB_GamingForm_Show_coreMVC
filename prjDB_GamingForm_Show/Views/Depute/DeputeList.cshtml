@@ -37,7 +37,7 @@
             display: flex;
             align-items: flex-end;
         }
-
+        
     </style>
 </head>
 
@@ -168,11 +168,11 @@
     @{
         if (Model.Count() == 0)
         {
-            <h1 id="totalcount" class="text-center mb-5 wow fadeInUp" data-wow-delay="0.1s">懸賞清單</h1>
+                                <h1 id="totalcount" class="text-center mb-5 wow fadeInUp" data-wow-delay="0.1s">懸賞清單</h1>
         }
         else
         {
-            <h1 id="totalcount" class="text-center mb-5 wow fadeInUp" data-wow-delay="0.1s">相關結果共@(Model.Count())筆</h1>
+                                <h1 id="totalcount" class="text-center mb-5 wow fadeInUp" data-wow-delay="0.1s">相關結果共@(Model.Count())筆</h1>
         }
     }
     
@@ -224,7 +224,7 @@
                                 </div>
                                 <div class="col-sm-12 col-md-4 d-flex flex-column align-items-start align-items-md-end justify-content-center">
                                     <div class="d-flex mb-3">
-                                        <a class="btn btn-light btn-square me-3" href=""><i class="far fa-heart text-primary"></i></a>
+                                        <a class="btn btn-light btn-square me-3" href="/Depute/Fav/@Html.DisplayFor(modelItem => item.id)"><i class="far fa-heart text-primary"></i></a>
                                         @Html.ActionLink("詳細", "DeputeDetails", "Depute", new { id = item.id }, new { @class = "btn btn-primary" })
                                         @Html.ActionLink("我要應徵", "Apply", "Depute", new { id = item.id }, new { @class = "btn btn-primary" })
                                     </div>
@@ -295,6 +295,7 @@
                             $('#loadtags').append(tag)
                         }
                         MutiSearch(keyword);
+                        loadRegion();
                         loadSkill(checkID);
 
 
@@ -356,12 +357,12 @@
             })
                 .done((data) => {
                     const RegionFrag = $(document.createDocumentFragment());
-                    const Regions = data.map(Regions =>
+                    const Regions = data.map(citydata =>
                         `
                                                         <div class="col order-12">
-                                                        <input class="form-check-input region" type="checkbox" id="${Regions.city}-1" value="${Regions.city}" name="${Regions.city}">
-                                                        <label class="form-check-label" for="${Regions.city}-1">
-                                                         ${Regions.city}
+                                                                                <input class="form-check-input region" type="checkbox" id="${citydata}-1" value="${citydata}" name="${citydata}">
+                                                                <label class="form-check-label" for="${citydata}-1">
+                                                                 ${citydata}
                                                         </label>
                                                         </div>
                                                          `
@@ -490,7 +491,7 @@
                                                                         </div>
                                                                         <div class="col-sm-12 col-md-4 d-flex flex-column align-items-start align-items-md-end justify-content-center">
                                                                         <div class="d-flex mb-3">
-                                                                        <a class="btn btn-light btn-square me-3" href=""><i class="far fa-heart text-primary"></i></a>
+                                                                                <a class="btn btn-light btn-square me-3" href="#" onclick=SetFav(${resultlist.id})><i class="far fa-heart text-primary"></i></a>
                                                                                 <a href="/Depute/DeputeDetails/${resultlist.id}" class="btn btn-primary "id=" btndp">詳細...</a>
                                                                                 <a href="/Depute/Apply/${resultlist.id}" class="btn btn-primary" id=" btndp">我要應徵...</a>
                                                                         </div>
@@ -502,13 +503,14 @@
                     )
                     lstFrag.append(resultlist);
                     $('#resultlist').html(lstFrag);
-                    pagination.addEventListener('click', event => {
-                        event.preventDefault()
-                        if (event.target.tagName === 'A') {
-                            getPageData(event.target.dataset.page, data)
-                        }
-                    })
-                    getTotalPages(data);
+                    // pagination.addEventListener('click', event => {
+                    //     event.preventDefault()
+                    //     if (event.target.tagName === 'A') {
+                    //         getPageData(event.target.dataset.page, data)
+                    //     }
+                    // })
+                    // getTotalPages(data);
+                    pageMove(data);
                 })
         }
         function loadHotkey() {
@@ -529,7 +531,36 @@
                 })
         }
 
+        function SetFav(value) {
+            $.ajax('@Url.Content("~/Depute/Fav")', {
+                "type": 'Post', //POST、PUT、DELETE
+                "data": { "id": value },
+                "dataType": "text"
+            })
+                .done((data) => 
+                {
+                    if (data == "Succeed") {
+                        Swal.fire({
+                            icon: "success",
+                            title: "已加入我的最愛",
+                            showConfirmButton: false,
+                            timer: 1500
+                        });
+                    }
+                    else 
+                    { 
+                        Swal.fire({
+                            icon: "success",
+                            title: "已從我的最愛移除",
+                            showConfirmButton: false,
+                            timer: 1500
+                        });
 
+                    }
+                
+                })
+            
+        }
 
         //舊式寫法
         // function loadList(hotkey) {
@@ -719,8 +750,17 @@
     </script>
 
     <script>
+        function pageMove(value) {
 
-
+            pagination.addEventListener('click', event => {
+                event.preventDefault()
+                if (event.target.tagName === 'A') {
+                    getPageData(event.target.dataset.page, value)
+                }
+            })
+            getTotalPages(value);
+        
+        }
 
         //計算總共頁數
         function getTotalPages(choiceMovies) {
@@ -765,7 +805,7 @@
                                                                                 </div>
                                                                                 <div class="col-sm-12 col-md-4 d-flex flex-column align-items-start align-items-md-end justify-content-center">
                                                                                 <div class="d-flex mb-3">
-                                                                                <a class="btn btn-light btn-square me-3" href=""><i class="far fa-heart text-primary"></i></a>
+                                                                                        <a class="btn btn-light btn-square me-3" href="#" onclick=SetFav(${resultlist.id})><i class="far fa-heart text-primary"></i></a>
                                                                                         <a href="/Depute/DeputeDetails/${resultlist.id}" class="btn btn-primary "id=" btndp">詳細...</a>
                                                                                         <a href="/Depute/Apply/${resultlist.id}" class="btn btn-primary" id=" btndp">我要應徵...</a>
                                                                                 </div>

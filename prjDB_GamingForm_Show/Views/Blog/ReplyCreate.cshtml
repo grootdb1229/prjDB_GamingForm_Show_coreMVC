@@ -51,7 +51,7 @@
         <h2 style ="text-align:center;margin:10px auto;color:whitesmoke;border-bottom:dotted">
             回復發表</h2>
         <div class="col-md-12" style="margin:10px 0">
-            <form asp-action="ReplyCreate" method="post">
+            <form asp-action="ReplyCreate" method="post" onsubmit="return validateForm()">
                 <input type="hidden" name="ArticleId" value=" @Model.articles.First().ArticleId" />
                 <input type="hidden" name="AFId" value=" @Model.articles.First().ArticleId" />
                 <input type="hidden" name="FId" value=" @Model.blogs.FirstOrDefault().BlogId" />                
@@ -234,7 +234,17 @@
                 return new MyUploadAdapter(loader);
             };
         }
+        function validateForm() {
 
+            var content = document.querySelector('textarea').value;
+
+            if (content.trim() == '') {
+                alert('內容不能為空！');
+                return false; // 取消表單提交
+            }
+
+            return true; // 允許表單提交
+        }
 
     </script>
 }

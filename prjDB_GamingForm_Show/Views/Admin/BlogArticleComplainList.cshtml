@@ -25,24 +25,56 @@
     </style>
 }
 <head>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.8/clipboard.min.js"></script>
+    @*<link rel="stylesheet" href="~/css/bootstrap.min.css" type="text/css">*@
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    @*<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />*@
+    <script src="~/js/bootstrap.min.js"></script>
+
+
+    @*<link href="~/css/styles.css" rel="stylesheet" />*@
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    @*<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">*@
+    @*<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.8/clipboard.min.js"></script>
     <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-pzjw8BO+DqSnC6xBg8yIcWHPXzxJsKn3XA2Tlkg8r7U5MDzY1ra2Qx54Vl8iIYiC" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-eZt+q1LQ4lO/dZ7JkqUy5m4qGu2zTpuKQFq6wC2FKeWBqy0i+xn2dOQ6BQFuMI6B" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-eZt+q1LQ4lO/dZ7JkqUy5m4qGu2zTpuKQFq6wC2FKeWBqy0i+xn2dOQ6BQFuMI6B" crossorigin="anonymous"></script>*@
 </head>
+
 
 <h2>檢舉清單</h2>
 
+
+@*<select id="selCom" name="SCId" style="margin-top:3px;width:200px;" onchange="filterComplains()">
+    <option>請選擇違規分類</option>
+    @{
+        foreach (var type in Model.subTags.Where(s => s.TagId == 6))
+        {
+            <option value="@type.SubTagId"> @type.Name</option>
+        }
+    }
+</select>*@
+
+@using (Html.BeginForm())
+{
+    <p style="display:inline;font-size:25px;margin-left:5px;margin-right:10px">關鍵字查詢 : </p> @Html.TextBox("txtKeyWord",null,new{@class = "col-form-label"})
+    <input type="submit" value="查詢" class="btn btn-dark" />
+}
 
 
 <table class="table table-dark table-hover" style="color:white ; font-size:20px">
     <thead>
         <tr>
             <th>
-                檢舉文章編號
+                檢舉人ID
             </th>
             <th>
-                檢舉會員編號
+                被檢舉人ID
+            </th>
+            <th>
+                被檢舉人狀態
+            </th>
+            <th>
+                檢舉類型
             </th>
             <th>
                 檢舉內容
@@ -50,21 +82,49 @@
             <th>
                 檢舉時間
             </th>
-            <th>
-                檢舉類型
-            </th>
-            <th></th>
         </tr>
     </thead>
     <tbody>
         @foreach (var item in Model.articleComplain)
         {
+            int memberId;
+            <input type="hidden" id="@item.Id" name="APId" value="@item.Id" />
+            <input type="hidden" name="AFId" id="@item.ArticleId" value="@item.ArticleId" />
+
             <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => item.ArticleId)
+                    @Html.DisplayFor(modelItem => item.MemberId)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.MemberId)
+                    @{
+                        memberId = Model.articles
+                        .Where(a => a.ArticleId == item.ArticleId)
+                        .Select(a => a.MemberId)
+                        .FirstOrDefault();
+                    }
+                    @memberId
+                </td>
+                <td>
+                    @{
+                        var queryResult = Model.articles
+                        .Where(a => a.ArticleId == item.ArticleId)
+                        .Join(
+                        Model.members,
+                        article => article.MemberId,
+                        member => member.MemberId,
+                        (article, member) => new { Article = article, Member = member }
+                        )
+                        .Select(result => new { result.Member.StatusId })
+                        .FirstOrDefault();
+
+                        var StName = Model.status.Where(a => a.StatusId == queryResult.StatusId).Select(a => new { a.Name }).FirstOrDefault();
+
+                    }
+                    @StName?.Name
+                </td>
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.SubTag.Name)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.ReportContent)
@@ -73,13 +133,112 @@
                     @Html.DisplayFor(modelItem => item.ReportDate)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.SubTag.Name)
+                    @Html.ActionLink("查看文章", "ArticleContent", "Blog", new { AFId = Model.articles.First().ArticleId , FId = Model.articles.First().SubBlog.BlogId}, new { @class = "btn btn-info" })
+                    @*                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop" onclick="test(@item.Id,@item.ArticleId,@memberId)">
+                處理方式
+                </button>*@
+
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop" onclick="test(@item.Id,@item.ArticleId,@memberId, '@StName?.Name')">
+                        處理方式
+                    </button>
                 </td>
-                <td>
-                    @Html.ActionLink("文章內容", "ArticleContent", "Blog", new { AFId = Model.articles.First().ArticleId , FId = Model.articles.First().SubBlog.BlogId}, new { @class = "btn btn-info" })
-                </td>
+
             </tr>
         }
     </tbody>
 </table>
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title fs-5" id="staticBackdropLabel">訊息</h2>
+                @*<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>*@
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true"><i class="fas fa-times"></i></span>
+                </button>
+            </div>
+            <div class="modal-body">
+                此檢舉是否屬實
+                <br />
+                如屬實，請選擇懲處
+                <p id="memberStatus"></p>
+                <select id="selSta" name="SId" style="margin-top:3px;width:200px">
+                    @{                        
+                        foreach (var type in Model.status.Where(s => (s.StatusId >= 32 && s.StatusId <= 34) || s.StatusId == 26))
+                        {
+                            <option value="@type.StatusId">@type.StatusId @type.Name</option>
+                        }
+                    }
+                </select>
+            </div>
+
+            <div class="modal-footer">
+                <button id="btn_Yes" type="button" class="btn btn-danger" data-bs-dismiss="modal">檢舉成立，移除文章並懲處</button>
+                <button id="btn_No" type="button" class="btn btn-primary">檢舉不成立</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@* <input type="hidden" name="APId" value="@Model.articleComplain.FirstOrDefault().Id" />
+            <input type="hidden" name="ID" value="@Model.articleComplain.FirstOrDefault().Id" />
+
+            <input type="hidden" name="AFId" value=" @Model.articles.First().ArticleId" />*@
+
+
+@section Scripts
+    {
+    <script>
+        let Cid
+        let AFId
+        let MId
+        let MemberStatus
+
+        function test(id, Aid, Mid, status) {
+            Cid = id
+            AFId = Aid
+            MId = Mid
+            MemberStatus = status;
+
+            // 更新被檢舉會員當前的狀態
+            const statusDisplay = document.getElementById('memberStatus');
+            statusDisplay.innerHTML = `被檢舉會員當前狀態：${MemberStatus}`;
+        }
+
+        const btnNo = document.querySelector('#btn_No')
+        const btnYes = document.querySelector('#btn_Yes')
+
+        btnNo.addEventListener('click', () => {
+            fetch(`@Url.Content("~/Admin/BlogArticleComplainFail")?APId=${Cid}`)
+                .then(response => response.text())
+                .then(data => {
+                    $('#staticBackdrop').modal('hide');
+                    confirm(`${data}`);
+                    window.location.href = "/Admin/BlogArticleComplainList"
+                });
+        })
+
+        btnYes.addEventListener('click', () => {
+            // 將這一行放到事件監聽器內部
+            const StatusId = selSta.value;
+
+            fetch(`@Url.Content("~/Admin/BlogArticleComplainSusscess")?APId=${Cid}&AFId=${AFId}&MId=${MId}&SId=${StatusId}`)
+                .then(response => response.text())
+                .then(data => {
+                    $('#staticBackdrop').modal('hide');
+                    confirm(`${data}`);
+                    window.location.href = "/Admin/BlogArticleComplainList"
+                });
+        })
+    </script>
+    }
+
+
+
+
 

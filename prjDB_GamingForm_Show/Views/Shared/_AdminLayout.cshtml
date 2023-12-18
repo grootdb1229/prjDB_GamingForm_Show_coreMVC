@@ -13,6 +13,8 @@
 
     <!-- Bootstrap -->
     <link href="~/vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+
+
     <!-- Font Awesome -->
     <link href="~/vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
     <!-- NProgress -->
@@ -73,10 +75,11 @@
                                     </a>
                                     <ul class="nav child_menu">
                                         <li>@Html.ActionLink("商品清單", "ProductList", "Admin", null, new { @style = "font-size:15px" })</li>
-                                        <li><a href="~/form_advanced.html" style="font-size:15px">申訴處理</a></li>
+                                        <li>@Html.ActionLink("商品申訴", "ProductComplain", "Admin", null, new { @style = "font-size:15px" })</li>
                                         <li>@Html.ActionLink("新品審核", "ProductReview", "Admin", null, new { @style = "font-size:15px" })</li>
-                                        <li><a href="~/form_wizards.html" style="font-size:15px">廣告上架</a></li>
+                                        <li>@Html.ActionLink("廣告設定", "ShopADSetting", "Admin", null, new { @style = "font-size:15px" })</li>
                                         <li>@Html.ActionLink("優惠券設定", "CouponList", "Admin", null, new { @style = "font-size:15px" })</li>
+                                        <li>@Html.ActionLink("電子報設定", "Newsletter", "Admin", null, new { @style = "font-size:15px" })</li>
                                         @*<li><a href="~/form_buttons.html">Form Buttons</a></li>*@
                                     </ul>
                                 </li>
@@ -259,37 +262,9 @@
     </div>
 
     <!-- footer content -->
-    <footer>
-        @* <button onclick="showPV()">SignalR</button> *@
+    <footer>        
         <div id="test" style="display:none;position: absolute; bottom: 10px; right: 10px; z-index: 999;background-color:#6C6C6C ; opacity:0.95; border: 3px groove #000;border-radius:15px;color:#FFFFF4;text-align:center">
-            @* <h1>即時聊天範例</h1>
-
-            <div class="row">
-            <div class="col-8">
-            <h4>個人 ID: <span id="SelfID"></span></h4>
-            <div class="mb-3">
-            <label for="message" class="form-label">發送訊息</label>
-            <input type="text" class="form-control" id="message">
-            </div>
-            <div class="mb-3">
-            <label for="sendToID" class="form-label">指定 ID</label>
-            <input type="text" class="form-control" id="sendToID">
-            </div>
-            <button type="button" class="btn btn-primary" id="sendButton">傳送訊息</button>
-            </div>
-            <div class="col-4">
-            <h4>連線 ID 列表</h4>
-            <ul class="list-group" id="IDList">
-            </ul>
-            </div>
-            </div>
-            <div class="row mt-3">
-            <div class="col-12">
-            <h3>聊天內容</h3>
-            <div id="Content" style="height:150px ;max-height: 150px; overflow-y: auto;">
-            </div>
-            </div>
-            </div>*@
+            
         </div>
         <div id="AdminsChat" style="display:none;position: absolute; bottom: 10px; right: 300px; z-index: 999;background-color:#6C6C6C ; opacity:0.95; border: 3px groove #000;border-radius:15px;color:#FFFFF4"></div>
         <div class="pull-right">
@@ -341,15 +316,7 @@
             }
             else {
                 div.style.display = "none"; // 隱藏
-            }
-            // alert("1")
-            // var liToDelete = document.querySelectorAll('[data-li-name="uniqueName"]');
-            // alert("2")
-            // liToDelete.forEach(function (li) {
-            //     alert("3")
-            //     li.remove();
-            // });
-            // alert("4")
+            }           
         }
         $(document).ready(function () {
             $.ajax({
@@ -405,117 +372,7 @@
                                               </a>
                                          </div>
                                     </li>`;
-        })
-
-        
-
-        // var connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
-
-        // //與Server建立連線
-        // connection.start().then(function () {
-        //     console.log("Hub 連線完成");
-        // }).catch(function (err) {
-        //     alert('連線錯誤: ' + err.toString());
-        // });
-
-        // //更新連線 ID 列表事件
-        // connection.on("UpdList", function (jsonList) {
-        //     var list = JSON.parse(jsonList);
-        //     $("#IDList li").remove();
-        //     for (i = 0; i < list.length; i++) {
-        //         // //$("#IDList").append($("<li></li>").attr("class", "list-group-item").text(list[i]));
-        //         // var newListItem = $("<li>").attr("class", "list-group-item").text(list[i]);
-
-        //         // // 創建新的按鈕
-        //         // var newButton = $("<button>").attr("id", "button_" + i).text("Click Me");
-
-        //         // // 將按鈕添加到 <li> 元素中
-        //         // newListItem.append(newButton);
-
-        //         // // 將 <li> 元素添加到列表
-        //         // $("#IDList").append(newListItem);
-        //         updateUsersList(list);
-        //     }
-        // });
-        // async function updateUsersList(users) {
-        //     // 更新用戶列表的顯示
-        //     $("#test").load('@Url.Content("~/Admin/SignalRPV")');
-
-        //     // 更新管理者在線狀態
-        //     for (var i = 0; i < users.length; i++) {
-        //         await getAdminOnlineStatus(users[i]);
-        //     }
-        // }
-
-        // async function getAdminOnlineStatus(adminName) {
-        //     // 新增：呼叫 SignalR Hub 方法獲取管理者的在線狀態
-        //     connection.invoke("GetAdminOnlineStatus", adminName).then(function (isOnline) {
-        //         // 修改：觸發更新在線狀態的事件
-        //         connection.invoke("UpdateAdminOnlineStatus", adminName, isOnline);
-        //     });
-        // }
-        // connection.on("UpdAdminOnlineStatus", function (adminName, isOnline) {
-        //     // 根據管理者名稱和在線狀態更新前端顯示
-        //     var statusId = `#onlineStatus_${adminName}`;
-        //     $(statusId).html(isOnline ? "在線" : "離線");
-        // });
-
-        // 更新用戶個人連線 ID 事件
-        // connection.on("UpdSelfID", function (userName) {
-        //     $('#SelfID').html(userName);
-        // });
-
-        // 更新聊天內容事件
-        // connection.on("UpdContent", function (msg) {
-        //     var messageBlock = document.getElementById("Content");
-
-        //     // 創建一個新的 <p> 元素
-        //     var newMessage = document.createElement("p");
-        //     // 設定新元素的內容為用戶傳遞的訊息
-        //     newMessage.innerText = msg;
-
-        //     // 將新元素加入訊息區塊
-        //     messageBlock.appendChild(newMessage);
-
-        //     // 取得當前時間
-        //     var currentTime = new Date();
-        //     var timeString = currentTime.toLocaleTimeString();
-
-        //     // 創建一個 <span> 用於顯示時間
-        //     var timeSpan = document.createElement("span");
-        //     timeSpan.innerText = " (" + timeString + ")";
-
-        //     // 將 <span> 加入訊息內容
-        //     newMessage.appendChild(timeSpan);
-
-        //     // 將新元素加入訊息區塊
-        //     messageBlock.appendChild(newMessage);
-        // });
-
-        //傳送訊息
-        // $('#sendButton').on('click', function () {
-        //     let selfUserName = $('#SelfID').html(); // 使用者名稱
-        //     let message = $('#message').val();
-        //     let sendToUserName = $('#sendToID').val(); // 接收者的使用者名稱
-
-        //     // 新增：呼叫 SignalR Hub 方法獲取接收者的 SignalR ID
-        //     getSignalRIdByUserName(sendToUserName).then(function (connectionId) {
-        //         // 修改：傳送訊息時使用接收者的 SignalR ID
-        //         connection.invoke("SendMessage", selfUserName, message, connectionId, sendToUserName).catch(function (err) {
-        //             console.error('傳送錯誤: ' + err.toString());
-        //         });
-        //     });
-        // });
-        // function getSignalRIdByUserName(userName) {
-        //     return new Promise((resolve, reject) => {
-        //         connection.invoke("GetConnectionIdByUserName", userName).then(function (connectionId) {
-        //             // 在這裡可以使用 connectionId 進行相應的處理
-        //             resolve(connectionId);
-        //         }).catch(function (err) {
-        //             reject(err);
-        //         });
-        //     });
-        // }
+        })   
     </script>
 </body>
 

@@ -30,7 +30,7 @@
             </div>
             <div class="form-group" hidden>
                 <label class="control-label">會員編號</label>
-                <input name="MemberId" value="@ViewBag.memberid" class="form-control" />
+                <input name="MemberId" value="@Context.Session.GetInt32(CDictionary.SK_UserID)" class="form-control" />
             </div>
             <div class="form-group" hidden>
                 <label class="control-label">ApplyStatusId</label>
@@ -38,10 +38,10 @@
             </div>
             <div>
                 <label class="control-label">自我推薦(選填)：</label>
-                <button onclick="showPreContent()" class="btn btn-warning">使用歷史範本</button>
+                <button type="button" onclick="showPreContent()" class="btn btn-warning btn-sm">使用其他範本</button>
                 <br />
                 <label class="control-label">寫下工作相關經驗，個人特質或專長，提升錄取率吧</label>
-                <textarea class="form-control" name="RecordContent" rows="4" cols="50" placeholder="在這裡輸入您的應徵補充資訊..."></textarea>
+                <textarea class="form-control" name="RecordContent" rows="4" cols="50" placeholder="在這裡輸入您的應徵補充資訊..." id="RecordContent"></textarea>
             </div>
             <div class="form-group mt-3">
                 <a asp-action="DeputeMain" class="btn btn-secondary">返回</a>
@@ -50,12 +50,37 @@
         </form>
     </div>
 </div>
+
 @section Scripts {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
 
     <script>
+        async function showPreContent() {
+            const response = await fetch(`@Url.Content("~/depute/myApplyContent")`);
+            const datas = await response.json();
+            const content = datas.map(content => `<a class="list-group-item list-group-item-action text-start text-truncate" id="list-${content.content}-list" data-bs-toggle="list" href="#list-${content.content}" role="tab" aria-controls="list-${content.content}">${content.content}</a>`);
+            const { value: formValues } = await Swal.fire({
+                color: "#D0D0D0",
+                background: "#343a40",
+                scrollbarPadding: false,
+                title: "自我推薦範本",
+                html: `<div class="list-group" id="list-tab" role="tablist">${content.join("")}</div>`,
+                focusConfirm: false,
+                confirmButtonText:"確認",
+                preConfirm: () => {
+                    return [
+                        document.querySelector(".list-group-item.list-group-item-action.active")
+                    ];
+                }
+            });
+            if (formValues) {
+                console.log(formValues[0].textContent);
+                document.querySelector('#RecordContent').textContent = formValues[0].textContent;
+            }
+           
+        }
 
         async function prepareAndSubmit() {
             const formElement = document.querySelector('#formElement');
@@ -92,106 +117,36 @@
         }
 
         document.addEventListener('DOMContentLoaded', () => {
+            var status = "";
+
             if (@Model.StatusId== 10 || @Model.StatusId== 20) {
-                Swal.fire({
-                    color: "#D0D0D0",
-                    background: "#343a40",
-                    timer: 5000,
-                    timerProgressBar: true,
-                    title: "合作中委託無法應徵",
-                    html: "將於<b></b>秒跳轉委託首頁",
-                    icon: "warning",
-                    didOpen: () => {
-                        Swal.showLoading();
-                        const timer = Swal.getPopup().querySelector("b");
-                        timerInterval = setInterval(() => {
-                            timer.textContent = `${(Swal.getTimerLeft() / 1000).toFixed(0)}`;
-                        }, 100);
-                    },
-                    willClose: () => {
-                        clearInterval(timerInterval);
-                    }
-                }).then(() => {
-                    window.location.href = '@Url.Action("DeputeMain","depute")';
-                })
+                status = "合作中委託無法應徵";
+                changeHref()
             }
             else if (@Model.StatusId== 19) {
-                Swal.fire({
-                    color: "#D0D0D0",
-                    background: "#343a40",
-                    timer: 5000,
-                    timerProgressBar: true,
-                    title: "關閉中委託無法應徵",
-                    html: "將於<b></b>秒跳轉委託首頁",
-                    icon: "warning",
-                    didOpen: () => {
-                        Swal.showLoading();
-                        const timer = Swal.getPopup().querySelector("b");
-                        timerInterval = setInterval(() => {
-                            timer.textContent = `${(Swal.getTimerLeft() / 1000).toFixed(0)}`;
-                        }, 100);
-                    },
-                    willClose: () => {
-                        clearInterval(timerInterval);
-                    }
-                }).then(() => {
-                    window.location.href = '@Url.Action("DeputeMain","depute")';
-                })
+                status = "關閉中委託無法應徵";
+                changeHref()
             }
             else if (@Model.StatusId== 16) {
-                Swal.fire({
-                    color: "#D0D0D0",
-                    background: "#343a40",
-                    timer: 5000,
-                    timerProgressBar: true,
-                    title: "該委託已完成無法應徵",
-                    html: "將於<b></b>秒跳轉委託首頁",
-                    icon: "warning",
-                    didOpen: () => {
-                        Swal.showLoading();
-                        const timer = Swal.getPopup().querySelector("b");
-                        timerInterval = setInterval(() => {
-                            timer.textContent = `${(Swal.getTimerLeft() / 1000).toFixed(0)}`;
-                        }, 100);
-                    },
-                    willClose: () => {
-                        clearInterval(timerInterval);
-                    }
-                }).then(() => {
-                    window.location.href = '@Url.Action("DeputeMain","depute")';
-                })
+                status = "該委託已完成無法應徵";
+                changeHref()
             }
-            else if (@Model.ProviderId== @ViewBag.memberid) {
-                Swal.fire({
-                    color: "#D0D0D0",
-                    background: "#343a40",
-                    timer: 5000,
-                    timerProgressBar: true,
-                    title: "無法應徵自己的委託",
-                    html: "將於<b></b>秒跳轉委託首頁",
-                    icon: "warning",
-                    didOpen: () => {
-                        Swal.showLoading();
-                        const timer = Swal.getPopup().querySelector("b");
-                        timerInterval = setInterval(() => {
-                            timer.textContent = `${(Swal.getTimerLeft() / 1000).toFixed(0)}`;
-                        }, 100);
-                    },
-                    willClose: () => {
-                        clearInterval(timerInterval);
-                    }
-                }).then(() => {
-                    window.location.href = '@Url.Action("DeputeMain", "depute")';
-                })
+            else if (@Model.ProviderId== @Context.Session.GetInt32(CDictionary.SK_UserID)) {
+                status = "無法應徵自己的委託";
+                changeHref()
             }
-            else if (@Model.ProviderId== @ViewBag.memberid) {
+            else if (@Context.Session.GetInt32(CDictionary.SK_會員狀態編號) == 26) {
+                status = "被封鎖會員無法進行此操作";
+                changeHref()
+            }
+            function changeHref() {
                 Swal.fire({
                     color: "#D0D0D0",
                     background: "#343a40",
                     timer: 5000,
                     timerProgressBar: true,
-                    title: "無法應徵自己的委託",
-                    html: "將於<b></b>秒跳轉委託首頁",
+                    title: `${status}`,
+                    html: "將於<b></b>秒跳轉前頁",
                     icon: "warning",
                     didOpen: () => {
                         Swal.showLoading();
@@ -204,7 +159,7 @@
                         clearInterval(timerInterval);
                     }
                 }).then(() => {
-                    window.location.href = '@Url.Action("DeputeMain", "depute")';
+                    window.location.href = '@ViewBag.preUrl';
                 })
             }
         })
