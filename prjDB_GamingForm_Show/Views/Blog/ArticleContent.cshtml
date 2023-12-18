@@ -66,7 +66,9 @@
                         var author = Model.articles.FirstOrDefault()?.Member;
                         if (author != null)
                         {
-                            <img src="~/MemberPhoto/@author.FImagePath" alt="" style="width: 100px;height:100px;border-radius: 50%;">
+                            <a href="@Url.Action("MemberPageTest", "Member", new { id=author.MemberId})">
+                                <img src="~/MemberPhoto/@author.FImagePath" alt="" style="width: 100px;height:100px;border-radius: 50%;">
+                            </a>                            
                         }
                     }
                 </div>
@@ -79,8 +81,11 @@
                         <a href="@Url.Action("ArticleList", "Blog", new { FId = Model.blogs.First().BlogId, SFId = Model.articles.First().SubBlogId })">@Model.articles.First().SubBlog.Title</a>
                     </div>
                     <div>
+                       
                         @* 超連結個人頁面 *@
-                        <span>樓主 :  @Html.DisplayFor(modelItem => Model.articles.FirstOrDefault().Member.Name)</span>                            
+                        <span>樓主 :   @Html.ActionLink(Model.articles.FirstOrDefault().Member.Name, "MemberPageTest", "Member", new { id = Model.articles.FirstOrDefault().MemberId })</span>@* 
+
+                        <span>樓主 :  @Html.DisplayFor(modelItem => Model.articles.FirstOrDefault().Member.Name)</span>                             *@
                         <span style ="color:white;float:right">累計人氣 : @Model.articles.FirstOrDefault().ViewCount</span>
                     </div>
                     <div style="max-width:800px; overflow: hidden; word-wrap: break-word; white-space: pre-line;border-bottom:1px dotted black;border-top:1px dotted black;padding-top:8px">@Html.Raw(Model.articles.FirstOrDefault().ArticleContent)</div>
@@ -221,14 +226,17 @@
                                 var replyAuthor = item.Member;
                                 if (replyAuthor != null)
                                 {
-                                    <img src="~/MemberPhoto/@replyAuthor.FImagePath" alt="" style="width: 100px;height:100px;border-radius: 50%;">
+                                    <a href="@Url.Action("MemberPageTest", "Member", new { id=replyAuthor.MemberId})">
+                                        <img src="~/MemberPhoto/@replyAuthor.FImagePath" alt="" style="width: 100px;height:100px;border-radius: 50%;">
+                                    </a>
+                                    // <img src="~/MemberPhoto/@replyAuthor.FImagePath" alt="" style="width: 100px;height:100px;border-radius: 50%;">
                                 }
                             }
                         </div>
                         <div style="flex-grow: 1;">
                             <div style="margin:8px 0">
                                 <span style="font-size:18px">
-                                    @count 樓 : @item.Member.Name
+                                    @count 樓 :   @Html.ActionLink(item.Member.Name, "MemberPageTest", "Member", new { id = item.MemberId})
                                 </span>
                             </div>
                             <div style="max-width:800px; overflow: hidden; word-wrap: break-word; white-space: pre-line;border-bottom:1px dotted black;border-top:1px dotted black">
