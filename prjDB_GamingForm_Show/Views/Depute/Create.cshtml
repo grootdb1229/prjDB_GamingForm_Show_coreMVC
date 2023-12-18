@@ -184,14 +184,17 @@
             const responseSkill = await fetch(`@Url.Content("~/depute/SkillClasses")`)
             const dataSkills = await responseSkill.json();
 
-            const fetchSkillClassPromises = skills.map(function (skill) {
-                var skillClassId = dataSkills.skills.find(_ => _.name == skill).skillClassId;
-                selSkills.push({ skillclass: dataSkills.skillclasses.find(_ => _.skillClassId == skillClassId).name, skill: skill });
+            skills.forEach(function (skill) {
+                let skillMatch = dataSkills.skills.find(_ => _.name === skill);
 
-                skillsCount();
+                if (!skillMatch) return;
 
-            })
-            await Promise.all(fetchSkillClassPromises);
+                let skillClassId = skillMatch.skillClassId;
+                let skillClassName = dataSkills.skillclasses.find(_ => _.skillClassId === skillClassId).name;
+                selSkills.push({ skillclass: skillClassName, skill: skill });
+            });
+
+            skillsCount();
 
             btnSelSkill.disabled = false;
             spanSkillSpin.hidden = true;
@@ -228,7 +231,7 @@
         const divSkillClasses = document.querySelector('#list-tab'),
             divSkillsGroup = document.querySelector('#nav-tabContent');
         var selectedCount = 0;
-        var chooseClass;
+        var chooseClass="程式";
 
         document.addEventListener('DOMContentLoaded', () => {
             const privateCbx = document.getElementById('flexSwitchCheckReverse'),

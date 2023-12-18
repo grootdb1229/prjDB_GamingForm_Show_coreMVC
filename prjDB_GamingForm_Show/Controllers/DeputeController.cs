@@ -778,10 +778,11 @@ namespace prjDB_GamingForm_Show.Controllers
         }
         public async Task<IActionResult> selectSkillAsync(string title,string content)
         {
-            string systemRule = "你將看到一件委託主題及委託內容，" +
-                "你的工作是根據以下列表中的技能，以JSON形式提供你的答案，" +
-                "只能從此提供的技能清單中選擇最多5項skill(嚴禁新建任何skill):\r\n" +
-                "skill：Csharp\r\nHtml\r\nCss\r\nLINQ\r\nADONET\r\nSQL\r\nJS\r\n電繪\r\n手繪\r\n水彩\r\n油畫\r\nJava\r\nPython\r\nPHP\r\nRuby\r\nASP.NET\r\nSwift\r\nKotlin\r\nReact\r\nSolidity\r\nSelenium\r\nJUnit\r\n電子\r\n搖滾\r\n古典\r\n爵士\r\n民族\r\n流行\r\n懸疑\r\n環境\r\n8位元\r\n16位元\r\nMaya\r\nPhotoShop\r\nPreminum";
+            string systemRule = "你將看到委託主題及委託內容，" +
+                "你的工作是從以下特定skill清單中選擇最多五項skill，並使用JSON形式提供答案。" +
+                "請嚴格依照以下列skill表來選擇skill，skill名稱必須完全吻合skill表裡的名稱。\r\n" +
+                "skill：\r\nCsharp\r\nHtml\r\nCss\r\nLINQ\r\nADONET\r\nSQL\r\nJS\r\n電繪\r\n手繪\r\n水彩\r\n油畫\r\nJava\r\nPython\r\nPHP\r\nRuby\r\nASP.NET\r\nSwift\r\nKotlin\r\nReact\r\nSolidity\r\nSelenium\r\nJUnit\r\n電子\r\n搖滾\r\n古典\r\n爵士\r\n民族\r\n流行\r\n懸疑\r\n環境\r\n8位元\r\n16位元\r\nMaya\r\nPhotoShop\r\nPreminum"
+;
             string userContent = "主題:" + title + "，" + "內容:" + content;
             var response = await ChatAsync(systemRule, userContent, 0);
             
@@ -1031,7 +1032,7 @@ namespace prjDB_GamingForm_Show.Controllers
 
         public IActionResult Skillss(string skillClass)
         {
-            if (_db.SkillClasses.Where(_ => _.Name == skillClass) == null)
+            if (_db.SkillClasses.FirstOrDefault(_ => _.Name == skillClass) == null)
                 return Content("");
             int skillclassid = Convert.ToInt32(_db.SkillClasses.Where(_ => _.Name == skillClass).FirstOrDefault().SkillClassId);
             var datas = _db.Skills.Where(_ => _.SkillClassId == skillclassid).Select(_ => _);
