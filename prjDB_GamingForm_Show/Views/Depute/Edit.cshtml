@@ -66,8 +66,7 @@
             <div class="row mb-3">
                 <div class="col">
                     <label class="control-label">提供報酬</label>
-                    <input asp-for="Salary" class="form-control" />
-                    <span asp-validation-for="Salary" class="text-danger"></span>
+                    <input type="text" class="form-control" name="Salary" value="@Model.Salary.ToString("###,###,##0")"/>
                 </div>
                 <div class="col">
                     <label class="control-label">地區</label>

@@ -31,6 +31,14 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="Properties\serviceDependencies.json" />
+    <None Remove="Properties\serviceDependencies.local.json" />
+    <None Remove="Properties\serviceDependencies.prjDBGamingFormShow20231215114758 - Web Deploy.json" />
+    <None Remove="Properties\serviceDependencies.prjDBGamingFormShow20231216150037 - Web Deploy.json" />
+    <None Remove="Properties\serviceDependencies.prjDBGamingFormShow20231218161049 - Web Deploy.json" />
+  </ItemGroup>
+
+  <ItemGroup>
     <_ContentIncludedByDefault Remove="wwwroot\production\images\S__84885521.jpg" />
   </ItemGroup>
 

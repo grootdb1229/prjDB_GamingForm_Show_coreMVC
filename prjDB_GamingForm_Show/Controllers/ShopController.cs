@@ -302,9 +302,16 @@ namespace prjDB_GamingForm_Show.Controllers
 				if (HttpContext.Session.GetInt32(CDictionary.SK_UserID) != null) //利用Session確認登入狀況
 				{ userId = (int)HttpContext.Session.GetInt32(CDictionary.SK_UserID); }//有登入複寫Userid，反之維持0。
 				else { return Json(new { message = "請先登入" }); }
-				var top5 = _db.WishLists.Where(x => x.MemberId == userId).Select(x => x.Product).Take(5).ToList();
-				//Trace.WriteLine("檢查TOP5"+top5);
-				return Json(top5);
+				
+				var top5 = _db.WishLists.Where(x => x.MemberId == userId).Select(x => x.Product).ToList();
+
+                    var OrdersList = _db.Orders.Where(x => x.MemberId == userId).SelectMany(x => x.OrderProducts.Select(a=>a.Product)).ToList();//已經購買的商品不能加入
+
+
+				top5.RemoveAll(productname => OrdersList.Contains(productname));
+				top5.Take(5).ToList();
+
+                return Json(top5);
 			}
 			public void Cookie(int? id)  //Cookies設定
 			{
@@ -958,8 +965,8 @@ namespace prjDB_GamingForm_Show.Controllers
 							return View((超酷warp)product);
 						}
 
-
-						Product x = _db.Products.FirstOrDefault(p => p.ProductId == product.ProductId);
+                        
+                        Product x = _db.Products.FirstOrDefault(p => p.ProductId == product.ProductId);
 						string MulPic = "";
 						List<string> PicList= new List<string>();
 						if (_db != null)
@@ -1003,8 +1010,8 @@ namespace prjDB_GamingForm_Show.Controllers
 										}//移除次要圖片
 									}
 
-									// 提交變更
-									_db.SaveChanges();
+                                    // 提交變更
+                                    _db.SaveChanges();
 									//string[] OtherPic = MulPic.Split("/").Skip(1).ToArray();
 									//PicList.Skip(1).ToArray();
 									foreach (string picpath in PicList.Skip(1))
@@ -1427,12 +1434,14 @@ namespace prjDB_GamingForm_Show.Controllers
 						car = uniqueProducts;
 						string jsoncar= JsonSerializer.Serialize(car);
                         HttpContext.Session.SetString(CDictionary.SK_PURCHASED_PRODUCES_LIST, jsoncar);
-                        TempData["SuccessMessage"] = "這是重複商品！"; //即使返回，要用特殊資料做出判斷差異
-						return View(car);
+                       
+						ViewBag.repet = "這是重複商品！";
+
+                        return View(car);
                     }           
                
 				}
-
+                ViewBag.repet = "";
                 return View(car);
 
             }
@@ -1545,10 +1554,19 @@ namespace prjDB_GamingForm_Show.Controllers
                 
 			}
 
-			public IActionResult OrderDetail()
-			{ 
-				List<COrderViewModel> vm = new List<COrderViewModel>();
-				var order =  _db.Orders.Where(x=>x.MemberId== 41)//HttpContext.Session.GetInt32(CDictionary.SK_UserID))
+			public IActionResult OrderDetail(int? id)
+			{
+                var data = from m in _db.Members
+                           where m.MemberId == id
+                           select m;
+                //孟宏  以下是檢查你有沒有買過任何商品。
+                var CheckBuyList = data.SelectMany(x => x.Orders.Select(a => a.OrderProducts)).ToList();
+                if (CheckBuyList.Count == 0)
+                {
+                    ViewBag.Buylist = "您沒有購買商品";
+                }
+                List<COrderViewModel> vm = new List<COrderViewModel>();
+				var order =  _db.Orders.Where(x=>x.MemberId== id)//HttpContext.Session.GetInt32(CDictionary.SK_UserID))
 							.OrderByDescending(x => x.OrderId)
 							.Select(x => new { x.OrderId,x.Payment.Name, x.Coupon.Title,x.OrderDate});
 				COrderViewModel n = null;
