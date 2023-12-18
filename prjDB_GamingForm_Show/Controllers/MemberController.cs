@@ -36,11 +36,14 @@ namespace prjDB_GamingForm_Show.Controllers
         #region MemberCreate&MemberPage 
         public IActionResult MemberPageTest(int? id)
         {
-            int MemberID=0;
-            if (id == null)
-                MemberID = (int)HttpContext.Session.GetInt32(CDictionary.SK_UserID);
+            int MemberID = 0;
+            if (id != null)
+                MemberID = (int)id;
             else
-            MemberID = (int)id;
+            {
+                if (HttpContext.Session.GetInt32(CDictionary.SK_UserID) != null)
+                    MemberID = (int)HttpContext.Session.GetInt32(CDictionary.SK_UserID);
+            }
             _db.Members.Load();
             IEnumerable<Member> datas = null;
             var data = from m in _db.Members
@@ -151,19 +154,19 @@ namespace prjDB_GamingForm_Show.Controllers
             return RedirectToAction("Home", "HomePage");
         }
 
-        
-        
+
+
         #region SendEmailByModel
         public IActionResult SendEmailByModel()
         {
             return View();
         }
         [HttpPost]
-        public IActionResult SendEmailByModel(CEmail email) 
+        public IActionResult SendEmailByModel(CEmail email)
         {
-            List<string>  EmailData = (from E in _db.Members
-                             where E.Email.Contains("alan")
-                             select E.Email).ToList();
+            List<string> EmailData = (from E in _db.Members
+                                      where E.Email.Contains("alan")
+                                      select E.Email).ToList();
             List<string> Emails = EmailData;
             Emails.Add("alan90306@gmail.com");
             Emails.Add("alan90306@gmail.com");
@@ -311,7 +314,7 @@ namespace prjDB_GamingForm_Show.Controllers
                        select new { m.Mycomment, m.Name, m.Phone, m.Gender, m.Birth.Year, m.FImagePath, m.Email };
             return Json(data);
         }
-        public IActionResult MyCollectionList(int? id) 
+        public IActionResult MyCollectionList(int? id)
         {
             var data = from c in _db.MemberCollections
                        where c.MemberId == id
@@ -329,7 +332,7 @@ namespace prjDB_GamingForm_Show.Controllers
         {
             var data = from c in _db.MemberCollections
                        where c.Id == id
-                       select new { c.Title, c.ModifiedDate, c.FImagePath, c.Intro , c.MyCollection};
+                       select new { c.Title, c.ModifiedDate, c.FImagePath, c.Intro, c.MyCollection };
             return View(data);
         }
         #region CollectionCRUD
@@ -366,7 +369,7 @@ namespace prjDB_GamingForm_Show.Controllers
         public IActionResult EditCollection(int? CId)
         {
             MemberCollection memberCollection = _db.MemberCollections.First(m => m.Id == CId);
-                //new MemberCollection()
+            //new MemberCollection()
             //{
             //    MyCollection = _db.MemberCollections.Where(a => a.Id == CId).FirstOrDefault().
             //};
@@ -415,7 +418,7 @@ namespace prjDB_GamingForm_Show.Controllers
         public IActionResult MyArticles(int? id)
         {
             var data = _db.Articles.Include(a => a.SubBlog).ThenInclude(s => s.Blog)
-                .Where(a => a.MemberId == (int)id )
+                .Where(a => a.MemberId == (int)id)
                 .Select(a => a);
             var datas = from A in _db.Articles
                         where A.MemberId == HttpContext.Session.GetInt32(CDictionary.SK_UserID)
@@ -524,19 +527,19 @@ namespace prjDB_GamingForm_Show.Controllers
 
         public bool IsLoginOrNot()
         {
-            if(HttpContext.Session.GetString(CDictionary.SK_UserName) != null)
+            if (HttpContext.Session.GetString(CDictionary.SK_UserName) != null)
             {
                 return true;
             }
             else { return false; }
         }
 
-        public IActionResult ChatMemberList() 
+        public IActionResult ChatMemberList()
         {
             List<CSignalRUseMemberList> members = new List<CSignalRUseMemberList>();
             var datas = from a in _db.Members
                         select new
-                        {      
+                        {
                             a.MemberId,
                             a.Name
                         };
@@ -547,7 +550,7 @@ namespace prjDB_GamingForm_Show.Controllers
                 member.MemberName = data.Name;
                 members.Add(member);
             }
-            
+
             return PartialView(members);
         }
 
