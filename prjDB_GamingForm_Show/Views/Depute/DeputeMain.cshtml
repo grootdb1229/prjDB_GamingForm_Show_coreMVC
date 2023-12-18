@@ -28,7 +28,7 @@
         <div class="tab-class text-center wow fadeInUp" data-wow-delay="0.3s">
             <ul class="nav nav-pills d-inline-flex justify-content-center border-bottom mb-5">
                 <li class="nav-item">
-                    <a class="d-flex align-items-center text-start mx-3 ms-0 pb-3 active" data-bs-toggle="pill" href="#tab-1">
+                    <a class="d-flex align-items-center text-start mx-3 ms-0 pb-3" data-bs-toggle="pill" href="#tab-1">
                         <h6 id="title1" class="mt-n1 mb-0">最新委託</h6>
                     </a>
                 </li>
@@ -38,7 +38,7 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="d-flex align-items-center text-start mx-3 me-0 pb-3" data-bs-toggle="pill" href="#tab-3">
+                    <a class="d-flex align-items-center text-start mx-3 pb-3  active" data-bs-toggle="pill" href="#tab-3">
                         <h6 id="fav" class="mt-n1 mb-0">我的最愛</h6>
                     </a>
                 </li>
@@ -47,6 +47,7 @@
                         <h6 id="record" class="mt-n1 mb-0">最近瀏覽</h6>
                     </a>
                 </li>
+                
             </ul>
             <div class="tab-content">
                 <div id="tab-1" class="tab-pane fade show p-0 active">
@@ -216,8 +217,8 @@
                         <div class="col-sm-12 col-md-4 d-flex flex-column align-items-start align-items-md-end justify-content-center">
                         <div class="d-flex mb-3">
                         <a class="btn btn-light btn-square me-3" href="#" onclick=SetFav(${list.id})><i class="far fa-heart text-primary"></i></a>
-                        <a href="/Depute/DeputeDetails/${list.id}" class="btn btn-primary id=" btndp"">詳細...</a>
-                        <a href="/Depute/Apply/${list.id}" class="btn btn-primary id=" btndp"">我要應徵...</a>
+                        <a href="/Depute/DeputeDetails/${list.id}" class="btn btn-primary" id="btndp" target="_blank">詳細...</a>
+                        <a href="/Depute/Apply/${list.id}" class="btn btn-primary" id="btndp">我要應徵...</a>
                         </div>
                                 <small class="text-truncate"><i class="far fa-regular fa-chart-bar text-primary me-2"></i>狀態 : ${list.status}</small>
                                 <small class="text-truncate"><i class="far fa-calendar-alt text-primary me-2"></i>Last Update : ${list.modifieddate}</small>
@@ -253,8 +254,8 @@
                                 <div class="col-sm-12 col-md-4 d-flex flex-column align-items-start align-items-md-end justify-content-center">
                                 <div class="d-flex mb-3">
                                 <a class="btn btn-light btn-square me-3" href="#" onclick=SetFav(${list.id})><i class="far fa-heart text-primary"></i></a>
-                                <a href="/Depute/DeputeDetails/${list.id}" class="btn btn-primary id=" btndp"">詳細...</a>
-                                <a href="/Depute/Apply/${list.id}" class="btn btn-primary id=" btndp"">我要應徵...</a>
+                                <a href="/Depute/DeputeDetails/${list.id}" class="btn btn-primary" id="btndp" target="_blank">詳細...</a>
+                                <a href="/Depute/Apply/${list.id}" class="btn btn-primary" id="btndp">我要應徵...</a>
                                 </div>
                                         <small class="text-truncate"><i class="far fa-regular fa-chart-bar text-primary me-2"></i>狀態 : ${list.status}</small>
                                         <small class="text-truncate"><i class="far fa-calendar-alt text-primary me-2"></i>Last Update : ${list.modifieddate}</small>
@@ -318,7 +319,7 @@
                                         <div class="col-sm-12 col-md-4 d-flex flex-column align-items-start align-items-md-end justify-content-center">
                                         <div class="d-flex mb-3">
                                         <a class="btn btn-light btn-square me-3" href="#" onclick=SetFav(${list.id})><i class="far fa-heart text-primary"></i></a>
-                                        <a href="/Depute/DeputeDetails/${list.id}" class="btn btn-primary id=" btndp"">詳細...</a>
+                                        <a href="/Depute/DeputeDetails/${list.id}" class="btn btn-primary" id="btndp" target="_blank">詳細...</a>
                                         <a href="/Depute/Apply/${list.id}" class="btn btn-primary id=" btndp"">我要應徵...</a>
                                         </div>
                                                 <small class="text-truncate"><i class="far fa-regular fa-chart-bar text-primary me-2"></i>狀態 : ${list.status}</small>

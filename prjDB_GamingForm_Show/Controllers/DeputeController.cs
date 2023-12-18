@@ -26,6 +26,8 @@ using OpenAI_API.Models;
 using Azure;
 using OpenAI_API.Chat;
 using Microsoft.AspNetCore.Http.Extensions;
+using Org.BouncyCastle.Ocsp;
+using System.Collections;
 
 namespace prjDB_GamingForm_Show.Controllers
 {
@@ -372,6 +374,50 @@ namespace prjDB_GamingForm_Show.Controllers
             return Json(CookieList.Take(5));
         }
         //TODO #4 熱門關鍵字
+
+        public IActionResult Recommand(int id)
+        {
+            var value = (from n in _db.DeputeSkills.AsEnumerable()
+                         where n.DeputeId == id
+                         select new { n.Skill.Name }).Distinct();
+            List< CDeputeViewModel> Rcolist = new List< CDeputeViewModel>();
+            CDeputeViewModel data = null;
+            foreach(var item in value)
+            {
+                  var  RecoData = from n in _db.DeputeSkills.AsEnumerable()
+                               where n.Skill.Name.Contains(item.Name)
+                               select new {n.DeputeId,n.Depute.Title, n.Depute.DeputeContent, n.Depute.Provider.Name, n.Depute.Provider.FImagePath };
+                CDeputeViewModel x = null;
+                foreach (var item2 in RecoData)
+                {
+
+                        x = new CDeputeViewModel()
+                        {
+                            id = item2.DeputeId,
+                            title = item2.Title,
+                            providername = item2.Name,
+                            deputeContent = item2.DeputeContent,
+                            imgfilepath = item2.FImagePath
+                        };
+                    Rcolist.Add(x);
+                }
+
+            }
+
+            Random rnd = new Random();
+            int count = rnd.Next(0, 50);
+            List<CDeputeViewModel> Rcolist2 = new List<CDeputeViewModel>();
+            for (int i = 1; i <= 6; i++)
+            {
+                Rcolist2.Add(Rcolist[count]);
+                Rcolist.RemoveAt(count);
+                count = rnd.Next(0, Rcolist.Count);
+
+            }
+            return Json(Rcolist2);
+
+
+        }
         public IActionResult HotKey(int id)
         {
             var value = (from n in _db.SerachRecords.AsEnumerable()
