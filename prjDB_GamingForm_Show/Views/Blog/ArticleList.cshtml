@@ -184,7 +184,7 @@
                                 <td style="color:wheat;font-size:15px;text-align:center">
                                     @((item.Replies != null) ? item.Replies.Count() : 0) / @* 回文次數 *@@Html.DisplayFor(modelItem => item.ViewCount)               @* 瀏覽次數 *@
                                     <br />
-                                    <p style="text-align:center;font-size:12px"> @Html.DisplayFor(modelItem => item.Member.Name) </p>  @* 預計顯示作者名稱在發文時間下面 *@
+                                    <p style="text-align:center;font-size:12px"> @Html.ActionLink(item.Member.Name,"MemberPageTest","Member",new{id=item.MemberId}) </p>  @* 預計顯示作者名稱在發文時間下面 *@
 
                                 </td>
                                 <td style="color:wheat;font-size:10px ;">
@@ -195,12 +195,12 @@
                                         {
                                             <p style="text-align:center ;font-size:15px">@item.Replies.LastOrDefault().ModifiedDate</p>
                                             <br />
-                                            <p style="text-align:center ;font-size:15px">@Model.members.Where(m => m.MemberId == item.Replies.LastOrDefault().MemberId).Select(m => m.Name).FirstOrDefault()</p>
+                                            <p style="text-align:center ;font-size:15px">@Html.ActionLink(Model.members.Where(m => m.MemberId == item.Replies.LastOrDefault().MemberId).Select(m => m.Name).FirstOrDefault(), "MemberPageTest", "Member", new { id = Model.members.Where(m => m.MemberId == item.Replies.LastOrDefault().MemberId).Select(m => m.MemberId).FirstOrDefault() })</p>                                            
                                         }
                                         else
                                         {
-                                            <p style="text-align:center ;font-size:15px">@item.ModifiedDate</p>
-                                            <p style="text-align:center ;font-size:15px">@item.Member.Name</p>
+                                            <p style="text-align:center ;font-size:15px">@item.ModifiedDate</p>                                           
+                                            <p style="text-align:center;font-size:12px"> @Html.ActionLink(item.Member.Name, "MemberPageTest", "Member", new { id = item.MemberId }) </p>  @* 預計顯示作者名稱在發文時間下面 *@
                                         }
                                     }
                                 </td>

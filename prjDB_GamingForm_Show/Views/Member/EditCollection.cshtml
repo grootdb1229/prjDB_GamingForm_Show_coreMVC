@@ -24,8 +24,10 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <input type="hidden" name="memberId" value=@Model.Id />
+       @*  <input type="hidden" name="CId" value=@Model.Id /> *@
         <form asp-action="EditCollection">
+            <input type="hidden" name="Id" value=@Model.Id />
+            <input type="hidden" name="MemberId" value=@Model.MemberId />
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Title" class="control-label"></label>
