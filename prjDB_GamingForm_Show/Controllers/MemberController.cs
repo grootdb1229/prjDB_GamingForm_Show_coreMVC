@@ -523,7 +523,18 @@ namespace prjDB_GamingForm_Show.Controllers
         #region SignalRChatForMember - 彥霖
         public IActionResult OpenChat()
         {
-            return View();
+            List<CPublicChatUseViewModel> chats = new List<CPublicChatUseViewModel>();
+            foreach(var chat in _db.PublicChats)
+            {
+                CPublicChatUseViewModel ori = new CPublicChatUseViewModel()
+                {
+                    SenderName = _db.Members.Where(m => m.MemberId == chat.SenderId).Select(m => m.Name).FirstOrDefault(),
+                    Content = chat.ChatContent,
+                    ModefiedDate = chat.Modifiedate
+                };
+                chats.Add(ori);
+            }
+            return View(chats);
         }
 
         public bool IsLoginOrNot()

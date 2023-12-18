@@ -57,6 +57,7 @@ namespace prjDB_GamingForm_Show.Controllers
             _db.Members.Load();
             _db.Statuses.Load();
             _db.Regions.Load();
+            _db.Deputes.Load();
             var data = from n in _db.Deputes.AsEnumerable()
                        orderby n.StartDate descending
                        select new
