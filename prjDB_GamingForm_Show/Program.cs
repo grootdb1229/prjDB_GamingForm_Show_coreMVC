@@ -2,6 +2,9 @@ using Microsoft.EntityFrameworkCore;
 using prjDB_GamingForm_Show.Models.Entities;
 using System.Text.Json.Serialization;
 using prjDB_GamingForm_Show.Hubs;
+using Microsoft.AspNetCore.Hosting;
+using prjDB_GamingForm_Show.Models.Member;
+using prjDB_GamingForm_Show.Controllers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,6 +14,7 @@ builder.Services.AddSession();
 builder.Services.AddDbContext<DbGamingFormTestContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("SchoolConnection")));
 builder.Services.AddControllers().AddJsonOptions(x => x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 builder.Services.AddSignalR();
+// 在這裡添加你的基本服務
 var app = builder.Build();
 // //Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

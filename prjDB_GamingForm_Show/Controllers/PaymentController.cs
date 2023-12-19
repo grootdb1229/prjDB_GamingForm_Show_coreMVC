@@ -102,7 +102,7 @@ namespace prjDB_GamingForm_Show.Controllers
                 { "CustomField3",  ""},
                 { "CustomField4",  ""},
                 { "ReturnURL",  $"{website}Ecpay/AddPayInfo"},
-                { "OrderResultURL", $"{website}Payment/PayInfo/{orderId}"},
+                { "OrderResultURL", $"{website}Shop/OrderSuccess"},
                 { "PaymentInfoURL",  $"{website}Ecpay/AddAccountInfo"},
                 { "ClientRedirectURL",  $"{website}Payment/AccountInfo/{orderId}"},
                 { "MerchantID",  "3002607"},

@@ -381,6 +381,11 @@ namespace prjDB_GamingForm_Show.Controllers
 				//TP.LListCount=LL.Count();
 				return View(LL);
             }
+
+			public IActionResult OrderSuccess()
+			{
+				return View();
+			}
             public IActionResult RemoveProduct(int? id) //Ajax刷新最愛
             {
                 int memberID = (int)HttpContext.Session.GetInt32(CDictionary.SK_UserID);
@@ -799,11 +804,11 @@ namespace prjDB_GamingForm_Show.Controllers
 				{
 					try
 					{
-						if (!ModelState.IsValid)
-						{
-							var errors = ModelState.Values.SelectMany(v => v.Errors); //測試錯誤用程式碼
-							return View(product);
-						}
+						//if (!ModelState.IsValid) 捨棄後端驗證。
+						//{
+						//	var errors = ModelState.Values.SelectMany(v => v.Errors); //測試錯誤用程式碼
+						//	return View(product);
+						//}
 						Product x = new Product();
 						string MulPic = "";
 						if (_db != null)
@@ -1578,14 +1583,14 @@ namespace prjDB_GamingForm_Show.Controllers
 						OrderId = i.OrderId,
 						CouponTitle = i.Title,
 						OrderDate = i.OrderDate,
-                        PaymentName = i.Name,
-                        products = new List<CProductNamePrice>()
+						PaymentName = i.Name,
+						products = new List<CProductNamePrice>()
 					};
 
 					var orderproduct = _db.OrderProducts.Where(x => x.OrderId == i.OrderId).Select(x => x.ProductId);
-                    foreach (var pp in orderproduct)
+					foreach (var pp in orderproduct)
 					{
-                        var op = _db.Products.Where(x => x.ProductId == pp).Select(x =>new { x.ProductName,x.Price });
+						var op = _db.Products.Where(x => x.ProductId == pp).Select(x => new { x.ProductName, x.Price });
 						CProductNamePrice cpnp = null;
 						foreach (var ppp in op)
 						{
@@ -1599,25 +1604,28 @@ namespace prjDB_GamingForm_Show.Controllers
 					}
 					if (n.Coupon != null)
 					{
-                        if (n.Coupon.Discount != 0)
-                        {
-                            double dis = (double)n.Coupon.Discount;
-                            n.Sumprice = (double)n.products.Sum(c => c.Price) * dis;
-                        }
-                        else
-                        {
-                            int reduce = (int)n.Coupon.Reduce;
-                            n.Sumprice = (int)n.products.Sum(c => c.Price) - reduce;
-                        }
+						if (n.Coupon.Discount != 0)
+						{
+							double dis = (double)n.Coupon.Discount;
+							n.Sumprice = (double)n.products.Sum(c => c.Price) * dis;
+						}
+						else
+						{
+							int reduce = (int)n.Coupon.Reduce;
+							n.Sumprice = (int)n.products.Sum(c => c.Price) - reduce;
+						}
 					}
 					else
 					{
 						n.Sumprice = (double)n.products.Sum(x => x.Price);
 
-                    }
-                    vm.Add(n);
-				}
-				//SendOrderEmail(vm.First());
+					}
+					vm.Add(n);
+					var price = _db.Orders.Where(x => x.OrderId == i.OrderId).FirstOrDefault();
+					price.SumPrice = (decimal)n.Sumprice;
+					_db.SaveChanges();
+                }
+				
 				return View(vm);
 			}
 
