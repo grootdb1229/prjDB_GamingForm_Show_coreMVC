@@ -6,7 +6,7 @@
 }
 
 <h2 class="mt-5">應徵</h2>
-<div hidden>@Model.Provider.Name</div>
+<div hidden id="bossname">@Model.Provider.Name</div>
 <div hidden>@Model.ProviderId</div>
 <h4>請輸入您的應徵資訊</h4>
 <hr class="col-10" />
@@ -46,7 +46,7 @@
             </div>
             <div class="form-group mt-3">
                 <a asp-action="DeputeMain" class="btn btn-secondary">返回</a>
-                <input type="button" value="送出並應徵" onclick="prepareAndSubmit()" class="btn btn-success" />
+                <input id="wantmoney" type="button" value="送出並應徵" onclick="prepareAndSubmit()" class="btn btn-success" />
             </div>
         </form>
     </div>
@@ -58,6 +58,33 @@
     }
 
     <script>
+
+        // $('#wantmoney').on('click', sendMessageBySignalR);
+        
+        function sendMessageBySignalR() {
+            let message = `您的委託-@Model.Title，有新的應徵`
+            let sendToUserName = $('#bossname').text() // 接收者的使用者名稱
+            console.log(sendToUserName)
+            // 新增：呼叫 SignalR Hub 方法獲取接收者的 SignalR ID
+            getSignalRIdByUserName(sendToUserName).then(function (connectionId) {
+                // 修改：傳送訊息時使用接收者的 SignalR ID
+                connection.invoke("SystemMessage", "委託", message, connectionId, sendToUserName).catch(function (err) {
+                    console.error('傳送錯誤: ' + err.toString());
+                });
+            });            
+        };
+        function getSignalRIdByUserName(userName) {
+            console.log("3")
+            return new Promise((resolve, reject) => {
+                connection.invoke("GetConnectionIdByUserName", userName).then(function (connectionId) {
+                    // 在這裡可以使用 connectionId 進行相應的處理
+                    resolve(connectionId);
+                }).catch(function (err) {
+                    reject(err);
+                });
+            });
+        }
+
         async function showPreContent() {
             const response = await fetch(`@Url.Content("~/depute/myApplyContent")`);
             const datas = await response.json();
@@ -112,6 +139,9 @@
                         clearInterval(timerInterval);
                     }
                 }).then(() => {
+                    console.log("1");
+                    sendMessageBySignalR();
+                    console.log("2");
                     window.location.href = '@Url.Action("homeframe","depute")';
                 })
             };
