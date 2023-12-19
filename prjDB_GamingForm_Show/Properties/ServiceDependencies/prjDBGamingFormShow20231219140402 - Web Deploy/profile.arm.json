@@ -21,7 +21,7 @@
     },
     "resourceName": {
       "type": "string",
-      "defaultValue": "prjDBGamingFormShow20231218190230",
+      "defaultValue": "prjDBGamingFormShow20231219140402",
       "metadata": {
         "description": "Name of the main resource to be created by this template."
       }
