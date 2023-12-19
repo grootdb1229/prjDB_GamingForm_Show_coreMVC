@@ -181,7 +181,7 @@ namespace prjDB_GamingForm_Show.Controllers
                 message.Subject = email.EmailSubject;
                 message.Body = new TextPart("html")
                 {
-                    Text = cshtmlContext
+                    //Text = cshtmlContext
 
                 };
                
