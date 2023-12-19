@@ -24,10 +24,15 @@ namespace prjDB_GamingForm_Show.Controllers
     {
         private readonly IWebHostEnvironment _host;
         private readonly DbGamingFormTestContext _db;
-        public MemberController(IWebHostEnvironment host, DbGamingFormTestContext db)
+        public MemberController(IWebHostEnvironment host, DbGamingFormTestContext db )
         {
             _host = host;
-            _db = db;
+            _db = db;    
+        }
+
+        public IActionResult MemberInfo() 
+        {
+            return PartialView("MemberInfo");
         }
         public IActionResult Index()
         {
@@ -115,17 +120,14 @@ namespace prjDB_GamingForm_Show.Controllers
             return RedirectToAction("MemberPageTest", "Member");
         }
         #endregion
-
-        //public string ReadHtmlTemplate(string HtmlTemplatePath) 
-        //{
-        //    string result = "";
-        //    StreamReader reader = new StreamReader(HtmlTemplatePath);
-        //    result = reader.ReadToEnd();
-        //    reader.Close();
-        //    return result;
-        //}
-        public IActionResult SendAdvertisments(CEmail email)
+        public async Task<IActionResult> SendAdvertisments() 
         {
+            return View();
+        }
+        [HttpPost]
+        public async Task<IActionResult> SendAdvertisments(CEmail email)
+        {
+            
             List<string> EmailData = (from E in _db.Members
                                       where E.Email.Contains("alan")
                                       select E.Email).ToList();
@@ -143,7 +145,6 @@ namespace prjDB_GamingForm_Show.Controllers
                 {
                     Text = email.EmailBody
                 };
-
                 using (var client = new SmtpClient())
                 {
                     client.Connect("smtp.gmail.com", 587, false);
@@ -180,9 +181,10 @@ namespace prjDB_GamingForm_Show.Controllers
                 message.Subject = email.EmailSubject;
                 message.Body = new TextPart("html")
                 {
-                    Text = email.EmailBody
-                };
+                    //Text = cshtmlContext
 
+                };
+               
                 using (var client = new SmtpClient())
                 {
                     client.Connect("smtp.gmail.com", 587, false);
