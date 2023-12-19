@@ -8,15 +8,19 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="bin\**" />
     <Compile Remove="Models\Depute\**" />
     <Compile Remove="wwwroot\assets\**" />
     <Compile Remove="wwwroot\MemberImage\**" />
+    <Content Remove="bin\**" />
     <Content Remove="Models\Depute\**" />
     <Content Remove="wwwroot\assets\**" />
     <Content Remove="wwwroot\MemberImage\**" />
+    <EmbeddedResource Remove="bin\**" />
     <EmbeddedResource Remove="Models\Depute\**" />
     <EmbeddedResource Remove="wwwroot\assets\**" />
     <EmbeddedResource Remove="wwwroot\MemberImage\**" />
+    <None Remove="bin\**" />
     <None Remove="Models\Depute\**" />
     <None Remove="wwwroot\assets\**" />
     <None Remove="wwwroot\MemberImage\**" />

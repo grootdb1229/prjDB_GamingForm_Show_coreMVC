@@ -20,7 +20,7 @@
                 <label for="formFileMultiple" class="form-label">上傳檔案</label>
                 <input class="form-control" type="file" id="formFileMultiple" name="formFile">
             </div>
-
+            <div id="providerName" hidden>@ViewBag.applyerName</div>
             @Html.ActionLink("取消","homeframe","depute",null,new{@class="btn btn-secondary"})
             <input type="submit" class="btn btn-success" value="完成" id="buttonSubmit" />
         </form>
@@ -49,9 +49,32 @@
                 text: "2秒後轉回委託頁面",
                 icon: `${icon}`
             }).then(() => {
+                sendMessageBySignalR();
                 window.location.href = '@Url.Action("homeframe","depute")';
             })
         };
     })
-    
+    function sendMessageBySignalR() {
+        let message = `您委託的項目已完成，請點擊查看`
+        let sendToUserName = document.querySelector('#providerName').textContent;  // 接收者的使用者名稱
+            console.log(sendToUserName)
+        // 新增：呼叫 SignalR Hub 方法獲取接收者的 SignalR ID
+        getSignalRIdByUserName(sendToUserName).then(function (connectionId) {
+            // 修改：傳送訊息時使用接收者的 SignalR ID
+            connection.invoke("SystemMessage", "委託", message, connectionId, sendToUserName).catch(function (err) {
+                console.error('傳送錯誤: ' + err.toString());
+            });
+        });
+    };
+    function getSignalRIdByUserName(userName) {
+        console.log("3")
+        return new Promise((resolve, reject) => {
+            connection.invoke("GetConnectionIdByUserName", userName).then(function (connectionId) {
+                // 在這裡可以使用 connectionId 進行相應的處理
+                resolve(connectionId);
+            }).catch(function (err) {
+                reject(err);
+            });
+        });
+    }
 </script>

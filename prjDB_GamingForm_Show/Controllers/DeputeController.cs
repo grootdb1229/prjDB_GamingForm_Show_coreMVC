@@ -711,6 +711,7 @@ namespace prjDB_GamingForm_Show.Controllers
         {
             //受委託者完成委託
             var data = _db.DeputeRecords.FirstOrDefault(_ => _.Id == id);
+            ViewBag.applyerName = data.Depute.Provider.Name;
             return View(data);
         }
         [HttpPost]
@@ -758,7 +759,7 @@ namespace prjDB_GamingForm_Show.Controllers
         {
             OpenAIAPI api = new OpenAIAPI("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");
             var chat = api.Chat.CreateConversation();
-            chat.Model = Model.ChatGPTTurbo;
+            chat.Model = Model.ChatGPTTurbo_16k;
             chat.RequestParameters.Temperature = temp;
 
             chat.AppendSystemMessage($"{system}");
@@ -778,15 +779,31 @@ namespace prjDB_GamingForm_Show.Controllers
         }
         public async Task<IActionResult> selectSkillAsync(string title,string content)
         {
+            string data = test();
             string systemRule = "你將看到委託主題及委託內容，" +
-                "你的工作是從以下特定skill清單中選擇最多五項skill，並使用JSON形式提供答案。" +
-                "請嚴格依照以下列skill表來選擇skill，skill名稱必須完全吻合skill表裡的名稱。\r\n" +
-                "skill：\r\nCsharp\r\nHtml\r\nCss\r\nLINQ\r\nADONET\r\nSQL\r\nJS\r\n電繪\r\n手繪\r\n水彩\r\n油畫\r\nJava\r\nPython\r\nPHP\r\nRuby\r\nASP.NET\r\nSwift\r\nKotlin\r\nReact\r\nSolidity\r\nSelenium\r\nJUnit\r\n電子\r\n搖滾\r\n古典\r\n爵士\r\n民族\r\n流行\r\n懸疑\r\n環境\r\n8位元\r\n16位元\r\nMaya\r\nPhotoShop\r\nPreminum"
-;
+                "你的工作是從以下特定skill清單中選擇最多5項skill，並使用JSON形式提供答案。" +
+                "請嚴格依照以下列skill表來選擇skill，skill名稱必須完全吻合skill列表裡的名稱，並且不要和上一次的結果一樣。\r\n" +
+                "正確範例:\r\n" +
+                "{\r\n  \"skill\": [\r\n    \"Html\",\r\n    \"JavaScript\",\r\n    \"Ruby\",\r\n    \"Sketch\",\r\n    \"Blender\"\r\n  ]\r\n}\r\n" +
+                "\r\nskill：\r\nCsharp\r\nHtml\r\nCss\r\nLINQ\r\nADONET\r\nSQL\r\nJavaScript\r\nSketch\r\nFigma\r\nBlender\r\nAutodesk Maya\r\nJava\r\nPython\r\nPHP\r\nRuby\r\nASPdotNET\r\nSwift\r\nKotlin\r\nReact\r\nSolidity\r\nSelenium\r\nJUnit\r\n電子\r\n搖滾\r\n古典\r\n爵士\r\n民族\r\n流行\r\n懸疑\r\n環境\r\n8位元\r\n16位元\r\nAutodesk Maya\r\nAdobe After Effects\r\nAdobe Animate\r\nC\r\nNodedotjs\r\ndotNET Framework\r\nXamarin\r\nUnity\r\nUnreal Engine\r\nSpring\r\nLaravel\r\nAdobe Photoshop\r\nAdobe Illustrator\r\nAdobe XD\r\n3ds Max\r\nZBrush\r\nInkscape\r\nCorelDRAW\r\nGIMP\r\nAudacity\r\nAdobe Audition\r\nFL Studio\r\nAbleton Live\r\nLogic Pro X\r\nPro Tools\r\nGarageBand\r\nCubase\r\nReaper\r\nBlender\r\nCinema 4D\r\nToon Boom Harmony\r\nSpine\r\nMoho\r\nDragonframe\r\nFinal Draft\r\nCeltx\r\nStoryboard That\r\nToon Boom Storyboard\r\nTwine\r\nSelenium\r\nAppium\r\nJest\r\nJMeter\r\nLoadRunner\r\nGatling\r\nOWASP\r\nNessus\r\nBurp Suite\r\nTestFlight\r\nSteam Early Access\r\nWebSocket\r\nRESTful API\r\nGraphQL\r\nAWS\r\nAzure\r\nGoogle Cloud\r\nNVIDIA GeForce Now\r\nXbox Cloud Gaming\r\nGoogle Analytics\r\nSEO\r\nHootsuite\r\nBuffer\r\nWordPress\r\nHubSpot";
             string userContent = "主題:" + title + "，" + "內容:" + content;
             var response = await ChatAsync(systemRule, userContent, 0);
             
             return Content(response);
+        }
+        private string test()
+        {
+            var skillNames = _db.Skills.Select(s => s.Name).ToList();
+            var resultObject = new
+            {
+                skill = skillNames
+            };
+            var data = JsonSerializer.Serialize(resultObject, new JsonSerializerOptions
+            {
+                WriteIndented = true
+            });
+            var data2= JsonSerializer.Serialize(resultObject);
+            return data;
         }
 
         public IActionResult SendDeputeEmail(CDeputeEmail vm)
