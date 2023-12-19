@@ -4,6 +4,7 @@
     <TargetFramework>net7.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>cbdb79cd-6497-41e2-b31e-ca8a2ba38e91</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -31,6 +32,14 @@
     <Content Remove="C:\Users\User\.nuget\packages\bootstrap\5.3.2\contentFiles\any\any\wwwroot\js\bootstrap.min.js" />
     <Content Remove="C:\Users\User\.nuget\packages\bootstrap\5.3.2\contentFiles\any\any\wwwroot\js\bootstrap.min.js.map" />
     <Content Remove="wwwroot\js\bootstrap.min.js" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Properties\serviceDependencies.json" />
+    <None Remove="Properties\serviceDependencies.local.json" />
+    <None Remove="Properties\serviceDependencies.prjDBGamingFormShow20231215114758 - Web Deploy.json" />
+    <None Remove="Properties\serviceDependencies.prjDBGamingFormShow20231216150037 - Web Deploy.json" />
+    <None Remove="Properties\serviceDependencies.prjDBGamingFormShow20231218161049 - Web Deploy.json" />
   </ItemGroup>
 
   <ItemGroup>
@@ -267,13 +276,14 @@
     <PackageReference Include="HtmlAgilityPack" Version="1.11.54" />
     <PackageReference Include="MailKit" Version="4.3.0" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="7.0.13" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.ViewFeatures" Version="2.2.0" />
+    <PackageReference Include="Microsoft.Azure.SignalR" Version="1.21.2" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.13" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="7.0.13">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="7.0.11" />
+    <PackageReference Include="OpenAI" Version="1.10.0" />
     <PackageReference Include="System.Runtime.Caching" Version="8.0.0" />
   </ItemGroup>
 

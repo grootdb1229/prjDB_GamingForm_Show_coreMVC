@@ -115,10 +115,38 @@
                     .done(() => { window.location.href = "/Admin/ADeputeList" })
             }
             
-
         }
 
-        
+        async function Delete(value) {
+
+            Swal.fire({
+                title: "確定刪除此委託?",
+                showDenyButton: true,
+                showCancelButton: true,
+                confirmButtonText: "是",
+                denyButtonText: `否`
+            }).then((result) => {
+                /* Read more about isConfirmed, isDenied below */
+                if (result.isConfirmed) {
+                    // Swal.fire(`You selected: ${status}`);
+                    $.ajax('@Url.Content("~/Admin/ADeputeEdit")', {
+                        "type": 'post', //POST、PUT、DELETE//
+                        "data": {
+                            "txtID": value,
+                            "txtStatusID": status,
+                        },
+                    })
+                        .done(() => { window.location.href = "/Admin/ADeputeList" })
+                    Swal.fire("確認刪除!", "", "success");
+                } else if (result.isDenied) {
+                    Swal.fire("已取消動作", "", "info");
+                }
+            });
+            
+                
+            
+
+        }
     </script>
 
 }

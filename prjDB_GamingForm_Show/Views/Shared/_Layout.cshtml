@@ -1,11 +1,48 @@
-﻿<!DOCTYPE html>
+﻿@{
+    bool isLoggedIn = Context.Session.GetInt32(CDictionary.SK_UserID) != null;
+}
+<!DOCTYPE html>
 <html lang="en">
 <head>
+    <style>
+        .dropdown-item {
+            width: 100%;
+            padding: 12px 20px
+        }
+
+        .image {
+            border-radius: 2px 2px 2px 2px;
+            float: left;
+            margin-right: 10px;
+            width: 11%;
+            height: 120px;
+            overflow: hidden
+        }
+
+        .time {
+            font-size: 11px;
+            font-style: italic;
+            font-weight: bold;
+            position: absolute;
+            right: 35px
+        }
+
+        .message {
+            display: block !important;
+            font-size: 11px
+        }
+
+        .nav-item1 {
+            background-color: antiquewhite;
+            border: groove;
+            border-radius: 10px;
+        }
+    </style>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta name="description" content="" />
     <meta name="author" content="" />
-    <title>Shop Homepage - Start Bootstrap Template</title>
+    <title>Groot遊戲資源整合平台</title>
 
     <!-- Bootstrap icons-->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
@@ -26,12 +63,17 @@
     <link rel="stylesheet" href="~/css/magnific-popup.css" type="text/css">
     <link rel="stylesheet" href="~/css/slicknav.min.css" type="text/css">
     @*<link rel="stylesheet" href="~/css/blogstyle.css" type="text/css"> *@
+    <!--彥霖-->
+    <link href="~/vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
 
 
+    <!-- Custom Theme Style -->
+    @* <link href="~/css/custom.min.css" rel="stylesheet"> *@
 
     <!--阿嘎測試-->
     @RenderSection("Styles", required: false)
 </head>
+
 <body>
     <!-- Navigation-->
     <nav class="navbar navbar-expand-lg navbar-light bg-light" style="background-color:black;">
@@ -46,19 +88,23 @@
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                             <li>@Html.ActionLink("遊戲委託", "DeputeMain", "Depute", null, new { @class = "dropdown-item" })</li>
                             <li><hr class="dropdown-divider" /></li>
-                            <li>@Html.ActionLink("委託管理", "homeframe", "Depute",  null, new { @class = "dropdown-item" })</li>
+                            <li>@Html.ActionLink("委託管理", "homeframe", "Depute", null, new { @class = "dropdown-item" })</li>
                         </ul>
                     </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">遊戲商城</a>
-                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <li>
-                                @Html.ActionLink("全部商品", "Index", "Shop", null, new { @class = "dropdown-item" })
-                            </li>
-                            <li><hr class="dropdown-divider" /></li>
-                            <li><a class="dropdown-item" href="#!">Popular Items</a></li>
-                            <li><a class="dropdown-item" href="#!">New Arrivals</a></li>
-                        </ul>
+                    <li class="nav-item">
+                        @Html.ActionLink("遊戲商城", "Index", "Shop", null, new { @class = "nav-link" })
+                    </li>
+                    @* <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <li>
+                    @Html.ActionLink("遊戲商城", "Index", "Shop", null, new { @class = "dropdown-item" })
+                    </li>
+                    <li><hr class="dropdown-divider" /></li>
+                    <li><a class="dropdown-item" href="#!">Popular Items</a></li>
+                    <li><a class="dropdown-item" href="#!">New Arrivals</a></li>
+                    </ul>*@
+
+                    <li id="memberChat" style="display:none" class="nav-item">
+                        @Html.ActionLink("聊天室測試", "OpenChat", "Member", null, new { @class = "nav-link" })
                     </li>
                 </ul>
                 <div>
@@ -67,55 +113,56 @@
                         @{
                             if (Context.Session.GetInt32(CDictionary.SK_UserID) == null)
                             {
-                                <li class="nav-item "> @Html.ActionLink("登入", "Login", "Home", null, new { @class = "nav-link" ,id="lilogin"})</li>
-                                <li class="nav-item"> @Html.ActionLink("註冊", "Create", "Member", null, new { @class = "nav-link" })</li>
+                                                <li class="nav-item "> @Html.ActionLink("登入", "Login", "Home", null, new { @class = "nav-link", id = "lilogin" })</li>
+                                                <li class="nav-item"> @Html.ActionLink("註冊", "Create", "Member", null, new { @class = "nav-link" })</li>
                             }
                             else
                             {
-                                <li class="nav-item" style=" padding: var(--bs-nav-link-padding-y) var(--bs-nav-link-padding-x)">歡迎回來 @Context.Session.GetString(CDictionary.SK_UserName) ID=@Context.Session.GetInt32(CDictionary.SK_UserID)</li>
-                                <li class="nav-item">@Html.ActionLink("登出", "Logout", "Home", null, new { @class = "nav-link" })</li>
-                                <li class="nav-item">@Html.ActionLink("會員頁面", "MemberPageTest", "Member", new {id = Context.Session.GetInt32(CDictionary.SK_UserID) }, new { @class = "nav-link" })</li>
+                                                <li class="nav-item" style=" padding: var(--bs-nav-link-padding-y) var(--bs-nav-link-padding-x)">歡迎回來 @Context.Session.GetString(CDictionary.SK_UserName) ID=@Context.Session.GetInt32(CDictionary.SK_UserID)</li>
+                                                <li class="nav-item">@Html.ActionLink("登出", "Logout", "Home", null, new { @class = "nav-link" })</li>
+                                                <li class="nav-item">@Html.ActionLink("會員頁面", "MemberPageTest", "Member", new { id = Context.Session.GetInt32(CDictionary.SK_UserID) }, new { @class = "nav-link" })</li>
                             }
                         }
 
                     </ul>
                 </div>
+
                 @* 願望清單 *@
 
                 @{
-                   @inject prjDB_GamingForm_Show.Models.Entities.DbGamingFormTestContext dbContext
+                                    @inject prjDB_GamingForm_Show.Models.Entities.DbGamingFormTestContext dbContext
                     int userId = 0;
                     int count = 0;
-                     if (Context.Session.GetInt32(CDictionary.SK_UserID) != null)
-                         {             
-                         userId = (int)Context.Session.GetInt32(CDictionary.SK_UserID);
-                          count = (dbContext.WishLists.Where(x => x.MemberId == userId).Select(a => a)).Count();
-                            }
-                    
+                    if (Context.Session.GetInt32(CDictionary.SK_UserID) != null)
+                    {
+                        userId = (int)Context.Session.GetInt32(CDictionary.SK_UserID);
+                        count = (dbContext.WishLists.Where(x => x.MemberId == userId).Select(a => a)).Count();
+                    }
+
 
                     if (Context.Session.GetInt32(CDictionary.SK_UserID) == null)
                     {
-                            <form class="d-flex">
-                             <a href="@Url.Action("LoveList", "Shop", new { id = Context.Session.GetInt32(CDictionary.SK_UserID) })" class="btn btn-outline-dark mt-auto" id="myLink" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-                                <img src="~/images/shop/blackheart.png" width="16" height="15">
-                                <span class="badge bg-dark text-white ms-1 rounded-pill" id="carcount">@count</span>
-                            </a>
-                        </form>
+                                        <form class="d-flex">
+                                            <a href="@Url.Action("LoveList", "Shop", new { id = Context.Session.GetInt32(CDictionary.SK_UserID) })" class="btn btn-outline-dark mt-auto" id="myLink" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                                                <img src="~/images/shop/blackheart.png" width="16" height="15">
+                                                <span class="badge bg-dark text-white ms-1 rounded-pill" id="lovecount">@count</span>
+                                            </a>
+                                        </form>
                     }
-                
+
                     else
                     {
-                        <form class="d-flex">
-                            <a href="@Url.Action("LoveList", "Shop", new { id = Context.Session.GetInt32(CDictionary.SK_UserID) })" class="btn mt-auto btn-outline-dark  me-1">
-                        <img src="~/images/shop/blackheart.png" width="16" height="15">
-                                <span class="badge bg-dark text-white ms-1 rounded-pill" id="carcount">@count</span>
-                        </a>
-                        </form>
+                                        <form class="d-flex">
+                                            <a href="@Url.Action("LoveList", "Shop", new { id = Context.Session.GetInt32(CDictionary.SK_UserID) })" class="btn mt-auto btn-outline-dark  me-1">
+                                                <img src="~/images/shop/blackheart.png" width="16" height="15">
+                                                <span class="badge bg-dark text-white ms-1 rounded-pill" id="lovecount">@count</span>
+                                            </a>
+                                        </form>
                     }
                     // 購物車
                 }
                 @{
-                
+
                     int Ccount = 0;
                     string json = "";
                     List<prjDB_GamingForm_Show.ViewModels.CShoppingCarViewModel> car = null;
@@ -123,18 +170,36 @@
                     {
                         json = Context.Session.GetString(CDictionary.SK_PURCHASED_PRODUCES_LIST);
                         car = System.Text.Json.JsonSerializer.Deserialize<List<prjDB_GamingForm_Show.ViewModels.CShoppingCarViewModel>>(json);
-                        Ccount=car.Count();
+                        Ccount = car.Count();
                     }
 
 
-                    <form class="d-flex">
-                        <a href="~/Shop/CarView" class="btn mt-auto btn-outline-dark bi-cart-fill me-1" id="car">
-                            <span class="badge bg-dark text-white ms-1 rounded-pill" id="carcount">@Ccount</span>
-                        </a>
-                    </form>
-                       }
+                                    <form class="d-flex">
+                                        <a href="~/Shop/CarView" class="btn mt-auto btn-outline-dark bi-cart-fill me-1" id="car">
+                                            <span class="badge bg-dark text-white ms-1 rounded-pill" id="carcount">@Ccount</span>
+                                        </a>
+                                    </form>
+                }
+
+                @{
+                    if (isLoggedIn)
+                    {
+                                        <form class="d-flex" id="notcheckmessage">
+
+                                            <a href="~/javascript:;" onclick="checkMessage()" class="dropdown-toggle info-number btn mt-auto btn-outline-dark me-1" id="navbarDropdown1" data-toggle="dropdown" aria-expanded="false">
+                                                <i class="fa fa-envelope-o"></i>
+                                                <span class="badge bg-dark text-white ms-1 rounded-pill" id="notCheckMessageCount"></span>
+                                            </a>
+                                            <ul id="messageBox" class="dropdown-menu list-unstyled msg_list" role="menu" aria-labelledby="navbarDropdown1">
+                                            </ul>
+
+                                        </form>
+                    }
+                }
+
             </div>
         </div>
+
     </nav>
 
     @RenderBody()
@@ -152,16 +217,20 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">關閉</button>
                     <button type="button" class="btn btn-primary" , id="btnlogin">登入</button>
-                   @*  @Html.ActionLink("登入", "Login", "Home", null, new { @class = "btn btn-primary", id = "btnlogin" }) *@
+                    @*  @Html.ActionLink("登入", "Login", "Home", null, new { @class = "btn btn-primary", id = "btnlogin" }) *@
                 </div>
             </div>
         </div>
     </div>
+    <div id="MemberChat" style="display:none;position: fixed; bottom: 10px; right: 10px; z-index: 999;background-color:#6C6C6C ; opacity:0.95; border: 3px groove #000;border-radius:15px;color:#FFFFF4"></div>
+
     <!-- Footer-->
     <footer class="py-5 bg-dark" style="position:relative;bottom:0;width:100%;z-index:-1 ">
         @*z-index:-1 不蓋過其他圖片，position:fixed維持在視窗底部*@
 
         <div class="container"><p class="m-0 text-center text-white ">Copyright &copy; Your Website 2023</p></div>
+        <div id="suname" hidden>@Context.Session.GetString(CDictionary.SK_UserName)</div>
+        <div id="suid" hidden>@Context.Session.GetInt32(CDictionary.SK_UserID)</div>
     </footer>
     <!-- Bootstrap core JS-->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
@@ -180,7 +249,164 @@
     <script src="~/js/owl.carousel.min.js"></script>
     <script src="~/js/blogmain.js"></script>*@
 
+    <!--連接SignalR用的 - 彥霖-->
+    <script src="~/js/signalr/dist/browser/signalr.js"></script>
+
     <script>
+        //往下-聊天室區域 - 彥霖
+        var connection = new signalR.HubConnectionBuilder().withUrl("/memberChatHub").build();
+        var suname = $('#suname').text();
+        var suid = $('#suid').text();
+
+        $(document).ready(async function () {
+            const response = await fetch('@Url.Content("~/Member/IsLoginOrNot")')
+            const datas = await response.json()
+            if (datas == true) {
+                $('#memberChat').css('display', 'block');
+            }
+        });
+
+        $(document).ready(function () {
+            $.ajax({
+                type: 'post',
+                url: '/Member/HowMuchMessageNotCheck',
+                success: function (result) {
+                    if (result != 0) {
+                        $('#notCheckMessageCount').text(result)
+                    }
+                    else {
+                        $('#notCheckMessageCount').text("")
+                    }
+                },
+                error: function (error) {
+                    // 處理錯誤
+                    console.error(error);
+                }
+            });
+
+        });
+
+        if (suname != "" && suid != null) {
+            connection.start().then(function () {
+                console.log("Hub 連線完成");
+            }).catch(function (err) {
+                alert('連線錯誤: ' + err.toString());
+            });
+        }
+
+
+        function checkMessage() {
+            $('#notCheckMessageCount').text("")
+        }
+
+        $('#navbarDropdown1').on('click', async function () {
+            const response = await fetch(`@Url.Content("~/Member/NotCheckMessage")`);
+            const datas = await response.json();
+
+            if (datas.length < 1) {
+                return;
+            }
+
+            datas.reverse();
+            const data = datas.map(data =>
+                `<li class="nav-item1" data-li-name="uniqueName" >
+                                                        <a class="dropdown-item" onclick="replyMessage('${data.senderName}',${data.senderId})">
+                                                            <span>
+                                                         <span>${data.senderName}</span >
+                                                         <span class="time" >${data.sendTime}</span>
+                                                    </span >
+                                                    <span class="message" >${data.message}</span>
+                                                </a >
+                                             </li>`);
+            var messageBox = document.querySelector('#messageBox');
+            messageBox.innerHTML = data.join('');
+        })
+
+        function replyMessage(name, id) {
+            if (id == 176) {
+
+            }
+            else if (id == 179) {
+
+            }
+            else {
+                var div = document.querySelector('#MemberChat');
+                if (div.style.display === "none") {
+                    $('#MemberChat').load(`@Url.Content("~/Member/ChatPV")?recevier=${name}`);
+                    div.style.display = "block"; // 顯示
+                    $.ajax({
+                        type: 'post',
+                        url: '/Member/CheckAllMessage',
+                        data: { senderid: id }
+                    });
+                    isChatOpen = true;
+                }
+                else {
+                    div.style.display = "none"; // 隱藏
+                    isChatOpen = false;
+                }
+            }            
+        }
+
+        connection.on("ReceiverUpdContent", function (message, selfID, senderAdminId, senderimg, sendTime) {
+            var div = document.querySelector('#MemberChat');
+            if (div.style.display == "block") {
+                var chatWho = $('#rn').text()
+                if (chatWho == selfID) {
+                    $.ajax({
+                        type: 'post',
+                        url: '/Member/CheckAllMessage',
+                        data: { senderid: senderAdminId }
+                    })
+                }
+                else {
+                    updateNotificationCount();
+                }
+            }
+            else {
+                updateNotificationCount();
+            }
+            var messageBox = document.querySelector('#messageBox')
+
+            // 最外層li
+            var li = document.createElement("li")
+            li.classList.add("nav-item")
+            li.setAttribute("data-li-name", "uniqueName");
+            messageBox.insertBefore(li, messageBox.firstChild)
+
+            // 第二層a
+            var a = document.createElement("a")
+            a.classList.add("dropdown-item")
+            li.appendChild(a)
+
+            // 第三層名字、時間span
+            var spanforname = document.createElement("span")
+            a.appendChild(spanforname)
+
+            // 第三層訊息span
+            var spanformessage = document.createElement("span")
+            spanformessage.classList.add("message")
+            spanformessage.innerHTML = `${message}`
+            a.appendChild(spanformessage)
+
+            //第四層名字span
+            var name = document.createElement("span")
+            name.innerHTML = `${selfID}`
+            spanforname.appendChild(name)
+
+            //第四層時間span
+            var time = document.createElement("span")
+            time.classList.add("time")
+            time.innerHTML = `${sendTime}`
+            spanforname.appendChild(time)
+
+        })
+        function updateNotificationCount() {
+            notCheckMessage = $('#notCheckMessageCount').text()
+            notCheckMessage++;
+            $('#notCheckMessageCount').text(notCheckMessage)
+        }
+        //往上-聊天室區域 - 彥霖
         const button = document.querySelector('#car');
         button.addEventListener('mouseover', () => {
             button.style.backgroundColor = '#a81d1d';
@@ -207,5 +433,23 @@
 
     <!--圈圈加進來測試用-->
     @await RenderSectionAsync("Scripts", required: false)
+    <script>
+        async function getLoveList() {
+            let url = "@Url.Content("~/Shop/getLoveList")";
+            const response = await fetch(url);
+            const count = await response.text();
+            document.querySelector("#lovecount").innerHTML = count
+        }
+        document.addEventListener('DOMContentLoaded', () => { getLoveList() })
+
+        async function getcarList() {
+            let url = "@Url.Content("~/Shop/getcarList")";
+            const response = await fetch(url);
+            const Lcount = await response.text();
+            document.querySelector("#carcount").innerHTML = Lcount
+        }
+        document.addEventListener('DOMContentLoaded', () => { getcarList() })
+    </script>
+
 </body>
 </html>

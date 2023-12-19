@@ -39,7 +39,7 @@ namespace prjDB_GamingForm_Show.ViewModels
                        {
                            n.DeputeId,
                            n.Title,
-                           Name = n.Provider.Name,
+                           n.Provider.Name,
                            SrartDate = n.StartDate.ToString("d"),
                            Modifiedate = n.Modifiedate.ToString("d"),
                            n.DeputeContent,

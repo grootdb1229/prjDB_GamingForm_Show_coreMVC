@@ -47,17 +47,15 @@ public partial class DbGamingFormTestContext : DbContext
 
     public virtual DbSet<EcpayOrder> EcpayOrders { get; set; }
 
-    public virtual DbSet<Education> Educations { get; set; }
-
     public virtual DbSet<Gender> Genders { get; set; }
 
     public virtual DbSet<Image> Images { get; set; }
 
     public virtual DbSet<JobAdvertise> JobAdvertises { get; set; }
 
-    public virtual DbSet<JobCertificate> JobCertificates { get; set; }
-
     public virtual DbSet<Member> Members { get; set; }
+
+    public virtual DbSet<MemberChat> MemberChats { get; set; }
 
     public virtual DbSet<MemberCollection> MemberCollections { get; set; }
 
@@ -67,6 +65,8 @@ public partial class DbGamingFormTestContext : DbContext
 
     public virtual DbSet<MemberTag> MemberTags { get; set; }
 
+    public virtual DbSet<NewsLetter> NewsLetters { get; set; }
+
     public virtual DbSet<Order> Orders { get; set; }
 
     public virtual DbSet<OrderProduct> OrderProducts { get; set; }
@@ -74,8 +74,6 @@ public partial class DbGamingFormTestContext : DbContext
     public virtual DbSet<Payment> Payments { get; set; }
 
     public virtual DbSet<Product> Products { get; set; }
-
-    public virtual DbSet<ProductAdvertise> ProductAdvertises { get; set; }
 
     public virtual DbSet<ProductComplain> ProductComplains { get; set; }
 
@@ -85,23 +83,13 @@ public partial class DbGamingFormTestContext : DbContext
 
     public virtual DbSet<ProductTag> ProductTags { get; set; }
 
+    public virtual DbSet<PublicChat> PublicChats { get; set; }
+
     public virtual DbSet<Region> Regions { get; set; }
 
     public virtual DbSet<RegionDistrict> RegionDistricts { get; set; }
 
     public virtual DbSet<Reply> Replies { get; set; }
-
-    public virtual DbSet<ReplyAction> ReplyActions { get; set; }
-
-    public virtual DbSet<ReplyImage> ReplyImages { get; set; }
-
-    public virtual DbSet<Resume> Resumes { get; set; }
-
-    public virtual DbSet<ResumeCertificate> ResumeCertificates { get; set; }
-
-    public virtual DbSet<ResumeSkill> ResumeSkills { get; set; }
-
-    public virtual DbSet<ResumeStyle> ResumeStyles { get; set; }
 
     public virtual DbSet<SerachRecord> SerachRecords { get; set; }
 
@@ -112,8 +100,6 @@ public partial class DbGamingFormTestContext : DbContext
     public virtual DbSet<Status> Statuses { get; set; }
 
     public virtual DbSet<SubBlog> SubBlogs { get; set; }
-
-    public virtual DbSet<SubBolgCategory> SubBolgCategories { get; set; }
 
     public virtual DbSet<SubTag> SubTags { get; set; }
 
@@ -171,8 +157,7 @@ public partial class DbGamingFormTestContext : DbContext
             entity.ToTable("Advertise");
 
             entity.Property(e => e.AdvertiseId).HasColumnName("AdvertiseID");
-            entity.Property(e => e.EndDate).HasColumnType("date");
-            entity.Property(e => e.StartDate).HasColumnType("date");
+            entity.Property(e => e.FImagePath).HasColumnName("fImagePath");
             entity.Property(e => e.StatusId).HasColumnName("StatusID");
             entity.Property(e => e.Title).HasMaxLength(50);
 
@@ -385,6 +370,9 @@ public partial class DbGamingFormTestContext : DbContext
             entity.Property(e => e.DeputeId).HasColumnName("DeputeID");
             entity.Property(e => e.MemberId).HasColumnName("MemberID");
             entity.Property(e => e.ReportDate).HasColumnType("datetime");
+            entity.Property(e => e.StatusId)
+                .HasDefaultValueSql("((28))")
+                .HasColumnName("StatusID");
             entity.Property(e => e.SubTagId).HasColumnName("SubTagID");
 
             entity.HasOne(d => d.Depute).WithMany(p => p.DeputeComplains)
@@ -396,6 +384,11 @@ public partial class DbGamingFormTestContext : DbContext
                 .HasForeignKey(d => d.MemberId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_DeputeComplain_Member");
+
+            entity.HasOne(d => d.Status).WithMany(p => p.DeputeComplains)
+                .HasForeignKey(d => d.StatusId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_DeputeComplain_Status");
 
             entity.HasOne(d => d.SubTag).WithMany(p => p.DeputeComplains)
                 .HasForeignKey(d => d.SubTagId)
@@ -467,16 +460,6 @@ public partial class DbGamingFormTestContext : DbContext
             entity.Property(e => e.TradeNo).HasMaxLength(50);
         });
 
-        modelBuilder.Entity<Education>(entity =>
-        {
-            entity.HasKey(e => e.Edid);
-
-            entity.ToTable("Education");
-
-            entity.Property(e => e.Edid).HasColumnName("EDID");
-            entity.Property(e => e.Name).HasMaxLength(50);
-        });
-
         modelBuilder.Entity<Gender>(entity =>
         {
             entity.HasKey(e => e.GenderId).HasName("PK_Firm");
@@ -511,15 +494,6 @@ public partial class DbGamingFormTestContext : DbContext
                 .HasConstraintName("FK_JobAdvertise_AD");
         });
 
-        modelBuilder.Entity<JobCertificate>(entity =>
-        {
-            entity.ToTable("JobCertificate");
-
-            entity.Property(e => e.Id).HasColumnName("ID");
-            entity.Property(e => e.CertificateId).HasColumnName("CertificateID");
-            entity.Property(e => e.JobId).HasColumnName("JobID");
-        });
-
         modelBuilder.Entity<Member>(entity =>
         {
             entity.ToTable("Member");
@@ -532,6 +506,36 @@ public partial class DbGamingFormTestContext : DbContext
             entity.Property(e => e.Mycomment).HasColumnType("ntext");
             entity.Property(e => e.Name).HasMaxLength(50);
             entity.Property(e => e.Phone).HasMaxLength(24);
+            entity.Property(e => e.StatusId)
+                .HasDefaultValueSql("((1))")
+                .HasColumnName("StatusID");
+
+            entity.HasOne(d => d.GenderNavigation).WithMany(p => p.Members)
+                .HasForeignKey(d => d.Gender)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Member_Gender");
+
+            entity.HasOne(d => d.Status).WithMany(p => p.Members)
+                .HasForeignKey(d => d.StatusId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Member_Status");
+        });
+
+        modelBuilder.Entity<MemberChat>(entity =>
+        {
+            entity.ToTable("MemberChat");
+
+            entity.Property(e => e.Id).HasColumnName("ID");
+
+            entity.HasOne(d => d.ReceiveMemberNavigation).WithMany(p => p.MemberChatReceiveMemberNavigations)
+                .HasForeignKey(d => d.ReceiveMember)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_MemberChat_Member1");
+
+            entity.HasOne(d => d.SenderMemberNavigation).WithMany(p => p.MemberChatSenderMemberNavigations)
+                .HasForeignKey(d => d.SenderMember)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_MemberChat_Member");
         });
 
         modelBuilder.Entity<MemberCollection>(entity =>
@@ -579,16 +583,6 @@ public partial class DbGamingFormTestContext : DbContext
             entity.Property(e => e.Id).HasColumnName("ID");
             entity.Property(e => e.MemeberId).HasColumnName("MemeberID");
             entity.Property(e => e.StatusId).HasColumnName("StatusID");
-
-            entity.HasOne(d => d.Memeber).WithMany(p => p.MemberStatuses)
-                .HasForeignKey(d => d.MemeberId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_MemberStatus_Member");
-
-            entity.HasOne(d => d.Status).WithMany(p => p.MemberStatuses)
-                .HasForeignKey(d => d.StatusId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_MemberStatus_Status");
         });
 
         modelBuilder.Entity<MemberTag>(entity =>
@@ -618,6 +612,16 @@ public partial class DbGamingFormTestContext : DbContext
                 .HasConstraintName("FK_MemberTag_Tag");
         });
 
+        modelBuilder.Entity<NewsLetter>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK_ProductAdvertise");
+
+            entity.ToTable("NewsLetter");
+
+            entity.Property(e => e.Id).HasColumnName("ID");
+            entity.Property(e => e.Title).HasColumnName("title");
+        });
+
         modelBuilder.Entity<Order>(entity =>
         {
             entity.ToTable("Order");
@@ -625,6 +629,7 @@ public partial class DbGamingFormTestContext : DbContext
             entity.Property(e => e.OrderId).HasColumnName("OrderID");
             entity.Property(e => e.CompletedDate).HasColumnType("date");
             entity.Property(e => e.CouponId).HasColumnName("CouponID");
+            entity.Property(e => e.Ecid).HasColumnName("ECID");
             entity.Property(e => e.MemberId).HasColumnName("MemberID");
             entity.Property(e => e.Note).HasMaxLength(50);
             entity.Property(e => e.OrderDate).HasColumnType("date");
@@ -704,28 +709,15 @@ public partial class DbGamingFormTestContext : DbContext
                 .HasConstraintName("FK_Product_Status");
         });
 
-        modelBuilder.Entity<ProductAdvertise>(entity =>
-        {
-            entity.ToTable("ProductAdvertise");
-
-            entity.Property(e => e.Id).HasColumnName("ID");
-            entity.Property(e => e.AdvertiseId).HasColumnName("AdvertiseID");
-            entity.Property(e => e.ProductId).HasColumnName("ProductID");
-
-            entity.HasOne(d => d.Advertise).WithMany(p => p.ProductAdvertises)
-                .HasForeignKey(d => d.AdvertiseId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_ProductAdvertise_AD");
-
-            entity.HasOne(d => d.Product).WithMany(p => p.ProductAdvertises)
-                .HasForeignKey(d => d.ProductId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_ProductAdvertise_Product");
-        });
-
         modelBuilder.Entity<ProductComplain>(entity =>
         {
             entity.ToTable("ProductComplain");
+
+            entity.Property(e => e.ReportDate).HasColumnType("datetime");
+            entity.Property(e => e.StatusId)
+                .HasDefaultValueSql("((28))")
+                .HasColumnName("StatusID");
+            entity.Property(e => e.SubTagId).HasColumnName("SubTagID");
 
             entity.HasOne(d => d.Memeber).WithMany(p => p.ProductComplains)
                 .HasForeignKey(d => d.MemeberId)
@@ -736,6 +728,16 @@ public partial class DbGamingFormTestContext : DbContext
                 .HasForeignKey(d => d.ProductId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_ProductComplain_Product");
+
+            entity.HasOne(d => d.Status).WithMany(p => p.ProductComplains)
+                .HasForeignKey(d => d.StatusId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_ProductComplain_Status");
+
+            entity.HasOne(d => d.SubTag).WithMany(p => p.ProductComplains)
+                .HasForeignKey(d => d.SubTagId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_ProductComplain_SubTag");
         });
 
         modelBuilder.Entity<ProductEvaluate>(entity =>
@@ -798,6 +800,19 @@ public partial class DbGamingFormTestContext : DbContext
                 .HasConstraintName("FK_ProductAction_SubTag");
         });
 
+        modelBuilder.Entity<PublicChat>(entity =>
+        {
+            entity.ToTable("PublicChat");
+
+            entity.Property(e => e.Id).HasColumnName("ID");
+            entity.Property(e => e.SenderId).HasColumnName("SenderID");
+
+            entity.HasOne(d => d.Sender).WithMany(p => p.PublicChats)
+                .HasForeignKey(d => d.SenderId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_PublicChat_Member");
+        });
+
         modelBuilder.Entity<Region>(entity =>
         {
             entity.ToTable("Region");
@@ -840,72 +855,6 @@ public partial class DbGamingFormTestContext : DbContext
                 .HasForeignKey(d => d.MemberId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Reply_Member");
-        });
-
-        modelBuilder.Entity<ReplyAction>(entity =>
-        {
-            entity.ToTable("ReplyAction");
-
-            entity.Property(e => e.Id).HasColumnName("ID");
-            entity.Property(e => e.ActionId).HasColumnName("ActionID");
-            entity.Property(e => e.MemberId).HasColumnName("MemberID");
-            entity.Property(e => e.ReplyId).HasColumnName("ReplyID");
-        });
-
-        modelBuilder.Entity<ReplyImage>(entity =>
-        {
-            entity.ToTable("ReplyImage");
-
-            entity.Property(e => e.Id)
-                .ValueGeneratedNever()
-                .HasColumnName("ID");
-            entity.Property(e => e.ImageId).HasColumnName("ImageID");
-            entity.Property(e => e.ReplyId).HasColumnName("ReplyID");
-        });
-
-        modelBuilder.Entity<Resume>(entity =>
-        {
-            entity.ToTable("Resume");
-
-            entity.Property(e => e.ResumeId).HasColumnName("ResumeID");
-            entity.Property(e => e.Edid).HasColumnName("EDID");
-            entity.Property(e => e.FormId).HasColumnName("FormID");
-            entity.Property(e => e.FullName).HasMaxLength(50);
-            entity.Property(e => e.IdentityId)
-                .HasMaxLength(50)
-                .HasColumnName("IdentityID");
-            entity.Property(e => e.ImageId).HasColumnName("ImageID");
-            entity.Property(e => e.MemberId).HasColumnName("MemberID");
-            entity.Property(e => e.PhoneNumber).HasMaxLength(50);
-            entity.Property(e => e.ResumeStatusId).HasColumnName("ResumeStatusID");
-        });
-
-        modelBuilder.Entity<ResumeCertificate>(entity =>
-        {
-            entity.ToTable("ResumeCertificate");
-
-            entity.Property(e => e.Id).HasColumnName("ID");
-            entity.Property(e => e.CertificateId).HasColumnName("CertificateID");
-            entity.Property(e => e.ResumeId).HasColumnName("ResumeID");
-        });
-
-        modelBuilder.Entity<ResumeSkill>(entity =>
-        {
-            entity.ToTable("ResumeSkill");
-
-            entity.Property(e => e.Id).HasColumnName("ID");
-            entity.Property(e => e.ResumeId).HasColumnName("ResumeID");
-            entity.Property(e => e.SkillId).HasColumnName("SkillID");
-        });
-
-        modelBuilder.Entity<ResumeStyle>(entity =>
-        {
-            entity.HasKey(e => e.FormId);
-
-            entity.ToTable("ResumeStyle");
-
-            entity.Property(e => e.FormId).HasColumnName("FormID");
-            entity.Property(e => e.Name).HasMaxLength(50);
         });
 
         modelBuilder.Entity<SerachRecord>(entity =>
@@ -961,15 +910,6 @@ public partial class DbGamingFormTestContext : DbContext
                 .HasForeignKey(d => d.BlogId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_SubBlog_Blog");
-        });
-
-        modelBuilder.Entity<SubBolgCategory>(entity =>
-        {
-            entity.HasKey(e => e.CategoryId);
-
-            entity.Property(e => e.CategoryId).HasColumnName("CategoryID");
-            entity.Property(e => e.SubBlogId).HasColumnName("SubBlogID");
-            entity.Property(e => e.Title).HasMaxLength(50);
         });
 
         modelBuilder.Entity<SubTag>(entity =>

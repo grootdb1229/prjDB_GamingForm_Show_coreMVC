@@ -19,6 +19,8 @@ public partial class SubTag
 
     public virtual ICollection<MemberTag> MemberTags { get; set; } = new List<MemberTag>();
 
+    public virtual ICollection<ProductComplain> ProductComplains { get; set; } = new List<ProductComplain>();
+
     public virtual ICollection<ProductTag> ProductTags { get; set; } = new List<ProductTag>();
 
     public virtual Tag Tag { get; set; } = null!;

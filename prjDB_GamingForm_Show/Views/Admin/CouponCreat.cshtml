@@ -1,69 +1,61 @@
-﻿@model prjDB_GamingForm_Show.Models.Entities.Coupon
+﻿@model prjDB_GamingForm_Show.ViewModels.CAdminCouponViewModel
 
 @{
     ViewData["Title"] = "CouponCreat";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
-<h2>CouponCreat</h2>
 
-<h4>Coupon</h4>
+
+<h4 class="text-center">新增折扣券</h4>
 <hr />
-<div class="row">
+<div class="row justify-content-center">
     <div class="col-md-4">
-        <form asp-action="CouponCreat" method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="CouponId" class="control-label"></label>
-                <input asp-for="CouponId" class="form-control" />
-                <span asp-validation-for="CouponId" class="text-danger"></span>
+        <form asp-action="CouponCreat" class="mx-auto">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>                      
+            <div class="input-group mb-3">
+                <span asp-validation-for="Title" class="input-group-text" id="inputGroup-sizing-default">名稱</span>
+                <input asp-for="Title" type="text" class="form-control" id="titleval" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" style="border-radius:5px" />                
+            </div>            
+            <div class="input-group mb-3">
+                <span asp-validation-for="Content" class="input-group-text" id="inputGroup-sizing-default1">內容</span>                
+                <input asp-for="Content" type="text" class="form-control" id="contentval" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default1" style="border-radius:5px" />
             </div>
-            <div class="form-group">
-                <label asp-for="Title" class="control-label"></label>
-                <input asp-for="Title" class="form-control" />
-                <span asp-validation-for="Title" class="text-danger"></span>
+            <div class="input-group mb-3" id="discount">
+                <span asp-validation-for="Discount" class="input-group-text" id="inputGroup-sizing-default2">折扣</span>
+                <input asp-for="Discount" type="range" id="disval" min="0.1" max="0.9" step="0.1" value="0.9" class="form-range" onchange="updateRangeValue(this.value)" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default2" style="border-radius:5px" />
+                <div id="rangeValue" style="padding-top:9px;padding-left:1px;font-size:15px">折數：9折</div>                
+            </div>            
+            <div class="input-group mb-3">
+                <span asp-validation-for="StartDate" class="input-group-text" id="inputGroup-sizing-default4">起日</span>
+                <input asp-for="StartDate" type="date" class="form-control" min="@DateTime.Today.ToString("yyyy-MM-dd")" id="startDate" onchange="updateEndDateMin()" aria-describedby="inputGroup-sizing-default3" style="border-radius:5px" />                
             </div>
+            <div class="input-group mb-3">
+                <span asp-validation-for="EndDate" class="input-group-text" id="inputGroup-sizing-default4">迄日</span>
+                <input asp-for="EndDate" type="date" class="form-control" min="@DateTime.Today.ToString("yyyy-MM-dd")" id="endDate" aria-describedby="inputGroup-sizing-default3" style="border-radius:5px" />                
+            </div>            
             <div class="form-group">
-                <label asp-for="Discount" class="control-label"></label>
-                <input asp-for="Discount" class="form-control" />
-                <span asp-validation-for="Discount" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Reduce" class="control-label"></label>
-                <input asp-for="Reduce" class="form-control" />
-                <span asp-validation-for="Reduce" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="StartDate" class="control-label"></label>
-                <input asp-for="StartDate" class="form-control" />
-                <span asp-validation-for="StartDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="EndDate" class="control-label"></label>
-                <input asp-for="EndDate" class="form-control" />
-                <span asp-validation-for="EndDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="StatusId" class="control-label"></label>
-                <input asp-for="StatusId" class="form-control" />
-                <span asp-validation-for="StatusId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Quantity" class="control-label"></label>
-                <input asp-for="Quantity" class="form-control" />
-                <span asp-validation-for="Quantity" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-default" />
+                <input type="submit" value="確認新增" class="btn btn-dark" />
             </div>
         </form>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
+<div class="text-center">
+    <a asp-action="CouponList" style="font-size:25px">回到清單</a>
 </div>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>        
+        function updateRangeValue(value) {
+            const discount = value * 10;
+            // 顯示目前選擇的range值
+            document.getElementById('rangeValue').innerText = `折數：${discount}折`;
+        }   
+        function updateEndDateMin() {
+            var startDate = document.getElementById("startDate").value;
+            document.getElementById("endDate").min = startDate;
+        }
+    </script>
 }

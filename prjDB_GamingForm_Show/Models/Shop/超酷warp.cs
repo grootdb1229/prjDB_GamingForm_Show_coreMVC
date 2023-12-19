@@ -129,6 +129,7 @@ namespace prjDB_GamingForm_Show.Models.Shop
 
         public List<IFormFile>? Photos { get; set; }
 
+	
 		public string? FImagePath
 		{
 
@@ -136,6 +137,7 @@ namespace prjDB_GamingForm_Show.Models.Shop
 			set { _product.FImagePath = value; }
 		}
 		public string? MulPic { get; set; }
+		public string? MulEditPic { get; set; }
 	}
 
 

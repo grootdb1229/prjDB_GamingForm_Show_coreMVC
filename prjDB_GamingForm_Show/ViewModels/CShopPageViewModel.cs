@@ -26,8 +26,8 @@ namespace prjDB_GamingForm_Show.ViewModels
         public string? FImagePath { get; set; }
 
         public string SubTagName { get; set; }
-
-        public IEnumerable<int> payment { get; set; }
+		public string SubTagName_Lan { get; set; }
+		public IEnumerable<int> payment { get; set; }
 
         public virtual Member? Member { get; set; }
         public IEnumerable<CProductWarp> CProductWarp { get; set; } = new List<CProductWarp>();

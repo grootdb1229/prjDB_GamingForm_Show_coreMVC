@@ -13,28 +13,33 @@ namespace prjDB_GamingForm_Show.Controllers
         DbGamingFormTestContext db = new DbGamingFormTestContext();
         //step4 : 新增訂單
         [HttpPost]
-        [Route("api/Ecpay/AddOrders")]
+        [Route("Ecpay/AddOrders")]
         public string AddOrders(Models.Shop.get_localStorage  json)
         {
-            EcpayOrder Orders = new EcpayOrder();
-            Orders.MemberId = json.MerchantID;
-            Orders.MerchantTradeNo = json.MerchantTradeNo;
-            Orders.RtnCode = 0; //未付款
-            Orders.RtnMsg = "訂單成功尚未付款";
-            Orders.TradeNo = json.MerchantID.ToString();
-            Orders.TradeAmt = json.TotalAmount;
-            Orders.PaymentDate = Convert.ToDateTime(json.MerchantTradeDate);
-            Orders.PaymentType = json.PaymentType;
-            Orders.PaymentTypeChargeFee = "0";
-            Orders.TradeDate = json.MerchantTradeDate;
-            Orders.SimulatePaid = 0;
-            db.EcpayOrders.Add(Orders);
+            var order = db.Orders.Where(x => x.MemberId == 41)//HttpContext.Session.GetInt32(CDictionary.SK_UserID))
+                        .OrderByDescending(x => x.OrderId).FirstOrDefault();
+            order.PaymentDate = DateTime.Now;
+            order.Ecid = json.MerchantTradeNo;
             db.SaveChanges();
+            //EcpayOrder Orders = new EcpayOrder();
+            //Orders.MemberId = json.MerchantID;
+            //Orders.MerchantTradeNo = json.MerchantTradeNo;
+            //Orders.RtnCode = 0; //未付款
+            //Orders.RtnMsg = "訂單成功尚未付款";
+            //Orders.TradeNo = json.MerchantID.ToString();
+            //Orders.TradeAmt = json.TotalAmount;
+            //Orders.PaymentDate = Convert.ToDateTime(json.MerchantTradeDate);
+            //Orders.PaymentType = json.PaymentType;
+            //Orders.PaymentTypeChargeFee = "0";
+            //Orders.TradeDate = json.MerchantTradeDate;
+            //Orders.SimulatePaid = 0;
+            //db.EcpayOrders.Add(Orders);
+            //db.SaveChanges();
             return "OK";
         }
         // HomeController->Index->ReturnURL所設定的
         [HttpPost]
-        [Route("api/Ecpay/AddPayInfo")]
+        [Route("Ecpay/AddPayInfo")]
         public HttpResponseMessage AddPayInfo(JObject info)
         {
             try
@@ -50,7 +55,7 @@ namespace prjDB_GamingForm_Show.Controllers
         }
         // HomeController->Index->PaymentInfoURL所設定的
         [HttpPost]
-        [Route("api/Ecpay/AddAccountInfo")]
+        [Route("Ecpay/AddAccountInfo")]
         public HttpResponseMessage AddAccountInfo(JObject info)
         {
             try

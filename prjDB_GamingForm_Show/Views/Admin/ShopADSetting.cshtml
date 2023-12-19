@@ -1,0 +1,64 @@
+﻿@model prjDB_GamingForm_Show.ViewModels.CShopUseADViewModel
+
+@{
+    ViewData["Title"] = "ShopADSetting";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+
+
+<h4 class="text-center">設定商城進版廣告</h4>
+<hr />
+<div class="row justify-content-center">
+    <div class="col-md-4">
+        <form asp-action="ShopADSetting" enctype="multipart/form-data" class="mx-auto">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="input-group mb-3">
+                <span asp-validation-for="Title" class="input-group-text" id="inputGroup-sizing-default">名稱</span>
+                <input asp-for="Title" type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" style="border-radius:5px" />                
+            </div>
+            <div class="input-group mb-3">
+                <span asp-validation-for="Content" class="input-group-text" id="inputGroup-sizing-default1">說明</span>
+                <input asp-for="Content" type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default1" style="border-radius:5px" />
+            </div>
+            <div class="input-group mb-3">                
+                <input type="file" name="Photo" accept="image/*" id="imgFile"  style="border-radius:5px" />                
+            </div>
+            <div class="input-group mb-3">
+                <span asp-validation-for="Content" class="input-group-text" id="inputGroup-sizing-default2">圖片預覽</span>
+                <img id="imgPreview" src="~/AD/noimage.png" style="width:50%;height:50%;border-radius:5px" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default2"  />
+            </div>
+            <div class="form-group">
+                <input type="submit" value="送出設定" class="btn btn-dark" />
+            </div>
+        </form>
+    </div>
+</div>
+
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        $("#imgFile").bind("change", function () {
+            var file = this.files[0]
+            var allowType = "image.*";
+            if (file.type.match(allowType)) {
+                var reader = new FileReader();
+                reader.onload = function () {
+                    arrayBuffer = this.result;
+                    var blob = new Blob([arrayBuffer], {
+                        type: "image/jpeg"
+                    });
+                    var urlCreater = window.URL || window.webkitURL;
+                    var imageUrl = urlCreater.createObjectURL(blob)
+                    $("#imgPreview").attr("src", imageUrl);
+                };
+                reader.readAsArrayBuffer(this.files[0])
+            }
+            else {
+                alert("錯誤的檔案格式")
+            }
+        })
+    </script>
+}

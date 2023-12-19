@@ -1,0 +1,153 @@
+﻿@model IEnumerable<prjDB_GamingForm_Show.ViewModels.CProductComplainViewModel>
+
+@{
+    ViewData["Title"] = "ProductComplain";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h2 style="margin-left:5px ; font-size:45px">商品申訴</h2>
+
+
+<table class="table table-dark table-hover" style="color:white ; font-size:20px">
+    <thead>
+        <tr>
+            <th>
+                編號
+            </th>
+            <th>
+                商品編號
+            </th>
+            <th>
+                申訴人ID
+            </th>
+            <th>
+                申訴理由
+            </th>
+            <th>
+                申訴內容
+            </th>
+            <th>
+                申訴時間
+            </th>
+            <th>
+                申訴狀態
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ProductId)
+            </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MemeberId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SubTag)
+                </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ReplyContent)
+            </td>
+           
+            <td>
+                @Html.DisplayFor(modelItem => item.ReportDate)
+            </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Status)
+                </td>
+            <td>
+                    <button type="button" class="btn btn-dark status" onclick="ProductDetail(@Html.DisplayFor(modelItem => item.ProductId))">商品詳情</button>
+                    <button type="button" class="btn btn-dark status" onclick="StatusEdit(@Html.DisplayFor(modelItem => item.Id))">修改狀態</button>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+@section Scripts
+    {
+
+    <script>
+
+        async function StatusEdit(value) {
+
+            const { value: status } = await Swal.fire({
+                title: "修改委託狀態",
+                input: "select",
+                inputOptions: {
+                    狀態: {
+                        28: "未處理",
+                        29: "處理中",
+                        30: "申訴通過",
+                        31: "申訴失敗",
+                    }
+                },
+                inputPlaceholder: "選擇狀態以修改",
+                showCancelButton: true,
+                inputValidator: (value) => {
+                    return new Promise((resolve) => {
+                        if (value != "") {
+                            resolve();
+                        } else {
+                            resolve("請選擇一個選項");
+                        }
+                    });
+                }
+            });
+            if (status) {
+                // Swal.fire(`You selected: ${status}`);
+                $.ajax('@Url.Content("~/Admin/ProductEdit")', {
+                    "type": 'post', //POST、PUT、DELETE//
+                    "data": {
+                        "txtID": value,
+                        "txtStatusID": status,
+                    },
+                })
+                    .done(() => { window.location.href = "/Admin/ProductComplain" })
+            }
+
+
+        }
+
+
+        async function ProductDetail(value) {
+
+            // Swal.fire(`You selected: ${status}`);
+            $.ajax('@Url.Content("~/Shop/ProductInfo")', {
+                "type": 'post', //POST、PUT、DELETE//
+                "data": {
+                    "id": value,
+                },
+                "dataType": "json"
+            })
+                .done((data) => {
+                    Swal.fire({
+                        title: `<strong>商品詳細資訊:</strong>`,
+                        html: `
+                                    <img src="../images/shop/${data[0].fImagePath}" alt="..." style="height:25vh; " /></br>
+                                    <b>商品編號:</b><p>${data[0].productId}</p></br>
+                                    <b>商品名稱:</b><p>${data[0].productName}</p></br>
+                                    <b>上架會員編號:</b><p>${data[0].memberId}</p></br>
+                                    <b>價格:</b><p>${data[0].price}</p></br>
+                                    <b>商品描述:</b><p>${data[0].productContent}</p></br>
+                                    
+                          `,
+                        showCloseButton: true,
+                        showCancelButton: true,
+
+                    });
+
+                })
+        }
+
+
+
+
+
+    </script>
+
+}

@@ -2,250 +2,398 @@
 
 
 @{
-	ViewBag.Title = "Create";
+    ViewBag.Title = "Create";
 }
 
 
 @using (Html.BeginForm("Create", "Shop", FormMethod.Post, new { enctype = "multipart/form-data", id = "productform" }))
 {
-	@Html.AntiForgeryToken()
+    @Html.AntiForgeryToken()
 
-	<div class="container px-4 px-lg-5 mt-2">
+    <div class="container px-4 px-lg-5 mt-2">
 
-		<h2>新增商品</h2>
-
-
-		<hr />
-		<div class="form-group">
-			@Html.LabelFor(model => model.ImageID, htmlAttributes: new { @class = "control-label col-md-2" })
-			<div class="col-md-10">
-				<label class="btn btn-info">
-					<input id="upload_img" name="Photos" style="display:none;" multiple="multiple" onchange="previewImages(this)" type="file">
-					<i class="fa-solid fa-file"></i>上傳圖片
-				</label>
-				<div id="imagePreviewContainer" style="width:100%">
-					<!-- 預覽圖片將顯示在這裡 -->
-				</div>
-			</div>
-		</div>
+        <h2>新增商品</h2>
 
 
-
-
-		<div class="form-group">
-			@Html.LabelFor(model => model.ProductName, htmlAttributes: new { @class = "control-label col-md-2" })
-			<div class="col-md-10">
-				@Html.EditorFor(model => model.ProductName, new { htmlAttributes = new { @class = "form-control" } })
-				@Html.ValidationMessageFor(model => model.ProductName, "", new { @class = "text-danger" })
-			</div>
-		</div>
+        <hr />
+        <div class="form-group">
+            @Html.LabelFor(model => model.ImageID, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <label class="btn btn-info">
+                    <input id="upload_img" name="Photos" style="display:none;" multiple="multiple" onchange="previewImages(this)" type="file">
+                    <i class="fa-solid fa-file"></i>上傳圖片
+                </label>
+                <div id="imagePreviewContainer" style="width:100%">
+                    <!-- 預覽圖片將顯示在這裡 -->
+                </div>
+            </div>
+        </div>
+        <p id="PicAlert" style="color:red"></p><!--沒存入圖片之警示-->
 
 
 
-		<div class="form-group">
-			@Html.LabelFor(model => model.Price, htmlAttributes: new { @class = "control-label col-md-2" })
-			<div class="col-md-10">
-				@Html.EditorFor(model => model.Price, new { htmlAttributes = new { @class = "form-control", id="Price" } })
-				@Html.ValidationMessageFor(model => model.Price, "", new { @class = "text-danger" })
-			</div>
-		</div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.ProductName, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.ProductName, new { htmlAttributes = new { @class = "form-control", @id = "_Productname" } })
+                @Html.ValidationMessageFor(model => model.ProductName, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <p id="NameAlert" style="color:red"></p><!--沒品名之警示-->
 
 
-		<label class="control-label col-md-2">支援語言：</label>
-		<div class="form-group" id="language" style="border: 1px solid #ccc; padding: 10px; overflow-y: auto; width:50vw;">
-			<div class="d-flex flex-wrap">
-				<!-- 內容會自動調整高度 -->
-			</div>
-		</div>
-		<label class="control-label col-md-2">遊戲類別：</label>
-		<div class="form-group" id="GameTag" style="border: 1px solid #ccc; padding: 10px; overflow-y: auto; width:50vw;">
-			<div class="d-flex flex-wrap">
-				<!-- 內容會自動調整高度 -->
-			</div>
-		</div>
-		<input type="hidden" id="LanguageOptions" name="LanguageOptions" /> <!--藏選擇好的標籤傳遞給後端-->
-		<input type="hidden" id="GameTagOptions" name="GameTagOptions" />
+        <div class="form-group">
+            @Html.LabelFor(model => model.Price, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Price, new { htmlAttributes = new { @class = "form-control", id = "_ProductPrice" } })
+                @Html.ValidationMessageFor(model => model.Price, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <p id="PriceAlert" style="color:red"></p><!--沒金額之警示-->
 
-		<div class="form-group">
-			@Html.LabelFor(model => model.ProductContent, htmlAttributes: new { @class = "control-label col-md-2" })
-			<div class="col-md-10">
-				@*@Html.EditorFor(model => model.ProductContent, new { htmlAttributes = new { @class = "form-control" } })*@
-				<textarea style="width: 50vw; height: 45vh; resize: none;" name="ProductContent" cols="120"></textarea>
-				@Html.ValidationMessageFor(model => model.ProductContent, "", new { @class = "text-danger" })
-			</div>
-		</div>
+        <label class="control-label col-md-2">支援語言：</label>
+        <div class="form-group" id="language" style="border: 1px solid #ccc; padding: 10px; overflow-y: auto; width:50vw;">
+            <div class="d-flex flex-wrap">
+                <!-- 內容會自動調整高度 -->
+            </div>
+        </div>
+        <label class="control-label col-md-2">遊戲類別：</label>
+        <div class="form-group" id="GameTag" style="border: 1px solid #ccc; padding: 10px; overflow-y: auto; width:50vw;">
+            <div class="d-flex flex-wrap">
+                <!-- 內容會自動調整高度 -->
+            </div>
+        </div>
+        <p id="TagAlert" style="color:red"></p><!--沒寫標籤之警示-->
+        <input type="hidden" id="LanguageOptions" name="LanguageOptions" /> <!--藏選擇好的標籤傳遞給後端-->
+        <input type="hidden" id="GameTagOptions" name="GameTagOptions" />
 
+        <div class="form-group">
+            @Html.LabelFor(model => model.ProductContent, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @*@Html.EditorFor(model => model.ProductContent, new { htmlAttributes = new { @class = "form-control" } })*@
+                <textarea style="width: 50vw; height: 45vh; resize: none;" name="ProductContent" id="productcontent" cols="120"></textarea>
+                @Html.ValidationMessageFor(model => model.ProductContent, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <p id="ProductcontentAlert" style="color:red"></p><!--沒內文之警示-->
 
-		<div class="form-group">
-			@Html.LabelFor(model => model.UnitStock, htmlAttributes: new { @class = "control-label col-md-2" })
-			<div class="col-md-10">
-				@Html.EditorFor(model => model.UnitStock, new { htmlAttributes = new { @class = "form-control" ,id="Unitstock"} })
-				@Html.ValidationMessageFor(model => model.UnitStock, "", new { @class = "text-danger" })
-			</div>
-		</div>
-		<hr />
-		<div class="form-group">
-			<div class="col-md-offset-2 col-md-10">
-				<input type="submit" value="送出並新增" class="btn btn-outline-dark mt-auto" id="btnsubmit" />
-			</div>
-		</div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.UnitStock, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.UnitStock, new { htmlAttributes = new { @class = "form-control", id = "Unitstock" } })
+                @Html.ValidationMessageFor(model => model.UnitStock, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <p id="UnitStockAlert" style="color:red"></p><!--沒金額之警示-->
+        <hr />
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="送出並新增" class="btn btn-outline-dark mt-auto" id="btnsubmit" />
+                <p id="ProductAlert" style="color:red"></p><!--沒金額之警示-->
+            </div>
+        </div>
 
-	</div>
+    </div>
 
-	@section Scripts
-	{
-	<!--子標籤視窗大小-->
-	<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-	<script>
-
-		document.getElementById('Price').value = 0;
-		document.getElementById('Unitstock').value = 0;
-	</script>
-	<script>
-		$(document).ready(function () {
-			// 監聽textarea內容變化
-			$('#ProductContent').on('input', function () {
-				// 根據內容設置div高度
-				var contentHeight = $(this).prop('scrollHeight');
-				$('#dynamicDiv').height(contentHeight);
-			});
-		});
-	</script>
-	<!--圖片呈現-->
-	<script>
+    @section Scripts
+ {
+    <!--子標籤視窗大小-->
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script>
 
 
-		function previewImages(input) {
-			var previewContainer = document.getElementById('imagePreviewContainer');
-			previewContainer.innerHTML = '';
+    </script>
+    <script>
+        $(document).ready(function () {
+            // 監聽textarea內容變化
+            $('#ProductContent').on('input', function () {
+                // 根據內容設置div高度
+                var contentHeight = $(this).prop('scrollHeight');
+                $('#dynamicDiv').height(contentHeight);
+            });
+        });
+    </script>
+    <!--圖片呈現-->
+    <script>
+        function deleteImage(deleteButton) {
+            // 找到要刪除的圖片及其父節點
+            var imageContainer = deleteButton.parentNode;
 
-			var files = input.files;
-			for (var i = 0; i < files.length; i++) {
-				var file = files[i];
-				var reader = new FileReader();
+            // 刪除整個包裹圖片和刪除按鈕的 div
+            imageContainer.parentNode.removeChild(imageContainer);
+        }
+    </script>
 
-				reader.onloadend = (function (currentReader) {
-					return function () {
-						var img = document.createElement('img');
-						img.src = currentReader.result;
-			
-						img.style.width = '220px';
-						img.style.height = '180px';
-						img.style.objectFit = 'cover'; // 'contain'會保持比例。 
-
-						previewContainer.appendChild(img);
-					};
-				})(reader);
-
-				if (file) {
-					reader.readAsDataURL(file);
-				}
-			}
-		}
-		
-
-		//以下程式碼SomeHow會影響到圖片的顯示
-		// const btn = document.querySelector('#btnsubmit');
-
-		// btn.addEventListener('click', event => {
-		//     event.preventDefault();
-		//     const formData = new FormData(document.querySelector('#productform'));
-		//     fetch('@Url.Content("~/Shop/Create")',
-		//     {
-		//             method: 'POST',
-		//             body: formData
-		//         }).then(response => response.json())
-		//             .then(Swal.fire({
-		//                 title: "新增成功!",
-		//                 //text: "訂單已送至電子信箱!",
-		//                 icon: "success",
-		//                 showConfirmButton=false
-		//             }))
-		//     })
+    <script>
 
 
+        function previewImages(input) {
+            var previewContainer = document.getElementById('imagePreviewContainer');
 
-	</script>
+            var files = input.files;
+            for (var i = 0; i < files.length; i++) {
+                var file = files[i];
+                var reader = new FileReader();
 
-	<!--放Tag-->
-	<script>
+                reader.onloadend = (function (currentReader) {
+                    return function () {
+                        var img = document.createElement('img');
+                        img.src = currentReader.result;
 
-		const LangDiv = document.querySelector('#language .d-flex');
-		const TagDiv = document.querySelector('#GameTag .d-flex');
+                        img.style.width = '220px';
+                        img.style.height = '180px';
+                        img.style.objectFit = 'cover'; // 'contain'會保持比例。
 
+                        var deleteButton = document.createElement('span');
+                        deleteButton.innerHTML = 'X';
+                        deleteButton.style.cursor = 'pointer';
+                        deleteButton.onclick = function () {
+                            // Call a function to delete the corresponding image
+                            deleteImage(deleteButton);
+                        };
 
-		async function LoadLang() { //讀取語言列表
-			const response = await fetch('@Url.Content("~/Shop/language")');
-			const data = await response.json();
+                        previewContainer.innerHTML += '<div style="display: inline-block; position: relative;">' +
+                            '<img src="' + currentReader.result + '" style="width: 220px; height: 180px; object-fit: cover;">' +
+                            '<span style="position: absolute; top: 0; right: 0; cursor: pointer;" onclick="deleteImage(this)">X</span>' +
+                            '</div>';
+                    };
+                })(reader);
 
-			const Language = data.map(x => `
-							<div class="col-3">
-								<label style="margin-bottom: 10px; display: block;">
-											<input type="checkbox" name="GameTag" value="${x.subTagId}">${x.name}
-								</label>
-							</div>
-						`).join('');
-
-			LangDiv.innerHTML = Language;
-			 submitTags();
-		}
-
-
-
-		async function LoadTag() { //讀取遊戲標籤列表
-			const response = await fetch('@Url.Content("~/Shop/GameTag")');
-			const data = await response.json();
-
-			const Tag = data.map(x => `
-							<div class="col-3">
-								<label style="margin-bottom: 10px; display: block;">
-									<input type="checkbox" name="GameTag" value="${x.subTagId}">${x.name}
-								</label>
-							</div>
-						`).join('');
-
-			TagDiv.innerHTML = Tag;
-			 submitTags();
-		}
-		LoadLang();
-		LoadTag();
-
-		///如何從checkbox取值
-		function collectSelectedOptions(checkboxName) {
-			const checkboxes = document.getElementsByName(checkboxName);
-			const selectedOptions = Array.from(checkboxes)
-				.filter(checkbox => checkbox.checked)
-				.map(checkbox => checkbox.value);
-
-			return selectedOptions.join(',');
-		}
-
-		function submitTags() {
+                if (file) {
+                    reader.readAsDataURL(file);
+                }
+            }
+        }
 
 
-			const gameTagOptions = collectSelectedOptions("GameTag");
+        //以下程式碼SomeHow會影響到圖片的顯示
+        // const btn = document.querySelector('#btnsubmit');
 
-			//將被勾起來的選項藏到hidden元素
-			document.getElementById("GameTagOptions").value = gameTagOptions;
-
-			return true;
-		}
-
-		async function submitForm(event) {
-			event.preventDefault(); // 阻止表單的默認提交行為
-			await submitTags(); // 等待 submitTags 完成
-			document.getElementById('productform').submit(); // 手動提交表單
-		}
-
-		document.addEventListener('DOMContentLoaded', function () {
-			const form = document.getElementById('productform');
-			form.addEventListener('submit', submitForm);
-		});
+        // btn.addEventListener('click', event => {
+        //     event.preventDefault();
+        //     const formData = new FormData(document.querySelector('#productform'));
+        //     fetch('@Url.Content("~/Shop/Create")',
+            //     {
+            //             method: 'POST',
+            //             body: formData
+            //         }).then(response => response.json())
+            //             .then(Swal.fire({
+            //                 title: "新增成功!",
+            //                 //text: "訂單已送至電子信箱!",
+            //                 icon: "success",
+            //                 showConfirmButton=false
+            //             }))
+            //     })
 
 
 
+        </script>
 
-	</script>
+        <!--放Tag-->
+        <script>
+
+            const LangDiv = document.querySelector('#language .d-flex');
+            const TagDiv = document.querySelector('#GameTag .d-flex');
+
+
+            async function LoadLang() { //讀取語言列表
+                const response = await fetch('@Url.Content("~/Shop/language")');
+                const data = await response.json();
+
+                const Language = data.map(x => `
+                                        <div class="col-3">
+                                            <label style="margin-bottom: 10px; display: block;">
+                                                        <input  type="checkbox" name="GameTag" value="${x.subTagId}">${x.name}
+                                            </label>
+                                        </div>
+                                    `).join('');
+
+                LangDiv.innerHTML = Language;
+                submitTags();
+            }
+
+
+
+            async function LoadTag() { //讀取遊戲標籤列表
+                const response = await fetch('@Url.Content("~/Shop/GameTag")');
+                const data = await response.json();
+
+                const Tag = data.map(x => `
+                                        <div class="col-3">
+                                            <label style="margin-bottom: 10px; display: block;">
+                                                            <input type="checkbox" name="GameTag" value="${x.subTagId}">${x.name}
+                                            </label>
+                                        </div>
+                                    `).join('');
+
+                TagDiv.innerHTML = Tag;
+                submitTags();
+            }
+            LoadLang();
+            LoadTag();
+
+            ///如何從checkbox取值
+            function collectSelectedOptions(checkboxName) {
+                const checkboxes = document.getElementsByName(checkboxName);
+                const selectedOptions = Array.from(checkboxes)
+                    .filter(checkbox => checkbox.checked)
+                    .map(checkbox => checkbox.value);
+
+                return selectedOptions.join(',');
+            }
+
+            function submitTags() {
+
+
+                const gameTagOptions = collectSelectedOptions("GameTag");
+
+                //將被勾起來的選項藏到hidden元素
+                document.getElementById("GameTagOptions").value = gameTagOptions;
+
+
+                return true;
+            }
+
+
+            //最終資料遞交
+            async function submitForm(event) 
+            {
+                //六面旗幟必須通過才允許建立資料。
+                var TagValid = false;
+                var PicValid = false;
+                var NameValid = false;
+                var PriceValid = false;
+                var UnitStockValid = false;
+                var ProductContentValid = false;
+
+                // 正則表達式，匹配一個或多個數字
+                var amountRegex = /^\d+$/u;
+
+
+                const ProductContent = document.getElementById("productcontent")//產品內文
+                const fileInput = document.getElementById("upload_img");//必須至少配一張圖
+                const gameTagOptions = document.getElementById("GameTagOptions").value; //你必須要選擇至少一個標籤
+                const ProductName = document.getElementById("_Productname");//商品名
+                const ProductPrice = document.getElementById("_ProductPrice");//價格
+                const UnitStock = document.getElementById("Unitstock");//總數
+                event.preventDefault(); // 阻止表單的默認提交行為
+                await submitTags(); // 等待 submitTags 完成
+
+
+                //標籤處理
+                if (gameTagOptions.trim() === "") {
+                    // 如果沒有選擇任何checkbox，顯示提醒信息
+                    TagAlert.innerHTML = "請至少選擇一個遊戲標籤。";
+                    TagAlert.style.color = "red";
+                    TagValid = false;
+
+                } else {
+                    TagAlert.innerHTML = "&#10003;以選擇標籤";
+                    TagAlert.style.color = "#79FF79";
+                    TagValid = true;
+                }
+                ///圖片處理
+                if (fileInput.files.length === 0) {
+                    // 如果沒有上傳任何檔案，顯示提醒信息
+                    PicAlert.innerHTML = "請上傳至少一張圖片。";
+                    PicAlert.style.color = "red";
+                    PicValid = false;
+
+                } else {
+                    PicAlert.innerHTML = "&#10003;以選擇圖片";
+                    PicAlert.style.color = "#79FF79";
+                    PicValid = true;
+
+                }
+                //品名處理
+                if (ProductName.value === "") {
+                    NameAlert.innerHTML = "您尚未替產品命名";
+                    NameAlert.style.color = "red";
+                    NameValid = false;
+
+                } else {
+                    NameAlert.innerHTML = "&#10003;以命名產品";
+                    NameAlert.style.color = "#79FF79";
+                    NameValid = true;
+
+                }
+
+                if (ProductPrice.value.trim() === "") {
+                    // 如果輸入框為空，顯示錯誤信息
+                    PriceAlert.innerHTML = "請輸入產品金額。";
+                    PriceValid = false;
+
+                } else {
+                    var priceValue = parseInt(ProductPrice.value, 10);
+                    if (!amountRegex.test(ProductPrice.value) || !(priceValue > 1)) {
+                        // 如果不是正確的阿拉伯數字，或者不大於1，顯示錯誤信息
+                        PriceAlert.innerHTML = "產品金額必須是正常的阿拉伯數字且大於1";
+                        PriceAlert.style.color = "red";
+                        PriceValid = false;
+
+                    } else {
+                        // 其他情況，顯示正確信息
+                        PriceAlert.innerHTML = "&#10003;通過";
+                        PriceAlert.style.color = "#79FF79";
+                        PriceValid = true;
+
+                    }
+                }
+                //庫存處理
+                if (UnitStock.value.trim() === "") {
+                    // 如果輸入框為空，顯示錯誤信息
+                    UnitStockAlert.innerHTML = "請輸入產品庫存。";
+                    UnitStockValid = false;
+
+                } else {
+                    var priceValue = parseInt(ProductPrice.value, 10);
+                    if (!amountRegex.test(ProductPrice.value) || !(priceValue > 1)) {
+                        // 如果不是正確的阿拉伯數字，或者不大於1，顯示錯誤信息
+                        UnitStockAlert.innerHTML = "產品庫存必須是正常的阿拉伯數字且大於1";
+                        UnitStockAlert.style.color = "red";
+                        UnitStockValid = false;
+
+                    } else {
+                        // 其他情況，顯示正確信息
+                        UnitStockAlert.innerHTML = "&#10003;通過";
+                        UnitStockAlert.style.color = "#79FF79";
+                        UnitStockValid = true;
+
+                    }
+                }
+
+                //內文處理
+                if (ProductContent.value.length < 10) {
+                    ProductcontentAlert.innerHTML = "請輸入至少10個字元，以便更好的介紹您的產品。"
+                    ProductcontentAlert.style.color = "red";
+                    ProductContentValid = false;
+
+                } else {
+                    ProductcontentAlert.innerHTML = "&#10003;以輸入產品介紹。"
+                    ProductcontentAlert.style.color = "#79FF79";
+                    ProductContentValid = true
+
+                }
+                if (TagValid && PicValid && NameValid && PriceValid && UnitStockValid && ProductContentValid) {
+                    document.getElementById('productform').submit(); // 手動提交表單
+                }
+                else { ProductAlert.innerHTML = "仍有資歷尚未填妥"; }
+            }
+                        
+
+
+
+
+
+            document.addEventListener('DOMContentLoaded', function () {
+                const form = document.getElementById('productform');
+                form.addEventListener('submit', submitForm);
+            });
+
+
+
+
+        </script>
 
 
 

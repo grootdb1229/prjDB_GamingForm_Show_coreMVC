@@ -24,7 +24,10 @@
 						<i class="fa-solid fa-file"></i>上傳圖片
 					</label>
 					<div id="imagePreviewContainer" style="width:100%">
-						<img id="imagePreview" style="max-width: 300px; max-height: 300px; margin-top: 10px;" src="~/images/shop/@Model.FImagePath" />
+						<div style="display: inline-block; position: relative;">
+							<img id="imagePreview" class="previewImage" data-filename="@Model.FImagePath" style="max-width: 300px; max-height: 300px; margin-top: 10px;" src="~/images/shop/@Model.FImagePath" />
+							<span class="deleteButton" style="position: absolute; top: 0; right: 0; cursor: pointer;" onclick="deleteImage(this)">X</span>
+						</div>
 						@{
 							if (Model.MulPic != null)
 							{
@@ -33,7 +36,10 @@
 								{
 									if (item != "")
 									{
-										<img id="imagePreview" style="max-width: 300px; max-height: 300px; margin-top: 10px;" src="~/images/shop/@item" />
+										<div style="display: inline-block; position: relative;">
+											<img class="previewImage" data-filename="@item" style="max-width: 300px; max-height: 300px; margin-top: 10px;" src="~/images/shop/@item" />
+											<span class="deleteButton" style="position: absolute; top: 0; right: 0; cursor: pointer;" onclick="deleteImage(this)">X</span>
+										</div>
 									}
 								}
 							}
@@ -41,6 +47,7 @@
 					</div>
 				</div>
 			</div>
+			<input type="hidden" id="hiddenInputPic" name="MulEditPic" />
 
 			<div class="form-group">
 				@Html.LabelFor(model => model.ProductName, htmlAttributes: new { @class = "control-label col-md-2" })
@@ -142,9 +149,18 @@
 		</script>
 		<!--圖片呈現-->
 		<script>
+			function deleteImage(deleteButton) {
+				// 找到要刪除的圖片及其父節點
+				var imageContainer = deleteButton.parentNode;
+
+				// 刪除整個包裹圖片和刪除按鈕的 div
+				imageContainer.parentNode.removeChild(imageContainer);
+			}
+		</script>
+
+		<script>
 			function previewImages(input) {
 				var previewContainer = document.getElementById('imagePreviewContainer');
-				previewContainer.innerHTML = '';
 
 				var files = input.files;
 				for (var i = 0; i < files.length; i++) {
@@ -160,7 +176,18 @@
 							img.style.height = '180px';
 							img.style.objectFit = 'cover'; // 'contain'會保持比例。
 
-							previewContainer.appendChild(img);
+							var deleteButton = document.createElement('span');
+							deleteButton.innerHTML = 'X';
+							deleteButton.style.cursor = 'pointer';
+							deleteButton.onclick = function () {
+								// Call a function to delete the corresponding image
+								deleteImage(deleteButton);
+							};
+
+							previewContainer.innerHTML += '<div style="display: inline-block; position: relative;">' +
+								'<img src="' + currentReader.result + '" style="width: 220px; height: 180px; object-fit: cover;">' +
+								'<span style="position: absolute; top: 0; right: 0; cursor: pointer;" onclick="deleteImage(this)">X</span>' +
+								'</div>';
 						};
 					})(reader);
 
@@ -258,6 +285,18 @@
 			async function submitForm(event) {
 				event.preventDefault(); // 阻止表單的默認提交行為
 				await submitTags(); // 等待 submitTags 完成
+
+				var filenames = "";
+				var previewImages = document.getElementsByClassName('previewImage');
+
+				for (var i = 0; i < previewImages.length; i++) {
+					var filename = previewImages[i].getAttribute('data-filename');
+					filenames += filename + "/";
+				}
+				document.getElementById('hiddenInputPic').value = filenames;
+
+
+
 				document.getElementById('productform').submit(); // 手動提交表單
 			}
 
@@ -265,6 +304,9 @@
 				const form = document.getElementById('productform');
 				form.addEventListener('submit', submitForm);
 			});
+
+
+
 
 
 

@@ -47,6 +47,13 @@
                 <span asp-validation-for="Modifiedate" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <label class="control-label">狀態</label>
+                <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked" name="statusid" value="18" checked>
+                    <label class="form-check-label" for="flexSwitchCheckChecked">開放應徵</label>
+                </div>
+            </div>
+            <div class="form-group">
                 <label class="control-label">標題</label>
                 <input asp-for="Title" class="form-control" />
                 <span asp-validation-for="Title" class="text-danger"></span>
@@ -56,22 +63,18 @@
                 <textarea asp-for="DeputeContent" class="form-control" style="height:200px"></textarea>
                 <span asp-validation-for="DeputeContent" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label class="control-label">提供報酬</label>
-                <input asp-for="Salary" class="form-control" />
-                <span asp-validation-for="Salary" class="text-danger"></span>
+            <div class="row mb-3">
+                <div class="col">
+                    <label class="control-label">提供報酬</label>
+                    <input type="text" class="form-control" name="Salary" value="@Model.Salary.ToString("###,###,##0")"/>
+                </div>
+                <div class="col">
+                    <label class="control-label">地區</label>
+                    <select name="region" class="form-select" id="selRegion" aria-label="Default select example">
+                    </select>
+                </div>
             </div>
-            <div class="form-group">
-                <label class="control-label">狀態</label>
-                <select name="status" class="form-select" id="selStatus" aria-label="Default select example">
-                </select>
-            </div>
-            <div class="form-group">
-                <label class="control-label">地區</label>
-                <select name="region" class="form-select" id="selRegion" aria-label="Default select example">
-                </select>
-            </div>
-
+            
             <span id="skillCount" hidden></span>
             <a class="btn btn-secondary mb-3" id="aSkillList"
                tabindex="0"
@@ -106,7 +109,8 @@
         const popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl));
         const selSkills = [];
         const divSkillClasses = document.querySelector('#list-tab'),
-            divSkillsGroup = document.querySelector('#nav-tabContent');
+            divSkillsGroup = document.querySelector('#nav-tabContent'),
+            chkStatus = document.querySelector('#flexSwitchCheckChecked');
         var selectedCount = 0;
         var chooseClass;
 
@@ -132,10 +136,14 @@
         const deputeid = @Model.DeputeId;
         async function loadStatuses(deputeID) {
             const response = await fetch(`@Url.Content("~/depute/editDeputeStatuses")?id=${deputeID}`);
-            const datas = await response.json();
-            console.log(datas);
-            const statuses = datas.map(status => `<option value="${status.status}">${status.status}</option>`);
-            document.querySelector("#selStatus").innerHTML = statuses.join("");
+            const data = await response.json();
+            console.log(data);
+            if (data == 18) {
+                chkStatus.checked = true;
+            }
+            else {
+                chkStatus.checked = false;
+            }
         }
         loadStatuses(deputeid);
 

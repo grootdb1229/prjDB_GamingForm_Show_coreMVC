@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Client;
 using Microsoft.IdentityModel.Tokens;
+using MimeKit;
 using Org.BouncyCastle.Bcpg;
 using prjDB_GamingForm_Show.Models;
 using prjDB_GamingForm_Show.Models.Entities;
@@ -14,11 +15,19 @@ using prjDB_GamingForm_Show.Models.Shop;
 using prjDB_GamingForm_Show.ViewModels;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
+using MailKit;
+using MailKit.Net.Smtp;
 using System.Text.Json;
 using System.Web;
 using static prjDB_GamingForm_Show.Controllers.DeputeController;
 using static System.Runtime.InteropServices.JavaScript.JSType;
+using OpenAI_API;
+using OpenAI_API.Models;
+using Azure;
+using OpenAI_API.Chat;
+using Microsoft.AspNetCore.Http.Extensions;
+using Org.BouncyCastle.Ocsp;
+using System.Collections;
 
 namespace prjDB_GamingForm_Show.Controllers
 {
@@ -39,7 +48,7 @@ namespace prjDB_GamingForm_Show.Controllers
         }
         #region 老朱
 
-        //TODO #1 讀資料
+        //TODO #1 讀資料//
         public void ListLoad()
         {
             //te
@@ -48,6 +57,7 @@ namespace prjDB_GamingForm_Show.Controllers
             _db.Members.Load();
             _db.Statuses.Load();
             _db.Regions.Load();
+            _db.Deputes.Load();
             var data = from n in _db.Deputes.AsEnumerable()
                        orderby n.StartDate descending
                        select new
@@ -127,68 +137,6 @@ namespace prjDB_GamingForm_Show.Controllers
             return Json(skillname);
 
         }
-        //TODO #2 搜尋
-
-        //public IActionResult Search(CKeyWord vm)
-        // {
-        //    IEnumerable<CDeputeViewModel> datas = null;
-        //    if (string.IsNullOrEmpty(vm.txtKeyword) && (!string.IsNullOrEmpty(vm.txtHotkey)))
-        //        vm.txtKeyword = vm.txtHotkey;
-
-        //    if (string.IsNullOrEmpty(vm.txtKeyword))
-        //    {
-        //        ListLoad();
-        //        datas = from n in List
-        //                select n;
-        //    }
-        //    else
-        //    {
-        //        _db.SerachRecords.Add
-        //                        (new SerachRecord { Name = vm.txtKeyword, CreateDays = (DateTime.Now.Date)});
-        //        _db.SaveChanges();
-
-        //        datas = List.Where(n => (n.deputeContent.Trim().ToLower().Contains(vm.txtKeyword.Trim().ToLower()) ||
-        //                                  n.providername.Trim().ToLower().Contains(vm.txtKeyword.Trim().ToLower()) ||
-        //                                  n.title.Trim().ToLower().Contains(vm.txtKeyword.Trim().ToLower()) ||
-        //                                  n.region.Trim().ToLower().Contains(vm.txtKeyword.Trim().ToLower()))
-        //                                  )
-        //        .OrderByDescending(n => n.modifieddate);
-
-        //    }
-        //    if (datas == null || datas.Count() == 0)
-        //    {
-        //        return Content("No result");
-        //    }
-        //    return Json(datas);
-        //}
-
-        //public IActionResult SearchById(int? id)
-        //{
-        //    IEnumerable<CDeputeViewModel> datas = null;
-        //    IEnumerable<string> keyword = from n in _db.SerachRecords
-        //                  where n.Id == id
-        //                  select n.Name;
-
-        //    foreach (string item in keyword)
-        //    {
-        //        if(string.IsNullOrEmpty(item)) 
-        //            continue;
-        //        datas = List.Where(n => (n.deputeContent.Trim().ToLower().Contains(item.Trim().ToLower()) ||
-        //                                  n.providername.Trim().ToLower().Contains(item.Trim().ToLower()) ||
-        //                                  n.title.Trim().ToLower().Contains(item.Trim().ToLower()) ||
-        //                                  n.region.Trim().ToLower().Contains(item.Trim().ToLower()))
-        //                                  ).OrderByDescending(n => n.modifieddate);
-
-        //    }
-        //    if (datas == null || datas.Count() == 0)
-        //    {
-        //        return Content("No result");
-        //    }
-
-        //    return Json(datas);
-
-
-        //}
         public IActionResult MutipleSearch(CKeyWord vm)
         {
             Temp = List;
@@ -295,7 +243,7 @@ namespace prjDB_GamingForm_Show.Controllers
 
 
         }
-        //檢舉//
+        //檢舉//////
         public IActionResult DeputeComplain(CAdminDepute vm)
         {
             if (HttpContext.Session.GetInt32(CDictionary.SK_UserID) != null)
@@ -361,8 +309,116 @@ namespace prjDB_GamingForm_Show.Controllers
             return Json(CookieList.Take(5));
         }
 
+        public IActionResult Fav(int? id)
+        {
+            
+            int userid = 0;
+            if (HttpContext.Session.GetInt32(CDictionary.SK_UserID) != null)
+                userid = (int)HttpContext.Session.GetInt32(CDictionary.SK_UserID);
 
+            string record = "";
+            if (HttpContext.Request.Cookies[$"fav{userid}"] != null)
+                record = HttpContext.Request.Cookies[$"fav{userid}"];
+
+            string[] strResult = record.Split(',');
+            if (strResult.Contains(id.ToString()))
+            {
+                record = "";
+                HttpContext.Response.Cookies.Delete($"fav{userid}");
+                var data = strResult.Where(n => n != id.ToString());
+                foreach (var item in data)
+                {
+                    if(!string.IsNullOrEmpty(item))
+                        record += item.ToString() + ",";
+                }
+                CookieOptions options = new CookieOptions();
+                options.Expires = DateTime.Now.AddDays(30);
+                HttpContext.Response.Cookies.Append($"fav{userid}", record, options);////
+                return Content("False");
+            }
+            else
+            { 
+            CookieOptions options = new CookieOptions();
+            options.Expires = DateTime.Now.AddDays(30);
+            record += $"{id},";
+            HttpContext.Response.Cookies.Append($"fav{userid}", record, options);//
+
+            return Content("Succeed");
+            }
+        }
+        public IActionResult GetFav()
+        {
+            CookieList = new List<CDeputeViewModel>();
+            int userid = 0;
+            if (HttpContext.Session.GetInt32(CDictionary.SK_UserID) != null)
+                userid = (int)HttpContext.Session.GetInt32(CDictionary.SK_UserID);
+            string record = "";
+            if (HttpContext.Request.Cookies[$"fav{userid}"] != null)
+                record = HttpContext.Request.Cookies[$"fav{userid}"];
+            string[] strResult = record.Split(',');
+            strResult = strResult.Reverse().Distinct().ToArray();
+            IEnumerable<CDeputeViewModel> datas = null;
+            foreach (var item in strResult)
+            {
+                if (!string.IsNullOrEmpty(item))
+                {
+                    datas = from n in List
+                            where n.id == Convert.ToInt32(item)
+                            select n;
+                    foreach (var data in datas)
+                    {
+                        CookieList.Add(data);
+                    }
+                }
+
+            }
+            return Json(CookieList.Take(5));
+        }
         //TODO #4 熱門關鍵字
+
+        public IActionResult Recommand(int id)
+        {
+            var value = (from n in _db.DeputeSkills.AsEnumerable()
+                         where n.DeputeId == id
+                         select new { n.Skill.Name }).Distinct();
+            List< CDeputeViewModel> Rcolist = new List< CDeputeViewModel>();
+            CDeputeViewModel data = null;
+            foreach(var item in value)
+            {
+                  var  RecoData = from n in _db.DeputeSkills.AsEnumerable()
+                               where n.Skill.Name.Contains(item.Name)
+                               select new {n.DeputeId,n.Depute.Title, n.Depute.DeputeContent, n.Depute.Provider.Name, n.Depute.Provider.FImagePath };
+                CDeputeViewModel x = null;
+                foreach (var item2 in RecoData)
+                {
+
+                        x = new CDeputeViewModel()
+                        {
+                            id = item2.DeputeId,
+                            title = item2.Title,
+                            providername = item2.Name,
+                            deputeContent = item2.DeputeContent,
+                            imgfilepath = item2.FImagePath
+                        };
+                    Rcolist.Add(x);
+                }
+
+            }
+
+            Random rnd = new Random();
+            int count = rnd.Next(0, 50);
+            List<CDeputeViewModel> Rcolist2 = new List<CDeputeViewModel>();
+            for (int i = 1; i <= 6; i++)
+            {
+                Rcolist2.Add(Rcolist[count]);
+                Rcolist.RemoveAt(count);
+                count = rnd.Next(0, Rcolist.Count);
+
+            }
+            return Json(Rcolist2);
+
+
+        }
         public IActionResult HotKey(int id)
         {
             var value = (from n in _db.SerachRecords.AsEnumerable()
@@ -390,7 +446,7 @@ namespace prjDB_GamingForm_Show.Controllers
 
             return View();
         }
-        //多選載入
+        //多選載入//
         public IActionResult SkillClassess()
         {
             var datas = from n in _db.SkillClasses
@@ -403,10 +459,13 @@ namespace prjDB_GamingForm_Show.Controllers
             return Json(datas);
         }
         public IActionResult Region()
+        
         {
+            List<string> regions = new List<string>();
             var datas = from n in _db.Regions
-                        select n;
-            return Json(datas);
+                        select n.City;
+            regions = datas.ToList();
+            return Json(regions);
         }
         public IActionResult Status()
         {
@@ -467,61 +526,102 @@ namespace prjDB_GamingForm_Show.Controllers
 
         #region 老邊
 
+        #region notAPI
         public IActionResult Create()
         {
+            //判斷是否被封鎖
+            if (HttpContext.Session.GetInt32(CDictionary.SK_UserID) != null)
+            {
+                int memberStatus = _db.Members.FirstOrDefault(_ => _.MemberId == HttpContext.Session.GetInt32(CDictionary.SK_UserID)).StatusId;
+                HttpContext.Session.SetInt32(CDictionary.SK_會員狀態編號, memberStatus);
+            }
             return View();
         }
         [HttpPost]
         public IActionResult Create(CDeputeViewModel vm)
         {
-            Depute n = new Depute()
+            try
             {
-                ProviderId = (int)HttpContext.Session.GetInt32(CDictionary.SK_UserID),
-                StartDate = DateTime.Now,
-                Modifiedate = DateTime.Now,
-                DeputeContent = vm.deputeContent,
-                Salary = vm.salary,
-                StatusId = 18,//懸賞中
-                RegionId = _db.Regions.FirstOrDefault(_ => _.City == vm.region).RegionId,
-                Title = vm.title,
-            };
-            _db.Deputes.Add(n);
-            _db.SaveChanges();
-
-            //存該委託所需的技能(多類別)
-            List<CDeputeSkillViewModel> list = JsonSerializer.Deserialize<List<CDeputeSkillViewModel>>(vm.skilllist);
-
-            DeputeSkill ndsk = new DeputeSkill();
-            foreach (var item in list)
-            {
-                int skillclassID = _db.SkillClasses.FirstOrDefault(_ => _.Name == item.skillclass).SkillClassId;
-                int skillID = _db.Skills.FirstOrDefault(_ => _.SkillClassId == skillclassID && _.Name == item.skill).SkillId;
-                ndsk.Id = 0;
-                ndsk.DeputeId = n.DeputeId;
-                ndsk.SkillId = skillID;
-                _db.DeputeSkills.Add(ndsk);
+                Depute n = new Depute()
+                {
+                    ProviderId = (int)HttpContext.Session.GetInt32(CDictionary.SK_UserID),
+                    StartDate = DateTime.Now,
+                    Modifiedate = DateTime.Now,
+                    DeputeContent = vm.deputeContent,
+                    Salary = vm.salary,
+                    StatusId = 18,//懸賞中
+                    RegionId = _db.Regions.FirstOrDefault(_ => _.City == vm.region).RegionId,
+                    Title = vm.title,
+                };
+                _db.Deputes.Add(n);
                 _db.SaveChanges();
+
+                //存該委託所需的技能(多類別)
+                List<CDeputeSkillViewModel> list = JsonSerializer.Deserialize<List<CDeputeSkillViewModel>>(vm.skilllist);
+
+                DeputeSkill ndsk = new DeputeSkill();
+                foreach (var item in list)
+                {
+                    int skillclassID = _db.SkillClasses.FirstOrDefault(_ => _.Name == item.skillclass).SkillClassId;
+                    int skillID = _db.Skills.FirstOrDefault(_ => _.SkillClassId == skillclassID && _.Name == item.skill).SkillId;
+                    ndsk.Id = 0;
+                    ndsk.DeputeId = n.DeputeId;
+                    ndsk.SkillId = skillID;
+                    _db.DeputeSkills.Add(ndsk);
+                    _db.SaveChanges();
+                }
+                return Json(new { success = true, message = "委託發佈成功" });
             }
-            return RedirectToAction("HomeFrame");
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message });
+            }
         }
         public IActionResult Apply(int id)
-        {
-            ViewBag.memberid = HttpContext.Session.GetInt32(CDictionary.SK_UserID);
+        { 
             Depute o = _db.Deputes.FirstOrDefault(_ => _.DeputeId == id);
             if (o == null)
                 return RedirectToAction("deputemain");
+
+            //登入後跳轉前一頁
+            ViewBag.preUrl = HttpContext.Request.Headers["Referer"].ToString();
+            if (!string.IsNullOrEmpty(Request.Cookies["ppreUrl"]))
+            {
+                //如果未登入點選狀態為例外項的應徵時執行此處
+                ViewBag.preUrl = Request.Cookies["ppreUrl"];
+                Response.Cookies.Delete("ppreUrl");
+            }
+            //判斷是否被封鎖
+            if (HttpContext.Session.GetInt32(CDictionary.SK_UserID) != null)
+            {
+                int memberStatus = _db.Members.FirstOrDefault(_ => _.MemberId == HttpContext.Session.GetInt32(CDictionary.SK_UserID)).StatusId;
+                HttpContext.Session.SetInt32(CDictionary.SK_會員狀態編號, memberStatus);
+            }
             return View(o);
         }
         [HttpPost]
-        public IActionResult Apply(DeputeRecord vm)
+        public IActionResult Apply(DeputeRecord data)
         {
             try
             {
-            _db.DeputeRecords.Add(vm);
-            _db.SaveChanges();
-                return Json(new { success = true, message = "應徵成功" });
+                _db.DeputeRecords.Add(data);
+                _db.SaveChanges();
+                //有會員應徵後，寄給發佈委託者
+                var currentDepute = _db.Deputes.FirstOrDefault(_ => _.DeputeId == data.DeputeId);
+                CDeputeEmail emaiContent = new CDeputeEmail()
+                {
+                    memberName = _db.Members.FirstOrDefault(_ => _.MemberId == currentDepute.ProviderId).Name,
+                    email = _db.Members.FirstOrDefault(_ => _.MemberId == currentDepute.ProviderId).Email,
+                    deputeTitle = currentDepute.Title,
+                    deputeStartDate = currentDepute.StartDate.ToString("yyyy/MM/dd"),
+                    deputeStatus = currentDepute.Status.Name,
+                    deputeRecordCount = _db.DeputeRecords.Count(_ => _.DeputeId == currentDepute.DeputeId),
+                    progress = CDictionary.PROGRESS_會員應徵委託
+                };
+                SendDeputeEmail(emaiContent);
+                return Json(new { success = true, message = "履歷投遞成功" });
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return Json(new { success = false, message = ex.Message });
             }
@@ -539,6 +639,10 @@ namespace prjDB_GamingForm_Show.Controllers
         public IActionResult Edit(CDeputeViewModel vm)
         {
             Depute o = _db.Deputes.Where(_ => _.DeputeId == vm.id).FirstOrDefault();
+            //前端radio，有勾選開放，沒勾選關閉
+            int statusid = vm.statusid;
+            if (statusid != 18)
+                statusid = 19;
             if (o != null)
             {
                 o.ProviderId = (int)HttpContext.Session.GetInt32(CDictionary.SK_UserID);
@@ -546,7 +650,7 @@ namespace prjDB_GamingForm_Show.Controllers
                 o.Modifiedate = DateTime.Now;
                 o.DeputeContent = vm.deputeContent;
                 o.Salary = vm.salary;
-                o.StatusId = _db.Statuses.FirstOrDefault(_ => _.Name == vm.status).StatusId;
+                o.StatusId = statusid;
                 o.RegionId = _db.Regions.FirstOrDefault(_ => _.City == vm.region).RegionId;
                 o.Title = vm.title;
                 _db.SaveChanges();
@@ -605,12 +709,14 @@ namespace prjDB_GamingForm_Show.Controllers
         }
         public IActionResult ReplyDepute(int id)
         {
+            //受委託者完成委託
             var data = _db.DeputeRecords.FirstOrDefault(_ => _.Id == id);
             return View(data);
         }
         [HttpPost]
         public IActionResult ReplyDepute(CDeputeViewModel vm,IFormFile formFile)
         {
+            //受委託者完成委託
             try
             {
                 string fileType = formFile.FileName.Split('.')[1];
@@ -626,15 +732,144 @@ namespace prjDB_GamingForm_Show.Controllers
                 oriDeputRecord.ReplyFileName = fileName;
                 oriDeputRecord.ApplyStatusId = 25;//狀態改為已完成(待確認)
                 _db.SaveChanges();
-                return Json(new { success = true, message = "應徵成功" });
+
+                CDeputeEmail content = new CDeputeEmail()
+                {
+                    memberName=oriDeputRecord.Depute.Provider.Name,
+                    workerName=oriDeputRecord.Member.Name,
+                    email=oriDeputRecord.Depute.Provider.Email,
+                    deputeTitle= oriDeputRecord.Depute.Title,
+                    deputeStatus=oriDeputRecord.ApplyStatus.Name,
+                    progress=CDictionary.PROGRESS_會員完成委託
+                };
+                SendDeputeEmail(content);
+                return Json(new { success = true, message = "案件已提交" });
             }
             catch (Exception ex)
             {
                 return Json(new { success = false, message = ex.Message });
             }
         }
+        #endregion
 
         #region API
+
+        private async Task<string> ChatAsync(string system,string user,double temp)
+        {
+            OpenAIAPI api = new OpenAIAPI("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");
+            var chat = api.Chat.CreateConversation();
+            chat.Model = Model.ChatGPTTurbo_16k;
+            chat.RequestParameters.Temperature = temp;
+
+            chat.AppendSystemMessage($"{system}");
+            chat.AppendUserInput($"{user}");
+            return await chat.GetResponseFromChatbotAsync();
+            //Console.WriteLine(response);
+            //foreach (ChatMessage msg in chat.Messages)
+            //{
+            //    Console.WriteLine($"{msg.Role}: {msg.Content}");
+            //}
+        }
+        public async Task<IActionResult> createContentAsync(string title)
+        {
+            string systemRule = "你將看到遊戲製作委託平台上的委託主題，你的工作是根據主題創造一篇50字左右的徵才委託。";
+            var response = await ChatAsync(systemRule, title, 1.0);
+            return Content(response);
+        }
+        public async Task<IActionResult> selectSkillAsync(string title,string content)
+        {
+            string systemRule = "你將看到委託主題及委託內容，" +
+                "你的工作是從以下特定skill清單中選擇最多5項skill，並使用JSON形式提供答案。" +
+                "請嚴格依照以下列skill表來選擇skill，skill名稱必須完全吻合skill列表裡的名稱，並且不要和上一次的結果一樣。\r\n" +
+                "正確範例:\r\n" +
+                $"{JsonSerializer.Serialize(_db.Skills.Select(_ => new
+                {
+                    skill=_.Name
+                }))}" +
+                "{\r\n  \"skill\": [\r\n    \"Html\",\r\n    \"Java\",\r\n    \"Ruby\",\r\n    \"Sketch\",\r\n    \"Blender\"\r\n  ]\r\n}\r\n" +
+                "\r\nskill：\r\nCsharp\r\nHtml\r\nCss\r\nLINQ\r\nADONET\r\nSQL\r\nJavaScript\r\nSketch\r\nFigma\r\nBlender\r\nAutodesk Maya\r\nJava\r\nPython\r\nPHP\r\nRuby\r\nASPdotNET\r\nSwift\r\nKotlin\r\nReact\r\nSolidity\r\nSelenium\r\nJUnit\r\n電子\r\n搖滾\r\n古典\r\n爵士\r\n民族\r\n流行\r\n懸疑\r\n環境\r\n8位元\r\n16位元\r\nAutodesk Maya\r\nAdobe After Effects\r\nAdobe Animate\r\nC\r\nNodedotjs\r\ndotNET Framework\r\nXamarin\r\nUnity\r\nUnreal Engine\r\nSpring\r\nLaravel\r\nAdobe Photoshop\r\nAdobe Illustrator\r\nAdobe XD\r\n3ds Max\r\nZBrush\r\nInkscape\r\nCorelDRAW\r\nGIMP\r\nAudacity\r\nAdobe Audition\r\nFL Studio\r\nAbleton Live\r\nLogic Pro X\r\nPro Tools\r\nGarageBand\r\nCubase\r\nReaper\r\nBlender\r\nCinema 4D\r\nToon Boom Harmony\r\nSpine\r\nMoho\r\nDragonframe\r\nFinal Draft\r\nCeltx\r\nStoryboard That\r\nToon Boom Storyboard\r\nTwine\r\nSelenium\r\nAppium\r\nJest\r\nJMeter\r\nLoadRunner\r\nGatling\r\nOWASP\r\nNessus\r\nBurp Suite\r\nTestFlight\r\nSteam Early Access\r\nWebSocket\r\nRESTful API\r\nGraphQL\r\nAWS\r\nAzure\r\nGoogle Cloud\r\nNVIDIA GeForce Now\r\nXbox Cloud Gaming"
+;
+            string userContent = "主題:" + title + "，" + "內容:" + content;
+            var response = await ChatAsync(systemRule, userContent, 0);
+
+            return Content(response);
+        }
+        private void test()
+        {
+            JsonSerializer.Serialize(_db.Skills.Select(_ => new
+            {
+                skill = _.Name
+            }));
+        }
+
+        public IActionResult SendDeputeEmail(CDeputeEmail vm)
+        {
+            string diffContent = "";
+            string diffTable = "";
+            string email = "bute77889@gmail.com";
+            switch (vm.progress)
+            {
+                case CDictionary.PROGRESS_會員應徵委託:
+                    diffContent = $"您發佈的委託「{vm.deputeTitle}」有新的應徵者，目前共有　{vm.deputeRecordCount}　位會員向您投遞履歷";
+                    diffTable = "<tr><td style=\"border: 1px solid #ccc; padding: 8px;\">委託標題</td><td style=\"border: 1px solid #ccc; padding: 8px;\">發佈日期</td><td style=\"border: 1px solid #ccc; padding: 8px;\">應徵人數</td></tr>" +
+                        $"<tr><td style=\"border: 1px solid #ccc; padding: 8px;\">{vm.deputeTitle}</td><td style=\"border: 1px solid #ccc; padding: 8px;\">{vm.deputeStartDate}</td><td style=\"border: 1px solid #ccc; padding: 8px;\">{vm.deputeRecordCount}</td></tr></tbody></table></li>";
+                    break;
+                case CDictionary.PROGRESS_委託者決定合作:
+                    diffContent = $"您應徵的委託「{vm.deputeTitle}」委託者已決定與您合作";
+                    diffTable = "<tr><td style=\"border: 1px solid #ccc; padding: 8px;\">委託標題</td><td style=\"border: 1px solid #ccc; padding: 8px;\">委託內容</td><td style=\"border: 1px solid #ccc; padding: 8px;\">目前狀態</td></tr>" +
+                        $"<tr><td style=\"border: 1px solid #ccc; padding: 8px;\">{vm.deputeTitle}</td><td style=\"border: 1px solid #ccc; padding: 8px;\">{vm.deputeContent}</td><td style=\"border: 1px solid #ccc; padding: 8px;\">{vm.recordStatus}</td></tr></tbody></table></li>";
+                    break;
+                case CDictionary.PROGRESS_會員完成委託:
+                    diffContent = $"您發佈的的委託「{vm.deputeTitle}」狀態已更新為「{vm.deputeStatus}」";
+                    diffTable = "<tr><td style=\"border: 1px solid #ccc; padding: 8px;\">委託標題</td><td style=\"border: 1px solid #ccc; padding: 8px;\">執行會員</td><td style=\"border: 1px solid #ccc; padding: 8px;\">目前狀態</td></tr>" +
+                        $"<tr><td style=\"border: 1px solid #ccc; padding: 8px;\">{vm.deputeTitle}</td><td style=\"border: 1px solid #ccc; padding: 8px;\">{vm.workerName}</td><td style=\"border: 1px solid #ccc; padding: 8px;\">{vm.recordStatus}</td></tr></tbody></table></li>";
+                    break;
+                case CDictionary.PROGRESS_委託者確認完成:
+                    diffContent = $"您的委託「{vm.deputeTitle}」委託者已確認完成";
+                    diffTable = "<tr><td style=\"border: 1px solid #ccc; padding: 8px;\">委託標題</td><td style=\"border: 1px solid #ccc; padding: 8px;\">委託內容</td><td style=\"border: 1px solid #ccc; padding: 8px;\">目前狀態</td></tr>" +
+                        $"<tr><td style=\"border: 1px solid #ccc; padding: 8px;\">{vm.deputeTitle}</td><td style=\"border: 1px solid #ccc; padding: 8px;\">{vm.deputeContent}</td><td style=\"border: 1px solid #ccc; padding: 8px;\">{vm.deputeStatus}</td></tr></tbody></table></li>";
+                    break;
+            }
+            //頂標(免改)
+            string dm = "<div style=\"color:black;\">\r\n<ul style=\"list-style-type: none; padding-left: 0;\">  <li style=\"background-color: #272727; color: #fff; padding: 10px; margin-left: 0px;\">Groot遊戲資源整合平台</li>";
+            //抬頭
+            dm += $"<li style=\"margin: 10px 0;padding: 10px;\">　　<p>{vm.memberName}　您好，</p>{diffContent}，立即<a href=\"#\" style=\"color: #0d6efd; text-decoration: none;\">查看委託詳情</a>。</li>";
+            dm += "<li style=\"margin: 10px 0;\"><table style=\"width: 100%; border-collapse: collapse;padding: 10px;\"><tbody>";
+            //表格
+            dm += $"{diffTable}";
+            //頁尾(免改)
+            dm += "<li style=\"margin: 10px 0;\"><a href=\"#\" style=\"background-color: #272727; color: #fff; padding: 10px; text-decoration: none; display: inline-block;border-radius:10px\">詳細資訊</a></li><li style=\"margin: 10px 0;\"><div style=\"margin-bottom: 10px;padding: 10px;\">Groot將依個人資料保護法及相關法令之規定下，依隱私權保護政策蒐集、處理及合理利用您的個人資料。</div><div style=\"margin-bottom: 10px;padding: 10px;\">為確保能收到來自Groot的通知信件，強烈建議您將groot1229@gmail.com加入通訊錄。</div></li></ul></div>";
+
+            var message = new MimeMessage();
+            //寄件者
+            message.From.Add(new MailboxAddress("grootdb1229", "grootdb1229@gmail.com"));
+            //收件者
+            message.To.Add(new MailboxAddress(_db.Members.FirstOrDefault(x => x.MemberId == HttpContext.Session.GetInt32(CDictionary.SK_UserID)).Name, email));
+            //標題
+            message.Subject = $"委託[{vm.deputeTitle}]狀態更新";
+            //內容
+            message.Body = new TextPart("html")
+            {
+                Text = dm 
+            };
+
+            using (var client = new SmtpClient())
+            {
+                client.Connect("smtp.gmail.com", 587, false);
+                client.Authenticate("grootdb1229@gmail.com", "fmgx uucs lgkv vqxm");
+                client.Send(message);
+                client.Disconnect(true);
+            }
+            return RedirectToAction("OrderDetail", "Shop");
+        }
+        public IActionResult myApplyContent(int id)
+        {
+            var o = _db.DeputeRecords.Where(_ => _.MemberId == HttpContext.Session.GetInt32(CDictionary.SK_UserID)).Select(_ => new
+            {
+                content=_.RecordContent
+            }).Distinct();
+            return Json(o);
+        }
         public IActionResult downloadFile(string fileName)
         {
             string fullFilePath= Path.Combine(_host.WebRootPath, "files\\depute", fileName);
@@ -656,35 +891,66 @@ namespace prjDB_GamingForm_Show.Controllers
 
         public IActionResult changeDeputeRecordStatus(string jsonString)
         {
+            //partialrelease使用3處
             CDeputeViewModel vm = JsonSerializer.Deserialize<CDeputeViewModel>(jsonString);
 
             var deputeRecord = _db.DeputeRecords.FirstOrDefault(_ => _.Id == vm.id);
             var depute = _db.Deputes.FirstOrDefault(_ => _.DeputeId == deputeRecord.DeputeId);
-            var otherRecords = _db.DeputeRecords.Where(_ => _.DeputeId == depute.DeputeId && _.Id != vm.id).Select(_ => _);
+            var otherRecords = _db.DeputeRecords.Where(_ => _.DeputeId == depute.DeputeId && _.Id != vm.id).ToList();
 
             //修改該會員應徵狀態
             deputeRecord.ApplyStatusId = vm.statusid;
 
-            //若與該會員合作，則此委託狀態一併改為合作中，且其他會員的應徵狀態改為備選
-            if (vm.statusid == 10)
+            switch (vm.statusid)
             {
-                depute.StatusId = 10;
-                deputeRecord.ApplyStatusId = 10;
-                foreach (var item in otherRecords)
-                {
-                    item.ApplyStatusId = 11;
-                }
-            }
-            //完成委託、委託紀錄
-            if (vm.statusid == 16)
-            {
-                depute.StatusId = 16;
-                deputeRecord.ApplyStatusId = 16;
+                case 10:
+                    handleStatus10(depute, deputeRecord, otherRecords);
+                    break;
+                case 16:
+                    handleStatus16(depute, deputeRecord);
+                    break;
             }
 
             _db.SaveChanges();
-            var statusName = _db.Statuses.FirstOrDefault(_ => _.StatusId == vm.statusid).Name;
+            var statusName = deputeRecord.ApplyStatus.Name;
             return Content(statusName);
+        }
+        private void handleStatus10(Depute depute,DeputeRecord deputeRecord,List<DeputeRecord> otherRecords)
+        {
+            //若與該會員合作，則此委託狀態一併改為合作中，且其他會員的應徵狀態改為備選
+            depute.StatusId = 10;
+            deputeRecord.ApplyStatusId = 10;
+
+            CDeputeEmail content = new CDeputeEmail()
+            {
+                memberName = deputeRecord.Member.Name,
+                email = deputeRecord.Member.Email,
+                deputeTitle = depute.Title,
+                deputeContent = depute.DeputeContent,
+                recordStatus = deputeRecord.ApplyStatus.Name,
+                progress = CDictionary.PROGRESS_委託者決定合作
+            };
+            SendDeputeEmail(content);
+            foreach (var item in otherRecords)
+            {
+                item.ApplyStatusId = 11;
+            }
+        }
+        private void handleStatus16(Depute depute, DeputeRecord deputeRecord)
+        {
+            //完成委託、委託紀錄
+            depute.StatusId = 16;
+            deputeRecord.ApplyStatusId = 16;
+
+            CDeputeEmail content = new CDeputeEmail()
+            {
+                memberName = deputeRecord.Member.Name,
+                email = deputeRecord.Member.Email,
+                deputeTitle = depute.Title,
+                deputeStatus = deputeRecord.ApplyStatus.Name,
+                progress = CDictionary.PROGRESS_委託者確認完成
+            };
+            SendDeputeEmail(content);
         }
         public IActionResult individualDetials(int id)
         {
@@ -695,6 +961,7 @@ namespace prjDB_GamingForm_Show.Controllers
             {
                 CDeputeViewModel n = new CDeputeViewModel();
                 n.id = item.Id;
+                n.workerId = item.MemberId;
                 n.title = item.Depute.Title;
                 n.count = o.Count();
                 n.status = item.ApplyStatus.Name;
@@ -759,42 +1026,26 @@ namespace prjDB_GamingForm_Show.Controllers
         }
         public IActionResult editDeputeStatuses(int id)
         {
-            List<CDeputeViewModel> statusList = new List<CDeputeViewModel>();
-            int oriStatusID = _db.Deputes.FirstOrDefault(_ => _.DeputeId == id).StatusId;
-
-            CDeputeViewModel oriStatus = new CDeputeViewModel()
-            {
-                id = oriStatusID,
-                status = _db.Statuses.FirstOrDefault(_ => _.StatusId == oriStatusID).Name,
-            };
-            statusList.Add(oriStatus);
-
-            var datas = _db.Statuses.Where(_ => (_.StatusId == 16 ||
-            _.StatusId == 18 ||
-            _.StatusId == 19) &&
-            _.StatusId != oriStatusID).Select(_ => _);
-
-            foreach (var item in datas)
-            {
-                CDeputeViewModel lastStatuses = new CDeputeViewModel()
-                {
-                    id = item.StatusId,
-                    status = item.Name,
-                };
-                statusList.Add(lastStatuses);
-            };
-            return Json(statusList);
+            var depute = _db.Deputes.FirstOrDefault(_ => _.DeputeId == id);
+            if (depute == null)
+                return NotFound();
+            int oriStatusID = depute.StatusId;
+            return Json(oriStatusID);
         }
         public IActionResult Regions()
         {
             //資料庫區域
-            var datas = _db.Regions.Select(_ => _);
+            var datas = _db.Regions.Select(_ => new
+            {
+                _.City,
+                _.RegionId
+            });
             return Json(datas);
         }
 
         public IActionResult Skillss(string skillClass)
         {
-            if (_db.SkillClasses.Where(_ => _.Name == skillClass).FirstOrDefault() == null)
+            if (_db.SkillClasses.FirstOrDefault(_ => _.Name == skillClass) == null)
                 return Content("");
             int skillclassid = Convert.ToInt32(_db.SkillClasses.Where(_ => _.Name == skillClass).FirstOrDefault().SkillClassId);
             var datas = _db.Skills.Where(_ => _.SkillClassId == skillclassid).Select(_ => _);
@@ -803,7 +1054,6 @@ namespace prjDB_GamingForm_Show.Controllers
         #endregion
 
         #region MainView
-        //主頁框架，load各個partialview
         public IActionResult HomeFrame()
         {
             ViewBag.memberid = HttpContext.Session.GetInt32(CDictionary.SK_UserID);
@@ -820,6 +1070,7 @@ namespace prjDB_GamingForm_Show.Controllers
                 .Where(_ => _.ProviderId == HttpContext.Session.GetInt32(CDictionary.SK_UserID))
                 .Select(depute => new
                 {
+                    RunCount = depute.DeputeRecords.Count(_ => _.ApplyStatusId == 10),
                     ApplyCount = depute.DeputeRecords.Count(_ => _.ApplyStatusId == 5),
                     ReplyCount = depute.DeputeRecords.Count(_ => _.ApplyStatusId == 25),
                     ComCount = depute.DeputeRecords.Count(_ => _.ApplyStatusId == 16),
@@ -835,14 +1086,15 @@ namespace prjDB_GamingForm_Show.Controllers
             var datas = new CDeputeOverViewModel();
             foreach (var item in release)
             {
-                datas.ApplyCount += item.ApplyCount;
-                datas.ReplyCount += item.ReplyCount;
-                datas.ComCount += item.ComCount;
+                datas.runCount += item.RunCount;
+                datas.applyCount += item.ApplyCount;
+                datas.replyCount += item.ReplyCount;
+                datas.comCount += item.ComCount;
             }
-            datas.NewCount = receive.Count(_ => _.ApplyStatusId == 9);
-            datas.RunCount = receive.Count(_ => _.ApplyStatusId == 10 || _.ApplyStatusId == 20);
-            datas.CofirmCount = receive.Count(_ => _.ApplyStatusId == 25);
-            datas.MemberComCount = receive.Count(_ => _.ApplyStatusId == 16);
+            datas.workerNewCount = receive.Count(_ => _.ApplyStatusId == 9);
+            datas.workerRunCount = receive.Count(_ => _.ApplyStatusId == 10 || _.ApplyStatusId == 20);
+            datas.workerCofirmCount = receive.Count(_ => _.ApplyStatusId == 25);
+            datas.workerComCount = receive.Count(_ => _.ApplyStatusId == 16);
 
             return PartialView(datas);
         }

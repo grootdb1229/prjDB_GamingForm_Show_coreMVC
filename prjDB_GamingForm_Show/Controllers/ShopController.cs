@@ -25,6 +25,11 @@ using System.Transactions;
 using MailKit;
 using MailKit.Net.Smtp;
 using MimeKit;
+using NuGet.Protocol.Plugins;
+using Microsoft.AspNetCore.Http;
+using System.Diagnostics.Metrics;
+using static Org.BouncyCastle.Asn1.Cmp.Challenge;
+using prjDB_GamingForm_Show.Models.Member;
 
 namespace prjDB_GamingForm_Show.Controllers
 {
@@ -69,7 +74,7 @@ namespace prjDB_GamingForm_Show.Controllers
 
                 List<CShopPageViewModel> List2 = data.Select(item =>
                 {   //將每個字以/串再一起。
-                    string s = string.Join("/", _db.ProductTags.Where(x => x.ProductId == item.ProductId).Select(x => x.SubTag.Name));
+                    string s = string.Join("/", _db.ProductTags.Where(x => x.ProductId == item.ProductId).Select(x => x.SubTag.Name).Take(5));
                     return new CShopPageViewModel //返還這個物件 Lambda多行表達需要加return，不然將會返還錯誤的東西，部分程式碼將不被視為返還值之一
                     {
                         ProductId = item.ProductId,
@@ -84,8 +89,33 @@ namespace prjDB_GamingForm_Show.Controllers
                 Temp = Listx;
 
             }
-			
-			public IActionResult MutipleSearch_Shop(string txtMutiKeywords)
+
+			public IActionResult ProductInfo(int? id)
+			{
+				var data = _db.Products.Where(x => x.ProductId == id).Select(x => new { x.ProductId, x.ProductName, x.Price, x.ProductContent, x.MemberId, x.FImagePath });
+				return Json(data);
+			}
+			//檢舉
+            public IActionResult ProductComplain(CProductAdmin vm)
+            {
+                if (HttpContext.Session.GetInt32(CDictionary.SK_UserID) != null)
+                {
+                    _db.ProductComplains.Add(
+                        new ProductComplain
+                        {
+                            ProductId = vm.txtID,
+                            MemeberId = (int)HttpContext.Session.GetInt32(CDictionary.SK_UserID),
+                            ReplyContent = vm.txtReportContent,
+                            ReportDate = (DateTime.Now),
+                            SubTagId = vm.txtSubTagID
+                        }
+                        );
+                    _db.SaveChanges();
+                }
+                return View();
+            }
+
+            public IActionResult MutipleSearch_Shop(string txtMutiKeywords)
 			{
                 
                 string result = "";
@@ -223,7 +253,28 @@ namespace prjDB_GamingForm_Show.Controllers
 				return PartialView();
 			}
 
-			public IActionResult SelSubtag()
+            public IActionResult SmlCarousel(int id)//小廣告牆
+            {ViewBag.howmuch = id;
+                return PartialView();
+            }
+
+			public IActionResult SmlCarouselcontent(int? id)//小廣告牆的方法
+			{
+                var randomTagWithProducts = _db.SubTags
+				.Where(x => x.TagId == 1)
+				 .OrderBy(x => Guid.NewGuid())
+				.Take(id??2)
+				.Select(tag => new
+				{
+				tag.Name,
+				Products = tag.ProductTags.Select(x => x.Product).Take(5).ToList()
+				})
+				.ToList();
+				Trace.WriteLine(randomTagWithProducts);
+                return Json(randomTagWithProducts);
+			}
+
+			public IActionResult SelSubtag()//多重篩選格
 			{
 				return PartialView();
 			}
@@ -251,9 +302,16 @@ namespace prjDB_GamingForm_Show.Controllers
 				if (HttpContext.Session.GetInt32(CDictionary.SK_UserID) != null) //利用Session確認登入狀況
 				{ userId = (int)HttpContext.Session.GetInt32(CDictionary.SK_UserID); }//有登入複寫Userid，反之維持0。
 				else { return Json(new { message = "請先登入" }); }
-				var top5 = _db.WishLists.Where(x => x.MemberId == userId).Select(x => x.Product).Take(5).ToList();
-				//Trace.WriteLine("檢查TOP5"+top5);
-				return Json(top5);
+				
+				var top5 = _db.WishLists.Where(x => x.MemberId == userId).Select(x => x.Product).ToList();
+
+                    var OrdersList = _db.Orders.Where(x => x.MemberId == userId).SelectMany(x => x.OrderProducts.Select(a=>a.Product)).ToList();//已經購買的商品不能加入
+
+
+				top5.RemoveAll(productname => OrdersList.Contains(productname));
+				top5.Take(5).ToList();
+
+                return Json(top5);
 			}
 			public void Cookie(int? id)  //Cookies設定
 			{
@@ -368,7 +426,7 @@ namespace prjDB_GamingForm_Show.Controllers
 					foreach (var item in data)
 					{
 						string s = "";
-						var tagname = _db.ProductTags.Where(x => x.ProductId == item.ProductId).Select(x => x.SubTag.Name).ToList();
+						var tagname = _db.ProductTags.Where(x => x.ProductId == item.ProductId).Select(x => x.SubTag.Name).ToList().Take(5);
 						foreach (var t in tagname)
 						{
 							s += t.ToString() + "/";
@@ -484,7 +542,7 @@ namespace prjDB_GamingForm_Show.Controllers
 
 				List<CShopPageViewModel> List = data.Select(item =>
 				{   //將每個字以/串再一起。
-					string s = string.Join("/", _db.ProductTags.Where(x => x.ProductId == item.ProductId).Select(x => x.SubTag.Name));
+					string s = string.Join("/", _db.ProductTags.Where(x => x.ProductId == item.ProductId).Select(x => x.SubTag.Name).Take(5));
 					return new CShopPageViewModel //返還這個物件 Lambda多行表達需要加return，不然將會返還錯誤的東西，部分程式碼將不被視為返還值之一
 					{
 						ProductId = item.ProductId,
@@ -532,7 +590,7 @@ namespace prjDB_GamingForm_Show.Controllers
 
 				List<CShopPageViewModel> List = data.Select(item =>
 				{   //將每個字以/串再一起。
-					string s = string.Join("/", _db.ProductTags.Where(x => x.ProductId == item.ProductId).Select(x => x.SubTag.Name));
+					string s = string.Join("/", _db.ProductTags.Where(x => x.ProductId == item.ProductId).Select(x => x.SubTag.Name).Take(5));
 					return new CShopPageViewModel //返還這個物件 Lambda多行表達需要加return，不然將會返還錯誤的東西，部分程式碼將不被視為返還值之一
 					{
 						ProductId = item.ProductId,
@@ -580,7 +638,7 @@ namespace prjDB_GamingForm_Show.Controllers
 
 				List<CShopPageViewModel> List = data.Select(item =>
 				{   //將每個字以/串再一起。
-					string s = string.Join("/", _db.ProductTags.Where(x => x.ProductId == item.ProductId).Select(x => x.SubTag.Name));
+					string s = string.Join("/", _db.ProductTags.Where(x => x.ProductId == item.ProductId).Select(x => x.SubTag.Name).Take(5));
 					return new CShopPageViewModel //返還這個物件 Lambda多行表達需要加return，不然將會返還錯誤的東西，部分程式碼將不被視為返還值之一
 					{
 						ProductId = item.ProductId,
@@ -628,7 +686,7 @@ namespace prjDB_GamingForm_Show.Controllers
 
 				List<CShopPageViewModel> List = data.Select(item =>
 				{   //將每個字以/串再一起。
-					string s = string.Join("/", _db.ProductTags.Where(x => x.ProductId == item.ProductId).Select(x => x.SubTag.Name));
+					string s = string.Join("/", _db.ProductTags.Where(x => x.ProductId == item.ProductId).Select(x => x.SubTag.Name).Take(5));
 					return new CShopPageViewModel  //返還這個物件 Lambda多行表達需要加return，不然將會返還錯誤的東西，部分程式碼將不被視為返還值之一
 					{
 						ProductId = item.ProductId,
@@ -741,11 +799,11 @@ namespace prjDB_GamingForm_Show.Controllers
 				{
 					try
 					{
-						if (!ModelState.IsValid)
-						{
-							var errors = ModelState.Values.SelectMany(v => v.Errors); //測試錯誤用程式碼
-							return View(product);
-						}
+						//if (!ModelState.IsValid) 捨棄後端驗證。
+						//{
+						//	var errors = ModelState.Values.SelectMany(v => v.Errors); //測試錯誤用程式碼
+						//	return View(product);
+						//}
 						Product x = new Product();
 						string MulPic = "";
 						if (_db != null)
@@ -896,57 +954,8 @@ namespace prjDB_GamingForm_Show.Controllers
 			[HttpPost]
 			public ActionResult Edit(超酷warp product) //原Product物件   
 			{
-				{
-					//if (!ModelState.IsValid)
-					//{
-					//    var errors = ModelState.Values.SelectMany(v => v.Errors);
-					//    return View((超酷warp)product);
-					//}
-
-					//Product x = _db.Products.FirstOrDefault(p => p.ProductId == product.ProductId);
-					//if (x != null)
-					//{
-					//    if (product.photo != null)
-					//    {
-					//        string photoName = Guid.NewGuid().ToString() + ".jpg";
-					//        x.FImagePath = photoName;
-					//        product.photo.CopyTo(new FileStream(_host.WebRootPath + "/images/shop/" + photoName, FileMode.Create));
-					//    }
-					//    x.ProductName = product.ProductName;
-					//    x.Price = (decimal)product.Price;
-					//    x.AvailableDate = product.AvailableDate;
-					//    x.ProductContent = product.ProductContent;
-					//    x.UnitStock = product.UnitStock;
-					//    x.StatusId = (int)product.StatusID;
-					//    x.MemberId = product.MemberID;
-
-					//    _db.SaveChanges();
-					//}
-					//if (product.GameTagOptions != null)//確保有選標籤
-					//{
-					//    _db.ProductTags.RemoveRange(_db.ProductTags.Where(x => x.ProductId == product.ProductId));
-
-
-					//    List<int> tagsList = product.GameTagOptions.Split(',').Select(int.Parse).ToList();
-					//    //Trace.WriteLine("AAAA" + tagsList);
-					//    foreach (var tags in tagsList)
-					//    {
-					//        int tagsID = _db.SubTags.FirstOrDefault(x => x.SubTagId == tags).SubTagId;
-					//        ProductTag productTag = new ProductTag
-					//        {
-					//            SubTagId = tagsID,
-					//            ProductId = x.ProductId
-					//        };
-
-					//        _db.ProductTags.Add(productTag);
-					//    }
-
-					//    _db.SaveChanges();
-
-					//}//Thread.Sleep(3000);
-					//return RedirectToAction("Index");
-				}//以防萬一 這是單圖存檔用
-				using (var transaction = _db.Database.BeginTransaction())
+				
+				using (var transaction = _db.Database.BeginTransaction()) //開始交易
 				{
 					try
 					{
@@ -956,12 +965,13 @@ namespace prjDB_GamingForm_Show.Controllers
 							return View((超酷warp)product);
 						}
 
-
-						Product x = _db.Products.FirstOrDefault(p => p.ProductId == product.ProductId);
+                        
+                        Product x = _db.Products.FirstOrDefault(p => p.ProductId == product.ProductId);
 						string MulPic = "";
+						List<string> PicList= new List<string>();
 						if (_db != null)
 						{
-							if (product.Photos != null && product.Photos.Count > 0)
+							if (product.Photos != null && product.Photos.Count > 0) //有新圖片加入時進入
 							{
 								foreach (var photo in product.Photos)
 								{
@@ -975,13 +985,59 @@ namespace prjDB_GamingForm_Show.Controllers
 										{
 											photo.CopyTo(stream);
 										}
-										MulPic += photoName + "/";
+										MulPic += photoName + "/";  //新加入的圖用"/"做區隔
+
+										string filenames = product.MulEditPic;//將沒有改的圖片存在這
+										filenames += MulPic;
+										
+										MulPic = filenames; //舊圖"/"新圖
+										PicList= MulPic.Split('/').Distinct().ToList();
 									}
 								}
-								string[] pics = MulPic.Split('/');  ///一長串圖片被我拆分儲存
-								if (pics.Length > 0)
+								if (product.Photos.Count >= 1) ///如果有超過一張圖就執行多餘圖片存取
 								{
-									string Mainpic = pics[0];//第一張是主圖存入商品資料行
+									_db.ProductImages.RemoveRange(_db.ProductImages.Where(p => p.ProductId == product.ProductId));
+									var removedImageIds = _db.ProductImages
+										.Where(p => p.ProductId == product.ProductId)
+										.Select(p => p.ImageId)
+										.ToList();
+									foreach (var imageId in removedImageIds)
+									{
+										var imageToRemove = _db.Images.FirstOrDefault(i => i.ImageId == imageId);
+										if (imageToRemove != null)
+										{
+											_db.Images.Remove(imageToRemove);
+										}//移除次要圖片
+									}
+
+                                    // 提交變更
+                                    _db.SaveChanges();
+									//string[] OtherPic = MulPic.Split("/").Skip(1).ToArray();
+									//PicList.Skip(1).ToArray();
+									foreach (string picpath in PicList.Skip(1))
+									{
+										if (!string.IsNullOrEmpty(picpath))
+										{
+											Image ElsePic = new Image();//裡還外?
+											ElsePic.FImagePath = picpath;
+											_db.Images.Add(ElsePic);
+											_db.SaveChanges();
+											ProductImage productImage = new ProductImage
+											{
+												ProductId = x.ProductId,
+												ImageId = ElsePic.ImageId
+											};
+											_db.ProductImages.Add(productImage);
+											_db.SaveChanges();
+										}
+									}
+
+								}
+
+								//string[] pics = MulPic.Split('/');  ///一長串圖片被我拆分儲存 這這這								
+								if (PicList.Count > 0)
+								{
+									string Mainpic = PicList[0];//第一張是主圖存入商品資料行
 									x.FImagePath = Mainpic;
 								}
 								x.ProductName = product.ProductName;
@@ -994,28 +1050,34 @@ namespace prjDB_GamingForm_Show.Controllers
 
 								_db.SaveChanges();
 							}
-							if (product.Photos.Count >= 1) ///如果有超過一張圖就執行多餘圖片存取
-							{
-								_db.ProductImages.RemoveRange(_db.ProductImages.Where(p => p.ProductId == x.ProductId));
-								var removedImageIds = _db.ProductImages
-									.Where(p => p.ProductId == x.ProductId)
-									.Select(p => p.ImageId)
-									.ToList(); 						
-								foreach (var imageId in removedImageIds)
+
+
+							else 
+							{ //沒有新圖片加入
+								string filenames = product.MulEditPic;
+								string[] OtherPic = filenames.Split("/").Skip(1).ToArray();
+								if (OtherPic.Length >= 1) ///如果有超過一張圖就執行多餘圖片存取
 								{
-									var imageToRemove = _db.Images.FirstOrDefault(i => i.ImageId == imageId);
-									if (imageToRemove != null)
+									_db.ProductImages.RemoveRange(_db.ProductImages.Where(p => p.ProductId == product.ProductId));
+									var removedImageIds = _db.ProductImages
+										.Where(p => p.ProductId == product.ProductId)
+										.Select(p => p.ImageId)
+										.ToList();
+									foreach (var imageId in removedImageIds)
 									{
-										_db.Images.Remove(imageToRemove);
+										var imageToRemove = _db.Images.FirstOrDefault(i => i.ImageId == imageId);
+										if (imageToRemove != null)
+										{
+											_db.Images.Remove(imageToRemove);
+										}
 									}
-								}
 
-								// 提交變更
-								_db.SaveChanges();
-								string[] OtherPic = MulPic.Split("/").Skip(1).ToArray();
+									// 提交變更
+									_db.SaveChanges();
 
-								foreach (string picpath in OtherPic)
-								{
+
+									foreach (string picpath in OtherPic)
+								
 									if (!string.IsNullOrEmpty(picpath))
 									{
 										Image ElsePic = new Image();//裡還外?
@@ -1031,6 +1093,23 @@ namespace prjDB_GamingForm_Show.Controllers
 										_db.SaveChanges();
 									}
 								}
+
+								string[] pics = filenames.Split('/');  
+								if (pics.Length > 0)
+								{
+									string Mainpic = pics[0];//第一張是主圖存入商品資料行
+									x.FImagePath = Mainpic;
+								}
+								x.ProductName = product.ProductName;
+								x.Price = product.Price;
+								x.AvailableDate = product.AvailableDate;
+								x.ProductContent = product.ProductContent;
+								x.UnitStock = product.UnitStock;
+								x.StatusId = 1;//記得改回7
+								x.MemberId = product.MemberID;
+
+								_db.SaveChanges();
+
 
 							}
 							if (product.GameTagOptions != null)//確保有選標籤
@@ -1100,16 +1179,21 @@ namespace prjDB_GamingForm_Show.Controllers
 				 .Where(x => x.ProductId == id)
 				 .Select(x => x.SubTag.Name)
 				 .ToList();
-				string s = string.Join("/", tagNames);
-				
-                string MulPicString = "";
+				var tags = _db.SubTags.Where(x => tagNames.Contains(x.Name)).Select(x => new { x.Name, x.TagId });
+				var Gtag= tags.Where(x => x.TagId == 1).Select(x=>x.Name).ToList();
+				var Ltag = tags.Where(x => x.TagId == 3).Select(x=>x.Name).ToList();
+				string gtag = string.Join("/", Gtag);
+				string ltag = string.Join("/", Ltag);
+				//string s = string.Join("/", tagNames);
+
+				string MulPicString = "";
                 var MulPicsID = _db.ProductImages.Where(x => x.ProductId == id).Select(a=>a.Image.FImagePath).ToList();
                 if (MulPicsID != null)
                 {    
                     MulPicString = string.Join("/", MulPicsID); 				
                 }
                
-                Trace.WriteLine("僅作查看"+MulPicString);
+                //Trace.WriteLine("僅作查看"+MulPicString);
 				List<CShopPageViewModel> aa = new List<CShopPageViewModel>();
 				CShopPageViewModel ProductInfo = new CShopPageViewModel()
 				{
@@ -1118,7 +1202,8 @@ namespace prjDB_GamingForm_Show.Controllers
 					FImagePath = x.FImagePath,
 					Price = x.Price,
 					ProductContent = x.ProductContent,
-					SubTagName = s,
+					SubTagName = gtag,
+					SubTagName_Lan = ltag,
 					favourite = Likestatus,
 					MulPic= MulPicString
 				};
@@ -1181,12 +1266,46 @@ namespace prjDB_GamingForm_Show.Controllers
 				var payment = _db.Payments.Select(x => x);
 				return Json(payment);
 			}
-			[HttpPost]
-			public IActionResult AddToCar(CShoppingCarViewModel vm)
+			public IActionResult getLoveList() 
 			{
+				int count = 0;
+				int memberID = 0;
+				
+                if ((HttpContext.Session.GetInt32(CDictionary.SK_UserID) != null))
+                {
+                    memberID = (int)HttpContext.Session.GetInt32(CDictionary.SK_UserID);
+                    count=_db.WishLists.Where(x=>x.MemberId==memberID).Count();   
+                }
+				string countString = count.ToString();
+                return Content(countString);
+            }
 
-				Product product = _db.Products.FirstOrDefault(x => x.ProductId == vm.ProductID);
-				if (product != null)
+            public IActionResult getcarList()
+            {
+                int count = 0;
+               
+
+                if (HttpContext.Session.Keys.Contains(CDictionary.SK_PURCHASED_PRODUCES_LIST))
+                {
+                 string json = HttpContext.Session.GetString(CDictionary.SK_PURCHASED_PRODUCES_LIST);
+                  var  car = JsonSerializer.Deserialize<List<CShoppingCarViewModel>>(json);
+                    count=car.Count;
+                }
+                string countString = count.ToString();
+                return Content(countString);
+            }
+
+
+            [HttpPost]
+			public IActionResult AddToCar(CShoppingCarViewModel vm)
+            {
+				int memberID = 0;
+				if ((HttpContext.Session.GetInt32(CDictionary.SK_UserID) != null)) {
+					memberID = (int)HttpContext.Session.GetInt32(CDictionary.SK_UserID);
+				}
+					Product product = _db.Products.FirstOrDefault(x => x.ProductId == vm.ProductID);
+
+                    if (product != null)
 				{
 					string json = "";
 
@@ -1200,18 +1319,27 @@ namespace prjDB_GamingForm_Show.Controllers
 					{
 						car = new List<CShoppingCarViewModel>();
 					}
-					var listCheck = car.Any(a => a.ProductName == product.ProductName);
-					if (!listCheck)
+					if (memberID != 0)
 					{
-						CShoppingCarViewModel x = new CShoppingCarViewModel();
-						x.Price = (decimal)product.Price;
-						x.ProductName = product.ProductName;
-						x.FImagePath = product.FImagePath;
-						x.Count = vm.txtCount;
-						x.ProductID = product.ProductId;
-						car.Add(x);
+						var OrdersList = _db.OrderProducts.Where(x => x.ProductId == product.ProductId).Select(x => x.Order);//已經購買的商品不能加入
+						Order order = OrdersList.FirstOrDefault(x => x.MemberId == memberID);
+						if (order != null)
+						{ return Json(new { success = false, message = "以購買過的商品" }); }
 					}
-					else { return Json(new { success = false }); } 
+
+						var listCheck = car.Any(a => a.ProductName == product.ProductName); //重複商品不能加入
+						if (!listCheck)
+						{
+							CShoppingCarViewModel x = new CShoppingCarViewModel();
+							x.Price = (decimal)product.Price;
+							x.ProductName = product.ProductName;
+							x.FImagePath = product.FImagePath;
+							x.Count = vm.txtCount;
+							x.ProductID = product.ProductId;
+                        car.Add(x);
+                    }
+					else { return Json(new { success = false , message="購物車內容重複"}); }
+					
 					json = JsonSerializer.Serialize(car);
 					HttpContext.Session.SetString(CDictionary.SK_PURCHASED_PRODUCES_LIST, json);
 					ViewBag.Car = car.Count();
@@ -1223,6 +1351,11 @@ namespace prjDB_GamingForm_Show.Controllers
 
             public IActionResult AddToCar2(int? id)
             {
+                int memberID = 0;
+                if ((HttpContext.Session.GetInt32(CDictionary.SK_UserID) != null))
+                {
+                    memberID = (int)HttpContext.Session.GetInt32(CDictionary.SK_UserID);
+                }
 
                 Product product = _db.Products.FirstOrDefault(x => x.ProductId == id);
                 if (product != null)
@@ -1238,6 +1371,14 @@ namespace prjDB_GamingForm_Show.Controllers
                     {
                         car = new List<CShoppingCarViewModel>();
                     }
+                    if (memberID != 0)
+                    {
+                        var OrdersList = _db.OrderProducts.Where(x => x.ProductId == product.ProductId).Select(x => x.Order);//已經購買的商品不能加入
+                        Order order = OrdersList.FirstOrDefault(x => x.MemberId == memberID);
+                        if (order != null)
+                        { return Json(new { success = false, message = "以購買過的商品" }); }
+                    }
+
                     var listCheck = car.Any(a => a.ProductName == product.ProductName);
 					if (!listCheck)
 					{
@@ -1260,7 +1401,8 @@ namespace prjDB_GamingForm_Show.Controllers
 
             public IActionResult CarView()
 			{
-				if (!HttpContext.Session.Keys.Contains(CDictionary.SK_PURCHASED_PRODUCES_LIST))
+            
+                if (!HttpContext.Session.Keys.Contains(CDictionary.SK_PURCHASED_PRODUCES_LIST))
 				{
 					return RedirectToAction("Index");
 				}
@@ -1270,10 +1412,39 @@ namespace prjDB_GamingForm_Show.Controllers
 				{
 					return RedirectToAction("Index");
 				}
+				////
+				///檢測重複購買商品
+			
+                int memberID = 0;
+                if ((HttpContext.Session.GetInt32(CDictionary.SK_UserID) != null))
+                {
+                    memberID = (int)HttpContext.Session.GetInt32(CDictionary.SK_UserID);
+                }
+                if (memberID != 0)
+                {	List<int> OrdersList = _db.OrderProducts.Where(x=>x.Order.MemberId== memberID).Select(x => x.ProductId).ToList();
+					List<int> product = car.Select(x=>x.ProductID).ToList();
+					bool HaveProduct = OrdersList.Any(x => product.Contains(x));//檢查你的車子裡面有沒有歷史購買紀錄
+					if (!HaveProduct) 
+					{ 
+						return View(car);
+					}
+					else
+					{
+                        List<CShoppingCarViewModel> uniqueProducts = car.Except(car.Where(x => OrdersList.Contains(x.ProductID))).ToList();
+						car = uniqueProducts;
+						string jsoncar= JsonSerializer.Serialize(car);
+                        HttpContext.Session.SetString(CDictionary.SK_PURCHASED_PRODUCES_LIST, jsoncar);
+                       
+						ViewBag.repet = "這是重複商品！";
 
-				ViewBag.Car = car.Count();
-				return View(car);
-			}
+                        return View(car);
+                    }           
+               
+				}
+                ViewBag.repet = "";
+                return View(car);
+
+            }
 
 			public IActionResult DeleteFromCar(int id)////應該能正常移除購物車了/////
 			{
@@ -1322,7 +1493,7 @@ namespace prjDB_GamingForm_Show.Controllers
 			}
 
 
-			public IActionResult Purchase(int payment)
+			public void Purchase(int payment)
 			{
 				string json = HttpContext.Session.GetString(CDictionary.SK_PURCHASED_PRODUCES_LIST);
 				List<CShoppingCarViewModel> car = JsonSerializer.Deserialize<List<CShoppingCarViewModel>>(json);
@@ -1380,14 +1551,22 @@ namespace prjDB_GamingForm_Show.Controllers
 				json = JsonSerializer.Serialize(car);
 				HttpContext.Session.SetString(CDictionary.SK_PURCHASED_PRODUCES_LIST, json);
 				ViewBag.Car = 0;
-                SendOrderEmail(orderview());
-                return RedirectToAction("OrderDetail");
+                
 			}
 
-			public IActionResult OrderDetail()
-			{ 
-				List<COrderViewModel> vm = new List<COrderViewModel>();
-				var order =  _db.Orders.Where(x=>x.MemberId== HttpContext.Session.GetInt32(CDictionary.SK_UserID))
+			public IActionResult OrderDetail(int? id)
+			{
+                var data = from m in _db.Members
+                           where m.MemberId == id
+                           select m;
+                //孟宏  以下是檢查你有沒有買過任何商品。
+                var CheckBuyList = data.SelectMany(x => x.Orders.Select(a => a.OrderProducts)).ToList();
+                if (CheckBuyList.Count == 0)
+                {
+                    ViewBag.Buylist = "您沒有購買商品";
+                }
+                List<COrderViewModel> vm = new List<COrderViewModel>();
+				var order =  _db.Orders.Where(x=>x.MemberId== id)//HttpContext.Session.GetInt32(CDictionary.SK_UserID))
 							.OrderByDescending(x => x.OrderId)
 							.Select(x => new { x.OrderId,x.Payment.Name, x.Coupon.Title,x.OrderDate});
 				COrderViewModel n = null;
@@ -1442,7 +1621,7 @@ namespace prjDB_GamingForm_Show.Controllers
 				return View(vm);
 			}
 
-			public COrderViewModel orderview()
+			public void orderview()
 			{
                 COrderViewModel vm = new COrderViewModel();
                 var order = _db.Orders.Where(x => x.MemberId == HttpContext.Session.GetInt32(CDictionary.SK_UserID))
@@ -1496,8 +1675,8 @@ namespace prjDB_GamingForm_Show.Controllers
                     }
                     vm = n;
                 }
-                return vm;
-			}
+                SendOrderEmail(vm);
+            }
 
             public IActionResult SendOrderEmail(COrderViewModel vm)
 			{
@@ -1518,7 +1697,7 @@ namespace prjDB_GamingForm_Show.Controllers
 					+
 							"<html>" +
 							"<h2>  您的訂單資訊 </h2>" +
-							"<p>   您的訂單編號編號為:" + vm.OrderId + "</p>" +
+							"<p>   您的訂單編號為:" + vm.OrderId + "</p>" +
 							"<p>   價格為:" + vm.Sumprice.ToString("#0") + "元</p>" +
 							"<p>   下單日期為:" + vm.OrderDate + "</p>" +
 							s +
@@ -1535,6 +1714,59 @@ namespace prjDB_GamingForm_Show.Controllers
 				}
 				return RedirectToAction("OrderDetail", "Shop");
 			}
+
+            #region SendEmailByModel
+            public IActionResult SendEmailByModel()
+            {
+                return View();
+            }
+            [HttpPost]
+            public IActionResult SendEmailByModel(CEmail email)
+            {
+                //List<string> EmailData = (from E in _db.Members
+                //                          where E.Email.Contains("alan")
+                //                          select E.Email).ToList();
+                List<string> Emails = new List<string>();
+                Emails.Add("alan90306@gmail.com");
+                Emails.Add("kakuc0e0ig@gmail.com");
+                Emails.Add("iamau3vm0@gmail.com");
+                email.Emails = Emails;
+                foreach (string Address in email.Emails)
+                {
+                    var message = new MimeMessage();
+                    message.From.Add(new MailboxAddress("grootdb1229", "grootdb1229@gmail.com"));
+                    message.To.Add(new MailboxAddress("會員", Address));
+                    message.Subject = email.EmailSubject;
+                    message.Body = new TextPart("html")
+                    {
+                        Text = email.EmailBody
+                    };
+
+                    using (var client = new SmtpClient())
+                    {
+                        client.Connect("smtp.gmail.com", 587, false);
+                        client.Authenticate("grootdb1229@gmail.com", "fmgx uucs lgkv vqxm");
+                        client.Send(message);
+                        client.Disconnect(true);
+                    }
+                }
+                return RedirectToAction("HomePage", "Admin");
+            }
+            #endregion
+
+            #region 彥霖
+            public IActionResult ShopADShow()
+			{
+				Advertise ad = _db.Advertises.Where(a => a.StatusId == 36).OrderByDescending(a => a.AdvertiseId).FirstOrDefault();
+				CShopUseADViewModel model = new CShopUseADViewModel()
+				{
+					Title = ad.Title,
+					Content = ad.AdContent,
+					ImgPath = ad.FImagePath
+				};
+				return Json(model);
+			}
+			#endregion
 		}
-    }
+	}
 }
