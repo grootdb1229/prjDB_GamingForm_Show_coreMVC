@@ -42,8 +42,8 @@
 
              
                 <tr class="textcolor">
-                <td>
-                   <img class="card-img-top" src="~/images/shop/@item.FImagePath" alt="..." style="height:120px; width=80px;" />
+                        <td style="width: 150px;">
+                            <img class="card-img-top" src="~/images/shop/@item.FImagePath" alt="..." style="height:100%; width:100%;" />
                 </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.ProductName)
@@ -76,9 +76,11 @@
                     <td id="pay">@pay.ToString("#0")元</td>
                     <td>
                         <p>
-                            <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample" style="background-color:#a81d1d; border-color: #272727">
-                                選擇優惠卷
-                            </button>
+                            @if (Context.Session.GetInt32(CDictionary.SK_UserID) != null)
+                            {
+                                <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample" style="background-color:#a81d1d; border-color: #272727">
+                                    選擇優惠卷
+                            </button>}
                         </p>
                     </td>
                 </tr>      
@@ -89,7 +91,7 @@
 
 
 
-<div class="collapse" id="collapseExample">
+@* <div class="collapse" id="collapseExample">
     <div style="border:solid 2px  #a81d1d ; margin-bottom:20px;">
         <div class="form-group" id="Coupon" style="background-color:#4F4F4F">
             <div class="d-flex flex-wrap">
@@ -107,7 +109,28 @@
         <input type="hidden" id="CouponOptions" name="CouponOptions" />
     </div>
 
-</div>
+</div> 
+*@
+    <div class="collapse" id="collapseExample">
+        <div style="border:solid 2px  #a81d1d ; margin-bottom:20px;">
+            <div class="form-group" id="Coupon" style="background-color:#4F4F4F">
+                <table class="table table-dark table-hover">
+                    <thead>
+                        <tr>
+                            <th scope="col">圖片</th>
+                            <th scope="col">標題</th>
+                            <th scope="col">折扣或減免</th>
+                            <th scope="col">選擇</th>
+                        </tr>
+                    </thead>
+                    <tbody id="Tbody">
+                                      
+                    </tbody>
+                </table>
+            </div>
+            <input type="hidden" id="CouponOptions" name="CouponOptions" />
+        </div>
+    </div>
 @* <li>交易金額:@sum.ToString("#0")元</li>
 <div id="pay">
     <li>應付金額:@pay.ToString("#0")元</li>
@@ -175,20 +198,25 @@
     })
 
     const CouponDiv = document.querySelector('#Coupon .d-flex');
-
+    var tbodyElement = document.getElementById('Tbody');
     async function LoadCoupon() {
         const response = await fetch('@Url.Content("~/Shop/Coupon")');
         const data = await response.json();
         console.log(data)
         const Coupon = data.map(x => `
-                            <button type="button" id="${x.couponId}" value="${x.couponId}" onclick="Couponselect1(${x.couponId})">
-                                <div  style="max-width: 18rem;" >
-              <div class="card-header" >${x.title}</div>
-    </div>
-        </button>
-                                    `).join('');
+                                <tr>
+                                   <td style="width: 150px;"><img class="card-img-top" src="../images/shop/christmas_Cupon.jpg" alt="..." style="height:100%; width:100%;" /></td>
+                                <td>${x.title}</td>
+                                   <td>${x.discount !== null ? x.discount : '-'}${x.reduce !== null ? x.reduce : '折'}</td>
+                                <td>
+                                            <button type="button" id="CouponSelect" value="${x.couponId}" onclick="Couponselect1(${x.couponId})">
+                                        選擇
+                                    </button>
+                                </td>
+                            </tr>
+                                        `).join('');
 
-        CouponDiv.innerHTML = Coupon;
+        tbodyElement.innerHTML = Coupon;
 
     }
 
