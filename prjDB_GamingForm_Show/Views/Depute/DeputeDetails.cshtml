@@ -62,12 +62,12 @@
                 @{
                     if (Context.Session.GetInt32(CDictionary.SK_UserID) == null)
                     {
-                        <button type="button" value="檢舉" class="btn btn-dark status" style="float:right" data-bs-toggle="modal" data-bs-target="#staticBackdrop">檢舉 </button>
+                            <button type="button" value="檢舉" class="btn btn-dark status" style="float:right" data-bs-toggle="modal" data-bs-target="#staticBackdrop">檢舉 </button>
 
                     }
                     else
                     {
-                        <button type="button" class="btn btn-dark status" style="float:right" onclick="test2(@Html.DisplayFor(model => model.id))">檢舉</button>
+                            <button type="button" class="btn btn-dark status" style="float:right" onclick="test2(@Html.DisplayFor(model => model.id))">檢舉</button>
                     }
                 }
 
@@ -128,41 +128,9 @@
     </div>
 </div>
 <!-- Job Detail End -->
-    <!-- Spinner Start -->
-    <div id="spinner" class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
-        <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
-            <span class="sr-only">Loading...</span>
-        </div>
-    </div>
-    <!-- Spinner End -->
     <!-- Testimonial Start -->
     <div class="container-xxl py-5 wow fadeInUp" data-wow-delay="0.1s">
-        <div class="container">
-            <h1 class="text-center mb-5">Our Clients Say!!!</h1>
-            <div class="owl-carousel testimonial-carousel" id="recommandlist">
-                <div class="testimonial-item bg-light rounded p-4">
-                    <i class="fa fa-quote-left fa-2x text-primary mb-3"></i>
-                    <p>Dolor et eos labore, stet justo sed est sed. Diam sed sed dolor stet amet eirmod eos labore diam</p>
-                    <div class="d-flex align-items-center">
-                        <img class="img-fluid flex-shrink-0 rounded" src="img/testimonial-1.jpg" style="width: 50px; height: 50px;">
-                        <div class="ps-3">
-                            <h5 class="mb-1">Client Name</h5>
-                            <small>Profession</small>
-                        </div>
-                    </div>
-                </div>
-                <div class="testimonial-item bg-light rounded p-4">
-                    <i class="fa fa-quote-left fa-2x text-primary mb-3"></i>
-                    <p>Dolor et eos labore, stet justo sed est sed. Diam sed sed dolor stet amet eirmod eos labore diam</p>
-                    <div class="d-flex align-items-center">
-                        <img class="img-fluid flex-shrink-0 rounded" src="img/testimonial-4.jpg" style="width: 50px; height: 50px;">
-                        <div class="ps-3">
-                            <h5 class="mb-1">Client Name</h5>
-                            <small>Profession</small>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <div class="container" id="recommandlist">
         </div>
     </div>
     <!-- Testimonial End -->
@@ -203,41 +171,44 @@
 
 
         }
-
-        function Recommand() {
-            var count = 1;
-            $.ajax('@Url.Content("~/Depute/Recommand")', {
-                "type": 'Post', //POST、PUT、DELETE//
-                "data": { "id": @Html.DisplayFor(model => model.id) },
-                "dataType": "json"
-            })
-                .done((data) => {
-                    console.log(data.indexOf())
-                    console.log(data)
-                    const RecommandFrag = $(document.createDocumentFragment());
-                    const Recommand = data.map(Recommand =>
-                        `
+        function Recommand() 
+        {
+            $('#recommandlist').load(`@Url.Content("~/Depute/Recommand")?id=@Html.DisplayFor(model => model.id)`)
+        }
+        // function Recommand() {
+        //     var count = 1;
+        //     $.ajax('@Url.Content("~/Depute/Recommand")', {
+        //         "type": 'Post', //POST、PUT、DELETE//
+        //         "data": { "id": @Html.DisplayFor(model => model.id) },
+        //         "dataType": "json"
+        //     })
+        //         .done((data) => {
+        //             console.log(data.indexOf())
+        //             console.log(data)
+        //             const RecommandFrag = $(document.createDocumentFragment());
+        //             const Recommand = data.map(Recommand =>
+        //                 `
                                 
-                    <div class="testimonial-item bg-light rounded p-4">
-                        <i class="fa fa-quote-left fa-2x text-primary mb-3"></i>
-                         <p>${Recommand.deputeContent}</p>
-                        <div class="d-flex align-items-center">
-                                   <img class="img-fluid flex-shrink-0 rounded" src="/images/${Recommand.imgfilepath}" style="width: 50px; height:50px;">
-                            <div class="ps-3">
-                            <h5 class="mb-1">${Recommand.title}</h5>
-                            <small>${Recommand.providername}</small>
-                            </div>
-                        </div>
-                    </div>
+        //             <div class="testimonial-item bg-light rounded p-4">
+        //                 <i class="fa fa-quote-left fa-2x text-primary mb-3"></i>
+        //                  <p>${Recommand.deputeContent}</p>
+        //                 <div class="d-flex align-items-center">
+        //                            <img class="img-fluid flex-shrink-0 rounded" src="/images/${Recommand.imgfilepath}" style="width: 50px; height:50px;">
+        //                     <div class="ps-3">
+        //                     <h5 class="mb-1">${Recommand.title}</h5>
+        //                     <small>${Recommand.providername}</small>
+        //                     </div>
+        //                 </div>
+        //             </div>
                             
                         
-                        `)
-                    RecommandFrag.append(Recommand);
-                    $('#recommandlist').after(RecommandFrag)
-                })
+        //                 `)
+        //             RecommandFrag.append(Recommand);
+        //             $('#recommandlist').after(RecommandFrag)
+        //         })
 
 
-        }
+        // }
 
         async function test2(value) {
 
