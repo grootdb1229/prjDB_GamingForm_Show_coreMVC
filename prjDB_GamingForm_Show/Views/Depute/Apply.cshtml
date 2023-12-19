@@ -74,7 +74,6 @@
             });            
         };
         function getSignalRIdByUserName(userName) {
-            console.log("3")
             return new Promise((resolve, reject) => {
                 connection.invoke("GetConnectionIdByUserName", userName).then(function (connectionId) {
                     // 在這裡可以使用 connectionId 進行相應的處理
@@ -139,9 +138,7 @@
                         clearInterval(timerInterval);
                     }
                 }).then(() => {
-                    console.log("1");
                     sendMessageBySignalR();
-                    console.log("2");
                     window.location.href = '@Url.Action("homeframe","depute")';
                 })
             };

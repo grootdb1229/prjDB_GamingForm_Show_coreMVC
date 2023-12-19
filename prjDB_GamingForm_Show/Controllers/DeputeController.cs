@@ -378,15 +378,18 @@ namespace prjDB_GamingForm_Show.Controllers
 
         public IActionResult Recommand(int id)
         {
-            var value = (from n in _db.DeputeSkills.AsEnumerable()
+            _db.Skills.Load();
+            _db.Deputes.Load();
+            _db.Members.Load();
+            var value = from n in _db.DeputeSkills.AsEnumerable()
                          where n.DeputeId == id
-                         select new { n.Skill.Name }).Distinct();
+                         select n.Skill.Name;
             List< CDeputeViewModel> Rcolist = new List< CDeputeViewModel>();
             CDeputeViewModel data = null;
             foreach(var item in value)
             {
                   var  RecoData = from n in _db.DeputeSkills.AsEnumerable()
-                               where n.Skill.Name.Contains(item.Name)
+                               where n.Skill.Name.Contains(item)
                                select new {n.DeputeId,n.Depute.Title, n.Depute.DeputeContent, n.Depute.Provider.Name, n.Depute.Provider.FImagePath };
                 CDeputeViewModel x = null;
                 foreach (var item2 in RecoData)
@@ -406,7 +409,7 @@ namespace prjDB_GamingForm_Show.Controllers
             }
 
             Random rnd = new Random();
-            int count = rnd.Next(0, 50);
+            int count = rnd.Next(0, Rcolist.Count()-1);
             List<CDeputeViewModel> Rcolist2 = new List<CDeputeViewModel>();
             for (int i = 1; i <= 6; i++)
             {
@@ -779,30 +782,26 @@ namespace prjDB_GamingForm_Show.Controllers
         }
         public async Task<IActionResult> selectSkillAsync(string title,string content)
         {
-            string data = test();
+            string datas = skillList();
             string systemRule = "你將看到委託主題及委託內容，" +
                 "你的工作是從以下特定skill清單中選擇最多5項skill，並使用JSON形式提供答案。" +
                 "請嚴格依照以下列skill表來選擇skill，skill名稱必須完全吻合skill列表裡的名稱，並且不要和上一次的結果一樣。\r\n" +
                 "正確範例:\r\n" +
                 "{\r\n  \"skill\": [\r\n    \"Html\",\r\n    \"JavaScript\",\r\n    \"Ruby\",\r\n    \"Sketch\",\r\n    \"Blender\"\r\n  ]\r\n}\r\n" +
-                "\r\nskill：\r\nCsharp\r\nHtml\r\nCss\r\nLINQ\r\nADONET\r\nSQL\r\nJavaScript\r\nSketch\r\nFigma\r\nBlender\r\nAutodesk Maya\r\nJava\r\nPython\r\nPHP\r\nRuby\r\nASPdotNET\r\nSwift\r\nKotlin\r\nReact\r\nSolidity\r\nSelenium\r\nJUnit\r\n電子\r\n搖滾\r\n古典\r\n爵士\r\n民族\r\n流行\r\n懸疑\r\n環境\r\n8位元\r\n16位元\r\nAutodesk Maya\r\nAdobe After Effects\r\nAdobe Animate\r\nC\r\nNodedotjs\r\ndotNET Framework\r\nXamarin\r\nUnity\r\nUnreal Engine\r\nSpring\r\nLaravel\r\nAdobe Photoshop\r\nAdobe Illustrator\r\nAdobe XD\r\n3ds Max\r\nZBrush\r\nInkscape\r\nCorelDRAW\r\nGIMP\r\nAudacity\r\nAdobe Audition\r\nFL Studio\r\nAbleton Live\r\nLogic Pro X\r\nPro Tools\r\nGarageBand\r\nCubase\r\nReaper\r\nBlender\r\nCinema 4D\r\nToon Boom Harmony\r\nSpine\r\nMoho\r\nDragonframe\r\nFinal Draft\r\nCeltx\r\nStoryboard That\r\nToon Boom Storyboard\r\nTwine\r\nSelenium\r\nAppium\r\nJest\r\nJMeter\r\nLoadRunner\r\nGatling\r\nOWASP\r\nNessus\r\nBurp Suite\r\nTestFlight\r\nSteam Early Access\r\nWebSocket\r\nRESTful API\r\nGraphQL\r\nAWS\r\nAzure\r\nGoogle Cloud\r\nNVIDIA GeForce Now\r\nXbox Cloud Gaming\r\nGoogle Analytics\r\nSEO\r\nHootsuite\r\nBuffer\r\nWordPress\r\nHubSpot";
+                $"\r\n{datas}";
             string userContent = "主題:" + title + "，" + "內容:" + content;
-            var response = await ChatAsync(systemRule, userContent, 0);
+            var response = await ChatAsync(systemRule, userContent, 0.6);
             
             return Content(response);
         }
-        private string test()
+        private string skillList()
         {
             var skillNames = _db.Skills.Select(s => s.Name).ToList();
             var resultObject = new
             {
                 skill = skillNames
             };
-            var data = JsonSerializer.Serialize(resultObject, new JsonSerializerOptions
-            {
-                WriteIndented = true
-            });
-            var data2= JsonSerializer.Serialize(resultObject);
+            var data= JsonSerializer.Serialize(resultObject);
             return data;
         }
 
@@ -889,6 +888,7 @@ namespace prjDB_GamingForm_Show.Controllers
                 title = ori.Depute.Title,
                 replyContent = ori.ReplyContent,
                 replyFileName = ori.ReplyFileName,
+                workerName = ori.Member.Name
             };
             return Json(data);
         }
@@ -969,7 +969,7 @@ namespace prjDB_GamingForm_Show.Controllers
                 n.title = item.Depute.Title;
                 n.count = o.Count();
                 n.status = item.ApplyStatus.Name;
-                n.memberName = item.Member.Name;
+                n.workerName = item.Member.Name;
                 n.applyerGender = item.Member.Gender == 1 ? "男性" : "女性";
                 n.applyerEmail = item.Member.Email;
                 n.applyerBirth = item.Member.Birth.ToString("yyyy/MM/dd");
