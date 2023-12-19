@@ -388,9 +388,15 @@ namespace prjDB_GamingForm_Show.Controllers
             CDeputeViewModel data = null;
             foreach(var item in value)
             {
-                  var  RecoData = from n in _db.DeputeSkills.AsEnumerable()
+                  var  RecoData = (from n in _db.DeputeSkills.AsEnumerable()
                                where n.Skill.Name.Contains(item)
-                               select new {n.DeputeId,n.Depute.Title, n.Depute.DeputeContent, n.Depute.Provider.Name, n.Depute.Provider.FImagePath };
+                               select new 
+                               {   n.DeputeId,
+                                   Title = (n.Depute.Title.Length > 15) ? n.Depute.Title.Substring(0,10) : n.Depute.Title,
+                                   DeputeContent = (n.Depute.DeputeContent.Length>15) ? n.Depute.DeputeContent.Substring(0, 20) : n.Depute.DeputeContent, 
+                                   n.Depute.Provider.Name, 
+                                   n.Depute.Provider.FImagePath 
+                               }).Distinct();
                 CDeputeViewModel x = null;
                 foreach (var item2 in RecoData)
                 {
@@ -418,7 +424,7 @@ namespace prjDB_GamingForm_Show.Controllers
                 count = rnd.Next(0, Rcolist.Count);
 
             }
-            return Json(Rcolist2);
+            return PartialView(Rcolist2);
 
 
         }
