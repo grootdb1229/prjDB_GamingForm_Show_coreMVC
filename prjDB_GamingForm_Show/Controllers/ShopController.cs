@@ -799,11 +799,11 @@ namespace prjDB_GamingForm_Show.Controllers
 				{
 					try
 					{
-						if (!ModelState.IsValid)
-						{
-							var errors = ModelState.Values.SelectMany(v => v.Errors); //測試錯誤用程式碼
-							return View(product);
-						}
+						//if (!ModelState.IsValid) 捨棄後端驗證。
+						//{
+						//	var errors = ModelState.Values.SelectMany(v => v.Errors); //測試錯誤用程式碼
+						//	return View(product);
+						//}
 						Product x = new Product();
 						string MulPic = "";
 						if (_db != null)

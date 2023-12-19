@@ -5,6 +5,8 @@ using prjDB_GamingForm_Show.Models.Entities;
 using System.ComponentModel.DataAnnotations;
 using prjDB_GamingForm_Show.Models;
 using static prjDB_GamingForm_Show.Hubs.ChatHub;
+using Org.BouncyCastle.Tls;
+using System;
 
 namespace prjDB_GamingForm_Show.Hubs
 {
@@ -96,6 +98,34 @@ namespace prjDB_GamingForm_Show.Hubs
             }
         }
 
+        public async Task SystemMessage(string which ,string message, string receiverConnectionId, string receiverName)
+        {
+            var receiveMemberId = _db.Members.FirstOrDefault(m => m.Name == receiverName).MemberId;
+            var sendTime = DateTime.UtcNow.ToLocalTime().ToString("yyyy/MM/dd HH:mm");
+            int sendSystem = 0;
+
+            if(which == "委託") {  sendSystem = 176; }
+            else if(which == "商城") { sendSystem = 179; }
+
+            if (receiverConnectionId != null)
+            {
+                await Clients.Client(receiverConnectionId).SendAsync("SystemNotify", message,  sendTime);
+            }
+
+            if(receiveMemberId != null)
+            {
+                MemberChat memberChat = new MemberChat()
+                {
+                    SenderMember = sendSystem,
+                    ReceiveMember = receiveMemberId,
+                    ChatContent = message,
+                    ModefiedDate = DateTime.UtcNow.ToLocalTime().ToString("yyyy/MM/dd HH:mm"),
+                    IsCheck = false
+                };
+                _db.MemberChats.Add(memberChat);
+                await _db.SaveChangesAsync();
+            }
+        }
         public async Task SendMessage(string senderName, string message, string receiverConnectionId, string receiverName)
         {
             var senderMemberName = _ConnectedMember.FirstOrDefault(u => u.MemberName == senderName)?.MemberName;
