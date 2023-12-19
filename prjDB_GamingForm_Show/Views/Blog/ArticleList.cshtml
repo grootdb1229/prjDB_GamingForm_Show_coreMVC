@@ -35,100 +35,97 @@
     <div class="nav-options">
 
         <div class="container">
-            <div class="humberger-menu ">
-                <a href="@Url.Action("List", "Blog",new{FId=Model.blogs.First().SubTagId})">@Model.subtagTitle</a>
-            </div>
-
-            <div class="nav-menu">
-                <ul>
-                    <li class="@(ViewBag.SelectedSubBlogId==null ? "selected-item":"" )">
-                        <a href="@Url.Action("ArticleList", "Blog", new { FId = Model.blogs.FirstOrDefault().BlogId})">@Model.blogs.FirstOrDefault().Title</a>
-                    </li>
-                    @{
-                        foreach (var item in Model.subBlogs.GroupBy(p => p.Title))
-                        {
-                            <li class="@(item.First().SubBlogId == ViewBag.SelectedSubBlogId ? "selected-item" : "")">
-                                <a href="@Url.Action("ArticleList", "Blog", new {FId=item.First().BlogId ,SFId = item.FirstOrDefault().SubBlogId})">@item.Key</a>
+            <div class="d-flex justify-content-between">
+                <div>
+                    <div class="d-flex flex-column bd-highlight mb-3 nav-menu">
+                        <ul>
+                            <li>
+                                <a href="@Url.Action("List", "Blog")">回列表</a>
                             </li>
-                        }
-                    }
-                    <li style="float:right;">
+                            <li class="@(ViewBag.SelectedSubBlogId==null ? "selected-item":"" )">
+                                <a href="@Url.Action("ArticleList", "Blog", new { FId = Model.blogs.FirstOrDefault().BlogId})">@Model.blogs.FirstOrDefault().Title</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="nav-menu" style="margin:25px 25px 0px 0px;">
+                    <ul>
                         @{
-                            if (Context.Session.GetInt32(CDictionary.SK_UserID) == null)
+                            foreach (var item in Model.subBlogs.GroupBy(p => p.Title))
                             {
-                                <button style="background:#a81d1d ;border:none;height:52.5px" type="button" class="btn btn-danger" id="btnCreate" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-                                    發表文章
-                                </button>
+                                <li class="@(item.First().SubBlogId == ViewBag.SelectedSubBlogId ? "selected-item" : "")">
+                                    <a href="@Url.Action("ArticleList", "Blog", new {FId=item.First().BlogId ,SFId = item.FirstOrDefault().SubBlogId})">@item.Key</a>
+                                </li>
                             }
-                            else
-                            {
-                                @Html.ActionLink("發表文章", "ArticleCreate", "Blog", new { FId = Model.blogs.FirstOrDefault().BlogId }, new { id = "btnCreate", @class = "btn" })
-                            }
-                        }
-                    </li>
-                </ul>
-
-            </div>
-            <div>
-
-                <div style="margin:3px 30%">
-
-                    @using (Html.BeginForm())
-                    {
-                        @:關鍵字 @Html.TextBox("txtKeyword")
-                        <input type="submit" value="查詢" />
-                    }
+                        } 
+                    </ul>
+                </div>
+                <div>
+                    <div>
+                        <ul>
+                            <li style="float:right;">
+                                @{
+                                    if (Context.Session.GetInt32(CDictionary.SK_UserID) == null)
+                                    {
+                                        <button style="background:#a81d1d ;border:none;height:52.5px" type="button" class="btn btn-danger" id="btnCreate" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                                            發表文章
+                                        </button>
+                                    }
+                                    else
+                                    {
+                                        @Html.ActionLink("發表文章", "ArticleCreate", "Blog", new { FId = Model.blogs.FirstOrDefault().BlogId }, new { id = "btnCreate", @class = "btn" })
+                                    }
+                                }
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
-
     </div>
+   
 </header>
-
-@*<div style="display:flex;justify-content:center;margin-top:10px ">   
-    <div>
-        <img src="~/images/Blogimages/@Model.blogs.FirstOrDefault().FImagePath" alt="" width="800" height="200">
-    </div>
-</div>*@
-
-<div style="display: flex; justify-content: center; margin-top: 10px;">
-    <div>
-        <img src="~/images/Blogimages/@Model.blogs.FirstOrDefault().FImagePath" alt="" style="min-width: 1250px; height:375px;">
+<div class="contanier">
+    <div style="display: flex; justify-content: center; margin-top: 10px;">
+        <img src="~/images/Blogimages/@Model.blogs.FirstOrDefault().FImagePath" alt="" style="min-width: 1250px; height:375px;object-fit:cover">
     </div>
 </div>
-
-
-
-<div style="float:right;margin-right:20px;margin-left:20px;margin-top:30px;width:350px;background-color:#4F4F4F;box-shadow:0px 0px 8px 8px #cccccc;border-radius:8px">
-    <div style="padding:10px">
-        <table class="table table-hover" style="color:antiquewhite; ">
-            <tr style="text-align:center;font-size:24px">
-                <th>熱門文章</th>
-            </tr>
-            @{
-                int num = 0;
-                foreach (var t in Model.articles.OrderByDescending(a => a.ViewCount).Take(5))
-                {
-                    num++;
-                    <tr>
-                        <td>
-                            <a style="text-decoration:none" href="@Url.Action("ArticleContent", "Blog", new {FId=t.SubBlog.BlogId, AFId =t.ArticleId}) ">
-                                <p>【@t.SubBlog.Title】 @t.Title</p>
-                            </a>
-                        </td>
-                    </tr>
-                }
+ <div>
+        <div style="margin:10px 30%">
+            @using (Html.BeginForm())
+            {
+                @:關鍵字 @Html.TextBox("txtKeyword")
+                <input type="submit" value="查詢" />
             }
-        </table>
+        </div>
     </div>
-</div>
-
 <div class="container">
+    <div style="float:right;margin-right:20px;margin-left:20px;width:350px;background-color:#4F4F4F;box-shadow:0px 0px 8px 8px #cccccc;border-radius:8px">
+        <div style="padding:10px">
+            <table class="table table-hover" style="color:antiquewhite; ">
+                <tr style="text-align:center;font-size:24px">
+                    <th>熱門文章</th>
+                </tr>
+                @{
+                    int num = 0;
+                    foreach (var t in Model.articles.OrderByDescending(a => a.ViewCount).Take(5))
+                    {
+                        num++;
+                        <tr>
+                            <td>
+                                <a style="text-decoration:none" href="@Url.Action("ArticleContent", "Blog", new {FId=t.SubBlog.BlogId, AFId =t.ArticleId}) ">
+                                    <p>【@t.SubBlog.Title】 @t.Title</p>
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                }
+            </table>
+        </div>
+    </div>
     <div class="row">
-
         @*------------------文章列表------------------*@
-
-        <div style="margin:0px auto;margin-top:30px;">
+        <div style="margin:0px auto;">
             <div style="background-color:#4F4F4F;box-shadow:0px 0px 8px 8px #cccccc;border-radius:8px">
                 <table class="table table-hover">
                     <tr>
@@ -148,7 +145,6 @@
                             </h4>
                         </th>
                     </tr>
-
                     @{
                         foreach (var item in Model.articles)
                         {
@@ -174,8 +170,8 @@
 
                                                 // 截取前30个字符
                                                 // 30字符以後以...作替代
-                                                string truncatedContent = textContent.Length > 30 ? textContent.Substring(0, 30) + "...": textContent ;
-                                                
+                                                string truncatedContent = textContent.Length > 30 ? textContent.Substring(0, 30) + "..." : textContent;
+
                                                 @Html.Raw(truncatedContent)
                                             }
                                         </span>
@@ -195,11 +191,11 @@
                                         {
                                             <p style="text-align:center ;font-size:15px">@item.Replies.LastOrDefault().ModifiedDate</p>
                                             <br />
-                                            <p style="text-align:center ;font-size:15px">@Html.ActionLink(Model.members.Where(m => m.MemberId == item.Replies.LastOrDefault().MemberId).Select(m => m.Name).FirstOrDefault(), "MemberPageTest", "Member", new { id = Model.members.Where(m => m.MemberId == item.Replies.LastOrDefault().MemberId).Select(m => m.MemberId).FirstOrDefault() })</p>                                            
+                                            <p style="text-align:center ;font-size:15px">@Html.ActionLink(Model.members.Where(m => m.MemberId == item.Replies.LastOrDefault().MemberId).Select(m => m.Name).FirstOrDefault(), "MemberPageTest", "Member", new { id = Model.members.Where(m => m.MemberId == item.Replies.LastOrDefault().MemberId).Select(m => m.MemberId).FirstOrDefault() })</p>
                                         }
                                         else
                                         {
-                                            <p style="text-align:center ;font-size:15px">@item.ModifiedDate</p>                                           
+                                            <p style="text-align:center ;font-size:15px">@item.ModifiedDate</p>
                                             <p style="text-align:center;font-size:12px"> @Html.ActionLink(item.Member.Name, "MemberPageTest", "Member", new { id = item.MemberId }) </p>  @* 預計顯示作者名稱在發文時間下面 *@
                                         }
                                     }

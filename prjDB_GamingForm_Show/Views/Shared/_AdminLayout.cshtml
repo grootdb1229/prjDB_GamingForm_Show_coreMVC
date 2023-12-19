@@ -114,21 +114,28 @@
                                 </li>
                                 <li>
                                     <a href="../Admin/Index">
-                                        <i class="fa fa-bar-chart-o" style="color:#a81d1d"></i> 報表檢視 @*<span class="fa fa-chevron-down"></span>*@
+                                        <i class="fa fa-bar-chart-o" style="color:#a81d1d"></i> 報表檢視 
                                     </a>
-                                    @*<ul class="nav child_menu">
-                                    <li><a href="~/chartjs.html">Chart JS</a></li>
-                                    <li><a href="~/chartjs2.html">Chart JS2</a></li>
-                                    <li><a href="~/morisjs.html">Moris JS</a></li>
-                                    <li><a href="~/echarts.html">ECharts</a></li>
-                                    <li><a href="~/other_charts.html">Other Charts</a></li>
-                                    </ul>*@
                                 </li>
+
+
+                                
                                 <li>
                                     <a onclick="showPV()">
                                         <i class="fa fa-solid fa-comments" style="color:#a81d1d"></i> 訊息系統
                                     </a>
                                 </li>
+                                @*---*@
+                                <li>
+                                    <a>
+                                        <i class="fa fa-clone" style="color:#a81d1d"></i> 數據分析 <span class="fa fa-chevron-down"></span>
+                                    </a>
+                                    <ul class="nav child_menu">
+                                        <li>@Html.ActionLink("訂單列表", "OrderList", "Admin", null, new { @style = "font-size:15px" })</li>
+                                        <li>123</li>                                        
+                                    </ul>
+                                </li>
+                                @*---*@
                                 @*<li>
                                 <a><i class="fa fa-clone"></i>Layouts <span class="fa fa-chevron-down"></span></a>
                                 <ul class="nav child_menu">

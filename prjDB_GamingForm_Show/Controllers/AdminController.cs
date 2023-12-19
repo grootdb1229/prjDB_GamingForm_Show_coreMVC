@@ -264,8 +264,8 @@ namespace prjDB_GamingForm_Show.Controllers
 
         #region Newsletter
         public IActionResult Newsletter()
-        { 
-            List<CNewsLetter> cNewsLetter =new List<CNewsLetter>();
+        {
+            List<CNewsLetter> cNewsLetter = new List<CNewsLetter>();
             var datas = _db.NewsLetters.OrderByDescending(x => x.Id).Select(x => x);
             foreach (var data in datas)
             {
@@ -277,7 +277,7 @@ namespace prjDB_GamingForm_Show.Controllers
                 };
                 cNewsLetter.Add(NewsLetter);
             }
-            
+
             return View(cNewsLetter);
         }
 
@@ -348,7 +348,7 @@ namespace prjDB_GamingForm_Show.Controllers
             };
             _db.NewsLetters.Add(dbn);
             _db.SaveChanges();
-            return Json(new { success = true, message = "電子報已成功發送！"});
+            return Json(new { success = true, message = "電子報已成功發送！" });
         }
         public IActionResult Resend(int? id)
         {
@@ -991,9 +991,9 @@ namespace prjDB_GamingForm_Show.Controllers
         public IActionResult BlogSubTagCreate(SubTag sub)
         {
 
-                _db.SubTags.Add(sub);
-                _db.SaveChanges();
-                return RedirectToAction("BlogCategoryList");
+            _db.SubTags.Add(sub);
+            _db.SaveChanges();
+            return RedirectToAction("BlogCategoryList");
 
         }
 
@@ -1055,7 +1055,7 @@ namespace prjDB_GamingForm_Show.Controllers
             return RedirectToAction("BlogList");
         }
 
-        public IActionResult Blogsel(int? id) 
+        public IActionResult Blogsel(int? id)
         {
             var blog = _db.Blogs.Where(b => b.SubTagId == id);
             return Json(blog);
@@ -1352,11 +1352,11 @@ namespace prjDB_GamingForm_Show.Controllers
 
                     return View(vm);
                 }
-                else 
+                else
                 {
                     vm = new CBlogViewModel();
 
-                    _db.ArticleComplains.Where(a => a.Article.SubBlogId != 191 && a.SubTagId==STId).Include(p => p.SubTag).Load();  // 使用 Load 方法進行延遲載入
+                    _db.ArticleComplains.Where(a => a.Article.SubBlogId != 191 && a.SubTagId == STId).Include(p => p.SubTag).Load();  // 使用 Load 方法進行延遲載入
                     vm.articleComplain = _db.ArticleComplains.Local;  // 從本地集合中獲取載入的 ArticleComplains
 
                     _db.Articles.Include(p => p.SubBlog).ThenInclude(p => p.Blog).Include(p => p.Member).Load();
@@ -1375,21 +1375,21 @@ namespace prjDB_GamingForm_Show.Controllers
                 }
             }
 
-            else 
+            else
             {
                 vm = new CBlogViewModel();
 
-                _db.ArticleComplains.Where(a =>(a.SubTag.Name.Contains(kyvm.txtKeyWord)||a.ReportContent.Contains(kyvm.txtKeyWord)) && a.Article.SubBlogId != 191).Include(p => p.SubTag).Load(); 
-                vm.articleComplain = _db.ArticleComplains.Local;  
+                _db.ArticleComplains.Where(a => (a.SubTag.Name.Contains(kyvm.txtKeyWord) || a.ReportContent.Contains(kyvm.txtKeyWord)) && a.Article.SubBlogId != 191).Include(p => p.SubTag).Load();
+                vm.articleComplain = _db.ArticleComplains.Local;
 
-                _db.Articles.Include(p => p.SubBlog).ThenInclude(p => p.Blog).Include(p => p.Member).Load();  
-                vm.articles = _db.Articles.Local;  
+                _db.Articles.Include(p => p.SubBlog).ThenInclude(p => p.Blog).Include(p => p.Member).Load();
+                vm.articles = _db.Articles.Local;
 
-                _db.Members.Load(); 
-                vm.members = _db.Members.Local; 
+                _db.Members.Load();
+                vm.members = _db.Members.Local;
 
-                _db.Statuses.Load();  
-                vm.status = _db.Statuses.Local;  
+                _db.Statuses.Load();
+                vm.status = _db.Statuses.Local;
 
                 _db.SubTags.Load();
                 vm.subTags = _db.SubTags.Local;
@@ -1452,7 +1452,7 @@ namespace prjDB_GamingForm_Show.Controllers
             if (art != null)
             {
 
-                art.IsPinned = true; 
+                art.IsPinned = true;
                 art.Title = "【置頂文章】" + art.Title;
                 _db.SaveChanges();
             }
@@ -1475,15 +1475,15 @@ namespace prjDB_GamingForm_Show.Controllers
 
         }
 
-        public IActionResult BlogComplaintsByTag(int? STId) 
+        public IActionResult BlogComplaintsByTag(int? STId)
         {
             //_db.ChangeTracker.Entries().ToList().ForEach(entry => entry.State = EntityState.Detached);
 
 
             CBlogViewModel vm = new CBlogViewModel();
 
-            _db.ArticleComplains.Where(a => a.Article.SubBlogId != 191 && a.SubTagId ==STId).Include(p => p.SubTag).Load();  
-            vm.articleComplain = _db.ArticleComplains.Local;  
+            _db.ArticleComplains.Where(a => a.Article.SubBlogId != 191 && a.SubTagId == STId).Include(p => p.SubTag).Load();
+            vm.articleComplain = _db.ArticleComplains.Local;
 
             _db.Articles.Include(p => p.SubBlog).ThenInclude(p => p.Blog).Include(p => p.Member).Load();
             vm.articles = _db.Articles.Local;
@@ -1502,7 +1502,7 @@ namespace prjDB_GamingForm_Show.Controllers
 
         }
 
-        
+
 
         #endregion
         //---------------------------論壇---------------------------
@@ -1580,7 +1580,37 @@ namespace prjDB_GamingForm_Show.Controllers
 
 
         #endregion
+
+
+
+
+
+
+        #region 數據
+
+        public IActionResult OrderList(DateTime? startday,DateTime? endday)
+        {
+
+            List<Order> orders = _db.Orders.Include(a=>a.Payment).Include(a=>a.Coupon).Where(p=>p.CompletedDate >= startday && p.OrderDate <= endday).ToList();
+
+            return View(orders);
+        }
+
+
+
+
+
+        #endregion
     }
+
+
+
+
+
+
 }
+
+
+
 
 

@@ -7,6 +7,10 @@ using prjDB_GamingForm_Show.Models;
 using static prjDB_GamingForm_Show.Hubs.ChatHub;
 using Org.BouncyCastle.Tls;
 using System;
+using MailKit;
+using MailKit.Net.Smtp;
+using MimeKit;
+using prjDB_GamingForm_Show.Models.Member;
 
 namespace prjDB_GamingForm_Show.Hubs
 {
@@ -100,17 +104,53 @@ namespace prjDB_GamingForm_Show.Hubs
 
         public async Task SystemMessage(string which ,string message, string receiverConnectionId, string receiverName)
         {
+            var systemName = "";
             var receiveMemberId = _db.Members.FirstOrDefault(m => m.Name == receiverName).MemberId;
             var sendTime = DateTime.UtcNow.ToLocalTime().ToString("yyyy/MM/dd HH:mm");
             int sendSystem = 0;
 
-            if(which == "委託") {  sendSystem = 176; }
-            else if(which == "商城") { sendSystem = 179; }
+            if(which == "委託") {  
+                sendSystem = 176;
+                systemName = "委託系統通知";
+            }
+            else if(which == "商城") { 
+                sendSystem = 179;
+                systemName = "商城系統通知";
+            }
 
             if (receiverConnectionId != null)
             {
-                await Clients.Client(receiverConnectionId).SendAsync("SystemNotify", message,  sendTime);
+                await Clients.Client(receiverConnectionId).SendAsync("ReceiverUpdContent", message, systemName, 0, "", sendTime);
             }
+            //else 
+            //{
+            //    CEmail email = new CEmail();
+            //    List<string> Emails = new List<string>();
+            //    //Emails.Add("alan90306@gmail.com");
+            //    Emails.Add("kakuc0e0ig@gmail.com");
+            //    //Emails.Add("iamau3vm0@gmail.com");
+            //    email.Emails = Emails;
+            //    string html = "<p>測試</p>";
+            //    foreach (string Address in email.Emails)
+            //    {
+            //        var emailmessage = new MimeMessage();
+            //        emailmessage.From.Add(new MailboxAddress("grootdb1229", "grootdb1229@gmail.com"));
+            //        emailmessage.To.Add(new MailboxAddress("會員", Address));
+            //        emailmessage.Subject = "測試";
+            //        emailmessage.Body = new TextPart("text")
+            //        {
+            //            Text = "測試"
+            //        };
+
+            //        using (var client = new SmtpClient())
+            //        {
+            //            client.Connect("smtp.gmail.com", 587, false);
+            //            client.Authenticate("grootdb1229@gmail.com", "fmgx uucs lgkv vqxm");
+            //            client.Send(emailmessage);
+            //            client.Disconnect(true);
+            //        }
+            //    }
+            //}
 
             if(receiveMemberId != null)
             {

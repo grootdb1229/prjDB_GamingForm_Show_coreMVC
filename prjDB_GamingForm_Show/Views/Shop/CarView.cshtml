@@ -8,86 +8,85 @@
 <h2>購物車</h2>
 
 <p>
-    @Html.ActionLink("繼續購物", "Index", "Shop",null, new { @class = "btn btn-outline-dark mt-auto" })
+    @Html.ActionLink("繼續購物", "Index", "Shop", null, new { @class = "btn btn-outline-dark mt-auto" })
 </p>
-<div class="container px-4 px-lg-5 mt-7" >
+<div class="container px-4 px-lg-5 mt-7">
     <table class="table">
-    <thead>
-        <tr class="textcolor">
-            <th>
-                
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ProductName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Price)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
+        <thead>
+            <tr class="textcolor">
+                <th>
+
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.ProductName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Price)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
             @{
                 if (!string.IsNullOrEmpty(ViewBag.repet))
                 {
-                    <div class="alert alert-danger">以偵測到重覆商品，為您移除</div>
+                        <div class="alert alert-danger">以偵測到重覆商品，為您移除</div>
                 }
             }
             @{
                 int count = 0;
                 decimal pay = 0;
                 decimal sum = 0;
-                foreach (var item in Model) {
+                foreach (var item in Model)
+                {
                     count++;
 
-             
-                <tr class="textcolor">
-                        <td style="width: 150px;">
-                            <img class="card-img-top" src="~/images/shop/@item.FImagePath" alt="..." style="height:100%; width:100%;" />
-                </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.ProductName)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Price) 
-              
-                    </td>
+
+                        <tr class="textcolor">
+                            <td>
+                                <img class="card-img-top" src="~/images/shop/@item.FImagePath" alt="..." style="height:120px;" />
+                            </td>
+                            <td id="@($"name_{count}")">
+                                @Html.DisplayFor(modelItem => item.ProductName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Price)
+
+                            </td>
 
                             <td>
                                 @Html.ActionLink("查看商品", "Details", "Shop", new { id = item.ProductID }, new { @class = "btn btn-outline-dark mt-auto" })
                                 @Html.ActionLink("刪除購物車", "DeleteFromCar", "Shop", new { id = item.ProductID }, new { @class = "btn btn-outline-dark mt-auto", onclick = "return confirm('確定要刪除嗎?')" })
                             </td>
-                </tr>
+                        </tr>
                     sum += item.Price;
+                        <div hidden id="@($"seller_{count}")">@item.MemberName</div>
                 }
-                    pay = sum;
-
-            <tr style="color:wheat;border-bottom-style:hidden">
-                    <td>總計金額:</td>
-                    <td></td>
-                    <td>@sum.ToString("#0")元</td>
-                    <td>
-                       
-                    </td>
-            </tr>
-                <tr style="color:wheat; border-top-style:hidden">
-                    <td>應付金額:</td>
-                    <td></td>
-                    <td id="pay">@pay.ToString("#0")元</td>
-                    <td>
-                        <p>
-                            @if (Context.Session.GetInt32(CDictionary.SK_UserID) != null)
-                            {
+                pay = sum;
+                    <div id="productcount" hidden>@count</div>
+                    <tr style="color:wheat;border-bottom-style:hidden">
+                        <td>總計金額:</td>
+                        <td></td>
+                        <td>@sum.ToString("#0")元</td>
+                        <td>
+                        </td>
+                    </tr>
+                    <tr style="color:wheat; border-top-style:hidden">
+                        <td>應付金額:</td>
+                        <td></td>
+                        <td id="pay">@pay.ToString("#0")元</td>
+                        <td>
+                            <p>
                                 <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample" style="background-color:#a81d1d; border-color: #272727">
                                     選擇優惠卷
-                            </button>}
-                        </p>
-                    </td>
-                </tr>      
+                                </button>
+                            </p>
+                        </td>
+                    </tr>
 
-}
-    </tbody>
-</table>
+            }
+        </tbody>
+    </table>
 
 
 
@@ -134,29 +133,34 @@
 @* <li>交易金額:@sum.ToString("#0")元</li>
 <div id="pay">
     <li>應付金額:@pay.ToString("#0")元</li>
-</div> *@
+    </div> *@
 
     <div style="position: relative;>
         <div class="container" style="margin-left:-10px ; position: absolute;top:0;right:0;">
-    <label for="payment">請選擇付款方式</label>
-    <select id="payment" name="payment">
-        <option value="apple">Apple</option>
-        <option value="banana">Banana</option>
-        <option value="orange">Orange</option>
-        <option value="grape">Grape</option>
-    </select>
-    @if (Context.Session.GetInt32(CDictionary.SK_UserID) == null)
-    {
-        <input type="button" value="結帳" class="btn btn-outline-dark mt-auto" id="btnLike" data-bs-toggle="modal" data-bs-target="#staticBackdrop" style="margin-left:550px">
-       
-    }else{
+            <label for="payment">請選擇付款方式</label>
+            <select id="payment" name="payment">
+                <option value="apple">Apple</option>
+                <option value="banana">Banana</option>
+                <option value="orange">Orange</option>
+                <option value="grape">Grape</option>
+            </select>
+        @if (Context.Session.GetInt32(CDictionary.SK_UserID) == null)
+        {
+                <input type="button" value="結帳" class="btn btn-outline-dark mt-auto" id="btnLike" data-bs-toggle="modal" data-bs-target="#staticBackdrop" style="margin-left:550px">
+
+        }
+        else
+        {
 
                 <input type="button" value="結帳" class="btn btn-outline-dark mt-auto" id="btnpurchase" style="margin-left:550px" />
-            @Html.ActionLink("綠界測試", "Index", "Payment",null, null)
-    }
-    @* @Html.DropDownListFor(m => m.payment, new SelectList(ViewBag.Items, "Value", "Text")) *@
-</div>
+            @Html.ActionLink("綠界測試", "Index", "Payment", null, null)
+        }
+        @* @Html.DropDownListFor(m => m.payment, new SelectList(ViewBag.Items, "Value", "Text")) *@
+        </div>
     </div>
+</div>
+<div hidden id="carts">
+    @Context.Session.GetString(CDictionary.SK_PURCHASED_PRODUCES_LIST);
 </div>
 @if (Context.Session.GetInt32(CDictionary.SK_UserID) != null)
 {
@@ -168,32 +172,32 @@
     
     <style>
     .textcolor {
-        color:white
-     }
+        color: white
+    }
 </style>
 <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 <script src="~/js/sweetalert2.all.js"></script>
 <script>
-
+    var count = $('#productcount').text()
     const btn = document.querySelector('#btnpurchase');
     const payment = document.querySelector('#payment');
-    
-    async function LoadPayment() { 
+
+    async function LoadPayment() {
         const response = await fetch('@Url.Content("~/Shop/payment")');
         const data = await response.json();
         console.log(data)
         const Payment = data.map(x => `
-                                     <option value="${x.paymentId}">${x.name}</option>
-                            `).join('');
+                                             <option value="${x.paymentId}">${x.name}</option>
+                                    `).join('');
 
-        payment.innerHTML = Payment; 
+        payment.innerHTML = Payment;
     }
     LoadPayment();
 
-  
-    
 
-    payment.addEventListener('change', () => { 
+
+
+    payment.addEventListener('change', () => {
         console.log(payment.value)
     })
 
@@ -223,7 +227,7 @@
     LoadCoupon();
 
     //async function Couponselect(value){
-        
+
     //    console.log(value)
     //    const CouponFrag = $(document.createDocumentFragment());
     //    const payprice =  document.querySelector('#pay');
@@ -251,12 +255,11 @@
                 CouponFrag.append(Coupons);
                 $('#pay').html(CouponFrag)
             })
-            
+
     }
 
     btn.addEventListener('click', () => {
         const payid = payment.value
-
         fetch(`@Url.Content("~/Shop/Purchase")?payment=${payid}`)
             .then(() => {
                 Swal.fire({
@@ -265,8 +268,42 @@
                     icon: "success",
                 }).then((result) => { if (result.isConfirmed) { window.location.href = "OrderDetail" } })
             })
-            .then(() => { fetch(`@Url.Content("~/Shop/orderview")`) })
+            .then(() => { fetch(`@Url.Content("~/Shop/orderview")`) }).then(() => {
+                for (var p = 1; p <= count; p++) {
+                    var n = $(`#name_${p}`).html()
+                    var s = $(`#seller_${p}`).text()
+
+                    let message = `您的商品-${n}已被購買`
+                    let sendToUserName = s // 接收者的使用者名稱
+                    console.log(sendToUserName)
+                    // 新增：呼叫 SignalR Hub 方法獲取接收者的 SignalR ID
+                    getSignalRIdByUserName(sendToUserName).then(function (connectionId) {
+                        // 修改：傳送訊息時使用接收者的 SignalR ID
+                        connection.invoke("SystemMessage", "商城", message, connectionId, sendToUserName).catch(function (err) {
+                            console.error('傳送錯誤: ' + err.toString());
+                        });
+                    });
+
+                }
+
+            })
+
     })
+    function sendMessageBySignalR() {
+        
+    }
+    
+    function getSignalRIdByUserName(userName) {
+        console.log("3")
+        return new Promise((resolve, reject) => {
+            connection.invoke("GetConnectionIdByUserName", userName).then(function (connectionId) {
+                // 在這裡可以使用 connectionId 進行相應的處理
+                resolve(connectionId);
+            }).catch(function (err) {
+                reject(err);
+            });
+        });
+    }
 
     function loadFavorite() {
         $('#YourTop5').load('@Url.Content("~/shop/YourFavorite")');
