@@ -814,18 +814,19 @@ ol {
 	transition: all 0.3s;
 }
 
-.nav-options .humberger-menu {
-	font-size: 15px;
-	color: #ffffff;
-	background: #a81d1d;
-	float: left;
-	padding: 15px 28px;
-	-webkit-transform: skewX(-15deg);
-	-ms-transform: skewX(-15deg);
-	transform: skewX(-15deg);
-	cursor: pointer;
-	display: inline-block;
-}
+	.nav-options .humberger-menu {
+		font-size: 15px;
+		color: #ffffff;
+		background: #000000;
+		float: left;
+		padding: 10px 20px;
+		-webkit-transform: skewX(-15deg);
+		-ms-transform: skewX(-15deg);
+		transform: skewX(-15deg);
+		cursor: pointer;
+		display: inline-block;
+		border: ridge 5px black
+	}
 
 .nav-options .humberger-menu i {
 	-webkit-transform: skewX(15deg);
@@ -1056,12 +1057,14 @@ ol {
 	-webkit-transition: all 0.3s;
 	-o-transition: all 0.3s;
 	transition: all 0.3s;
+	border: ridge 5px black;
 }
 
 	.nav-options .nav-menu ul li.selected-item a {
 		/* 選中項目的樣式設定 */
 		color: #fff; /* 白色字體 */
-		background-color: #ff9800; /* 橙色背景 */
+		background-color: #272727; /* 橙色背景 */
+		border: revert 3px black;
 	}
 
 .nav-options .nav-menu ul li a span {

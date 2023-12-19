@@ -1,0 +1,209 @@
+﻿@model prjDB_GamingForm_Show.ViewModels.COrderViewModel
+
+@{
+    ViewData["Title"] = "OrderSuccess";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="wrap">
+    <div class="top">
+        <h3>訂單成功  訂單編號:@Model.OrderId</h3>
+        <div class="total">
+            <span>總計</span>
+            <span>NT$@Html.DisplayFor(model => model.Sumprice)</span>
+        </div>
+            <div class="bottom">
+                <h3>購物清單</h3>
+                @foreach (var p in Model.products)
+                {
+                <div class="row">
+                        <div class="col" style="color:black"> @p.ProductName</div>
+                        <div class="col" style="color:black">@p.Price.ToString("#0")元</div>
+                    </div>
+                }
+            </div>
+    </div>
+    
+
+</div>
+@*<div>
+    <h4>COrderViewModel</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.OrderId)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.OrderId)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.CouponTitle)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.CouponTitle)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.OrderDate)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.OrderDate)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.PaymentName)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.PaymentName)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Sumprice)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Sumprice)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.MemberName)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.MemberName)
+        </dd>
+    </dl>
+</div>
+<div>
+    @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
+    <a asp-action="Index">Back to List</a>
+</div>*@
+
+<style>
+    html, body, div, span, applet, object, iframe,
+    h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+    a, abbr, acronym, address, big, cite, code,
+    del, dfn, em, img, ins, kbd, q, s, samp,
+    small, strike, strong, sub, sup, tt, var,
+    b, u, i, center,
+    dl, dt, dd, ol, ul, li,
+    fieldset, form, label, legend,
+    table, caption, tbody, tfoot, thead, tr, th, td,
+    article, aside, canvas, details, embed,
+    figure, figcaption, footer, header, hgroup,
+    menu, nav, output, ruby, section, summary,
+    time, mark, audio, video {
+        margin: 0;
+        padding: 0;
+        border: 0;
+        font-size: 100%;
+        font: inherit;
+        vertical-align: baseline;
+    }
+    /* HTML5 display-role reset for older browsers */
+    article, aside, details, figcaption, figure,
+    footer, header, hgroup, menu, nav, section {
+        display: block;
+    }
+
+    body {
+        line-height: 1;
+    }
+
+    ol, ul {
+        list-style: none;
+    }
+
+    blockquote, q {
+        quotes: none;
+    }
+
+        blockquote:before, blockquote:after,
+        q:before, q:after {
+            content: '';
+            content: none;
+        }
+
+    table {
+        border-collapse: collapse;
+        border-spacing: 0;
+    }
+
+    .wrap {
+        width: 310px;
+        margin: 0 auto;
+    }
+
+    .top {
+        margin-bottom: 20px;
+        border: #e7eeea solid;
+    }
+
+        .top h3 {
+            padding-top: 28px;
+            padding-bottom: 28px;
+            padding-left: 15px;
+            padding-right: 105px;
+            font-size: 18px;
+            font-weight: bold;
+            color: black;
+            background-color: white;
+        }
+
+    .price {
+        padding-left: 15px;
+        padding-right: 15px;
+        padding-top: 15px;
+        display: flex;
+        justify-content: space-between;
+    }
+
+        .price span {
+            color: black;
+        }
+
+    .total {
+        padding-left: 15px;
+        padding-right: 15px;
+        padding-top: 20px;
+        padding-bottom: 13px;
+        display: flex;
+        justify-content: space-between;
+        background-color: white;
+    }
+
+        .total span {
+            font-size: 20px;
+            color: black;
+            font-weight: bold;
+        }
+
+    .bottom {
+        border: #e7eeea solid;
+    }
+
+        .bottom h3 {
+            padding-top: 28px;
+            padding-bottom: 28px;
+            padding-left: 15px;
+            padding-right: 105px;
+            font-size: 18px;
+            font-weight: bold;
+            color: black;
+            background-color: white;
+        }
+
+    .list {
+        padding: 15px;
+        padding-left: 20px;
+        display: flex;
+        align-items: center;
+    }
+
+    .item-price {
+        margin-left: 20px;
+        font-size: 20px;
+        font-weight: bold;
+        color: black;
+    }
+
+    .item h4 {
+        margin-left: 20px;
+        margin-bottom: 5px;
+        color: black;
+    }
+</style>

@@ -135,27 +135,37 @@
         </div>
     </div>
     <!-- Spinner End -->
-<!-- Testimonial Start -->
-<div class="container-xxl py-5 wow fadeInUp" data-wow-delay="0.1s">
-    <div class="container">
-        <h3 class="text-center mb-5">你可能也喜歡</h3>
-        <div class="owl-carousel testimonial-carousel">
-            <div class="testimonial-item bg-light rounded p-4">
-                <i class="fa fa-quote-left fa-2x text-primary mb-3"></i>
-                <p>Dolor et eos labore, stet justo sed est sed. Diam sed sed dolor stet amet eirmod eos labore diam</p>
-                <div class="d-flex align-items-center">
-                    <img class="img-fluid flex-shrink-0 rounded" src="~/layout/jobentry-1.0.0/img/testimonial-1.jpg" style="width: 50px; height: 50px;">
-                    <div class="ps-3">
-                        <h5 class="mb-1">Client Name</h5>
-                        <small>Profession</small>
+    <!-- Testimonial Start -->
+    <div class="container-xxl py-5 wow fadeInUp" data-wow-delay="0.1s">
+        <div class="container">
+            <h1 class="text-center mb-5">Our Clients Say!!!</h1>
+            <div class="owl-carousel testimonial-carousel" id="recommandlist">
+                <div class="testimonial-item bg-light rounded p-4">
+                    <i class="fa fa-quote-left fa-2x text-primary mb-3"></i>
+                    <p>Dolor et eos labore, stet justo sed est sed. Diam sed sed dolor stet amet eirmod eos labore diam</p>
+                    <div class="d-flex align-items-center">
+                        <img class="img-fluid flex-shrink-0 rounded" src="img/testimonial-1.jpg" style="width: 50px; height: 50px;">
+                        <div class="ps-3">
+                            <h5 class="mb-1">Client Name</h5>
+                            <small>Profession</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-item bg-light rounded p-4">
+                    <i class="fa fa-quote-left fa-2x text-primary mb-3"></i>
+                    <p>Dolor et eos labore, stet justo sed est sed. Diam sed sed dolor stet amet eirmod eos labore diam</p>
+                    <div class="d-flex align-items-center">
+                        <img class="img-fluid flex-shrink-0 rounded" src="img/testimonial-4.jpg" style="width: 50px; height: 50px;">
+                        <div class="ps-3">
+                            <h5 class="mb-1">Client Name</h5>
+                            <small>Profession</small>
+                        </div>
                     </div>
                 </div>
             </div>
-            
         </div>
     </div>
-</div>
-<!-- Testimonial End -->
+    <!-- Testimonial End -->
 
 
 
@@ -173,6 +183,7 @@
 @section Scripts {
     <script>
         DetailSkills();
+        Recommand();
         function DetailSkills() {
             var count = 1;
             $.ajax('@Url.Content("~/Depute/DetailSkills")', {
@@ -187,6 +198,7 @@
                     const DS = data.map(DS => `<li><i class="fa fa-angle-right text-primary me-2"></i>${count++} . ${DS}</li>`)
                     DSFrag.append(DS);
                     $('#detailskill').html(DSFrag)
+                    
                 })
 
 
@@ -205,24 +217,23 @@
                     const RecommandFrag = $(document.createDocumentFragment());
                     const Recommand = data.map(Recommand =>
                         `
-                                <div class="owl-carousel testimonial-carousel">
+                                
                     <div class="testimonial-item bg-light rounded p-4">
                         <i class="fa fa-quote-left fa-2x text-primary mb-3"></i>
-                        <p>Dolor et eos labore, stet justo sed est sed. Diam sed sed dolor stet amet eirmod eos labore diam</p>
+                         <p>${Recommand.deputeContent}</p>
                         <div class="d-flex align-items-center">
-                            <img class="img-fluid flex-shrink-0 rounded" src="~/layout/jobentry-1.0.0/img/testimonial-1.jpg" style="width: 50px; height: 50px;">
+                                   <img class="img-fluid flex-shrink-0 rounded" src="/images/${Recommand.imgfilepath}" style="width: 50px; height:50px;">
                             <div class="ps-3">
-                                <h5 class="mb-1">Client Name</h5>
-                                <small>Profession</small>
+                            <h5 class="mb-1">${Recommand.title}</h5>
+                            <small>${Recommand.providername}</small>
                             </div>
                         </div>
                     </div>
-
-                </div>
+                            
                         
                         `)
                     RecommandFrag.append(Recommand);
-                    $('#detailskill').html(RecommandFrag)
+                    $('#recommandlist').after(RecommandFrag)
                 })
 
 
