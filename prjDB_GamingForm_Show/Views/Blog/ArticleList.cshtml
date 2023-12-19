@@ -22,7 +22,7 @@
         }
 
         a {
-            text-decoration: none
+            text-decoration: none;          
         }
 
         .table-hover tbody tr:hover {
@@ -40,10 +40,10 @@
                     <div class="d-flex flex-column bd-highlight mb-3 nav-menu">
                         <ul>
                             <li>
-                                <a href="@Url.Action("List", "Blog")">回列表</a>
+                                <a style="font-size:20px" href="@Url.Action("List", "Blog")">回列表</a>
                             </li>
                             <li class="@(ViewBag.SelectedSubBlogId==null ? "selected-item":"" )">
-                                <a href="@Url.Action("ArticleList", "Blog", new { FId = Model.blogs.FirstOrDefault().BlogId})">@Model.blogs.FirstOrDefault().Title</a>
+                                <a style="font-size:20px" href="@Url.Action("ArticleList", "Blog", new { FId = Model.blogs.FirstOrDefault().BlogId})">@Model.blogs.FirstOrDefault().Title</a>
                             </li>
                         </ul>
                     </div>
@@ -114,7 +114,7 @@
                         <tr>
                             <td>
                                 <a style="text-decoration:none" href="@Url.Action("ArticleContent", "Blog", new {FId=t.SubBlog.BlogId, AFId =t.ArticleId}) ">
-                                    <p>【@t.SubBlog.Title】 @t.Title</p>
+                                    <p style="font-size:16px">【@t.SubBlog.Title】 @t.Title</p>
                                 </a>
                             </td>
                         </tr>
@@ -130,17 +130,17 @@
                 <table class="table table-hover">
                     <tr>
                         <th>
-                            <h4 style="color:antiquewhite;text-align:center">
+                            <h4 style="color:antiquewhite;text-align:center; white-space: nowrap;">
                                 文章標題
                             </h4>
                         </th>
                         <th>
-                            <h4 style="color:antiquewhite;text-align:center">
+                            <h4 style="color:antiquewhite;text-align:center; white-space: nowrap;">
                                 互動/人氣
                             </h4>
                         </th>
                         <th>
-                            <h4 style="color:antiquewhite;text-align:center">
+                            <h4 style="color:antiquewhite;text-align:center; white-space: nowrap;">
                                 最新回復
                             </h4>
                         </th>
@@ -151,10 +151,10 @@
                             <tr>
                                 <td>
                                     <a style="text-decoration:none" href="@Url.Action("ArticleContent", "Blog", new {FId=item.SubBlog.BlogId, AFId =item.ArticleId}) ">
-                                        <span style="color:	#FF8000;font-size:25px;font-weight:bold">
+                                        <span style="color:	#FF8000;font-size:16px;font-weight:bold">
                                             【@item.SubBlog.Title】
                                         </span>
-                                        <span style="font-size:25px;font-weight:bold">
+                                        <span style="font-size:16px;font-weight:bold">
                                             @item.Title<br />
                                         </span>
                                         <span style="color:#E0E0E0">
@@ -183,19 +183,18 @@
                                     <p style="text-align:center;font-size:12px"> @Html.ActionLink(item.Member.Name,"MemberPageTest","Member",new{id=item.MemberId}) </p>  @* 預計顯示作者名稱在發文時間下面 *@
 
                                 </td>
-                                <td style="color:wheat;font-size:10px ;">
+                                <td style="color:wheat;font-size:15px;text-align:center">
                                     @{
-
-
                                         if (item.Replies.Any(r => r.ArticleId == item.ArticleId))
                                         {
-                                            <p style="text-align:center ;font-size:15px">@item.Replies.LastOrDefault().ModifiedDate</p>
-                                            <br />
-                                            <p style="text-align:center ;font-size:15px">@Html.ActionLink(Model.members.Where(m => m.MemberId == item.Replies.LastOrDefault().MemberId).Select(m => m.Name).FirstOrDefault(), "MemberPageTest", "Member", new { id = Model.members.Where(m => m.MemberId == item.Replies.LastOrDefault().MemberId).Select(m => m.MemberId).FirstOrDefault() })</p>
+                                       @item.Replies.LastOrDefault().ModifiedDate.ToString("yyyy/MM/dd")
+                                       <br/>
+                                        <p style="text-align:center ;font-size:15px">@Html.ActionLink(Model.members.Where(m => m.MemberId == item.Replies.LastOrDefault().MemberId).Select(m => m.Name).FirstOrDefault(), "MemberPageTest", "Member", new { id = Model.members.Where(m => m.MemberId == item.Replies.LastOrDefault().MemberId).Select(m => m.MemberId).FirstOrDefault() })</p>
                                         }
                                         else
                                         {
-                                            <p style="text-align:center ;font-size:15px">@item.ModifiedDate</p>
+                                           @item.ModifiedDate.ToString("yyyy/MM/dd")
+                                            <br />
                                             <p style="text-align:center;font-size:12px"> @Html.ActionLink(item.Member.Name, "MemberPageTest", "Member", new { id = item.MemberId }) </p>  @* 預計顯示作者名稱在發文時間下面 *@
                                         }
                                     }

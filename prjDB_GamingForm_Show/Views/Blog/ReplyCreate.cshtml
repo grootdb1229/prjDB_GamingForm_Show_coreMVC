@@ -90,12 +90,14 @@
                     mediaEmbed: {
                         previewsInData: true
                     }
+                }).then(editor => {
+                    // 獲取 CKEditor 實例，你可以在這裡保存或使用它
+                    window.ckeditorInstance = editor;
                 })
                 .catch(error => {
                     console.log(error);
                 });
         });
-
         class MyUploadAdapter {
             constructor(loader) {
                 // The file loader instance to use during the upload.
@@ -234,9 +236,12 @@
                 return new MyUploadAdapter(loader);
             };
         }
-        function validateForm() {
+                function validateForm() {          
 
-            var content = document.querySelector('textarea').value;
+            var editor = window.ckeditorInstance;
+
+            // 獲取編輯器內容
+            var content = editor.getData();
 
             if (content.trim() == '') {
                 alert('內容不能為空！');
