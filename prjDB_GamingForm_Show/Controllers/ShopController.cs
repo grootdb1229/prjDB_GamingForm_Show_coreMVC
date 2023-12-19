@@ -1306,7 +1306,9 @@ namespace prjDB_GamingForm_Show.Controllers
             [HttpPost]
 			public IActionResult AddToCar(CShoppingCarViewModel vm)
             {
-				int memberID = 0;
+                _db.Products.Load();
+                _db.Members.Load();
+                int memberID = 0;
 				if ((HttpContext.Session.GetInt32(CDictionary.SK_UserID) != null)) {
 					memberID = (int)HttpContext.Session.GetInt32(CDictionary.SK_UserID);
 				}
@@ -1343,7 +1345,7 @@ namespace prjDB_GamingForm_Show.Controllers
 							x.FImagePath = product.FImagePath;
 							x.Count = vm.txtCount;
 							x.ProductID = product.ProductId;
-						x.MemberName = product.Member.Name;
+						    x.MemberName = product.Member.Name;
 						car.Add(x);
                     }
 					else { return Json(new { success = false , message="購物車內容重複"}); }
@@ -1632,6 +1634,46 @@ namespace prjDB_GamingForm_Show.Controllers
 					_db.SaveChanges();
                 }
 				
+				return View(vm);
+			}
+
+			public IActionResult MyProduct(int? id)
+			{
+				_db.Statuses.Load();
+				List<CProductViewModel> vm = new List<CProductViewModel>();
+				string statusname = "";
+				var datas = _db.Products.Where(x => x.MemberId == 34)//HttpContext.Session.GetInt32(CDictionary.SK_UserID))
+						.OrderByDescending(x => x.ProductId);
+                CProductViewModel products = null;
+				foreach (var data in datas) 
+				{
+					if (data.Status.Name == "Active")
+					{
+						statusname = "販售中";
+					}
+					else if (data.Status.Name == "Inactive")
+					{
+						statusname = "停售中";
+					}
+					else
+					{
+                        statusname = data.Status.Name;
+                    }
+                    if (_db.OrderProducts.Where(x => x.ProductId == data.ProductId).Select(x => x).Count() == 0)
+                    {
+                        ViewBag.Buylist = "您沒有購買商品";
+                    }
+                    products = new CProductViewModel()
+					{ 
+						ProductId = data.ProductId,
+						ProductName = data.ProductName,
+						Price = data.Price,
+						ProductContent = data.ProductContent,
+                        StatusName = statusname,
+                        sells = _db.OrderProducts.Where(x=>x.ProductId==data.ProductId).Select(x=>x).Count()
+					};
+					vm.Add(products);
+                }
 				return View(vm);
 			}
 

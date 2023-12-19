@@ -1,0 +1,61 @@
+﻿@model IEnumerable<prjDB_GamingForm_Show.ViewModels.CProductViewModel>
+
+@{
+    ViewData["Title"] = "MyProduct";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    .accordion-button {
+        background-color: transparent !important;
+        color: black !important;
+    }
+</style>
+<h2 style="margin-left:350px">訂單管理</h2>
+<div class="container-fluid">
+    <div class="row justify-content-center align-items-center min-vh-100">
+        <div class="col-lg-7">
+            <div class="container-xxl py-5">
+                <div id="popmenu" class="container" style="margin-bottom:10px">
+                    <div class="accordion accordion-flush" id="accordionFlushExample">
+
+                        @{
+                            if (!string.IsNullOrEmpty(ViewBag.Buylist))
+                            {
+                                <div class="alert alert-danger">您目前沒有任何商品</div>
+                            }
+                        }
+                        @foreach (var item in Model)
+                        {
+                            string CountString = "flush-collapseOne" + item.ProductId.ToString();
+
+                            <div class="accordion-item">
+                                <h2 class="accordion-header">
+                                    <button class="accordion-button " type="button" data-bs-toggle="collapse" data-bs-target="#@CountString" aria-expanded="true" aria-controls="@CountString">
+                                        <div class="col-2" style="color:black">
+                                            編號:@Html.DisplayFor(modelItem => item.ProductId)
+                                        </div>
+                                        <div class="col-6" style="color:black">
+                                        商品名稱:@Html.DisplayFor(modelItem => item.ProductName)
+                                        </div>
+                                        <div class="col" style="color:black">
+                                        銷售量:@Html.DisplayFor(modelItem => item.sells)
+                                        </div>
+                                    </button>
+                                </h2>
+                                <div id="@CountString" class="accordion-collapse collapse  " data-bs-parent="#accordionFlushExample">
+                                    <div class="accordion-body">
+                                            <div class="row">
+                                            <div class="col" style="color:black"> 內容:@Html.DisplayFor(modelItem => item.ProductContent)</div>
+                                            <div class="col" style="color:black">價格:@Html.DisplayFor(modelItem => item.Price)元</div>
+                                            <div class="col" style="color:black">狀態:@Html.DisplayFor(modelItem => item.StatusName)</div>
+                                            </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
