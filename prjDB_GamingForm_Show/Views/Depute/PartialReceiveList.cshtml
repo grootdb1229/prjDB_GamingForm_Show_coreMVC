@@ -223,8 +223,8 @@
                     }
                     count3++;
                     <tr class="comDepute">
-                        <td hidden>@i.DeputeId</td>
                         <td hidden>@i.Id</td>
+                        <td hidden>@i.DeputeId</td>
                         <td class="text-center">
                             @count3
                         </td>
@@ -293,11 +293,8 @@
     function readAllCom(event) {
         const allRecords = event.target.parentElement.parentElement.nextElementSibling.querySelectorAll('.comDepute');
         const allRecordsArray = Array.from(allRecords);
-        const deputeIDs = allRecordsArray.map(depute => parseInt(depute.firstElementChild.textContent));
-        const promises = deputeIDs.map(async function (deputeID) {
-            const response = await fetch(`@Url.Content("~/depute/individualDetials")?id=${deputeID}`);
-            const datas = await response.json();
-            const recordID = datas[0].id;
+        const recordIDs = allRecordsArray.map(depute => parseInt(depute.firstElementChild.textContent));
+        const promises = recordIDs.map(async function (recordID) {
             await changeRecordStatus(recordID, 39);//39狀態為:已完成(已讀)
         });
         Promise.all(promises).then(() => {
