@@ -1588,18 +1588,20 @@ namespace prjDB_GamingForm_Show.Controllers
 
         #region 數據
 
-        public IActionResult OrderList(/*CKeyWordViewModel kyvm, int? ODId*/)
+        public IActionResult OrderList(DateTime? startday,DateTime? endday)
         {
-            // HttpContext.Session.Remove(CDictionary.SK_管理者觀看版面清單頁數使用關鍵字);
 
-            List<Order> orders = _db.Orders.Include(a=>a.Payment).Include(a=>a.Coupon).ToList();
+            List<Order> orders = _db.Orders.Include(a=>a.Payment).Include(a=>a.Coupon).Where(p=>p.CompletedDate >= startday && p.OrderDate <= endday).ToList();
 
             return View(orders);
         }
+
+
+
+
+
         #endregion
     }
-
-
 
 
 

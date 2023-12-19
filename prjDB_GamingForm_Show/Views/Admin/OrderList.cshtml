@@ -6,9 +6,42 @@
 @{
     ViewData["Title"] = "OrderList";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    var totalOrders = Model.Count();
+    var totalAmount = Math.Floor(Model.Sum(p => p.SumPrice));
+    //var averagePrice = Model.Any() ? Model.Average(o => o.SumPrice) : 0;
+    var averagePrice = Model.Any() ? Math.Floor(Model.Average(o => o.SumPrice)) : 0;
 }
 
 <h2>OrderList</h2>
+
+<div style="font-size:25px">
+    總訂單數:@totalOrders 筆  /   訂單總額:@totalAmount 元  /  平均金額:@averagePrice 元
+    <br />
+</div>
+
+
+@*<label for="start">開始日期:</label>
+
+<input type="date" id="start" name="trip-start" value="2023-01-01" min="2023-01-01" max="2099-12-31" />
+
+<label for="start">結束日期:</label>
+
+<input type="date" id="end" name="trip-start" value="2023-01-01" min="2023-01-01" max="2099-12-31" />*@
+
+@using (Html.BeginForm())
+{
+   
+    <label for="start">開始日期:</label>
+
+    <input type="date" id="start" name="startday" value="2023-01-01" min="2023-01-01" max="2099-12-31" />
+
+    <label for="start">結束日期:</label>
+
+    <input type="date" id="end" name="endday" value="@DateTime.Now" min="2023-01-01" max="2099-12-31" />
+        
+    <input type="submit" value="查詢" class="btn btn-dark" />
+}
+
 
 <table class="table table-dark table-hover" style="color:white ; font-size:20px">
     <thead>
@@ -91,3 +124,4 @@
         }
     </tbody>
 </table>
+
