@@ -135,12 +135,13 @@
 </div>
     </div>
 </div>
-
+@if (Context.Session.GetInt32(CDictionary.SK_UserID) != null)
+{
 <div class="container px-4 px-lg-5 mt-5">
     <h2>其他在您的最愛中的商品....</h2>
     <div class="" id="YourTop5"></div>
     </div>
-    
+}
     
     <style>
     .textcolor {
