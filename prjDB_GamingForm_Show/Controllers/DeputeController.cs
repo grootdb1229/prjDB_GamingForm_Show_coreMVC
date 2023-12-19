@@ -711,6 +711,7 @@ namespace prjDB_GamingForm_Show.Controllers
         {
             //受委託者完成委託
             var data = _db.DeputeRecords.FirstOrDefault(_ => _.Id == id);
+            ViewBag.applyerName = data.Depute.Provider.Name;
             return View(data);
         }
         [HttpPost]

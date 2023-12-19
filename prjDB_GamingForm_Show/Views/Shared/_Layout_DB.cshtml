@@ -217,12 +217,19 @@
                 <script src="~/layout/templatemo_555_upright/slick/slick.min.js"></script>              <!-- https://kenwheeler.github.io/slick/ -->
                 <script src="~/layout/templatemo_555_upright/js/templatemo-script.js"></script>
                 <script src="~/js/sweetalert2.all.js"></script>
+            <!--連接SignalR用的 - 彥霖-->
+            <script src="~/js/signalr/dist/browser/signalr.js"></script>
                 <script>
                     function changeLocation(event) {
                         console.log(event);
                         location.href = `${event.target.href}`;
                     }
-
+                var connection = new signalR.HubConnectionBuilder().withUrl("/memberChatHub").build();
+                connection.start().then(function () {
+                    console.log("Hub 連線完成");
+                }).catch(function (err) {
+                    alert('連線錯誤: ' + err.toString());
+                });
                 </script>
                 @await RenderSectionAsync("scripts", required: false)
         }

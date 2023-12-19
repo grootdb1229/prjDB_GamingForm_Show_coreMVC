@@ -109,7 +109,7 @@ namespace prjDB_GamingForm_Show.Hubs
 
             if (receiverConnectionId != null)
             {
-                await Clients.Client(receiverConnectionId).SendAsync("SystemNotify", message,  sendTime);
+                await Clients.Client(receiverConnectionId).SendAsync("ReceiverUpdContent", message, "我是系統", 0, "系統沒有照片", sendTime);
             }
 
             if(receiveMemberId != null)
