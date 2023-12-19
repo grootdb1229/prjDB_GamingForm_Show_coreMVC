@@ -25,6 +25,7 @@ namespace prjDB_GamingForm_Show.ViewModels
         public decimal total { get { return this.Count * this.Price; } }
 
         public int payment { get; set; }
+        public string MemberName { get; set; }
         public IEnumerable<Product>  product { get; set; }
 
         //public IEnumerable<Payment> payment { get; set; }

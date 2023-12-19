@@ -1343,7 +1343,8 @@ namespace prjDB_GamingForm_Show.Controllers
 							x.FImagePath = product.FImagePath;
 							x.Count = vm.txtCount;
 							x.ProductID = product.ProductId;
-                        car.Add(x);
+						x.MemberName = product.Member.Name;
+						car.Add(x);
                     }
 					else { return Json(new { success = false , message="購物車內容重複"}); }
 					
@@ -1358,6 +1359,8 @@ namespace prjDB_GamingForm_Show.Controllers
 
             public IActionResult AddToCar2(int? id)
             {
+				_db.Products.Load();
+				_db.Members.Load();
                 int memberID = 0;
                 if ((HttpContext.Session.GetInt32(CDictionary.SK_UserID) != null))
                 {
@@ -1395,7 +1398,8 @@ namespace prjDB_GamingForm_Show.Controllers
 						x.FImagePath = product.FImagePath;
 						x.Count = 1;
 						x.ProductID = product.ProductId;
-						car.Add(x);
+                        x.MemberName = product.Member.Name;
+                        car.Add(x);
 					}
                     else { return Json(new { success = false }); }
                     json = JsonSerializer.Serialize(car);
