@@ -384,7 +384,9 @@ namespace prjDB_GamingForm_Show.Controllers
 
 			public IActionResult OrderSuccess()
 			{
-				return View();
+				COrderViewModel vm = orderview();
+
+                return View(vm);
 			}
             public IActionResult RemoveProduct(int? id) //Ajax刷新最愛
             {
@@ -1571,7 +1573,7 @@ namespace prjDB_GamingForm_Show.Controllers
                     ViewBag.Buylist = "您沒有購買商品";
                 }
                 List<COrderViewModel> vm = new List<COrderViewModel>();
-				var order =  _db.Orders.Where(x=>x.MemberId== id)//HttpContext.Session.GetInt32(CDictionary.SK_UserID))
+				var order =  _db.Orders.Where(x=>x.MemberId== HttpContext.Session.GetInt32(CDictionary.SK_UserID))
 							.OrderByDescending(x => x.OrderId)
 							.Select(x => new { x.OrderId,x.Payment.Name, x.Coupon.Title,x.OrderDate});
 				COrderViewModel n = null;
@@ -1629,10 +1631,10 @@ namespace prjDB_GamingForm_Show.Controllers
 				return View(vm);
 			}
 
-			public void orderview()
+			public COrderViewModel orderview()
 			{
                 COrderViewModel vm = new COrderViewModel();
-                var order = _db.Orders.Where(x => x.MemberId == HttpContext.Session.GetInt32(CDictionary.SK_UserID))
+                var order = _db.Orders.Where(x => x.MemberId == 41)//HttpContext.Session.GetInt32(CDictionary.SK_UserID))
                             .OrderByDescending(x => x.OrderId).Take(1)
                             .Select(x => new { x.OrderId, x.Payment.Name, x.Coupon.Title, x.OrderDate });
                 COrderViewModel n = null;
@@ -1683,7 +1685,8 @@ namespace prjDB_GamingForm_Show.Controllers
                     }
                     vm = n;
                 }
-                SendOrderEmail(vm);
+                //SendOrderEmail(vm);
+				return vm;
             }
 
             public IActionResult SendOrderEmail(COrderViewModel vm)
