@@ -779,13 +779,15 @@ namespace prjDB_GamingForm_Show.Controllers
         public async Task<IActionResult> selectSkillAsync(string title,string content)
         {
             string systemRule = "你將看到委託主題及委託內容，" +
-                "你的工作是從以下特定skill清單中選擇最多五項skill，並使用JSON形式提供答案。" +
-                "請嚴格依照以下列skill表來選擇skill，skill名稱必須完全吻合skill表裡的名稱。\r\n" +
-                "skill：\r\nCsharp\r\nHtml\r\nCss\r\nLINQ\r\nADONET\r\nSQL\r\nJS\r\n電繪\r\n手繪\r\n水彩\r\n油畫\r\nJava\r\nPython\r\nPHP\r\nRuby\r\nASP.NET\r\nSwift\r\nKotlin\r\nReact\r\nSolidity\r\nSelenium\r\nJUnit\r\n電子\r\n搖滾\r\n古典\r\n爵士\r\n民族\r\n流行\r\n懸疑\r\n環境\r\n8位元\r\n16位元\r\nMaya\r\nPhotoShop\r\nPreminum"
+                "你的工作是從以下特定skill清單中選擇最多5項skill，並使用JSON形式提供答案。" +
+                "請嚴格依照以下列skill表來選擇skill，skill名稱必須完全吻合skill列表裡的名稱。\r\n" +
+                "範例:\r\n" +
+                "{\r\n  \"skill\": [\r\n    \"Html\",\r\n    \"Java\",\r\n    \"Ruby\",\r\n    \"爵士\",\r\n    \"Maya\"\r\n  ]\r\n}\r\n" +
+                "\r\nskill：\r\nCsharp\r\nHtml\r\nCss\r\nLINQ\r\nADONET\r\nSQL\r\nJS\r\n電繪\r\n手繪\r\n水彩\r\n油畫\r\nJava\r\nPython\r\nPHP\r\nRuby\r\nASP.NET\r\nSwift\r\nKotlin\r\nReact\r\nSolidity\r\nSelenium\r\nJUnit\r\n電子\r\n搖滾\r\n古典\r\n爵士\r\n民族\r\n流行\r\n懸疑\r\n環境\r\n8位元\r\n16位元\r\nMaya\r\nPhotoShop\r\nPreminum"
 ;
             string userContent = "主題:" + title + "，" + "內容:" + content;
             var response = await ChatAsync(systemRule, userContent, 0);
-            
+
             return Content(response);
         }
 
