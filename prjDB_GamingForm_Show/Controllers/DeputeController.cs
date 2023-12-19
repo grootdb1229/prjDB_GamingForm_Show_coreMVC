@@ -378,15 +378,18 @@ namespace prjDB_GamingForm_Show.Controllers
 
         public IActionResult Recommand(int id)
         {
-            var value = (from n in _db.DeputeSkills.AsEnumerable()
+            _db.Skills.Load();
+            _db.Deputes.Load();
+            _db.Members.Load();
+            var value = from n in _db.DeputeSkills.AsEnumerable()
                          where n.DeputeId == id
-                         select new { n.Skill.Name }).Distinct();
+                         select n.Skill.Name;
             List< CDeputeViewModel> Rcolist = new List< CDeputeViewModel>();
             CDeputeViewModel data = null;
             foreach(var item in value)
             {
                   var  RecoData = from n in _db.DeputeSkills.AsEnumerable()
-                               where n.Skill.Name.Contains(item.Name)
+                               where n.Skill.Name.Contains(item)
                                select new {n.DeputeId,n.Depute.Title, n.Depute.DeputeContent, n.Depute.Provider.Name, n.Depute.Provider.FImagePath };
                 CDeputeViewModel x = null;
                 foreach (var item2 in RecoData)
@@ -406,7 +409,7 @@ namespace prjDB_GamingForm_Show.Controllers
             }
 
             Random rnd = new Random();
-            int count = rnd.Next(0, 50);
+            int count = rnd.Next(0, Rcolist.Count()-1);
             List<CDeputeViewModel> Rcolist2 = new List<CDeputeViewModel>();
             for (int i = 1; i <= 6; i++)
             {
