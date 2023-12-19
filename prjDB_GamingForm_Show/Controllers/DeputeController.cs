@@ -786,7 +786,7 @@ namespace prjDB_GamingForm_Show.Controllers
                 {
                     skill=_.Name
                 }))}" +
-                "{\r\n  \"skill\": [\r\n    \"Html\",\r\n    \"Java\",\r\n    \"Ruby\",\r\n    \"爵士\",\r\n    \"Maya\"\r\n  ]\r\n}\r\n" +
+                "{\r\n  \"skill\": [\r\n    \"Html\",\r\n    \"Java\",\r\n    \"Ruby\",\r\n    \"Sketch\",\r\n    \"Blender\"\r\n  ]\r\n}\r\n" +
                 "\r\nskill：\r\nCsharp\r\nHtml\r\nCss\r\nLINQ\r\nADONET\r\nSQL\r\nJavaScript\r\nSketch\r\nFigma\r\nBlender\r\nAutodesk Maya\r\nJava\r\nPython\r\nPHP\r\nRuby\r\nASPdotNET\r\nSwift\r\nKotlin\r\nReact\r\nSolidity\r\nSelenium\r\nJUnit\r\n電子\r\n搖滾\r\n古典\r\n爵士\r\n民族\r\n流行\r\n懸疑\r\n環境\r\n8位元\r\n16位元\r\nAutodesk Maya\r\nAdobe After Effects\r\nAdobe Animate\r\nC\r\nNodedotjs\r\ndotNET Framework\r\nXamarin\r\nUnity\r\nUnreal Engine\r\nSpring\r\nLaravel\r\nAdobe Photoshop\r\nAdobe Illustrator\r\nAdobe XD\r\n3ds Max\r\nZBrush\r\nInkscape\r\nCorelDRAW\r\nGIMP\r\nAudacity\r\nAdobe Audition\r\nFL Studio\r\nAbleton Live\r\nLogic Pro X\r\nPro Tools\r\nGarageBand\r\nCubase\r\nReaper\r\nBlender\r\nCinema 4D\r\nToon Boom Harmony\r\nSpine\r\nMoho\r\nDragonframe\r\nFinal Draft\r\nCeltx\r\nStoryboard That\r\nToon Boom Storyboard\r\nTwine\r\nSelenium\r\nAppium\r\nJest\r\nJMeter\r\nLoadRunner\r\nGatling\r\nOWASP\r\nNessus\r\nBurp Suite\r\nTestFlight\r\nSteam Early Access\r\nWebSocket\r\nRESTful API\r\nGraphQL\r\nAWS\r\nAzure\r\nGoogle Cloud\r\nNVIDIA GeForce Now\r\nXbox Cloud Gaming"
 ;
             string userContent = "主題:" + title + "，" + "內容:" + content;
