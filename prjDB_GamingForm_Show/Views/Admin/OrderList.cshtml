@@ -7,12 +7,11 @@
     ViewData["Title"] = "OrderList";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
     var totalOrders = Model.Count();
-    var totalAmount = Math.Floor(Model.Sum(p => p.SumPrice));
+    var totalAmount = Math.Floor(Model.Where(p=>p.StatusId==16 || p.StatusId == 15).Sum(p => p.SumPrice));
     //var averagePrice = Model.Any() ? Model.Average(o => o.SumPrice) : 0;
     var averagePrice = Model.Any() ? Math.Floor(Model.Average(o => o.SumPrice)) : 0;
 }
 
-<h2>OrderList</h2>
 
 <div style="font-size:25px">
     總訂單數:@totalOrders 筆  /   訂單總額:@totalAmount 元  /  平均金額:@averagePrice 元
@@ -20,26 +19,48 @@
 </div>
 
 
-@*<label for="start">開始日期:</label>
+@*@using (Html.BeginForm())
+{
+    <label for="start">開始日期:</label>
+    <input type="date" id="start" name="startday" value="2023-01-01" min="2023-01-01" max="2099-12-31" />
 
-<input type="date" id="start" name="trip-start" value="2023-01-01" min="2023-01-01" max="2099-12-31" />
+    <label for="end">結束日期:</label>
+    <input type="date" id="end" name="endday" />
 
-<label for="start">結束日期:</label>
+    <script>        
+        document.getElementById("end").valueAsDate = new Date();
+    </script>
 
-<input type="date" id="end" name="trip-start" value="2023-01-01" min="2023-01-01" max="2099-12-31" />*@
+    <input type="submit" value="查詢" class="btn btn-dark" />
+
+
+}*@
+
 
 @using (Html.BeginForm())
 {
-   
-    <label for="start">開始日期:</label>
+    @if (Model.Any())
+    {
+        <label for="start">開始日期:</label>
+        <input type="date" id="start" name="startday" value="2023-01-01" min="2023-01-01" max="2099-12-31" />
 
-    <input type="date" id="start" name="startday" value="2023-01-01" min="2023-01-01" max="2099-12-31" />
+        <label for="start">結束日期:</label>
+        <input type="date" id="end" name="endday" value="@DateTime.Now" min="2023-01-01" max="2099-12-31" />
 
-    <label for="start">結束日期:</label>
+        <select id="sel_Com" name="ST" style="margin-top:3px;width:200px;" onchange="updateOrderList()">
+            <option>請選擇訂單狀態</option>
+            <option>未付款</option>
+            <option>已付款</option>
+            <option>已出貨</option>
+            <option>已完成</option>
+            <option>取消訂單</option>
 
-    <input type="date" id="end" name="endday" value="@DateTime.Now" min="2023-01-01" max="2099-12-31" />
-        
-    <input type="submit" value="查詢" class="btn btn-dark" />
+        </select>
+
+
+
+        <input type="submit" value="查詢" class="btn btn-dark" />
+    }
 }
 
 
@@ -114,7 +135,7 @@
                 </td>
 
                 <td>
-                    @Html.DisplayFor(modelItem => item.StatusId)
+                    @Html.DisplayFor(modelItem => item.Status.Name)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.SumPrice)
