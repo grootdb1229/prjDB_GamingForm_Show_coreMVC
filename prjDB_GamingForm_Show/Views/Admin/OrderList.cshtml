@@ -1,0 +1,93 @@
+﻿@*@model IEnumerable<prjDB_GamingForm_Show.Models.Entities.Order>*@
+@*@model prjDB_GamingForm_Show.Models.Entities.Order*@
+@model IEnumerable<prjDB_GamingForm_Show.Models.Entities.Order>
+
+
+@{
+    ViewData["Title"] = "OrderList";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h2>OrderList</h2>
+
+<table class="table table-dark table-hover" style="color:white ; font-size:20px">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.OrderId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MemberId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CouponId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.OrderDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PaymentDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CompletedDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PaymentId)
+            </th>
+
+            <th>
+                @Html.DisplayNameFor(model => model.StatusId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SumPrice)
+            </th>
+
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.OrderId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MemberId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Coupon.Title)
+                </td>
+                <td>
+                    @item.OrderDate.ToString("yyyy/MM/dd")
+                </td>
+                <td>                   
+                    @{
+                        var pday = item.PaymentDate;
+                        var payday = pday.HasValue ? pday.Value.ToString("yyyy/MM/dd") : string.Empty;
+                    }
+                    @Html.DisplayFor(modelitem => payday)
+                </td>
+                <td>
+                    @{
+                        var completedDate = item.CompletedDate;
+                        var formattedDate = completedDate.HasValue ? completedDate.Value.ToString("yyyy/MM/dd") : string.Empty;
+                    }
+                    @Html.DisplayFor(modelItem => formattedDate)
+                </td>
+                <td>
+                   
+                    @Html.DisplayFor(modelItem => item.Payment.Name)
+                </td>
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.StatusId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SumPrice)
+                </td>
+
+            </tr>
+        }
+    </tbody>
+</table>

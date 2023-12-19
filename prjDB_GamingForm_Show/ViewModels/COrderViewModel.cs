@@ -26,5 +26,7 @@ namespace prjDB_GamingForm_Show.ViewModels
 
         public virtual ICollection<OrderProduct> OrderProducts { get; set; } = new List<OrderProduct>();
         public virtual Coupon? Coupon { get; set; }
+
+
     }
 }
