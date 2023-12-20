@@ -107,29 +107,28 @@
         $("#upload_img").bind("change", function () {
             var files = this.files;
             for (var i = 0; i < files.length; i++) {
-                console.log(this.files[i])
+                var allowType = "image.*";
+                if (files[i].type.match(allowType)) {
+                    var reader = new FileReader();
+                    reader.onload = (function (index) {
+                        return function () {
+                            arrayBuffer = this.result;
+                            var blob = new Blob([arrayBuffer], {
+                                type: "image/jpeg"
+                            });
+                            var urlCreater = window.URL || window.webkitURL;
+                            var imageUrl = urlCreater.createObjectURL(blob);
+                            analyze(index);
+                        };
+                    })(i);
+                    reader.readAsArrayBuffer(files[i]);
+                }
+                else {
+                    alert("錯誤的檔案格式");
+                }
             }
-            
-            var file = this.files[0]
-            var allowType = "image.*";
-            if (file.type.match(allowType)) {
-                var reader = new FileReader();
-                reader.onload = function () {
-                    arrayBuffer = this.result;
-                    var blob = new Blob([arrayBuffer], {
-                        type: "image/jpeg"
-                    });
-                    var urlCreater = window.URL || window.webkitURL;
-                    var imageUrl = urlCreater.createObjectURL(blob)
-                    
-                };
-                reader.readAsArrayBuffer(this.files[0])
-            }
-            else {
-                alert("錯誤的檔案格式")
-            }
-        })
-        function analyze() {
+        });
+        function analyze(i) {
             var params = {
                 // Request parameters
                 "CacheImage": false,
@@ -152,13 +151,13 @@
                 var isRacy = data['IsImageRacyClassified'];
                 var racyScore = data['RacyClassificationScore'];
                 if (isAdult) {
-                    alert(`色情內容指數:${(adultScore * 100).toFixed(2)}%`);
+                    alert(`圖片${i}-色情內容指數:${(adultScore * 100).toFixed(2)}%`);
                 }
                 if (isRacy) {
-                    alert(`性暗示指數:${(racyScore * 100).toFixed(2)}%`);
+                    alert(`圖片${i}-性暗示指數:${(racyScore * 100).toFixed(2)}%`);
                 }
                 if (!isAdult && !isRacy) {
-                    alert("未偵測到色情或性暗示內容")
+                    alert(`圖片${i}-未偵測到色情或性暗示內容`)
                 }
             }).fail(function (err) {
                 alert(err.statusText);
@@ -268,13 +267,14 @@
                 const Language = data.map(x => `
                                         <div class="col-3">
                                             <label style="margin-bottom: 10px; display: block;">
-                                                        <input  type="checkbox" name="GameTag" value="${x.subTagId}">${x.name}
+                                                     
+                                    <input type="checkbox" name="GameTag" value="${x.subTagId}" onchange="submitTags()">${x.name}
                                             </label>
                                         </div>
                                     `).join('');
 
                 LangDiv.innerHTML = Language;
-                submitTags();
+             
             }
 
 
@@ -286,13 +286,13 @@
                 const Tag = data.map(x => `
                                         <div class="col-3">
                                             <label style="margin-bottom: 10px; display: block;">
-                                                            <input type="checkbox" name="GameTag" value="${x.subTagId}">${x.name}
+                                             <input type="checkbox" name="GameTag" value="${x.subTagId}" onchange="submitTags()">${x.name}
                                             </label>
                                         </div>
                                     `).join('');
 
                 TagDiv.innerHTML = Tag;
-                submitTags();
+              
             }
             LoadLang();
             LoadTag();

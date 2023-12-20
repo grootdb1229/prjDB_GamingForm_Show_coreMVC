@@ -72,8 +72,10 @@
                 }
 
                 <div class="d-flex align-items-center mb-5">
-                    <img class="flex-shrink-0 img-fluid border rounded" src="~/images/04.jfif" alt="" style="width: 80px; height: 80px;">
-                    <div class="text-start ps-4">
+                        <a href="/Member/MemberPageTest/@Html.DisplayFor(model => model.workerId)">
+                        <img class="flex-shrink-0 img-fluid border rounded" src="~/MemberPhoto/@Html.DisplayFor(model => model.imgfilepath)" alt="" style="width: 80px; height: 80px;">
+                        </a>
+                        <div class="text-start ps-4">
                         <input type="hidden" id="detailid" value=@Html.DisplayFor(model => model.id) />
                         <h3 class="mb-3" style="clear:right">@Html.DisplayFor(model => model.title)</h3>
                         <span class="text-truncate me-3"><i class="fa fa-map-marker-alt text-primary me-2"></i>@Html.DisplayFor(model => model.region)</span>
@@ -118,7 +120,9 @@
                 </div>
                 <div class="bg-light rounded p-5 wow slideInUp" data-wow-delay="0.1s">
                     <h4 class="mb-4">自我介紹</h4>
+                    <a href="/Member/MemberPageTest/@Html.DisplayFor(model => model.workerId)">
                     <p><i class="fa fa-angle-right text-primary me-2"></i>委託會員: @Html.DisplayFor(model => model.providername)</p>
+                    </a>
                     <p class="m-0">@Html.DisplayFor(model => model.memeberContent)</p>
                 </div>
             </div>

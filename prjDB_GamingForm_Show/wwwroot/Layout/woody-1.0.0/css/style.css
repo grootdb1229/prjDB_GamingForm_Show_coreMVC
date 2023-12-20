@@ -97,10 +97,10 @@
     outline: none;
 }
 
-.navbar-light .navbar-nav .nav-link:hover,
-.navbar-light .navbar-nav .nav-link.active {
-    color: var(--primary);
-}
+    .navbar-light .navbar-nav .nav-link:hover,
+    .navbar-light .navbar-nav .nav-link.active {
+        color: #a81d1d;
+    }
 
 @media (max-width: 991.98px) {
     .navbar-light .navbar-nav .nav-link  {
