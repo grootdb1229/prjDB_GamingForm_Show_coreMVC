@@ -1,10 +1,35 @@
 ﻿@model prjDB_GamingForm_Show.ViewModels.COrderViewModel
 
-<h2>您的訂單已成立</h2>
 
-<div>
-    <hr />
-    <dl class="dl-horizontal">
+
+<div class="container px-4 px-lg-5 mt-5" style="border:3px solid white">
+    <h2>您的訂單已成立</h2>
+    <table class ="table" style="color:white">
+        <thead>
+            <tr>
+                <th scope="col"></th>
+                <th scope="col"></th>       
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th scope="row">訂單編號</th>
+                <td>@Html.DisplayFor(model => model.OrderId)</td>
+            </tr>
+            <tr>
+                <th scope="row">使用優惠卷</th>
+                @if (Model.CouponTitle == null) { <td>無使用</td> }else{
+                <td>@Html.DisplayFor(model => model.CouponTitle)</td>}
+            </tr>
+            <tr>
+                <th scope="row">下單日期</th>
+                <td>@Html.DisplayFor(model => model.OrderDate)</td>
+            </tr>
+            <tr>
+                <th scope="row">總計</th>
+                <td>@Html.DisplayFor(model => model.Sumprice)</td>
+            </tr>
+@*     <dl class="dl-horizontal">
         <dd>
             訂單編號:@Html.DisplayFor(model => model.OrderId)
         </dd>
@@ -17,6 +42,7 @@
         <dd>
             總計:@Html.DisplayFor(model => model.Sumprice)
         </dd>
-    </dl>
+    </dl> *@
+          
 </div>
 
