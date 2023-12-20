@@ -1,16 +1,20 @@
 ﻿﻿
 @model System.Collections.Generic.Dictionary<string, string>
-@{ Layout = null; }
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
 <!DOCTYPE html>
 <html>
 <body>
+    <div id="order"></div>
     <form id="form" name="form" method="POST" action="https://payment-stage.ecpay.com.tw/Cashier/AioCheckOut/V5">
         <!--step2 : 收到後端的值印出來-->
+        <button type="submit" id="checkoutBtn">前往付款</button>
         @foreach (var key in @Model.Keys.ToList())
         {
-            @(key) <input type="text" name="@key" value="@Model[key]" /><br />
+            <input type="text" name="@key" value="@Model[key]" hidden/><br />
         }
-        <button type="submit" id="checkoutBtn">送出</button>
+        
     </form>
 
     <!-- js套件 -->
@@ -20,4 +24,11 @@
     <!-- 自己的 -->
     <script src="~/js/ecpay.js"></script>
 </body>
+<script>
+    function loadOrder() {
+        $('#order').load('@Url.Content("~/shop/YourOrder")');
+    }
+    loadOrder();
+
+</script>
 </html>

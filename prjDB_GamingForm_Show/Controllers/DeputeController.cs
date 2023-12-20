@@ -144,7 +144,7 @@ namespace prjDB_GamingForm_Show.Controllers
 
         public IActionResult DeputeList(int? id)
         {
-
+            
             IEnumerable<CDeputeViewModel> datas = null;
             if (id ==null)
             {
@@ -159,10 +159,11 @@ namespace prjDB_GamingForm_Show.Controllers
                 IEnumerable<string> skillname = from n in _db.SkillClasses
                                 where n.SkillClassId == id
                                 select n.Name;
+                ViewBag.name = skillname;
                 foreach (string item in skillname)
                 {
                     datas = from n in List
-                            where n.deputeContent.Contains(item)
+                            where n.listskillclassid.Contains(item)
                             select n;
                 }
                 
@@ -540,9 +541,9 @@ namespace prjDB_GamingForm_Show.Controllers
             CDeputeViewModel x = null;
             foreach (var item in SkillClasses)
             {
-                var datas = from n in _db.DeputeSkills.AsEnumerable()
+                var datas = (from n in _db.DeputeSkills.AsEnumerable()
                             where n.Skill.SkillClassId == item.SkillClassId
-                            select n.Skill.SkillClass;
+                            select n.DeputeId).Distinct();
 
                 x = new CDeputeViewModel()
                 {

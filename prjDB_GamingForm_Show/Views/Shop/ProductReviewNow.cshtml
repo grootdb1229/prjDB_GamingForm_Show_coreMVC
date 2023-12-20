@@ -20,64 +20,80 @@
         </dt>
         <dd>
             @Html.DisplayFor(model => model.ProductName)
-        </dd>
+        </dd>         
         <dt>
-            @Html.DisplayNameFor(model => model.Price)
+            商品圖片
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.Price)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.AvailableDate)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.AvailableDate)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.ProductContent)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.ProductContent)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.UnitStock)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.UnitStock)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.StatusId)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.StatusId)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.ViewCount)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.ViewCount)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.MemberId)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.MemberId)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.FImagePath)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.FImagePath)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Goods)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Goods)
-        </dd>
+            <img src="../images/shop/@Model.FImagePath" alt="..." style="height:25vh; " />
+        </dd> 
     </dl>
+    <input type="file" id="imgFile" class="form-control" accept="image/*" />
+</div>
+<div class="form-group">
+    <button onclick="analyze()">分析</button>
 </div>
 <div>
     @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
     <a asp-action="Index">Back to List</a>
 </div>
+
+@section Scripts {    
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script type="text/javascript">
+        var arrayBuffer;
+        $("#imgFile").bind("change", function () {
+            var file = this.files[0]
+            var allowType = "image.*";
+            if (file.type.match(allowType)) {
+                var reader = new FileReader();
+                reader.onload = function () {
+                    arrayBuffer = this.result;
+                    var blob = new Blob([arrayBuffer], {
+                        type: "image/jpeg"
+                    });
+                    var urlCreater = window.URL || window.webkitURL;
+                    var imageUrl = urlCreater.createObjectURL(blob)
+                    $("#imgPreview").attr("src", imageUrl);
+                };
+                reader.readAsArrayBuffer(this.files[0])
+            }
+            else {
+                alert("錯誤的檔案格式")
+            }
+        })
+        function analyze() {            
+            var params = {
+                // Request parameters
+                "CacheImage": false,
+            };
+            
+            $.ajax({
+                url: "https://grootdbai.cognitiveservices.azure.com/contentmoderator/moderate/v1.0/ProcessImage/Evaluate?" + $.param(params),
+                beforeSend: function (xhrObj) {
+                    // Request headers
+                    xhrObj.setRequestHeader("Content-Type", "application/octet-stream");
+                    xhrObj.setRequestHeader("Ocp-Apim-Subscription-Key", "5585e8a41e73436a88e83f840805a453");
+                },
+                type: "POST",
+                // Request body
+                data: arrayBuffer,
+                processData: false
+            }).done(function (data) {
+                alert(JSON.stringify(data));
+                var isAdult = data['IsImageAdultClassified'];
+                var adultScore = data['AdultClassificationScore'];
+                var isRacy = data['IsImageRacyClassified'];
+                var racyScore = data['RacyClassificationScore'];
+                if (isAdult) {
+                    alert(`adult:${(adultScore * 100).toFixed(2)}%`);
+                }
+                if (isRacy) {
+                    alert(`racy:${(racyScore * 100).toFixed(2)}%`);
+                }
+            }).fail(function (err) {
+                alert(err.statusText);
+            });
+        }
+    </script>
+}
