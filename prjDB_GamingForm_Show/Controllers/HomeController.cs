@@ -52,7 +52,7 @@ namespace prjDB_GamingForm_Show.Controllers
         {
             return View();
         }
-        public IActionResult Logout() 
+        public IActionResult Logout()
         {
             if (HttpContext.Session.GetInt32(CDictionary.SK_UserID) != null)
             {
@@ -60,9 +60,45 @@ namespace prjDB_GamingForm_Show.Controllers
                 HttpContext.Session.Remove(CDictionary.SK_UserName);
                 HttpContext.Session.Remove(CDictionary.SK_PURCHASED_PRODUCES_LIST);
             }
-           return RedirectToAction("HomePage");
+            return RedirectToAction("HomePage");
         }
+        public IActionResult ShopInfo()
+        {
+            var datas = new
+            {
+                proCount = _db.Products.Count(),
+                orderCount = _db.Orders.Count(),
+                orderProductCount = _db.OrderProducts.Count(),
+            };
+            return Json(datas);
+        }
+        //public IActionResult DeputeInfo()
+        //{
+        //    var datas = new {  HDT = _db.SkillClasses.Where()  };
+        //    return Json(datas);
+        //}
 
+        public IActionResult BlogInfo()
+        {
+            var datas = new
+            {
+                ArticleCounts = _db.Articles.Count(),
+                MPB = _db.Blogs.OrderByDescending(b => b.SubBlogs.SelectMany(s => s.Articles).Sum(a => a.ViewCount)).Select(a => a.Title).Take(1),
+                MAM = _db.Members.OrderByDescending(m=>m.Articles.Count()).Take(1),
+
+            };
+            return Json(datas);
+        }
+        public IActionResult DeputeInfo() 
+        {
+            var datas = new
+            {
+                MPDT = _db.SkillClasses.Include(S => S.Skills).ThenInclude(Ss => Ss.DeputeSkills).ThenInclude(Ds => Ds.Depute),
+                //MDR = _db.Regions.OrderByDescending(r => r.Deputes.Count(d=>d.)).Take(1),
+                HSR = _db.Regions.OrderByDescending(r => r.Deputes.Average(d => d.Salary)).Take(1)
+            };
+            return Json(datas);
+        }
         [HttpPost]
         public IActionResult Login(CLoginViewModel vm)
         {
