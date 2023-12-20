@@ -60,7 +60,7 @@
                     @Html.DisplayFor(modelItem => item.status)
                 </td>
                 <td>
-                    @Html.ActionLink("刪除委託", "DeputeList", "Depute", new { id = "null" }, new { @class = "btn btn-dark ", @id = "search", name = "txtKeyword" })
+                    @Html.ActionLink("刪除委託", "ADeputeDelete", "Admin", new { txtID = item.id }, new { @class = "btn btn-dark " })
                     <button type="button" class="btn btn-dark status" onclick="StatusEdit(@Html.DisplayFor(modelItem => item.id))">修改狀態</button>
                     @* @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ }) *@
                 </td>

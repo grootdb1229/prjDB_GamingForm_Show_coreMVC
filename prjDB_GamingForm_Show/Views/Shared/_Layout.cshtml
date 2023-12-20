@@ -333,7 +333,13 @@
                 });
             }
             else if (id == 179) {
-                //商城跳轉
+                window.location.href = '@Url.Content("~/Shop/MyProduct")';
+                event.preventDefault();
+                $.ajax({
+                    type: 'post',
+                    url: '/Member/CheckAllMessage',
+                    data: { senderid: 179 }
+                });
             }
             else {
                 var div = document.querySelector('#MemberChat');
