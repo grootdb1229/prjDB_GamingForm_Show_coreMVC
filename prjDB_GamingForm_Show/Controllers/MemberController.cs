@@ -338,6 +338,8 @@ namespace prjDB_GamingForm_Show.Controllers
                        select new { c.Title, c.ModifiedDate, c.FImagePath, c.Intro, c.MyCollection };
             return View(data);
         }
+
+
         #region CollectionCRUD
         public IActionResult CreateCollection()
         {
@@ -406,18 +408,13 @@ namespace prjDB_GamingForm_Show.Controllers
             }
             return RedirectToAction("MyCollectionList", "Member", new { id = MC.MemberId });
         }
+        
         #endregion
         #region MyHistoryRecord
         public IActionResult MyWorks()
         {
             return View();
         }
-
-        public IActionResult MyBlog()
-        {
-            return View();
-        }
-
         public IActionResult MyArticles(int? id)
         {
             var data = _db.Articles.Include(a => a.SubBlog).ThenInclude(s => s.Blog)

@@ -66,36 +66,23 @@ namespace prjDB_GamingForm_Show.Controllers
         {
             var datas = new
             {
-                proCount = _db.Products.Count(),
-                orderCount = _db.Orders.Count(),
-                orderProductCount = _db.OrderProducts.Count(),
+                proCount = _db.Products.Count(),//商品數
+                orderCount = _db.Orders.Count(),//交易數
+                orderProductCount = _db.OrderProducts.Count(),//銷售量
             };
             return Json(datas);
         }
-        //public IActionResult DeputeInfo()
-        //{
-        //    var datas = new {  HDT = _db.SkillClasses.Where()  };
-        //    return Json(datas);
-        //}
-
         public IActionResult BlogInfo()
         {
+            _db.SubBlogs.Load();
+            _db.Articles.Load();
             var datas = new
             {
+
                 ArticleCounts = _db.Articles.Count(),
                 MPB = _db.Blogs.OrderByDescending(b => b.SubBlogs.SelectMany(s => s.Articles).Sum(a => a.ViewCount)).Select(a => a.Title).Take(1),
                 MAM = _db.Members.OrderByDescending(m=>m.Articles.Count()).Take(1),
 
-            };
-            return Json(datas);
-        }
-        public IActionResult DeputeInfo() 
-        {
-            var datas = new
-            {
-                MPDT = _db.SkillClasses.Include(S => S.Skills).ThenInclude(Ss => Ss.DeputeSkills).ThenInclude(Ds => Ds.Depute),
-                //MDR = _db.Regions.OrderByDescending(r => r.Deputes.Count(d=>d.)).Take(1),
-                HSR = _db.Regions.OrderByDescending(r => r.Deputes.Average(d => d.Salary)).Take(1)
             };
             return Json(datas);
         }
