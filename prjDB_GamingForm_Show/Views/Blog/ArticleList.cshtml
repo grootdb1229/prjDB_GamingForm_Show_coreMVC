@@ -40,7 +40,7 @@
                     <div class="d-flex flex-column bd-highlight mb-3 nav-menu">
                         <ul>
                             <li>
-                                <a style="font-size:20px" href="@Url.Action("List", "Blog")">回列表</a>
+                                <a style="font-size:20px" href="@Url.Action("List", "Blog")">回首頁</a>
                             </li>
                             <li class="@(ViewBag.SelectedSubBlogId==null ? "selected-item":"" )">
                                 <a style="font-size:20px" href="@Url.Action("ArticleList", "Blog", new { FId = Model.blogs.FirstOrDefault().BlogId})">@Model.blogs.FirstOrDefault().Title</a>
@@ -223,7 +223,7 @@
                             HA += `
                                                             <tr>
                                                             <td>
-                                                                 <a style="text-decoration:none" href="~/Blog/ArticleContent?FId=${data[i].blogid}&AFId=${data[i].articleId}">
+                                                                 <a style="text-decoration:none" href="/Blog/ArticleContent?FId=${data[i].blogid}&AFId=${data[i].articleId}">
                                                                    <p style="font-size:16px">【${data[i].subtitle}】 ${data[i].title}</p>
                                                                 </a>
                                                             </td>
