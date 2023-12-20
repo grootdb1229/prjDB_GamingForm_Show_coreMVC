@@ -244,9 +244,13 @@
                         <script>
                             function shareOnFacebook() {
                                 // 使用 window.open 在新視窗中打開 Facebook 分享連結
-                                window.open('https://www.facebook.com/sharer.php?u=https://localhost:7056/Blog/ArticleContent?FId=@(Model.blogs?.FirstOrDefault()?.BlogId)&AFId=@(Model.articles?.FirstOrDefault()?.ArticleId)', '_blank');
+                                window.open('https://www.facebook.com/sharer.php?u=https://prjdbgamingformshow20231219140402.azurewebsites.net/Blog/ArticleContent?FId=9&AFId=1235', '_blank');
                             }
                         </script>
+
+
+                       
+
                         @*------FB按鈕------*@
                         <div style="float:right">
                             @*------Line按鈕------*@
@@ -255,13 +259,16 @@
                                      data-lang="zh_Hant"
                                      data-type="share-c"
                                      data-env="REAL"
-                                     data-url="https://localhost:7056/Blog/ArticleContent?FId=@(Model.blogs?.FirstOrDefault()?.BlogId)&AFId=@(Model.articles?.FirstOrDefault()?.ArticleId)"
+                                     data-url="https://prjdbgamingformshow20231219140402.azurewebsites.net/Blog/ArticleContent?FId=@(Model.blogs?.FirstOrDefault()?.BlogId)&AFId=@(Model.articles?.FirstOrDefault()?.ArticleId)"
                                      data-color="default"
                                      data-size="large"
                                      data-count="false"
                                      data-ver="3"
                                      style="float:right ;margin:5px">
                                 </div>
+
+
+
                                 <script src="https://www.line-website.com/social-plugins/js/thirdparty/loader.min.js" async="async" defer="defer"></script>
                             }
                             @*------Line按鈕------*@
