@@ -48,7 +48,7 @@ body {
     font-size: 1rem;
     font-weight: 400;
     line-height: 1.5;
-    color: #555;
+    /*color: #555;*/
     background-color: #000000;
     -webkit-text-size-adjust: 100%;
     -webkit-tap-highlight-color: rgba(0,0,0,0)
@@ -2829,11 +2829,11 @@ textarea.form-control-lg {
     vertical-align: middle;
     cursor: pointer;
     user-select: none;
-    background-color: transparent;
+    /*background-color: transparent;*/
     border: 1px solid transparent;
     padding: .375rem .75rem;
     font-size: 1rem;
-    border-radius: 0px;
+    border-radius: 0.375rem;
     transition: color 0.15s ease-in-out,background-color 0.15s ease-in-out,border-color 0.15s ease-in-out,box-shadow 0.15s ease-in-out
 }
 
