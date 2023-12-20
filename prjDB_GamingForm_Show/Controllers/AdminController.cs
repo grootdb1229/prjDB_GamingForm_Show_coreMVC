@@ -1597,19 +1597,31 @@ namespace prjDB_GamingForm_Show.Controllers
 
         //}
 
-        public IActionResult OrderList(DateTime? startday, DateTime? endday ,string? ST)
+        public IActionResult OrderList(DateTime? startday, DateTime? endday, string? ST)
         {
-            IQueryable<Order> query = _db.Orders.Include(a => a.Payment).Include(a => a.Coupon).Include(a=>a.Status);
 
-            if ((startday.HasValue && endday.HasValue)|| ST!=null)
+            if (endday == null)
+                endday = DateTime.Now;
+
+            IQueryable<Order> query = _db.Orders.Include(a => a.Payment).Include(a => a.Coupon).Include(a => a.Status);
+
+            if (startday.HasValue && endday.HasValue )
             {
-                query = query.Where(p => p.CompletedDate >= startday.Value && p.OrderDate <= endday.Value&&p.Status.Name == ST);
+                if (ST == "請選擇訂單狀態")
+                {
+                    query = query.Where(p => p.CompletedDate >= startday.Value && p.OrderDate <= endday.Value);                    
+                }
+                else 
+                {
+                    query = query.Where(p => p.CompletedDate >= startday.Value && p.OrderDate <= endday.Value && p.Status.Name == ST);
+                }
             }
 
-                     
+
             List<Order> orders = query.ToList();
 
             return View(orders);
+
         }
 
 
