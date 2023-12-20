@@ -326,7 +326,7 @@
                     title: "恭喜!",
                     html: "委託已完成<br/>視窗將於<b></b>秒關閉",
                     icon: "success",
-                    timer: 5000,
+                    timer: 4000,
                     timerProgressBar: true,
                     didOpen: () => {
                         sendMessageBySignalR(data.workerName, "完成");
@@ -334,6 +334,9 @@
                         const timer = Swal.getPopup().querySelector("b");
                         timerInterval = setInterval(() => {
                             timer.textContent = `${(Swal.getTimerLeft() / 1000).toFixed(0)}`;
+                            if (++timer.textContent < 0) {
+                                clearInterval(timerInterval);
+                            }
                         }, 100);
                     },
                     willClose: () => {
@@ -379,55 +382,55 @@
             const isCooperating = applyer.status.includes("合作中") || applyer.status.includes("已完成");
             const canChangeStatus = isCooperating ? "disabled" : "";
             return `<div class="accordion-item">
-                                <h2 class="accordion-header">
-                                    <button class="accordion-button collapsed" onclick="readed(${applyer.id},event)" type="button" data-bs-toggle="collapse" data-bs-target="#collapse${applyer.memberName}" aria-expanded="false" aria-controls="collapse${applyer.memberName}">
-                                    ${index + 1}-${applyer.memberName}<span class="badge text-bg-info">${applyer.status}</span>
-                                    </button>
-                                </h2>
-                              <div id="collapse${applyer.memberName}" class="accordion-collapse collapse" data-bs-parent="#accordionExample" style="">
-                                <div class="accordion-body">
-                                  <table class="table">
-                                    <thead>
-                                      <tr>
-                                      <th style="color:black" scope="col-1">性別</th>
-                                      <th style="color:black" scope="col-1">Email</th>
-                                      <th style="color:black" scope="col-1">手機</th>
-                                      <th style="color:black" scope="col-1">生日</th>
-                                      <th style="color:black" scope="col-1">會員頁面連結</th>
-                                      <th style="color:black" scope="col-1">狀態</th>
-                                      <th style="color:black" scope="col-1">狀態管理</th>
-                                      <th style="color:black" scope="col-1"></th>
-                                </tr>
-                              </thead>
-                              <tbody>
-                                <tr>
-                                  <td class="align-middle" style="color:black">${applyer.applyerGender}</td>
-                                  <td class="align-middle" style="color:black">${applyer.applyerEmail}</td>
-                                  <td class="align-middle" style="color:black">${applyer.applyerPhone}</td>
-                                  <td class="align-middle" style="color:black">${applyer.applyerBirth}</td>
-                                  <td class="align-middle" style="color:black"><a href='@Url.Content("~/member/MemberPageTest")?id=${applyer.workerId}'>${applyer.memberName}</a></td>
-                                  <td class="align-middle" style="color:black" id="currentStatus">${applyer.status}</td>
-                                  <td class="align-middle" style="color:black">
-                                     <select class="form-select" aria-label="Default select example" ${canChangeStatus}>
-                                        <option selected>請選擇欲修改的狀態</option>
-                                        <option value="7">審核中</option>
-                                        <option value="10">合作中</option>
-                                        <option value="11">備選</option>
-                                     </select>
-                                  </td>
-                                  <td>
-                                     <button class="btn btn-info" onclick="changeStatus(${applyer.id},event)" ${canChangeStatus}>更改</button>
-                                  </td>
-                                </tr>
-                              </tbody>
-                            </table>
-                                </div>
-                                <ul class="list-group">
-                                    <li class="list-group-item text-center">應徵會員補充資訊</li>
-                                    <li class="list-group-item text-start" style="white-space: pre-line;">${applyer.applyerContent}</li>
-                                </ul>
-                                </div>
-                         </div>`});
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" onclick="readed(${applyer.id},event)" type="button" data-bs-toggle="collapse" data-bs-target="#collapse${applyer.workerName}" aria-expanded="false" aria-controls="collapse${applyer.workerName}">
+                        ${index + 1}-${applyer.workerName}<span class="badge text-bg-info">${applyer.status}</span>
+                        </button>
+                    </h2>
+                    <div id="collapse${applyer.workerName}" class="accordion-collapse collapse" data-bs-parent="#accordionExample" style="">
+                    <div class="accordion-body">
+                        <table class="table">
+                        <thead>
+                            <tr>
+                            <th style="color:black" scope="col-1">性別</th>
+                            <th style="color:black" scope="col-1">Email</th>
+                            <th style="color:black" scope="col-1">手機</th>
+                            <th style="color:black" scope="col-1">生日</th>
+                            <th style="color:black" scope="col-1">會員頁面連結</th>
+                            <th style="color:black" scope="col-1">狀態</th>
+                            <th style="color:black" scope="col-1">狀態管理</th>
+                            <th style="color:black" scope="col-1"></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td class="align-middle" style="color:black">${applyer.applyerGender}</td>
+                        <td class="align-middle" style="color:black">${applyer.applyerEmail}</td>
+                        <td class="align-middle" style="color:black">${applyer.applyerPhone}</td>
+                        <td class="align-middle" style="color:black">${applyer.applyerBirth}</td>
+                        <td class="align-middle" style="color:black"><a href='@Url.Content("~/member/MemberPageTest")?id=${applyer.workerId}'>${applyer.workerName}</a></td>
+                        <td class="align-middle" style="color:black" id="currentStatus">${applyer.status}</td>
+                        <td class="align-middle" style="color:black">
+                            <select class="form-select" aria-label="Default select example" ${canChangeStatus}>
+                            <option selected>請選擇欲修改的狀態</option>
+                            <option value="7">審核中</option>
+                            <option value="10">合作中</option>
+                            <option value="11">備選</option>
+                            </select>
+                        </td>
+                        <td>
+                            <button class="btn btn-info" onclick="changeStatus(${applyer.id},event)" ${canChangeStatus}>更改</button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+                    </div>
+                    <ul class="list-group">
+                        <li class="list-group-item text-center">應徵會員補充資訊</li>
+                        <li class="list-group-item text-start" style="white-space: pre-line;">${applyer.applyerContent}</li>
+                    </ul>
+                    </div>
+                </div>`});
         const titleapplyer = await document.querySelector('#accordionExample');
         titleapplyer.innerHTML = applyers.join("");
     }

@@ -666,8 +666,8 @@ select:not([multiple]) {
 
 @media (max-width: 1400px) {
 	.tm-section-wrap {
-		width: calc(100% - 630px);
-		margin-left: 630px;
+		width: calc(100% - 400px);
+		margin-left: 400px;
 	}
 }
 
@@ -694,12 +694,16 @@ select:not([multiple]) {
 		transition: all 0.3s ease;
 	}
 
+	.navbar.navbar-expand-lg.navbar-light.bg-light {
+		margin-left: 0px;
+	}
+
 	.navbar-toggler {
 		display: block;
 		position: fixed;
 		left: 0;
 		top: 0;
-		background-color: rgb(0 102 153 / 0.80);
+		background-color: #a81d1d;
 		color: white;
 		padding: 10px 15px;
 		transition: all 0.3s ease;
@@ -720,8 +724,8 @@ select:not([multiple]) {
 	}
 
 	.tm-section-wrap {
-		width: calc(100% - 280px);
-		margin-left: 280px;		
+		width: calc(100% - 100px);
+		margin-left: 100px;		
 	}
 
 	.tm-section {

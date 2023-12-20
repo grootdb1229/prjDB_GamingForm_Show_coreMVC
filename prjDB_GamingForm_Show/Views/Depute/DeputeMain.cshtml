@@ -28,7 +28,7 @@
         <div class="tab-class text-center wow fadeInUp" data-wow-delay="0.3s">
             <ul class="nav nav-pills d-inline-flex justify-content-center border-bottom mb-5">
                 <li class="nav-item">
-                    <a class="d-flex align-items-center text-start mx-3 ms-0 pb-3" data-bs-toggle="pill" href="#tab-1">
+                    <a class="d-flex align-items-center text-start mx-3 ms-0 pb-3 active" data-bs-toggle="pill" href="#tab-1">
                         <h6 id="title1" class="mt-n1 mb-0">最新委託</h6>
                     </a>
                 </li>
@@ -38,7 +38,7 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="d-flex align-items-center text-start mx-3 pb-3  active" data-bs-toggle="pill" href="#tab-3">
+                    <a class="d-flex align-items-center text-start mx-3 pb-3" data-bs-toggle="pill" href="#tab-3">
                         <h6 id="fav" class="mt-n1 mb-0">我的最愛</h6>
                     </a>
                 </li>
@@ -161,6 +161,14 @@
 @section Scripts {
     <script>
         loadCategory();
+        getFive(1, "newfive");
+        getFive(2, "topfive");
+        GetCookie();
+        GetFav();
+        $('#title1').click(() => { getFive(1, "newfive") });
+        $('#title2').click(() => { getFive(2, "topfive") });
+        $('#fav').click(() => { GetFav() });
+        $('#record').click(() => { GetCookie() });
         function loadCategory() {
             $.ajax('@Url.Content("~/Depute/DeputeCount")', {
                 "type": 'Get', //POST、PUT、DELETE
@@ -183,16 +191,12 @@
                     )
                     ctgFrag.append(Categorys);
                     $('#category').html(ctgFrag)
-                    getFive(1, "newfive");
-                    getFive(2, "topfive");
+                    
                     
                 })
         }
         
-        $('#title1').click(() => { getFive(1, "newfive") });
-        $('#title2').click(() => { getFive(2, "topfive") });
-        $('#fav').click(() => { GetFav() });
-        $('#record').click(() => { GetCookie() });
+        
         function getFive(id, tag) {
             $.ajax('@Url.Content("~/Depute/GetFive")', {
                 "type": 'POST', //POST、PUT、DELETE//
@@ -228,7 +232,7 @@
                 )
                 lstFrag.append(list);
                 $(`#${tag}`).html(lstFrag);
-                GetCookie();
+                
             })
         }
         function GetCookie() {
@@ -265,7 +269,7 @@
                     )
                     lstFrag.append(list);
                     $('#history').html(lstFrag);
-                    GetFav();
+                    
                 })
         }
         function SetFav(value) {

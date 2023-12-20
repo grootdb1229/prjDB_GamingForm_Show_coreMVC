@@ -100,7 +100,6 @@ namespace prjDB_GamingForm_Show.Controllers
             }
             return RedirectToAction("Create", "Member");
         }
-
         public IActionResult PopularShopItems() 
         {
             var datas = from P in _db.Products

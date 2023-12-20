@@ -23,7 +23,7 @@
 <hr class="col-10" />
 <div class="row">
     <div class="col-md-10">
-        <form asp-action="Create">
+        <form class="needs-validation">
             <div class="p-3 mb-3 bg-opacity-10 border border-danger  rounded-end rounded-start">
                 <div class="form-check form-switch form-check " style="">
                     <label class="form-check-label" style="color:white" for="flexSwitchCheckReverse">開立專屬委託</label>
@@ -83,11 +83,17 @@
                     </div>
                 </div>
                 <div class="col-md">
+
                     <div class="form-floating  mb-3">
-                        <select name="region" class="form-select" id="selRegions" aria-label="Default select example">
+                        <select class="form-select" name="region" id="selRegions" required>
+                       
                         </select>
-                        <label asp-for="RegionId" class="control-label" id="RegionId" placeholder="">地區</label>
+                        <label for="selRegions" class="form-label">地區</label>
+                        <div class="invalid-feedback">
+                            請選擇一個地區
+                        </div>
                     </div>
+
                 </div>
             </div>
             <div class="form-floating mb-3">
@@ -131,7 +137,7 @@
                 Swal.fire({
                     color: "#D0D0D0",
                     background: "#343a40",
-                    timer: 5000,
+                    timer: 4000,
                     timerProgressBar: true,
                     title: `${status}`,
                     html: "將於<b></b>秒跳轉首頁",
@@ -141,13 +147,14 @@
                         const timer = Swal.getPopup().querySelector("b");
                         timerInterval = setInterval(() => {
                             timer.textContent = `${(Swal.getTimerLeft() / 1000).toFixed(0)}`;
+                            if (++timer.textContent < 0) {
+                                clearInterval(timerInterval);
+                            }
                         }, 100);
                     },
                     willClose: () => {
-                        clearInterval(timerInterval);
+                        window.location.href = '@Url.Action("HomePage", "home")';
                     }
-                }).then(() => {
-                    window.location.href = '@Url.Action("HomePage", "home")';
                 })
             }
 
@@ -155,11 +162,11 @@
             const btnCreate = document.querySelector('#btnCreate');
             const btnSelSkill = document.querySelector('#btnSelSkill');
             const content = document.querySelector('#DeputeContent');
-            deputeTitle.addEventListener('change', () => {
+            deputeTitle.addEventListener('input', () => {
                 deputeTitle.value == "" ? btnCreate.disabled = true : btnCreate.disabled = false;
                 content.value == "" || deputeTitle.value == "" ? btnSelSkill.disabled = true : btnSelSkill.disabled = false;
             })
-            content.addEventListener('change', () => {
+            content.addEventListener('click', () => {
                 content.value == "" || deputeTitle.value == "" ? btnSelSkill.disabled = true : btnSelSkill.disabled = false;
             })
         })
@@ -446,13 +453,15 @@
             const response = await fetch(`@Url.Content("~/depute/regions")`);
             const datas = await response.json();
             const regions = datas.map(region => `<option value="${region.city}">${region.city}</option>`)
-            var regionsString = "<option selected>請選擇地區</option>".concat(regions.join(""));
+            var regionsString = "<option selected disabled value=''>請選擇地區</option>".concat(regions.join(""));
             document.querySelector("#selRegions").innerHTML = regionsString;
         }
         loadRegions();
 
         const inputSkill = document.getElementById('select-skills');
         async function prepareAndSubmit() {
+            if (!checkForm())
+                return;
             inputSkill.value = JSON.stringify(selSkills);
             const formData = new FormData(document.querySelector('form'));
             const response = await fetch('@Url.Content("~/depute/create")', {
@@ -465,7 +474,7 @@
                 Swal.fire({
                     color: "#D0D0D0",
                     background: "#343a40",
-                    timer: 5000,
+                    timer: 4000,
                     timerProgressBar: true,
                     title: `${result.message}`,
                     html: "將於<b></b>秒跳轉委託首頁",
@@ -475,6 +484,9 @@
                         const timer = Swal.getPopup().querySelector("b");
                         timerInterval = setInterval(() => {
                             timer.textContent = `${(Swal.getTimerLeft() / 1000).toFixed(0)}`;
+                            if (++timer.textContent < 0) {
+                                clearInterval(timerInterval);
+                            }
                         }, 100);
                     },
                     willClose: () => {
@@ -484,6 +496,20 @@
                     window.location.href = '@Url.Action("homeframe", "depute")';
                 })
             };
+        }
+
+        function checkForm() {
+            'use strict';
+
+            // 假設只有一個需要驗證的表單
+            const form = document.querySelector('.needs-validation');
+
+            if (form.checkValidity() === false) {
+                form.classList.add('was-validated');
+                return false; // 表單無效
+            }
+
+            return true; // 表單有效
         }
     </script>
 

@@ -388,9 +388,15 @@ namespace prjDB_GamingForm_Show.Controllers
             CDeputeViewModel data = null;
             foreach(var item in value)
             {
-                  var  RecoData = from n in _db.DeputeSkills.AsEnumerable()
+                  var  RecoData = (from n in _db.DeputeSkills.AsEnumerable()
                                where n.Skill.Name.Contains(item)
-                               select new {n.DeputeId,n.Depute.Title, n.Depute.DeputeContent, n.Depute.Provider.Name, n.Depute.Provider.FImagePath };
+                               select new 
+                               {   n.DeputeId,
+                                   Title = (n.Depute.Title.Length > 15) ? n.Depute.Title.Substring(0,10) : n.Depute.Title,
+                                   DeputeContent = (n.Depute.DeputeContent.Length>15) ? n.Depute.DeputeContent.Substring(0, 20) : n.Depute.DeputeContent, 
+                                   n.Depute.Provider.Name, 
+                                   n.Depute.Provider.FImagePath 
+                               }).Distinct();
                 CDeputeViewModel x = null;
                 foreach (var item2 in RecoData)
                 {
@@ -418,7 +424,7 @@ namespace prjDB_GamingForm_Show.Controllers
                 count = rnd.Next(0, Rcolist.Count);
 
             }
-            return Json(Rcolist2);
+            return PartialView(Rcolist2);
 
 
         }
@@ -611,7 +617,7 @@ namespace prjDB_GamingForm_Show.Controllers
                 _db.SaveChanges();
                 //有會員應徵後，寄給發佈委託者
                 var currentDepute = _db.Deputes.FirstOrDefault(_ => _.DeputeId == data.DeputeId);
-                CDeputeEmail emaiContent = new CDeputeEmail()
+                CDeputeEmail emailContent = new CDeputeEmail()
                 {
                     memberName = _db.Members.FirstOrDefault(_ => _.MemberId == currentDepute.ProviderId).Name,
                     email = _db.Members.FirstOrDefault(_ => _.MemberId == currentDepute.ProviderId).Email,
@@ -621,7 +627,7 @@ namespace prjDB_GamingForm_Show.Controllers
                     deputeRecordCount = _db.DeputeRecords.Count(_ => _.DeputeId == currentDepute.DeputeId),
                     progress = CDictionary.PROGRESS_會員應徵委託
                 };
-                SendDeputeEmail(emaiContent);
+                _ = Task.Run(() => SendDeputeEmail(emailContent));
                 return Json(new { success = true, message = "履歷投遞成功" });
             }
             catch (Exception ex)
@@ -746,7 +752,7 @@ namespace prjDB_GamingForm_Show.Controllers
                     deputeStatus=oriDeputRecord.ApplyStatus.Name,
                     progress=CDictionary.PROGRESS_會員完成委託
                 };
-                SendDeputeEmail(content);
+                _ = Task.Run(() => SendDeputeEmail(content));
                 return Json(new { success = true, message = "案件已提交" });
             }
             catch (Exception ex)
@@ -805,7 +811,7 @@ namespace prjDB_GamingForm_Show.Controllers
             return data;
         }
 
-        public IActionResult SendDeputeEmail(CDeputeEmail vm)
+        private void SendDeputeEmail(CDeputeEmail vm)
         {
             string diffContent = "";
             string diffTable = "";
@@ -847,9 +853,9 @@ namespace prjDB_GamingForm_Show.Controllers
             //寄件者
             message.From.Add(new MailboxAddress("grootdb1229", "grootdb1229@gmail.com"));
             //收件者
-            message.To.Add(new MailboxAddress(_db.Members.FirstOrDefault(x => x.MemberId == HttpContext.Session.GetInt32(CDictionary.SK_UserID)).Name, email));
+            message.To.Add(new MailboxAddress(vm.memberName, email));
             //標題
-            message.Subject = $"委託[{vm.deputeTitle}]狀態更新";
+            message.Subject = $"格魯特-委託[{vm.deputeTitle}]狀態更新";
             //內容
             message.Body = new TextPart("html")
             {
@@ -863,7 +869,6 @@ namespace prjDB_GamingForm_Show.Controllers
                 client.Send(message);
                 client.Disconnect(true);
             }
-            return RedirectToAction("OrderDetail", "Shop");
         }
         public IActionResult myApplyContent(int id)
         {
@@ -934,7 +939,7 @@ namespace prjDB_GamingForm_Show.Controllers
                 recordStatus = deputeRecord.ApplyStatus.Name,
                 progress = CDictionary.PROGRESS_委託者決定合作
             };
-            SendDeputeEmail(content);
+            _ = Task.Run(() => SendDeputeEmail(content));
             foreach (var item in otherRecords)
             {
                 item.ApplyStatusId = 11;
@@ -954,7 +959,7 @@ namespace prjDB_GamingForm_Show.Controllers
                 deputeStatus = deputeRecord.ApplyStatus.Name,
                 progress = CDictionary.PROGRESS_委託者確認完成
             };
-            SendDeputeEmail(content);
+            _ = Task.Run(() => SendDeputeEmail(content));
         }
         public IActionResult individualDetials(int id)
         {
