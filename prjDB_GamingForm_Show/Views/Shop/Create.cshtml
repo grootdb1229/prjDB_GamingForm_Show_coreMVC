@@ -268,13 +268,14 @@
                 const Language = data.map(x => `
                                         <div class="col-3">
                                             <label style="margin-bottom: 10px; display: block;">
-                                                        <input  type="checkbox" name="GameTag" value="${x.subTagId}">${x.name}
+                                                     
+                                    <input type="checkbox" name="GameTag" value="${x.subTagId}" onchange="submitTags()">${x.name}
                                             </label>
                                         </div>
                                     `).join('');
 
                 LangDiv.innerHTML = Language;
-                submitTags();
+             
             }
 
 
@@ -286,13 +287,13 @@
                 const Tag = data.map(x => `
                                         <div class="col-3">
                                             <label style="margin-bottom: 10px; display: block;">
-                                                            <input type="checkbox" name="GameTag" value="${x.subTagId}">${x.name}
+                                             <input type="checkbox" name="GameTag" value="${x.subTagId}" onchange="submitTags()">${x.name}
                                             </label>
                                         </div>
                                     `).join('');
 
                 TagDiv.innerHTML = Tag;
-                submitTags();
+              
             }
             LoadLang();
             LoadTag();
