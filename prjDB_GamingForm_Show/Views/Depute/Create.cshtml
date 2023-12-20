@@ -26,10 +26,11 @@
         <form class="needs-validation">
             <div class="p-3 mb-3 bg-opacity-10 border border-danger  rounded-end rounded-start">
                 <div class="form-check form-switch form-check " style="">
-                    <label class="form-check-label" style="color:white" for="flexSwitchCheckReverse">開立專屬委託</label>
-                    <input class="form-check-input" style="" type="checkbox" id="flexSwitchCheckReverse">
+                    <label class="form-check-label" style="color:white" for="privateCbx">開立專屬委託</label>
+                    <input class="form-check-input" style="" type="checkbox" id="privateCbx" >
                 </div>
-                <input class="form-control col-4" type="text" id="privatetxt" placeholder="請輸入對方會員編號" hidden />
+                <input class="form-control col-4" type="text" id="privatetxt" placeholder="請輸入對方會員編號" value="@ViewBag.workerID" hidden />
+                <input name="workerId" value="@ViewBag.workerID" hidden />
             </div>
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-floating mb-3" hidden>
@@ -241,14 +242,28 @@
         var chooseClass="程式";
 
         document.addEventListener('DOMContentLoaded', () => {
-            const privateCbx = document.getElementById('flexSwitchCheckReverse'),
+            const privateCbx = document.getElementById('privateCbx'),
                 privateTxt = document.getElementById('privatetxt'),
                 statusTxt = document.getElementById('StatusId');
+
 
             privateCbx.addEventListener('change', () => {
                 privateTxt.hidden = !privateCbx.checked;
                 privateCbx.checked ? statusTxt.innerHTML = 9 : statusTxt.innerHTML = 18
+                privateTxt.name = "workerId";
+                privateTxt.nextElementSibling.name = "";
             })
+
+            if (privateTxt.value == "")
+                return;
+
+            privateTxt.textContent = privateTxt.value;
+
+            privateTxt.hidden = false;
+            privateTxt.disabled = true;
+
+            privateCbx.checked = true;
+            privateCbx.disabled = true;
         })
 
         $('*').click(function (event) {

@@ -50,8 +50,12 @@ namespace prjDB_GamingForm_Show.Hubs
             var memberId = Context.GetHttpContext().Session.GetInt32(CDictionary.SK_UserID);
             var connectionId = Context.ConnectionId;
 
-            var memberConnection = new MemberConnection { ConnectionId = connectionId, MemberName = memberName, MemberId = (int)memberId, IsOnline = true };
-            _ConnectedMember.Add(memberConnection);
+            var x  = _ConnectedMember.FirstOrDefault(m => m.MemberId == memberId);
+            if (x == null) {
+                var memberConnection = new MemberConnection { ConnectionId = connectionId, MemberName = memberName, MemberId = (int)memberId, IsOnline = true };
+                _ConnectedMember.Add(memberConnection);
+            }
+            
 
             // 更新連線 ID 列表
             string jsonString = JsonConvert.SerializeObject(GetMemberName());
