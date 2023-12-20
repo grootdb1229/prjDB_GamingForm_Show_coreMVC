@@ -248,6 +248,7 @@
     <script>
         const text = document.querySelector('#text');
         loadSkillClassess();
+        // MutiSearch(@ViewBag.name)
         let keyword = [];
         $('#search').click(() => { MutiSearch(text.value) });
         $('#money').change(() => { MutiSearch(keyword) });
@@ -264,11 +265,11 @@
                     const SkillClassessFrag = $(document.createDocumentFragment());
                     const SkillClassess = data.map(value =>
                         `<div class="form-check">
-                                                                         <input class="form-check-input skillclass" type="checkbox" id="${value.name}-1" value="${value.skillClassId}"name="${value.name}">
-                                                         <label class="form-check-label" for="${value.name}-1">
-                                                         ${value.name}
-                                                         </label>
-                                                         </div>
+                        <input class="form-check-input skillclass" type="checkbox" id="${value.name}-1" value="${value.skillClassId}"name="${value.name}">
+                        <label class="form-check-label" for="${value.name}-1">
+                        ${value.name}
+                        </label>
+                        </div>
                                                                  ` )
                     SkillClassessFrag.append(SkillClassess);
                     $('#skillclass').after(SkillClassessFrag)
