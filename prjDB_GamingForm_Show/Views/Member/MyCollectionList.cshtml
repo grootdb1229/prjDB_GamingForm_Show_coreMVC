@@ -19,7 +19,7 @@
                     <div class="card" style="border-radius:20px;">
                         <img class="card-img-top" style="border-radius:20px;height:200px;max-height:200px" src="/images/MemberCollectionPreView/@Html.DisplayFor(modelItem => item.FImagePath)" alt="Card image cap">
                         <div class="card-body" style="height:150px;max-height:150px">
-                            <a href=@Url.Action("MyCollection","Member",new{id =1})><h5 class="card-title">@Html.DisplayFor(modelItem => item.Title)</h5></a>
+                            <a href=@Url.Content("~/Member/MyCollectionView?CId="+(item.Id))><h5 class="card-title">@Html.DisplayFor(modelItem => item.Title)</h5></a>
                             <p class="card-text">@Html.DisplayFor(modelItem => item.Intro)</p>
                         </div>
                         <div class="card-footer">
@@ -30,7 +30,7 @@
                             @Html.ActionLink("修改作品", "EditCollection", "Member", new { CId = item.Id }, new {@class ="btn btn-warning" , style="margin:5px"})
                             @Html.ActionLink("刪除作品", "DeleteCollection", "Member", new { CId = item.Id }, new { @class = "btn btn-danger", onclick = "return confirm('確定要刪除嗎?')" })
                             }
-                            <button class="btn btn-info">作品資料</button>
+                                @Html.ActionLink("檢視作品","MyCollectionView" , "Member" , new{CId = item.Id} ,new{@class = "btn btn-info"})
                             </div>
                         </div>
                     </div>
@@ -129,9 +129,6 @@
 }
     </div>
 </div>
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
 @* @foreach (var item in Model) {
         <tr>
             <td>

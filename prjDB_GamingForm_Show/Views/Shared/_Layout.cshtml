@@ -118,9 +118,9 @@
                             }
                             else
                             {
-                                                        <li class="nav-item" style=" padding: var(--bs-nav-link-padding-y) var(--bs-nav-link-padding-x)">歡迎回來 @Context.Session.GetString(CDictionary.SK_UserName) ID=@Context.Session.GetInt32(CDictionary.SK_UserID)</li>
+                                                        <li class="nav-item" style=" padding: var(--bs-nav-link-padding-y) var(--bs-nav-link-padding-x)">歡迎回來 @Context.Session.GetString(CDictionary.SK_UserName)</li>
                                                         <li class="nav-item">@Html.ActionLink("登出", "Logout", "Home", null, new { @class = "nav-link" })</li>
-                                                        <li class="nav-item">@Html.ActionLink("會員頁面", "MemberPageTest", "Member", new { id = Context.Session.GetInt32(CDictionary.SK_UserID) }, new { @class = "nav-link" })</li>
+                                                        <li class="nav-item">@Html.ActionLink("會員中心", "MemberPageTest", "Member", new { id = Context.Session.GetInt32(CDictionary.SK_UserID) }, new { @class = "nav-link" })</li>
                             }
                         }
 
