@@ -116,7 +116,7 @@
                         <!-- 收藏按鈕 -->
                         @if (Context.Session.GetInt32(CDictionary.SK_UserID) == null)
                         {
-                            <button type="button" class="btn btn-info" id="btnLike" data-bs-toggle="modal" data-bs-target="#staticBackdrop" style="float:right;margin:0 5px">
+                            <button type="button" class="btn btn-light" id="btnLike" data-bs-toggle="modal" data-bs-target="#staticBackdrop" style="float:right;margin:0 5px">
                                 <img src="~/images/shop/hollowheart.png" width="20px" height="20px" />
                             </button>
                         }
@@ -124,19 +124,19 @@
                         {
                             if (Model.favourite == "你收藏過了")
                             {
-                                <button type="button" class="btn btn-info" id="btnLike" style="float:right;margin:0 5px">
+                                <button type="button" class="btn btn-light" id="btnLike" style="float:right;margin:0 5px">
                                     <img src="~/images/shop/heart.png" width="20px" height="20px" id="clicked" />
                                 </button>
                             }
                             else if (Model.favourite == "你還沒收藏過")
                             {
-                                <button type="button" class="btn btn-info" id="btnLike" style="float:right;margin:0 5px">
+                                <button type="button" class="btn btn-light" id="btnLike" style="float:right;margin:0 5px">
                                     <img src="~/images/shop/hollowheart.png" width="20px" height="20px" id="unclicked" />
                                 </button>
                             }
                         }
                         <!-- HTML 中的按鈕 -->
-                        <button id="copyButton" class="btn btn-info" data-clipboard-target="#urlToCopy" style="float:right;margin:0 5px">分享</button>
+                        <button id="copyButton" class="btn btn-light" data-clipboard-target="#urlToCopy" style="float:right;margin:0 5px">分享</button>
                         <!-- 網址藏在這 -->
                         <input type="hidden" id="urlToCopy" value="" readonly>
 
