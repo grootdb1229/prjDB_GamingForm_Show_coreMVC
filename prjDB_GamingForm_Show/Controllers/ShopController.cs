@@ -301,6 +301,14 @@ namespace prjDB_GamingForm_Show.Controllers
 			{
 				return PartialView();
 			}
+
+			public IActionResult YourOrder()
+			{
+                var order = _db.Orders.Where(x => x.MemberId == HttpContext.Session.GetInt32(CDictionary.SK_UserID))
+                        .OrderByDescending(x => x.OrderId).FirstOrDefault();
+                COrderViewModel vm = orderview(order.OrderId);
+				return PartialView(vm);
+			}
 			public IActionResult FavoriteTop5()
 			{
 
@@ -388,10 +396,13 @@ namespace prjDB_GamingForm_Show.Controllers
 				return View(LL);
             }
 
-			public IActionResult OrderSuccess()
+			public IActionResult OrderSuccess(int?id)
 			{
-				COrderViewModel vm = orderview();
-
+                var order = _db.Orders.Where(x => x.OrderId==id).FirstOrDefault();
+                order.PaymentDate = DateTime.Now;
+                _db.SaveChanges();
+                //綠界回傳後會清空Session
+                COrderViewModel vm = orderview(id);
                 return View(vm);
 			}
             public IActionResult RemoveProduct(int? id) //Ajax刷新最愛
@@ -958,7 +969,7 @@ namespace prjDB_GamingForm_Show.Controllers
 				cProductWarp.ProductName = pdb.ProductName;
 				cProductWarp.Price = pdb.Price;
 				cProductWarp.ProductContent = pdb.ProductContent;
-				cProductWarp.UnitStock = pdb.UnitStock;
+				cProductWarp.UnitStock = 99;
 				cProductWarp.StatusID = (int)pdb.StatusId;
 				cProductWarp.MemberID = pdb.MemberId;
 				return View(cProductWarp);
@@ -972,14 +983,15 @@ namespace prjDB_GamingForm_Show.Controllers
 				{
 					try
 					{
-						if (!ModelState.IsValid)
-						{
-							var errors = ModelState.Values.SelectMany(v => v.Errors); //測試錯誤用程式碼
-							return View((超酷warp)product);
-						}
+						//if (!ModelState.IsValid)
+						//{
+						//	var errors = ModelState.Values.SelectMany(v => v.Errors); //測試錯誤用程式碼
+						//	return View((超酷warp)product);
+						//}
 
-                        
-                        Product x = _db.Products.FirstOrDefault(p => p.ProductId == product.ProductId);
+
+
+						Product x = _db.Products.FirstOrDefault(p => p.ProductId == product.ProductId);
 						string MulPic = "";
 						List<string> PicList= new List<string>();
 						if (_db != null)
@@ -1057,8 +1069,8 @@ namespace prjDB_GamingForm_Show.Controllers
 								x.Price = product.Price;
 								x.AvailableDate = product.AvailableDate;
 								x.ProductContent = product.ProductContent;
-								x.UnitStock = product.UnitStock;
-								x.StatusId = 1;//記得改回7
+								x.UnitStock = 99;
+								x.StatusId = 7;//記得改回7
 								x.MemberId = product.MemberID;
 
 								_db.SaveChanges();
@@ -1117,8 +1129,8 @@ namespace prjDB_GamingForm_Show.Controllers
 								x.Price = product.Price;
 								x.AvailableDate = product.AvailableDate;
 								x.ProductContent = product.ProductContent;
-								x.UnitStock = product.UnitStock;
-								x.StatusId = 1;//記得改回7
+								x.UnitStock = 99;
+								x.StatusId = 7;//記得改回7
 								x.MemberId = product.MemberID;
 
 								_db.SaveChanges();
@@ -1146,7 +1158,8 @@ namespace prjDB_GamingForm_Show.Controllers
 								transaction.Commit();
 							}
 						}
-						return RedirectToAction("Index");
+						ViewBag.message = "修改成功";
+						return RedirectToAction("MyProduct");
 					}
 					catch (Exception ex)
 					{
@@ -1262,17 +1275,6 @@ namespace prjDB_GamingForm_Show.Controllers
 			}
 		
 
-
-   //         public IActionResult AddToCar(int? id)  不知道是不是炸彈
-			//{
-			//	if (id == null)
-			//	{
-			//		return RedirectToAction("Index");
-			//	}
-			//	ViewBag.FID = id;
-			//	return View();
-			//}
-
 			public IActionResult payment()
 			{
 				_db.Payments.Load();
@@ -1339,7 +1341,7 @@ namespace prjDB_GamingForm_Show.Controllers
 						var OrdersList = _db.OrderProducts.Where(x => x.ProductId == product.ProductId).Select(x => x.Order);//已經購買的商品不能加入
 						Order order = OrdersList.FirstOrDefault(x => x.MemberId == memberID);
 						if (order != null)
-						{ return Json(new { success = false, message = "以購買過的商品" }); }
+						{ return Json(new { success = false, message = "已購買過的商品" }); }
 					}
 
 						var listCheck = car.Any(a => a.ProductName == product.ProductName); //重複商品不能加入
@@ -1394,7 +1396,7 @@ namespace prjDB_GamingForm_Show.Controllers
                         var OrdersList = _db.OrderProducts.Where(x => x.ProductId == product.ProductId).Select(x => x.Order);//已經購買的商品不能加入
                         Order order = OrdersList.FirstOrDefault(x => x.MemberId == memberID);
                         if (order != null)
-                        { return Json(new { success = false, message = "以購買過的商品" }); }
+                        { return Json(new { success = false, message = "已購買過的商品" }); }
                     }
 
                     var listCheck = car.Any(a => a.ProductName == product.ProductName);
@@ -1512,11 +1514,12 @@ namespace prjDB_GamingForm_Show.Controllers
 			}
 
 
-			public void Purchase(int payment)
+			public void Purchase()
 			{
 				string json = HttpContext.Session.GetString(CDictionary.SK_PURCHASED_PRODUCES_LIST);
 				List<CShoppingCarViewModel> car = JsonSerializer.Deserialize<List<CShoppingCarViewModel>>(json);
 				Order order = null;
+				double sumprice = 0;
 				List<Coupon> coupon = null;
 
                 if (HttpContext.Session.GetString(CDictionary.SK_COUPON) != null)
@@ -1529,24 +1532,37 @@ namespace prjDB_GamingForm_Show.Controllers
 				{
 					foreach (var i in coupon)
 					{
-						order = new Order()
+                        if (i.Discount != 0&& i.Discount !=null)
+                        {
+                            double dis = (double)i.Discount;
+                            sumprice = (double)car.Sum(c => c.Price) * dis;
+                        }	
+                        else
+                        {
+                            int reduce = (int)i.Reduce;
+                            sumprice = (int)car.Sum(c => c.Price) - reduce;
+                        }
+                        order = new Order()
 						{
 							MemberId = HttpContext.Session.GetInt32(CDictionary.SK_UserID),
 							OrderDate = DateTime.Now,
-							PaymentId = payment,
 							StatusId = 13,
-							CouponId = i.CouponId
-						};
+							CouponId = i.CouponId,
+							PaymentId=1,
+							SumPrice = (decimal)sumprice
+                        };
 					}
 				}
 				else
 				{
+                    sumprice = (double)car.Sum(x => x.Price);
                     order = new Order()
                     {
                         MemberId = HttpContext.Session.GetInt32(CDictionary.SK_UserID),
                         OrderDate = DateTime.Now,
-                        PaymentId = payment,
                         StatusId = 13,
+                        PaymentId = 1,
+                        SumPrice = (decimal)sumprice
                     };
                 }
 				_db.Orders.Add(order);
@@ -1570,8 +1586,10 @@ namespace prjDB_GamingForm_Show.Controllers
 				json = JsonSerializer.Serialize(car);
 				HttpContext.Session.SetString(CDictionary.SK_PURCHASED_PRODUCES_LIST, json);
 				ViewBag.Car = 0;
-                
-			}
+				var ordernewid = _db.Orders.Where(x => x.MemberId == HttpContext.Session.GetInt32(CDictionary.SK_UserID))
+							.OrderByDescending(x => x.OrderId).FirstOrDefault();
+                SendOrderEmail(orderview(ordernewid.OrderId));
+            }
 
 			public IActionResult OrderDetail(int? id)
 			{
@@ -1587,18 +1605,28 @@ namespace prjDB_GamingForm_Show.Controllers
                 List<COrderViewModel> vm = new List<COrderViewModel>();
 				var order =  _db.Orders.Where(x=>x.MemberId== HttpContext.Session.GetInt32(CDictionary.SK_UserID))
 							.OrderByDescending(x => x.OrderId)
-							.Select(x => new { x.OrderId,x.Payment.Name, x.Coupon.Title,x.OrderDate});
+							.Select(x => new { x.OrderId,x.Payment.Name, x.Coupon.Title,x.OrderDate,x.SumPrice,x.PaymentDate});
 				COrderViewModel n = null;
-
+				string payok = "";
 				foreach (var i in order)
 				{
+					if (i.PaymentDate != null)
+					{
+						payok = "已付款";
+					}
+					else
+					{
+                        payok = "未付款";
+                    }
 					n = new COrderViewModel()
 					{
 						OrderId = i.OrderId,
 						CouponTitle = i.Title,
 						OrderDate = i.OrderDate,
 						PaymentName = i.Name,
-						products = new List<CProductNamePrice>()
+						Sumprice=(double)i.SumPrice,
+						payok = payok,
+                        products = new List<CProductNamePrice>()
 					};
 
 					var orderproduct = _db.OrderProducts.Where(x => x.OrderId == i.OrderId).Select(x => x.ProductId);
@@ -1616,28 +1644,28 @@ namespace prjDB_GamingForm_Show.Controllers
 							n.products.Add(cpnp);
 						}
 					}
-					if (n.Coupon != null)
-					{
-						if (n.Coupon.Discount != 0)
-						{
-							double dis = (double)n.Coupon.Discount;
-							n.Sumprice = (double)n.products.Sum(c => c.Price) * dis;
-						}
-						else
-						{
-							int reduce = (int)n.Coupon.Reduce;
-							n.Sumprice = (int)n.products.Sum(c => c.Price) - reduce;
-						}
-					}
-					else
-					{
-						n.Sumprice = (double)n.products.Sum(x => x.Price);
+					//if (n.Coupon != null)
+					//{
+					//	if (n.Coupon.Discount != 0)
+					//	{
+					//		double dis = (double)n.Coupon.Discount;
+					//		n.Sumprice = (double)n.products.Sum(c => c.Price) * dis;
+					//	}
+					//	else
+					//	{
+					//		int reduce = (int)n.Coupon.Reduce;
+					//		n.Sumprice = (int)n.products.Sum(c => c.Price) - reduce;
+					//	}
+					//}
+					//else
+					//{
+					//	n.Sumprice = (double)n.products.Sum(x => x.Price);
 
-					}
+					//}
 					vm.Add(n);
-					var price = _db.Orders.Where(x => x.OrderId == i.OrderId).FirstOrDefault();
-					price.SumPrice = (decimal)n.Sumprice;
-					_db.SaveChanges();
+					//var price = _db.Orders.Where(x => x.OrderId == i.OrderId).FirstOrDefault();
+					//price.SumPrice = (decimal)n.Sumprice;
+					//_db.SaveChanges();
                 }
 				
 				return View(vm);
@@ -1667,7 +1695,7 @@ namespace prjDB_GamingForm_Show.Controllers
                     }
                     if (_db.OrderProducts.Where(x => x.ProductId == data.ProductId).Select(x => x).Count() == 0)
                     {
-                        ViewBag.Buylist = "您沒有購買商品";
+                        ViewBag.Productlist = "您目前沒有任何商品";
                     }
                     products = new CProductViewModel()
 					{ 
@@ -1683,13 +1711,14 @@ namespace prjDB_GamingForm_Show.Controllers
 				return View(vm);
 			}
 
-			public COrderViewModel orderview()
-			{ _db.OrderProducts.Load();
-				_db.Products.Load();
+			public COrderViewModel orderview(int? id)
+			{
                 COrderViewModel vm = new COrderViewModel();
-                var order = _db.Orders.Where(x => x.MemberId == 41)//HttpContext.Session.GetInt32(CDictionary.SK_UserID))
-                            .OrderByDescending(x => x.OrderId).Take(1)
-                            .Select(x => new { x.OrderId, x.Payment.Name, x.Coupon.Title, x.OrderDate});
+                //var order = _db.Orders.Where(x => x.MemberId == HttpContext.Session.GetInt32(CDictionary.SK_UserID))
+                //            .OrderByDescending(x => x.OrderId).Take(1)
+                //            .Select(x => new { x.OrderId, x.Payment.Name, x.Coupon.Title, x.OrderDate });
+                var order = _db.Orders.Where(x => x.OrderId==id)
+                            .Select(x => new { x.OrderId, x.Payment.Name, x.Coupon.Title, x.OrderDate,x.SumPrice });
                 COrderViewModel n = null;
 
                 foreach (var i in order)
@@ -1700,43 +1729,25 @@ namespace prjDB_GamingForm_Show.Controllers
 						CouponTitle = i.Title,
 						OrderDate = i.OrderDate,
 						PaymentName = i.Name,
+						Sumprice = (double)i.SumPrice,
 						products = new List<CProductNamePrice>(),
-						
                     };
 
                     var orderproduct = _db.OrderProducts.Where(x => x.OrderId == i.OrderId).Select(x => x.ProductId);
                     foreach (var pp in orderproduct)
                     {
-                        var op = _db.Products.Where(x => x.ProductId == pp).Select(x => new { x.ProductName, x.Price,x.FImagePath });
+                        var op = _db.Products.Where(x => x.ProductId == pp).Select(x => new { x.ProductName, x.FImagePath,x.Price });
                         CProductNamePrice cpnp = null;
                         foreach (var ppp in op)
                         {
                             cpnp = new CProductNamePrice()
                             {
                                 ProductName = ppp.ProductName,
-                                Price = ppp.Price,
+								Price = ppp.Price,
 								FImagePath=ppp.FImagePath
                             };
                             n.products.Add(cpnp);
                         }
-                    }
-                    if (n.Coupon != null)
-                    {
-                        if (n.Coupon.Discount != 0)
-                        {
-                            double dis = (double)n.Coupon.Discount;
-                            n.Sumprice = (double)n.products.Sum(c => c.Price) * dis;
-                        }
-                        else
-                        {
-                            int reduce = (int)n.Coupon.Reduce;
-                            n.Sumprice = (int)n.products.Sum(c => c.Price) - reduce;
-                        }
-                    }
-                    else
-                    {
-                        n.Sumprice = (double)n.products.Sum(x => x.Price);
-
                     }
                     vm = n;
                 }

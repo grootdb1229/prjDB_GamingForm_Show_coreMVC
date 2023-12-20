@@ -72,7 +72,9 @@ namespace prjDB_GamingForm_Show.Controllers
                            n.ViewCount,
                            Status = n.Status.Name,
                            n.Region.City,
-                           n.Provider.FImagePath
+                           n.Provider.FImagePath,
+                           Skillid = GetSkill(n.DeputeId),
+                           Skillclassid = GetSkillClass(n.DeputeId)
                        };
             CDeputeViewModel x = null;
 
@@ -90,21 +92,62 @@ namespace prjDB_GamingForm_Show.Controllers
                     viewcount = item.ViewCount,
                     status = item.Status,
                     region = item.City,
-                    imgfilepath = item.FImagePath
+                    imgfilepath = item.FImagePath,
+                    listskillid = item.Skillid,
+                    listskillclassid = item.Skillclassid,
+
                 };
 
                 List.Add(x);
-                Temp = List;
+                
             }
+            Temp = List;
+        }
+
+        private string GetSkillClass(int deputeId)
+        {
+            string result = "";
+            _db.Skills.Load();
+            _db.SkillClasses.Load();
+            var data = (from n in _db.DeputeSkills
+                       where n.DeputeId == deputeId
+                       select n.Skill.SkillClass.Name).Distinct();
+
+            foreach (var item in data)
+            {
+                result += item + ",";
+
+            }
+
+
+            return result;
+
+        }
+
+        private string GetSkill(int deputeId)
+        {
+            string result = "";
+            _db.Skills.Load();
+            _db.SkillClasses.Load();
+            var data = (from n in _db.DeputeSkills
+                       where n.DeputeId == deputeId
+                       select n.Skill.Name).Distinct();
+            foreach ( var item in data)
+            {
+                result += item + ",";
+
+            }
+
+
+            return result;
         }
 
         public IActionResult DeputeList(int? id)
         {
-
+            
             IEnumerable<CDeputeViewModel> datas = null;
             if (id ==null)
             {
-                //ListLoad();
                 datas = from n in List
                         select n;
                 
@@ -117,8 +160,9 @@ namespace prjDB_GamingForm_Show.Controllers
                                 select n.Name;
                 foreach (string item in skillname)
                 {
+                    ViewBag.name = item;
                     datas = from n in List
-                            where n.deputeContent.Contains(item)
+                            where n.listskillclassid.Contains(item)
                             select n;
                 }
                 
@@ -143,7 +187,9 @@ namespace prjDB_GamingForm_Show.Controllers
             IEnumerable<CDeputeViewModel> datas = null;
             if (vm.txtMutiKeywords != null)
             {
-                foreach (var item in vm.txtMutiKeywords)
+                if (vm.txtMutiKeywords[0] != null)
+                { 
+                    foreach (var item in vm.txtMutiKeywords)
                 {
                     if (!string.IsNullOrEmpty(item))
                     { 
@@ -153,6 +199,8 @@ namespace prjDB_GamingForm_Show.Controllers
 
                     datas = Temp.Where(n => (n.deputeContent.Trim().ToLower().Contains(item.Trim().ToLower()) ||
                                                n.title.Trim().ToLower().Contains(item.Trim().ToLower()) ||
+                                               n.listskillclassid.Trim().ToLower().Contains(item.Trim().ToLower()) ||
+                                               n.listskillid.Trim().ToLower().Contains(item.Trim().ToLower()) ||
                                                n.providername.Trim().ToLower().Contains(item.Trim().ToLower()) ||
                                                n.region.Trim().ToLower().Contains(item.Trim().ToLower()) ||
                                                n.status.Trim().ToLower().Contains(item.Trim().ToLower())
@@ -161,7 +209,9 @@ namespace prjDB_GamingForm_Show.Controllers
                     Temp = datas.ToList();
 
                 }
+                }
             }
+
             SelectedSearch(vm);
             Orderby(vm);
             return Json(Temp);
@@ -228,8 +278,8 @@ namespace prjDB_GamingForm_Show.Controllers
                 pln.id = pDb.DeputeId;
                 pln.providername = pDb.Provider.Name;
                 pln.title = pDb.Title;
-                pln.startdate = pDb.StartDate.ToString("yyyy/mm/dd HH:mm:ss");
-                pln.modifieddate = pDb.Modifiedate.ToString("yyyy/mm/dd HH:mm:ss");
+                pln.startdate = pDb.StartDate.ToString("yyyy/MM/dd HH:mm:ss");
+                pln.modifieddate = pDb.Modifiedate.ToString("yyyy/MM/dd HH:mm:ss");
                 pln.deputeContent = pDb.DeputeContent;
                 pln.salary = pDb.Salary;
                 pln.status = pDb.Status.Name;
@@ -494,9 +544,9 @@ namespace prjDB_GamingForm_Show.Controllers
             CDeputeViewModel x = null;
             foreach (var item in SkillClasses)
             {
-                var datas = from n in _db.DeputeSkills.AsEnumerable()
+                var datas = (from n in _db.DeputeSkills.AsEnumerable()
                             where n.Skill.SkillClassId == item.SkillClassId
-                            select n.Skill.SkillClass;
+                            select n.DeputeId).Distinct();
 
                 x = new CDeputeViewModel()
                 {
@@ -539,7 +589,7 @@ namespace prjDB_GamingForm_Show.Controllers
         #region 老邊
 
         #region notAPI
-        public IActionResult Create()
+        public IActionResult Create(int? workerID = null)
         {
             //判斷是否被封鎖
             if (HttpContext.Session.GetInt32(CDictionary.SK_UserID) != null)
@@ -547,6 +597,11 @@ namespace prjDB_GamingForm_Show.Controllers
                 int memberStatus = _db.Members.FirstOrDefault(_ => _.MemberId == HttpContext.Session.GetInt32(CDictionary.SK_UserID)).StatusId;
                 HttpContext.Session.SetInt32(CDictionary.SK_會員狀態編號, memberStatus);
             }
+
+            //若有帶ID，則為私人委託
+            if (workerID != null)
+                ViewBag.workerID = workerID;
+
             return View();
         }
         [HttpPost]
@@ -559,11 +614,11 @@ namespace prjDB_GamingForm_Show.Controllers
                     ProviderId = (int)HttpContext.Session.GetInt32(CDictionary.SK_UserID),
                     StartDate = DateTime.Now,
                     Modifiedate = DateTime.Now,
+                    Title = vm.title,
                     DeputeContent = vm.deputeContent,
                     Salary = vm.salary,
                     StatusId = 18,//懸賞中
                     RegionId = _db.Regions.FirstOrDefault(_ => _.City == vm.region).RegionId,
-                    Title = vm.title,
                 };
                 _db.Deputes.Add(n);
                 _db.SaveChanges();
@@ -609,6 +664,7 @@ namespace prjDB_GamingForm_Show.Controllers
                 int memberStatus = _db.Members.FirstOrDefault(_ => _.MemberId == HttpContext.Session.GetInt32(CDictionary.SK_UserID)).StatusId;
                 HttpContext.Session.SetInt32(CDictionary.SK_會員狀態編號, memberStatus);
             }
+            
             return View(o);
         }
         [HttpPost]

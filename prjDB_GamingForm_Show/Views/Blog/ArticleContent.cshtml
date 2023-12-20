@@ -19,7 +19,7 @@
 }
 <link rel="stylesheet" href="~/css/blogstyle.css" type="text/css">
 <header class="header-section">
-    <div class="nav-options">
+    @* <div class="nav-options">
         <div class="container">
             <div class="humberger-menu " style="background:#a81d1d">
                 <a href="@Url.Action("List", "Blog",new{FId=Model.blogs.First().SubTagId})">@Model.subtagTitle</a>
@@ -54,7 +54,70 @@
                 </ul>
             </div>
         </div>
+    </div> *@
+    <div class="nav-options">
+
+        <div class="container">
+            <div class="d-flex justify-content-between">
+                <div>
+                    <div class="d-flex flex-column bd-highlight mb-3 nav-menu">
+                        <ul>
+                            <li>
+                                <a style="font-size:20px" href="@Url.Action("ArticleList", "Blog",new{FId = Model.blogs.FirstOrDefault().BlogId})">回列表</a>
+                            </li>
+                            <li class="@(ViewBag.SelectedSubBlogId==null ? "selected-item":"" )">
+                                <a style="font-size:20px" href="@Url.Action("ArticleList", "Blog", new { FId = Model.blogs.FirstOrDefault().BlogId})">@Model.blogs.FirstOrDefault().Title</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="nav-menu" style="margin:25px 25px 0px 0px;">
+                    <ul>
+                        @{
+                            foreach (var item in Model.subBlogs.GroupBy(p => p.Title))
+                            {
+                                <li class="@(item.First().SubBlogId == ViewBag.SelectedSubBlogId ? "selected-item" : "")">
+                                    <a href="@Url.Action("ArticleList", "Blog", new {FId=item.First().BlogId ,SFId = item.FirstOrDefault().SubBlogId})">@item.Key</a>
+                                </li>
+                            }
+                        }
+                    </ul>
+                </div>
+                <div>
+                    <div>
+                        <ul style="list-style-type: none;">
+                            <li style="float:right;">
+                                @{
+                                    if (Context.Session.GetInt32(CDictionary.SK_UserID) == null)
+                                    {
+                                        <button style="font-size:15px;color:#ffffff;
+                                                    text-transform: uppercase;
+                                                    padding: 17px 15px 13px 30px;
+                                                    display: inline-block;
+                                                    background: #a81d1d;
+                                                    -webkit-transform: skewX(-15deg);
+                                                    -ms-transform: skewX(-15deg);
+                                                    transform: skewX(-15deg);
+                                                    -webkit-transition: all 0.3s;
+                                                    -o-transition: all 0.3s;
+                                                    transition: all 0.3s;
+                                                    border: ridge 5px black;" type="button" class="btn btn-danger" id="btnCreate" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                                            發表回覆
+                                        </button>
+                                    }
+                                    else
+                                    {
+                                        @Html.ActionLink("發表回覆", "ReplyCreate", "Blog", new { FId = Model.blogs.FirstOrDefault().BlogId,AFId=Model.articles.FirstOrDefault().ArticleId }, new { id = "btnCreate", @class = "btn", style = "font-size:15px;color:#ffffff;padding:17px 15px 13px 30px;display: inline-block;background: #a81d1d;-webkit-transform: skewX(-15deg);                                                -ms-transform: skewX(-15deg);                                                transform: skewX(-15deg);                                                -webkit-transition: all 0.3s;                                                -o-transition: all 0.3s;                                                transition: all 0.3s;                                                border: ridge 5px black;" })
+                                    }
+                                }
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
+
 </header>
 @*-----------------------------------<!-- ArticleContent -->----------------------------------------1-----------*@
 <div style="margin-top:8px">
@@ -181,9 +244,13 @@
                         <script>
                             function shareOnFacebook() {
                                 // 使用 window.open 在新視窗中打開 Facebook 分享連結
-                                window.open('https://www.facebook.com/sharer.php?u=https://localhost:7056/Blog/ArticleContent?FId=@(Model.blogs?.FirstOrDefault()?.BlogId)&AFId=@(Model.articles?.FirstOrDefault()?.ArticleId)', '_blank');
+                                window.open('https://www.facebook.com/sharer.php?u=https://prjdbgamingformshow20231219140402.azurewebsites.net/Blog/ArticleContent?FId=9&AFId=1235', '_blank');
                             }
                         </script>
+
+
+                       
+
                         @*------FB按鈕------*@
                         <div style="float:right">
                             @*------Line按鈕------*@
@@ -192,13 +259,16 @@
                                      data-lang="zh_Hant"
                                      data-type="share-c"
                                      data-env="REAL"
-                                     data-url="https://localhost:7056/Blog/ArticleContent?FId=@(Model.blogs?.FirstOrDefault()?.BlogId)&AFId=@(Model.articles?.FirstOrDefault()?.ArticleId)"
+                                     data-url="https://prjdbgamingformshow20231219140402.azurewebsites.net/Blog/ArticleContent?FId=@(Model.blogs?.FirstOrDefault()?.BlogId)&AFId=@(Model.articles?.FirstOrDefault()?.ArticleId)"
                                      data-color="default"
                                      data-size="large"
                                      data-count="false"
                                      data-ver="3"
                                      style="float:right ;margin:5px">
                                 </div>
+
+
+
                                 <script src="https://www.line-website.com/social-plugins/js/thirdparty/loader.min.js" async="async" defer="defer"></script>
                             }
                             @*------Line按鈕------*@
