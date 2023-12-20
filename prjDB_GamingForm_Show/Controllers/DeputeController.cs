@@ -585,7 +585,7 @@ namespace prjDB_GamingForm_Show.Controllers
         #region 老邊
 
         #region notAPI
-        public IActionResult Create()
+        public IActionResult Create(int? workerID = null)
         {
             //判斷是否被封鎖
             if (HttpContext.Session.GetInt32(CDictionary.SK_UserID) != null)
@@ -593,6 +593,11 @@ namespace prjDB_GamingForm_Show.Controllers
                 int memberStatus = _db.Members.FirstOrDefault(_ => _.MemberId == HttpContext.Session.GetInt32(CDictionary.SK_UserID)).StatusId;
                 HttpContext.Session.SetInt32(CDictionary.SK_會員狀態編號, memberStatus);
             }
+
+            //若有帶ID，則為私人委託
+            if (workerID != null)
+                ViewBag.workerID = workerID;
+
             return View();
         }
         [HttpPost]
@@ -605,11 +610,11 @@ namespace prjDB_GamingForm_Show.Controllers
                     ProviderId = (int)HttpContext.Session.GetInt32(CDictionary.SK_UserID),
                     StartDate = DateTime.Now,
                     Modifiedate = DateTime.Now,
+                    Title = vm.title,
                     DeputeContent = vm.deputeContent,
                     Salary = vm.salary,
                     StatusId = 18,//懸賞中
                     RegionId = _db.Regions.FirstOrDefault(_ => _.City == vm.region).RegionId,
-                    Title = vm.title,
                 };
                 _db.Deputes.Add(n);
                 _db.SaveChanges();
@@ -635,7 +640,7 @@ namespace prjDB_GamingForm_Show.Controllers
                 return Json(new { success = false, message = ex.Message });
             }
         }
-        public IActionResult Apply(int id, int? inviterID = null)
+        public IActionResult Apply(int id)
         { 
             Depute o = _db.Deputes.FirstOrDefault(_ => _.DeputeId == id);
             if (o == null)
@@ -655,8 +660,7 @@ namespace prjDB_GamingForm_Show.Controllers
                 int memberStatus = _db.Members.FirstOrDefault(_ => _.MemberId == HttpContext.Session.GetInt32(CDictionary.SK_UserID)).StatusId;
                 HttpContext.Session.SetInt32(CDictionary.SK_會員狀態編號, memberStatus);
             }
-            //if(inviterID!=null)
-            //    1
+            
             return View(o);
         }
         [HttpPost]
