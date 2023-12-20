@@ -354,7 +354,7 @@ namespace prjDB_GamingForm_Show.Controllers
             };
             _db.NewsLetters.Add(dbn);
             _db.SaveChanges();
-            return Json(new { success = true, message = "電子報已成功發送！" });
+            return RedirectToAction("Newsletter");
         }
         public IActionResult Resend(int? id)
         {
@@ -1639,7 +1639,7 @@ namespace prjDB_GamingForm_Show.Controllers
 
             IQueryable<Order> query = _db.Orders.Include(a => a.Payment).Include(a => a.Coupon).Include(a => a.Status);
 
-            if (startday.HasValue && endday.HasValue )
+            if (startday.HasValue && endday.HasValue)
             {
                 if (ST == "請選擇訂單狀態")
                 {
@@ -1658,10 +1658,47 @@ namespace prjDB_GamingForm_Show.Controllers
 
         }
 
+        //public IActionResult OrderListcheck(DateTime? startday, DateTime? endday, string? ST)
+        //{
 
 
-        #endregion
-    }
+
+
+        //}
+
+
+
+            //public IActionResult OrderListPartial(DateTime? startday, DateTime? endday, string? ST)
+            //{
+            //    if (endday == null)
+            //        endday = DateTime.Now;
+
+            //    ViewBag.StartDate = startday?.ToString("yyyy-MM-dd") ?? "2023-01-01"; // Default value if startday is null
+            //    ViewBag.EndDate = endday?.ToString("yyyy-MM-dd") ?? DateTime.Now.ToString("yyyy-MM-dd");
+
+            //    IQueryable<Order> query = _db.Orders.Include(a => a.Payment).Include(a => a.Coupon).Include(a => a.Status);
+
+            //    if (startday.HasValue && endday.HasValue)
+            //    {
+            //        if (ST == "請選擇訂單狀態")
+            //        {
+            //            query = query.Where(p => p.CompletedDate >= startday.Value && p.OrderDate <= endday.Value);
+            //        }
+            //        else
+            //        {
+            //            query = query.Where(p => p.CompletedDate >= startday.Value && p.OrderDate <= endday.Value && p.Status.Name == ST);
+            //        }
+            //    }
+
+            //    List<Order> orders = query.ToList();
+
+            //    return PartialView("_OrderListPartial", orders);
+            //}
+
+
+
+            #endregion
+        }
 
 
 

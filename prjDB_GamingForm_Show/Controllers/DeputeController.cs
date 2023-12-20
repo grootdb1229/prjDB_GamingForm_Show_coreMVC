@@ -148,7 +148,6 @@ namespace prjDB_GamingForm_Show.Controllers
             IEnumerable<CDeputeViewModel> datas = null;
             if (id ==null)
             {
-                //ListLoad();
                 datas = from n in List
                         select n;
                 
@@ -159,9 +158,9 @@ namespace prjDB_GamingForm_Show.Controllers
                 IEnumerable<string> skillname = from n in _db.SkillClasses
                                 where n.SkillClassId == id
                                 select n.Name;
-                ViewBag.name = skillname;
                 foreach (string item in skillname)
                 {
+                    ViewBag.name = item;
                     datas = from n in List
                             where n.listskillclassid.Contains(item)
                             select n;
@@ -188,7 +187,9 @@ namespace prjDB_GamingForm_Show.Controllers
             IEnumerable<CDeputeViewModel> datas = null;
             if (vm.txtMutiKeywords != null)
             {
-                foreach (var item in vm.txtMutiKeywords)
+                if (vm.txtMutiKeywords[0] != null)
+                { 
+                    foreach (var item in vm.txtMutiKeywords)
                 {
                     if (!string.IsNullOrEmpty(item))
                     { 
@@ -208,7 +209,9 @@ namespace prjDB_GamingForm_Show.Controllers
                     Temp = datas.ToList();
 
                 }
+                }
             }
+
             SelectedSearch(vm);
             Orderby(vm);
             return Json(Temp);
