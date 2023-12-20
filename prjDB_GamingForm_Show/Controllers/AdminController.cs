@@ -1534,6 +1534,34 @@ namespace prjDB_GamingForm_Show.Controllers
             _db.SaveChanges();
             return RedirectToAction("ADeputeList");
         }
+
+        public IActionResult ADeputeDelete(CAdminDepute vm)
+        {
+            var data = from n in _db.DeputeRecords
+                       where n.DeputeId == vm.txtID
+                       select n;
+            
+            _db.DeputeRecords.RemoveRange(data);
+
+            var data2 = from n in _db.DeputeSkills
+                       where n.DeputeId == vm.txtID
+                       select n;
+
+            _db.DeputeSkills.RemoveRange(data2);
+
+            var data3 = from n in _db.DeputeComplains
+                        where n.DeputeId == vm.txtID
+                        select n;
+
+            _db.DeputeComplains.RemoveRange(data3);
+
+            var data4 = from n in _db.Deputes
+                       where n.DeputeId == vm.txtID
+                       select n;
+            _db.Deputes.RemoveRange(data4);
+            _db.SaveChanges();
+            return RedirectToAction("ADeputeList");
+        }
         public IActionResult ACDeputeList(CAdminDepute vm)
         {
             _db.Members.Load();
