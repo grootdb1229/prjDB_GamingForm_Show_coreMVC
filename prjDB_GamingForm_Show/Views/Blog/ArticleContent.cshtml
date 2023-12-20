@@ -21,7 +21,7 @@
 <header class="header-section">
     <div class="nav-options">
         <div class="container">
-            <div class="humberger-menu ">
+            <div class="humberger-menu " style="background:#a81d1d">
                 <a href="@Url.Action("List", "Blog",new{FId=Model.blogs.First().SubTagId})">@Model.subtagTitle</a>
             </div>
             <div class="nav-menu">
@@ -125,12 +125,7 @@
                                                     <a href="#" class="dropdown-item" style="color:black">
                                                         檢舉
                                                     </a>
-                                                </li>
-                                                <li data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-                                                    <a href="#" class="dropdown-item" style="color:black">
-                                                        發表回覆
-                                                    </a>
-                                                </li>
+                                                </li>                                                
                                             }
                                             else
                                             {
@@ -138,11 +133,7 @@
                                                     <a href="#" class="dropdown-item" style="color:black">
                                                         檢舉
                                                     </a>
-                                                </li>
-                                                <li>
-                                                    @Html.ActionLink("發表回覆", "ReplyCreate", "Blog", new { AFId = Model.articles.FirstOrDefault().ArticleId, FId = Model.blogs.FirstOrDefault().BlogId }, new { style = "color:black;", @class = "dropdown-item" })
-                                                </li>
-                                            }
+                                                </li>                                           
                                         }
 
                                         <li>
