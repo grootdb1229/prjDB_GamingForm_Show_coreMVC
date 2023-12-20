@@ -76,11 +76,14 @@
                         <td></td>
                         <td id="pay">@pay.ToString("#0")元</td>
                         <td>
+                        @if (Context.Session.GetInt32(CDictionary.SK_UserID) != null)
+                        {
                             <p>
                                 <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample" style="background-color:#a81d1d; border-color: #272727">
                                     選擇優惠卷
                                 </button>
                             </p>
+                        }
                         </td>
                     </tr>
 

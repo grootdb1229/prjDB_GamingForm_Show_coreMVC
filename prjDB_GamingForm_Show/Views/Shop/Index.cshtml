@@ -149,24 +149,32 @@
             $.ajax('@Url.Content("~/Shop/AddToCar2")', {
                 "type": 'get', //POST、PUT、DELETE//
                 "data": { "id": value },
-                "dataType": "text",
+                "dataType": "json",
                 "success": function (response) {
-                    Swal.fire({
-                        title: '商品已成功添加到購物車！',
-                        icon: 'success',
-                        showCancelButton: true,
-                        confirmButtonText: '去購物車看看',
-                        confirmButtonColor: '#3085d6',
-                        cancelButtonText: '留在本頁',
-                        cancelButtonColor: '#d33'
-                    }).then((result) => {
-                        // 根据用户的选择进行跳转
-                        if (result.isConfirmed) {
-                            window.location.href = "/Shop/CarView";
-                        }
-                    });
+                    if (response.success) {
+                        Swal.fire({
+                            title: '商品已成功添加到購物車！',
+                            icon: 'success',
+                            showCancelButton: true,
+                            confirmButtonText: '去購物車看看',
+                            confirmButtonColor: '#3085d6',
+                            cancelButtonText: '留在本頁',
+                            cancelButtonColor: '#d33'
+                        }).then((result) => {
+                            // 根據使用者的選擇進行跳轉
+                            if (result.isConfirmed) {
+                                window.location.href = "/Shop/CarView";
+                            }
+                        });
+                    } else {
+                        // 如果成功為 false，顯示錯誤訊息
+                        Swal.fire('無法添加商品', response.message, 'error');
+                    }
                 },
-                "error": function (xhr) { Swal.fire('已有此商品', result.message, 'error'); }
+                "error": function (xhr) {
+                    // 如果發生錯誤，顯示一般性錯誤訊息
+                    Swal.fire('錯誤', '發生了一些錯誤，請重試。', 'error');
+                }
             });
             getcarList();
         }
@@ -324,8 +332,8 @@
                                         </div>
 
                                                    <div style="background-color:black; position: relative; height: 38px;">
-                                                           <input type="button" value="測試修改" class="btn btn-outline-dark mt-auto" value="${product.ProductId}" onclick="Addtocar(${product.ProductId})" style=" position: absolute; right: 0;"/>
-                                                                                   <input type="button" value="加入購物車" class="btn btn-outline-dark mt-auto" value="${product.ProductId}" onclick="window.location.href='../shop/Edit?id=${product.ProductId}'" style=" position: absolute; right: 0;"/>
+                                                                   <input type="button" value="測試修改" class="btn btn-outline-dark mt-auto" value="${product.ProductId}"  onclick="window.location.href='../shop/Edit?id=${product.ProductId}'" style=" position: absolute; right: 0;"/>
+                                                                                           <input type="button" value="加入購物車" class="btn btn-outline-dark mt-auto" value="${product.ProductId}"  onclick="Addtocar(${product.ProductId})" style=" position: absolute; right: 0;"/>
                                                 <div style="position: absolute;bottom:6px; left: 0;">
                                               <span style="color:weight; ">NT$${product.Price}</span>
                                               </div>
