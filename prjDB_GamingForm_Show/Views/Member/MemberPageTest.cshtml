@@ -130,7 +130,6 @@
                     <div class="collapse navbar-collapse" id="navbarCollapse">
                         <div class="navbar-nav ms-auto py-0">
                             <a href="@Url.Action("MemberPageTest" , "Member" , new{id=Model.First().MemberId})" class="nav-item nav-link active">我的首頁</a>
-                            <a href="@Url.Action("MyBlog" , "Member")" class="nav-item nav-link">我的部落格</a>
                             <div class="nav-item dropdown">
                                 <a href="@Url.Action("MyCollectionList" , "Member")" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">我的作品</a>
                                 <div class="dropdown-menu m-0">
@@ -890,6 +889,38 @@
                 $('#divInfo').append(DivHtml)
             })
     })
+
+    $(document).ready(function()
+    {
+    var div = document.querySelector('#Collection');
+           fetch('@Url.Content("~/Member/MyCollection")?id=@Model.First().MemberId')
+           .then(response=>response.json())
+           .then(data=>
+           {
+            console.log(data)
+            for(index=0;index<data.length;index++)
+            {
+            var DivHtml=`<div class="card">
+                         <img src="/images/MemberCollectionPreView/${data[index].fImagePath}" class="card-img-top" alt="..." style="height:400px;max-height:400px">
+                         <div class="card-body">
+                         <h5 class="card-title">${data[index].title}</h5>
+                         <p class="card-text">${data[index].intro}</p>
+                         </div>
+                         <div class="card-footer">
+                         <small class="text-muted">${data[index]. modifiedDate}</small>
+                         </div>
+                         </div>`
+                         ;
+                         $('#Collection').append(DivHtml)
+                }
+           })
+    })
+    
+        
+        
+           
+          
+   
     // 彥霖
     function openChat(id) {
         var div = document.querySelector('#MemberChat');
@@ -967,4 +998,5 @@
         $('#notCheckMessageCount').text(notCheckMessage)
     }
 
+    
 </script>

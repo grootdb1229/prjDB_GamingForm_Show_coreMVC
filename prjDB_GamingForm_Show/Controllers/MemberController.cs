@@ -17,6 +17,7 @@ using Microsoft.AspNetCore.Components.Web;
 using System.Net.Mail;
 using SmtpClient = MailKit.Net.Smtp.SmtpClient;
 using static prjDB_GamingForm_Show.Hubs.MemberChatHub;
+using Microsoft.AspNetCore.Mvc.ActionConstraints;
 
 namespace prjDB_GamingForm_Show.Controllers
 {
@@ -331,15 +332,18 @@ namespace prjDB_GamingForm_Show.Controllers
                        select new { mc.Title, mc.FImagePath, mc.Intro, mc.ModifiedDate };
             return Json(data);  
         }
-        public IActionResult MyCollectionView(int? id)
+        public IActionResult MyCollectionView(int? CId)
         {
             var data = from c in _db.MemberCollections
-                       where c.Id == id
-                       select new { c.Title, c.ModifiedDate, c.FImagePath, c.Intro, c.MyCollection };
+                       where c.Id == CId
+                       select c;
             return View(data);
         }
 
-
+        public IActionResult Test2() 
+        {
+            return View();
+        }
         #region CollectionCRUD
         public IActionResult CreateCollection()
         {

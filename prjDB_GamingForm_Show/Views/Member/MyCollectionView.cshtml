@@ -1,0 +1,15 @@
+﻿@model IEnumerable<prjDB_GamingForm_Show.Models.Entities.MemberCollection>
+@{
+    ViewData["Title"] = "MyCollectionView";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<!DOCTYPE html>
+<html lang="en">
+<div>
+   <input type="hidden" name="id" value=@Model.First().Id />
+   <h2>@Model.First().Title</h2>
+   <p>@Model.First().Intro</p>
+   <div>
+        @Html.Raw(Model.First().MyCollection)
+   </div>
+</div>
