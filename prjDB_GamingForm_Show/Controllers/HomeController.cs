@@ -86,6 +86,16 @@ namespace prjDB_GamingForm_Show.Controllers
             };
             return Json(datas);
         }
+        public IActionResult DeputeInfo() 
+        {
+            var datas = new
+            {
+                DeputeNumber = _db.Deputes.Count(),
+                DeputeAvgPrice = _db.Deputes.Average(p=>p.Salary),
+                HotRegion = _db.Regions.Include(R=>R.Deputes).OrderByDescending(D=>D.Deputes.Count()).Take(1)
+            };
+            return Json(datas);
+        }
         [HttpPost]
         public IActionResult Login(CLoginViewModel vm)
         {

@@ -237,52 +237,8 @@
                             <h1 class="display-5 mb-4" style="color:white">委託專區</h1>
                         </div>
                         <p class="mb-4 pb-2">想賺外快嗎?一身的才華卻無處施展嗎?快來這裡看看適合你的案子吧!!</p>
-                        <div class="row g-4">
-                            <div class="col-6">
-                                <div class="d-flex align-items-center">
-                                    <div class="d-flex flex-shrink-0 align-items-center justify-content-center bg-white" style="width: 60px; height: 60px;">
-                                        <i class="fa fa-check fa-2x text-primary"></i>
-                                    </div>
-                                    <div class="ms-4">
-                                        <p class="mb-2" style="color:white">Quality</p>
-                                        <h5 class="mb-0" style="color:white">Services</h5>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-6">
-                                <div class="d-flex align-items-center">
-                                    <div class="d-flex flex-shrink-0 align-items-center justify-content-center bg-white" style="width: 60px; height: 60px;">
-                                        <i class="fa fa-user-check fa-2x text-primary"></i>
-                                    </div>
-                                    <div class="ms-4">
-                                        <p class="mb-2" style="color:white">Creative</p>
-                                        <h5 class="mb-0" style="color:white">Designers</h5>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-6">
-                                <div class="d-flex align-items-center">
-                                    <div class="d-flex flex-shrink-0 align-items-center justify-content-center bg-white" style="width: 60px; height: 60px;">
-                                        <i class="fa fa-drafting-compass fa-2x text-primary"></i>
-                                    </div>
-                                    <div class="ms-4">
-                                        <p class="mb-2" style="color:white">Free</p>
-                                        <h5 class="mb-0" style="color:white">Consultation</h5>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-6">
-                                <div class="d-flex align-items-center">
-                                    <div class="d-flex flex-shrink-0 align-items-center justify-content-center bg-white" style="width: 60px; height: 60px;">
-                                        <i class="fa fa-headphones fa-2x text-primary"></i>
-                                    </div>
-                                    <div class="ms-4">
-                                        <p class="mb-2" style="color:white">Customer</p>
-                                        <h5 class="mb-0" style="color:white">Support</h5>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        <div class="row g-4" id="DeputeInfo">
+                          </div>
                     </div>
                 </div>
                 <div class="col-lg-6 pe-lg-0" style="min-height: 400px;">
@@ -607,5 +563,50 @@
                     $('#ShopInfo').append(DivHtml);
                 });
         });
+
+        $(document).ready(function () {
+            fetch('@Url.Content("~/Home/DeputeInfo")')
+                .then(response => response.json())
+                .then(datas => {
+                    console.log(datas)
+                    let DivHtml = `<div class="col-sm-6 wow fadeIn" data-wow-delay="0.1s">
+                                                        <div class="d-flex align-items-center">
+                                                            <div class="d-flex flex-shrink-0 align-items-center justify-content-center bg-white" style="width: 60px; height: 60px;">
+                                                                <i class="fa fa-users fa-2x text-primary"></i>
+                                                            </div>
+                                                            <div class="ms-3">
+                                                                <h2 class="text-primary mb-1" data-toggle="counter-up" style="color:white">${datas.deputeNumber}</h2>
+                                                                <p class="fw-medium mb-0">委託總數</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-6 wow fadeIn" data-wow-delay="0.3s">
+                                                        <div class="d-flex align-items-center">
+                                                            <div class="d-flex flex-shrink-0 align-items-center justify-content-center bg-white" style="width: 60px; height: 60px;">
+                                                                <i class="fa fa-headphones fa-2x text-primary"></i>
+                                                            </div>
+                                                            <div class="ms-3">
+                                                                        <h2 class="text-primary mb-1" data-toggle="counter-up" style="color:white">${datas.deputeAvgPrice}</h2>
+                                                                <p class="fw-medium mb-0">委託平均價格</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-6 wow fadeIn" data-wow-delay="0.5s">
+                                                    <div class="d-flex align-items-center">
+                                                        <div class="d-flex flex-shrink-0 align-items-center justify-content-center bg-white" style="width: 60px; height: 60px;">
+                                                            <i class="fa fa-check fa-2x text-primary"></i>
+                                                        </div>
+                                                        <div class="ms-3">
+                                                            <h2 class="text-primary mb-1" data-toggle="counter-up" style="color:white">${datas.hotRegion[0].city}</h2>
+                                                            <p class="fw-medium mb-0">委託最多的地區</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>`;
+                    $('#DeputeInfo').append(DivHtml);
+                });
+        });
+
     </script>
 }
