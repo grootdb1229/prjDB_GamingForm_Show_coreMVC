@@ -276,6 +276,7 @@ namespace prjDB_GamingForm_Show.Controllers
 
                 pln = new CDeputeViewModel();
                 pln.id = pDb.DeputeId;
+                pln.workerId = pDb.ProviderId;
                 pln.providername = pDb.Provider.Name;
                 pln.title = pDb.Title;
                 pln.startdate = pDb.StartDate.ToString("yyyy/MM/dd HH:mm:ss");

@@ -48,7 +48,7 @@
                         <i class="fa fa-quote-left fa-2x text-primary mb-3"></i>
                         <p>@Html.DisplayFor(modelItem => item.deputeContent)...</p>
                         <div class="d-flex align-items-center">
-                            <img class="img-fluid flex-shrink-0 rounded" src="/images/@Html.DisplayFor(modelItem => item.imgfilepath)" style="width: 50px; height:50px;">
+                    <img class="img-fluid flex-shrink-0 rounded" src="/MemberPhoto/@Html.DisplayFor(modelItem => item.imgfilepath)" style="width: 50px; height:50px;">
                             <div class="ps-3">
                         <h5 class="mb-1">@Html.ActionLink(item.title, "DeputeDetails", "Depute", new { id = item.id }, null)...</h5>
                                 <small>@Html.DisplayFor(modelItem => item.providername)</small>
