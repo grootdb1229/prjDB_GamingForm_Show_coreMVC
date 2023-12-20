@@ -1,97 +1,100 @@
-﻿
-@{
+﻿@{
     ViewData["Title"] = "Login";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    Layout = null/* "~/Views/Shared/_Layout.cshtml" */;
 }
-@section Styles {
-    <style>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<style>
 
-        html {
-            min-height: 100%;
-            height: 100%;
-            Width: auto;
+    html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        background-color: #272727; /* 基底背景色 */
+    }
+
+    .container {
+        max-width: 100%;
+    }
+
+        .container.h-custom {
+            max-width: 100%; /* 主要內容部分的最小高度 */
         }
 
-        body {
-            min-height: 100%;
-            height: 100%;
-            Width: auto;
+    .image-container {
+        height: 80px; /* 或者您需要的任何高度 */
+        width: auto; /* 根據需要調整寬度 */
+        overflow: hidden; /* 隱藏超出容器的部分 */
+        display: flex; /* 用於垂直居中圖片 */
+        align-items: center; /* 垂直居中圖片 */
+    }
+
+        .image-container img {
+            width: auto; /* 保持圖片原始寬度 */
+            height: auto; /* 保持圖片原始高度 */
         }
 
-        footer {
-            position: !important absolute;
-        }
+    .text-divider {
+        color: #a81d1d; /* 配色 - 小紅 */
+        margin: 0 10px;
+    }
 
-    </style>
-}
-<section >
-    <div class="container-fluid h-custom">
-        <div class="row d-flex justify-content-center align-items-center h-100">
-            <div class="col-md-9 col-lg-6 col-xl-5">
-              
-            </div>
-            <div class="col-md-8 col-lg-6 col-xl-4 offset-xl-1">
-                <form method="post">
-                   @* <div class="d-flex flex-row align-items-center justify-content-center justify-content-lg-start">
-                        <p class="lead fw-normal mb-0 me-3">Sign in with</p>
-                        <button type="button" class="btn btn-primary btn-floating mx-1">
-                            <i class="fab fa-facebook-f"></i>
-                        </button>
 
-                        <button type="button" class="btn btn-primary btn-floating mx-1">
-                            <i class="fab fa-twitter"></i>
-                        </button>
+    .btn-primary {
+        background-color: #a81d1d; /* 配色 - 小紅 */
+        border: none;
+    }
 
-                        <button type="button" class="btn btn-primary btn-floating mx-1">
-                            <i class="fab fa-linkedin-in"></i>
-                        </button>
-                    </div>
+    .link-danger {
+        color: #a81d1d; /* 配色 - 小紅 */
+    }
 
-                    <div class="divider d-flex align-items-center my-4">
-                        <p class="text-center fw-bold mx-3 mb-0">Or</p>
-                    </div>*@
+</style>
+<body>
+    <div class="min-vh-100">
+        <nav class="navbar bg-black" style="height:80px;padding-top: 0px;padding-bottom: 0px;">
+            <div class="container-fluid" style="padding-left: 0px;padding-right: 0px;">
+                <a class="navbar-brand  d-flex align-items-center" href="~/Home/HomePage" style="margin:0;padding-top: 0px;padding-bottom: 0px;">
+                <img src="~/logo/imglogo.png" style="height:80px;" class="d-inline-block" />
+                <div class="image-container d-flex align-items-center" style="">
+                    <img src="~/logo/wordlogo.png" alt="Word Logo" />
+                </div>
+            </a>
+        </div>
+    </nav>
+    <section>
+        <div class="container h-custom">
+            <div class="row d-flex justify-content-center align-items-center min-vh-100">
+                <div class="col-md-9 col-lg-6 col-xl-5 bg-light rounded-3 p-4">
+                    <!-- 可以放置一些額外的內容或圖像 -->
+                </div>
+                <div class="col-md-8 col-lg-6 col-xl-4 offset-xl-1">
+                    <form method="post" class="p-4 bg-white rounded-3">
 
-                    <!-- Email input -->
-                   @* <div class="form-outline mb-4">*@
-                        @*<input type="email" name="txt" id="form3Example3" class="form-control form-control-lg"
-                               placeholder="Enter a valid email address" />
-                        <label class="form-label" for="form3Example3">Email address</label>*@
-                    @*</div>*@
-                    <div class="form-group">
-                        帳號(Email)
-                        <div class="col-md-10">
-                            @Html.TextBox("txtAccount", "", new { htmlAttributes = new { @class = "form-control" } })
+                        <div class="form-floating mb-3">
+                            <input type="email" class="form-control" id="txtAccount" name="txtAccount" placeholder="name@example.com">
+                            <label for="txtAccount">電話號碼/Email</label>
                         </div>
-                    </div>
-                    <div class="form-group">
-                        密碼
-                        <div class="col-md-10">
-                            @Html.TextBox("txtPassword", "", new { htmlAttributes = new { @class = "form-control" } })
+                        <div class="form-floating mb-3">
+                            <input type="password" class="form-control" id="txtPassword" name="txtPassword" placeholder="Password">
+                            <label for="txtPassword">密碼</label>
                         </div>
-                    </div>
-                    <!-- Password input -->
-                    @*<div class="form-outline mb-3">*@
-                        @*@Html.TextBox("txtPassword", "", new { htmlAttributes = new { @class = "form-control" } })*@
-                       @* <input type="password" id="form3Example4" class="form-control form-control-lg"
-                               placeholder="Enter password" />
-                        <label class="form-label" for="form3Example4">Password</label>*@
-                  @*  </div>*@
 
-                   
-
-                    <div class="text-center text-lg-start mt-4 pt-2">
-                        <button type="submit" class="btn btn-primary btn-lg" 
-                                style="padding-left: 2.5rem; padding-right: 2.5rem;">
-                            Login
-                        </button>
-                        <p class="small fw-bold mt-2 pt-1 mb-0"> 還沒有註冊帳號嗎? <a href="@Url.Action("Create", "Member")"class="link-danger">註冊</a>
-                        </p>
-                        <p><a href=@Url.Action("ForgetPassword" , "Member") style="color:#dc3545">忘記密碼了嗎?</a></p>
-                    </div>
-
-                </form>
+                        <div class="text-center mb-3">
+                            <button type="submit" class="btn btn-primary btn-lg mb-2">登入</button>
+                            <div class="">
+                                <a href="@Url.Action("Create", "Member")" class="link-danger">註冊帳號</a>
+                                <span class="text-divider">|</span>
+                                <a href=@Url.Action("ForgetPassword", "Member") style="color:#dc3545">忘記密碼?</a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
+    </section>
     </div>
-    
-</section>
+</body>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+
+</script>
