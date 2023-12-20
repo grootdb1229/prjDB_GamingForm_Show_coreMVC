@@ -53,9 +53,9 @@
                         @{
                             foreach (var item in Model.subBlogs.GroupBy(p => p.Title))
                             {
-                                                <li class="@(item.First().SubBlogId == ViewBag.SelectedSubBlogId ? "selected-item" : "")">
-                                                    <a href="@Url.Action("ArticleList", "Blog", new {FId=item.First().BlogId ,SFId = item.FirstOrDefault().SubBlogId})">@item.Key</a>
-                                                </li>
+                                <li class="@(item.First().SubBlogId == ViewBag.SelectedSubBlogId ? "selected-item" : "")">
+                                    <a href="@Url.Action("ArticleList", "Blog", new {FId=item.First().BlogId ,SFId = item.FirstOrDefault().SubBlogId})">@item.Key</a>
+                                </li>
                             }
                         }
                     </ul>
@@ -67,13 +67,24 @@
                                 @{
                                     if (Context.Session.GetInt32(CDictionary.SK_UserID) == null)
                                     {
-                                                        <button style="background:#a81d1d ;border:none;height:52.5px" type="button" class="btn btn-danger" id="btnCreate" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-                                                            發表文章
-                                                        </button>
+                                        <button style="font-size:15px;color:#ffffff;           
+                                                text-transform: uppercase;
+                                                padding: 17px 15px 13px 30px;
+                                                display: inline-block;
+                                                background: #a81d1d;
+                                                -webkit-transform: skewX(-15deg);
+                                                -ms-transform: skewX(-15deg);
+                                                transform: skewX(-15deg);
+                                                -webkit-transition: all 0.3s;
+                                                -o-transition: all 0.3s;
+                                                transition: all 0.3s;
+                                                border: ridge 5px black;" type="button" class="btn btn-danger" id="btnCreate" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                                            發表文章
+                                        </button>
                                     }
                                     else
                                     {
-                                        @Html.ActionLink("發表文章", "ArticleCreate", "Blog", new { FId = Model.blogs.FirstOrDefault().BlogId }, new { id = "btnCreate", @class = "btn"})
+                                        @Html.ActionLink("發表文章", "ArticleCreate", "Blog", new { FId = Model.blogs.FirstOrDefault().BlogId }, new { id = "btnCreate", @class = "btn" ,style="font-size:15px;color:#ffffff;padding:17px 15px 13px 30px;display: inline-block;background: #a81d1d;-webkit-transform: skewX(-15deg);                                                -ms-transform: skewX(-15deg);                                                transform: skewX(-15deg);                                                -webkit-transition: all 0.3s;                                                -o-transition: all 0.3s;                                                transition: all 0.3s;                                                border: ridge 5px black;"})
                                     }
                                 }
                             </li>
@@ -101,7 +112,7 @@
 </div>
 <div class="container">
     <div style="float:right;margin-right:20px;margin-left:20px;width:350px;background-color:#4F4F4F;box-shadow:0px 0px 8px 8px #cccccc;border-radius:8px">
-        <div id="HotArticles" style="padding:10px">         
+        <div id="HotArticles" style="padding:10px">
         </div>
     </div>
     <div class="row">
@@ -129,18 +140,18 @@
                     @{
                         foreach (var item in Model.articles)
                         {
-                                            <tr>
-                                                <td>
-                                                    <a style="text-decoration:none" href="@Url.Action("ArticleContent", "Blog", new {FId=item.SubBlog.BlogId, AFId =item.ArticleId}) ">
-                                                        <span style="color:	#FF8000;font-size:16px;font-weight:bold">
-                                                            【@item.SubBlog.Title】
-                                                        </span>
-                                                        <span style="font-size:16px;font-weight:bold">
-                                                            @item.Title<br />
-                                                        </span>
-                                                        <span style="color:#E0E0E0">
-                                                            @*--------------------------顯示內文--------------------------------*@
-                                                            @{
+                            <tr>
+                                <td>
+                                    <a style="text-decoration:none" href="@Url.Action("ArticleContent", "Blog", new {FId=item.SubBlog.BlogId, AFId =item.ArticleId}) ">
+                                        <span style="color:	#FF8000;font-size:16px;font-weight:bold">
+                                            【@item.SubBlog.Title】
+                                        </span>
+                                        <span style="font-size:16px;font-weight:bold">
+                                            @item.Title<br />
+                                        </span>
+                                        <span style="color:#E0E0E0">
+                                            @*--------------------------顯示內文--------------------------------*@
+                                            @{
                                                 string content = item.ArticleContent;
                                                 HtmlAgilityPack.HtmlDocument htmlDoc = new HtmlAgilityPack.HtmlDocument();
                                                 htmlDoc.LoadHtml(content);
@@ -153,34 +164,34 @@
                                                 // 30字符以後以...作替代
                                                 string truncatedContent = textContent.Length > 30 ? textContent.Substring(0, 30) + "..." : textContent;
 
-                                                                                @Html.Raw(truncatedContent)
-                                                            }
-                                                        </span>
-                                                    </a>
-                                                </td>
-                                                <td style="color:wheat;font-size:15px;text-align:center">
-                                                    @((item.Replies != null) ? item.Replies.Count() : 0) / @* 回文次數 *@@Html.DisplayFor(modelItem => item.ViewCount)               @* 瀏覽次數 *@
-                                                    <br />
-                                                    <p style="text-align:center;font-size:12px"> @Html.ActionLink(item.Member.Name, "MemberPageTest", "Member", new { id = item.MemberId }) </p>  @* 預計顯示作者名稱在發文時間下面 *@
+                                                @Html.Raw(truncatedContent)
+                                            }
+                                        </span>
+                                    </a>
+                                </td>
+                                <td style="color:wheat;font-size:15px;text-align:center">
+                                    @((item.Replies != null) ? item.Replies.Count() : 0) / @* 回文次數 *@@Html.DisplayFor(modelItem => item.ViewCount)               @* 瀏覽次數 *@
+                                    <br />
+                                    <p style="text-align:center;font-size:12px"> @Html.ActionLink(item.Member.Name, "MemberPageTest", "Member", new { id = item.MemberId }) </p>  @* 預計顯示作者名稱在發文時間下面 *@
 
-                                                </td>
-                                                <td style="color:wheat;font-size:15px;text-align:center">
-                                                    @{
+                                </td>
+                                <td style="color:wheat;font-size:15px;text-align:center">
+                                    @{
                                         if (item.Replies.Any(r => r.ArticleId == item.ArticleId))
                                         {
-                                                                            @item.Replies.LastOrDefault().ModifiedDate.ToString("yyyy/MM/dd")
-                                                                            <br />
-                                                                            <p style="text-align:center ;font-size:15px">@Html.ActionLink(Model.members.Where(m => m.MemberId == item.Replies.LastOrDefault().MemberId).Select(m => m.Name).FirstOrDefault(), "MemberPageTest", "Member", new { id = Model.members.Where(m => m.MemberId == item.Replies.LastOrDefault().MemberId).Select(m => m.MemberId).FirstOrDefault() })</p>
+                                            @item.Replies.LastOrDefault().ModifiedDate.ToString("yyyy/MM/dd")
+                                            <br />
+                                            <p style="text-align:center ;font-size:15px">@Html.ActionLink(Model.members.Where(m => m.MemberId == item.Replies.LastOrDefault().MemberId).Select(m => m.Name).FirstOrDefault(), "MemberPageTest", "Member", new { id = Model.members.Where(m => m.MemberId == item.Replies.LastOrDefault().MemberId).Select(m => m.MemberId).FirstOrDefault() })</p>
                                         }
                                         else
                                         {
-                                                                            @item.ModifiedDate.ToString("yyyy/MM/dd")
-                                                                            <br />
-                                                                            <p style="text-align:center;font-size:12px"> @Html.ActionLink(item.Member.Name, "MemberPageTest", "Member", new { id = item.MemberId }) </p>  @* 預計顯示作者名稱在發文時間下面 *@
+                                            @item.ModifiedDate.ToString("yyyy/MM/dd")
+                                            <br />
+                                            <p style="text-align:center;font-size:12px"> @Html.ActionLink(item.Member.Name, "MemberPageTest", "Member", new { id = item.MemberId }) </p>  @* 預計顯示作者名稱在發文時間下面 *@
                                         }
-                                                    }
-                                                </td>
-                                            </tr>
+                                    }
+                                </td>
+                            </tr>
                         }
                     }
 
@@ -197,27 +208,27 @@
 
 @section Scripts {
     <script>
-        $(document).ready(function () { 
+        $(document).ready(function () {
             function fetchHotArticle() {
                 fetch(`@Url.Content("~/Blog/HotArticle")?blogid=${@Model.blogs.FirstOrDefault().BlogId}`)
                     .then(response => response.json())
                     .then(data => {
                         var HA = `
-                                                <table class="table table-hover" style="color:antiquewhite; ">
-                                        <tr style="text-align:center;font-size:24px">
-                                            <th>熱門文章</th>
-                                        </tr>
-                                                `;
+                                                        <table class="table table-hover" style="color:antiquewhite; ">
+                                                <tr style="text-align:center;font-size:24px">
+                                                    <th>熱門文章</th>
+                                                </tr>
+                                                        `;
                         for (let i = 0; i < data.length; i++) {
                             HA += `
-                                                    <tr>
-                                                    <td>
-                                                         <a style="text-decoration:none" href="~/Blog/ArticleContent?FId=${data[i].blogid}&AFId=${data[i].articleId}">
-                                                           <p style="font-size:16px">【${data[i].subtitle}】 ${data[i].title}</p>
-                                                        </a>
-                                                    </td>
-                                                </tr>
-                                                    `
+                                                            <tr>
+                                                            <td>
+                                                                 <a style="text-decoration:none" href="~/Blog/ArticleContent?FId=${data[i].blogid}&AFId=${data[i].articleId}">
+                                                                   <p style="font-size:16px">【${data[i].subtitle}】 ${data[i].title}</p>
+                                                                </a>
+                                                            </td>
+                                                        </tr>
+                                                            `
                         }
                         HA += ` </table>`;
                         $('#HotArticles').html(HA);
@@ -225,6 +236,6 @@
             }
             fetchHotArticle();
         })
-       
+
     </script>
 }
