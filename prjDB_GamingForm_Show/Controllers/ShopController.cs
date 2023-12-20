@@ -95,8 +95,14 @@ namespace prjDB_GamingForm_Show.Controllers
 				var data = _db.Products.Where(x => x.ProductId == id).Select(x => new { x.ProductId, x.ProductName, x.Price, x.ProductContent, x.MemberId, x.FImagePath });
 				return Json(data);
 			}
+
+			public IActionResult ProductReviewNow(int id)
+			{
+				Product data = _db.Products.Where(p => p.ProductId == id).Select(p => p).FirstOrDefault();
+				return View(data);
+            }
 			//檢舉
-            public IActionResult ProductComplain(CProductAdmin vm)
+			public IActionResult ProductComplain(CProductAdmin vm)
             {
                 if (HttpContext.Session.GetInt32(CDictionary.SK_UserID) != null)
                 {
@@ -1678,35 +1684,38 @@ namespace prjDB_GamingForm_Show.Controllers
 			}
 
 			public COrderViewModel orderview()
-			{
+			{ _db.OrderProducts.Load();
+				_db.Products.Load();
                 COrderViewModel vm = new COrderViewModel();
                 var order = _db.Orders.Where(x => x.MemberId == 41)//HttpContext.Session.GetInt32(CDictionary.SK_UserID))
                             .OrderByDescending(x => x.OrderId).Take(1)
-                            .Select(x => new { x.OrderId, x.Payment.Name, x.Coupon.Title, x.OrderDate });
+                            .Select(x => new { x.OrderId, x.Payment.Name, x.Coupon.Title, x.OrderDate});
                 COrderViewModel n = null;
 
                 foreach (var i in order)
                 {
-                    n = new COrderViewModel()
-                    {
-                        OrderId = i.OrderId,
-                        CouponTitle = i.Title,
-                        OrderDate = i.OrderDate,
-                        PaymentName = i.Name,
-                        products = new List<CProductNamePrice>()
+					n = new COrderViewModel()
+					{
+						OrderId = i.OrderId,
+						CouponTitle = i.Title,
+						OrderDate = i.OrderDate,
+						PaymentName = i.Name,
+						products = new List<CProductNamePrice>(),
+						
                     };
 
                     var orderproduct = _db.OrderProducts.Where(x => x.OrderId == i.OrderId).Select(x => x.ProductId);
                     foreach (var pp in orderproduct)
                     {
-                        var op = _db.Products.Where(x => x.ProductId == pp).Select(x => new { x.ProductName, x.Price });
+                        var op = _db.Products.Where(x => x.ProductId == pp).Select(x => new { x.ProductName, x.Price,x.FImagePath });
                         CProductNamePrice cpnp = null;
                         foreach (var ppp in op)
                         {
                             cpnp = new CProductNamePrice()
                             {
                                 ProductName = ppp.ProductName,
-                                Price = ppp.Price
+                                Price = ppp.Price,
+								FImagePath=ppp.FImagePath
                             };
                             n.products.Add(cpnp);
                         }

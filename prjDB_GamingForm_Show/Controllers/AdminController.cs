@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.SqlServer.Storage.Internal;
 using MimeKit;
 using prjDB_GamingForm_Show.Models;
 using prjDB_GamingForm_Show.Models.Admin;
@@ -221,11 +222,16 @@ namespace prjDB_GamingForm_Show.Controllers
         {
             CAdminCheckProductViewModel vm = new CAdminCheckProductViewModel
             {
-                Products = _db.Products.Include(m => m.Member).Where(p => p.StatusId == 7),
+                Products = _db.Products.Include(m => m.Member).Where(p => p.StatusId == 7),                
                 Members = _db.Members
-            };
+            };            
             return View(vm);
         }
+
+        //public IActionResult ProductDetails(int id)
+        //{
+
+        //}
         public IActionResult ProductEdit(CProductAdmin vm)
         {
             var data = _db.ProductComplains.Where(n => n.Id == vm.txtID);
