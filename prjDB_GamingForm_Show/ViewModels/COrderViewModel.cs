@@ -22,6 +22,8 @@ namespace prjDB_GamingForm_Show.ViewModels
         public string MemberName { get; set; }
         public List<CProductNamePrice> products { get; set; }
 
+        public string payok { get; set; }
+
         public virtual Payment Payment { get; set; } = null!;
 
         public virtual ICollection<OrderProduct> OrderProducts { get; set; } = new List<OrderProduct>();
