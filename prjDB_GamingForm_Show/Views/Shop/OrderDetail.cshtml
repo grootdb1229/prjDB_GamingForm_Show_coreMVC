@@ -31,14 +31,25 @@
                             <div class="accordion-item">
                                 <h2 class="accordion-header">
                                     <button class="accordion-button " type="button" data-bs-toggle="collapse" data-bs-target="#@CountString" aria-expanded="true" aria-controls="@CountString">
+                                        <div class="col-2" style="color:black">
                                         訂單編號:@Html.DisplayFor(modelItem => item.OrderId)
+                                       </div>
+                                        <div class="col-5" style="color:black">
                                         下單日期:@Html.DisplayFor(modelItem => item.OrderDate)
+                                        </div>
+                                        <div class="col-3" style="color:black">
                                         付款金額:@item.Sumprice.ToString("#0")元
-                                        付款方式:@Html.DisplayFor(modelItem => item.PaymentName)
+                                        </div>
+                                        <div class="col-1" style="color:black">
+                                        @Html.DisplayFor(modelItem => item.payok)
+                            </div>
                                     </button>
                                 </h2>
                                 <div id="@CountString" class="accordion-collapse collapse  " data-bs-parent="#accordionFlushExample">
                                     <div class="accordion-body">
+                                        <div class="row">
+                                            <div class="col" style="color:black">使用優惠卷:@item.CouponTitle</div>
+                                        </div>
                                         @foreach (var p in item.products)
                                         {
                                             <div class="row">
