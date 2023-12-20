@@ -72,7 +72,9 @@ namespace prjDB_GamingForm_Show.Controllers
                            n.ViewCount,
                            Status = n.Status.Name,
                            n.Region.City,
-                           n.Provider.FImagePath
+                           n.Provider.FImagePath,
+                           Skillid = GetSkill(n.DeputeId),
+                           Skillclassid = GetSkillClass(n.DeputeId)
                        };
             CDeputeViewModel x = null;
 
@@ -90,12 +92,54 @@ namespace prjDB_GamingForm_Show.Controllers
                     viewcount = item.ViewCount,
                     status = item.Status,
                     region = item.City,
-                    imgfilepath = item.FImagePath
+                    imgfilepath = item.FImagePath,
+                    listskillid = item.Skillid,
+                    listskillclassid = item.Skillclassid,
+
                 };
 
                 List.Add(x);
-                Temp = List;
+                
             }
+            Temp = List;
+        }
+
+        private string GetSkillClass(int deputeId)
+        {
+            string result = "";
+            _db.Skills.Load();
+            _db.SkillClasses.Load();
+            var data = (from n in _db.DeputeSkills
+                       where n.DeputeId == deputeId
+                       select n.Skill.SkillClass.Name).Distinct();
+
+            foreach (var item in data)
+            {
+                result += item + ",";
+
+            }
+
+
+            return result;
+
+        }
+
+        private string GetSkill(int deputeId)
+        {
+            string result = "";
+            _db.Skills.Load();
+            _db.SkillClasses.Load();
+            var data = (from n in _db.DeputeSkills
+                       where n.DeputeId == deputeId
+                       select n.Skill.Name).Distinct();
+            foreach ( var item in data)
+            {
+                result += item + ",";
+
+            }
+
+
+            return result;
         }
 
         public IActionResult DeputeList(int? id)
@@ -118,7 +162,7 @@ namespace prjDB_GamingForm_Show.Controllers
                 foreach (string item in skillname)
                 {
                     datas = from n in List
-                            where n.deputeContent.Contains(item)
+                            where n.listskillclassid.Contains(item)
                             select n;
                 }
                 
@@ -153,6 +197,8 @@ namespace prjDB_GamingForm_Show.Controllers
 
                     datas = Temp.Where(n => (n.deputeContent.Trim().ToLower().Contains(item.Trim().ToLower()) ||
                                                n.title.Trim().ToLower().Contains(item.Trim().ToLower()) ||
+                                               n.listskillclassid.Trim().ToLower().Contains(item.Trim().ToLower()) ||
+                                               n.listskillid.Trim().ToLower().Contains(item.Trim().ToLower()) ||
                                                n.providername.Trim().ToLower().Contains(item.Trim().ToLower()) ||
                                                n.region.Trim().ToLower().Contains(item.Trim().ToLower()) ||
                                                n.status.Trim().ToLower().Contains(item.Trim().ToLower())
@@ -228,8 +274,8 @@ namespace prjDB_GamingForm_Show.Controllers
                 pln.id = pDb.DeputeId;
                 pln.providername = pDb.Provider.Name;
                 pln.title = pDb.Title;
-                pln.startdate = pDb.StartDate.ToString("yyyy/mm/dd HH:mm:ss");
-                pln.modifieddate = pDb.Modifiedate.ToString("yyyy/mm/dd HH:mm:ss");
+                pln.startdate = pDb.StartDate.ToString("yyyy/MM/dd HH:mm:ss");
+                pln.modifieddate = pDb.Modifiedate.ToString("yyyy/MM/dd HH:mm:ss");
                 pln.deputeContent = pDb.DeputeContent;
                 pln.salary = pDb.Salary;
                 pln.status = pDb.Status.Name;
@@ -494,9 +540,9 @@ namespace prjDB_GamingForm_Show.Controllers
             CDeputeViewModel x = null;
             foreach (var item in SkillClasses)
             {
-                var datas = from n in _db.DeputeSkills.AsEnumerable()
+                var datas = (from n in _db.DeputeSkills.AsEnumerable()
                             where n.Skill.SkillClassId == item.SkillClassId
-                            select n.Skill.SkillClass;
+                            select n.DeputeId).Distinct();
 
                 x = new CDeputeViewModel()
                 {
@@ -589,7 +635,7 @@ namespace prjDB_GamingForm_Show.Controllers
                 return Json(new { success = false, message = ex.Message });
             }
         }
-        public IActionResult Apply(int id)
+        public IActionResult Apply(int id, int? inviterID = null)
         { 
             Depute o = _db.Deputes.FirstOrDefault(_ => _.DeputeId == id);
             if (o == null)
@@ -609,6 +655,8 @@ namespace prjDB_GamingForm_Show.Controllers
                 int memberStatus = _db.Members.FirstOrDefault(_ => _.MemberId == HttpContext.Session.GetInt32(CDictionary.SK_UserID)).StatusId;
                 HttpContext.Session.SetInt32(CDictionary.SK_會員狀態編號, memberStatus);
             }
+            //if(inviterID!=null)
+            //    1
             return View(o);
         }
         [HttpPost]

@@ -1,0 +1,22 @@
+﻿@model prjDB_GamingForm_Show.ViewModels.COrderViewModel
+
+<h2>您的訂單已成立</h2>
+
+<div>
+    <hr />
+    <dl class="dl-horizontal">
+        <dd>
+            訂單編號:@Html.DisplayFor(model => model.OrderId)
+        </dd>
+        <dd>
+            使用優惠卷:@Html.DisplayFor(model => model.CouponTitle)
+        </dd>
+        <dd>
+            下單日期:@Html.DisplayFor(model => model.OrderDate)
+        </dd>
+        <dd>
+            總計:@Html.DisplayFor(model => model.Sumprice)
+        </dd>
+    </dl>
+</div>
+

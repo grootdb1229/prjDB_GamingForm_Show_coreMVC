@@ -27,16 +27,22 @@
         {
             <tr>
                 <td ><img src=~/images/shop/@p.FImagePath alt="Product Image" style="max-width: 120px; max-height: 120px;"></td>
-                <td style="color: white">@p.ProductName</td>
-                <td style="color: white">@p.Price.ToString("#0")元</td>
+                            <td style="color: white; vertical-align: middle;">@p.ProductName</td>
+                            <td style="color: white; vertical-align: middle;">@p.Price.ToString("#0")元</td>
             </tr>
         }
     </tbody>
-</table>
-            </div>
+            </table>
+        </div>
+        <div class="wrap">
+            @{
+            var memberid = Context.Session.GetInt32(CDictionary.SK_UserID);//取會員id，作為參數傳送
+            <a class="btn btn-light" style="float: right;" href="@Url.Content("/Shop/OrderDetail")?id=@memberid">訂單總覽</a>
+            }
+        </div>
     </div>
     
-
+ 
 </div>
 @*<div>
     <h4>COrderViewModel</h4>

@@ -24,13 +24,14 @@ namespace prjDB_GamingForm_Show.Controllers
             _db = db;
 
         }
-        public COrderViewModel orderview()
+        public COrderViewModel orderview(int? id)
         {
             
             COrderViewModel vm = new COrderViewModel();
-            var order = _db.Orders.Where(x => x.MemberId == 41)//HttpContext.Session.GetInt32(CDictionary.SK_UserID))
-                        .OrderByDescending(x => x.OrderId).Take(1)
-                        .Select(x => new { x.OrderId, x.Payment.Name, x.Coupon.Title, x.OrderDate, MemberName = x.Member.Name});
+            //var order = _db.Orders.Where(x => x.MemberId == HttpContext.Session.GetInt32(CDictionary.SK_UserID))
+            //            .OrderByDescending(x => x.OrderId).Take(1)
+            //            .Select(x => new { x.OrderId, x.Payment.Name, x.Coupon.Title, x.OrderDate, MemberName = x.Member.Name});
+            var order = _db.Orders.Where(x => x.OrderId == id).Select(x => new { x.OrderId, x.Payment.Name, x.Coupon.Title, x.OrderDate, MemberName = x.Member.Name });
             COrderViewModel n = null;
 
             foreach (var i in order)
@@ -85,7 +86,9 @@ namespace prjDB_GamingForm_Show.Controllers
         //step1 : 網頁導入傳值到前端
         public IActionResult Index()
         {
-            COrderViewModel vm = orderview();
+            var orderid = _db.Orders.Where(x => x.MemberId == HttpContext.Session.GetInt32(CDictionary.SK_UserID))
+                        .OrderByDescending(x => x.OrderId).FirstOrDefault();
+            COrderViewModel vm = orderview(orderid.OrderId);
             var orderId = Guid.NewGuid().ToString().Replace("-", "").Substring(0, 20);
             //需填入你的網址
             var website = $"https://prjDBGamingFormShow20231219140402.azurewebsites.net/";
@@ -102,7 +105,7 @@ namespace prjDB_GamingForm_Show.Controllers
                 { "CustomField3",  ""},
                 { "CustomField4",  ""},
                 { "ReturnURL",  $"{website}Ecpay/AddPayInfo"},
-                { "OrderResultURL", $"{website}Shop/OrderSuccess"},
+                { "OrderResultURL", $"{website}Shop/OrderSuccess/{vm.OrderId}"},
                 { "PaymentInfoURL",  $"{website}Ecpay/AddAccountInfo"},
                 { "ClientRedirectURL",  $"{website}Payment/AccountInfo/{orderId}"},
                 { "MerchantID",  "3002607"},
@@ -126,7 +129,7 @@ namespace prjDB_GamingForm_Show.Controllers
                 data.Add(key, id[key]);
             }
             DbGamingFormTestContext db = new DbGamingFormTestContext();
-            var order = db.Orders.Where(x => x.MemberId == 41)//HttpContext.Session.GetInt32(CDictionary.SK_UserID))
+            var order = db.Orders.Where(x => x.MemberId == HttpContext.Session.GetInt32(CDictionary.SK_UserID))
                         .OrderByDescending(x => x.OrderId).FirstOrDefault();
             order.PaymentDate= DateTime.Now;
             order.Ecid = id["MerchantTradeNo"];

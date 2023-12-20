@@ -30,7 +30,7 @@
             @{
                 if (!string.IsNullOrEmpty(ViewBag.repet))
                 {
-                        <div class="alert alert-danger">以偵測到重覆商品，為您移除</div>
+                        <div class="alert alert-danger">已偵測到重覆商品，為您移除</div>
                 }
             }
             @{
@@ -140,13 +140,13 @@
 
     <div style="position: relative;>
         <div class="container" style="margin-left:-10px ; position: absolute;top:0;right:0;">
-            <label for="payment">請選擇付款方式</label>
+            @*<label for="payment">請選擇付款方式</label>
             <select id="payment" name="payment">
                 <option value="apple">Apple</option>
                 <option value="banana">Banana</option>
                 <option value="orange">Orange</option>
                 <option value="grape">Grape</option>
-            </select>
+            </select>*@
         @if (Context.Session.GetInt32(CDictionary.SK_UserID) == null)
         {
                 <input type="button" value="結帳" class="btn btn-outline-dark mt-auto" id="btnLike" data-bs-toggle="modal" data-bs-target="#staticBackdrop" style="margin-left:550px">
@@ -185,24 +185,11 @@
     const btn = document.querySelector('#btnpurchase');
     const payment = document.querySelector('#payment');
 
-    async function LoadPayment() {
-        const response = await fetch('@Url.Content("~/Shop/payment")');
-        const data = await response.json();
-        console.log(data)
-        const Payment = data.map(x => `
-                                             <option value="${x.paymentId}">${x.name}</option>
-                                    `).join('');
-
-        payment.innerHTML = Payment;
-    }
-    LoadPayment();
 
 
-
-
-    payment.addEventListener('change', () => {
-        console.log(payment.value)
-    })
+    //payment.addEventListener('change', () => {
+    //    console.log(payment.value)
+    //})
 
     const CouponDiv = document.querySelector('#Coupon .d-flex');
     var tbodyElement = document.getElementById('Tbody');
@@ -226,8 +213,18 @@
         tbodyElement.innerHTML = Coupon;
 
     }
-
     LoadCoupon();
+
+    //async function LoadPayment() {
+    //    const response = await fetch('@Url.Content("~/Shop/payment")');
+    //    const data = await response.json();
+    //    console.log(data)
+    //    const Payment = data.map(x => `
+    //                                             <option value="${x.paymentId}">${x.name}</option>
+    //                                    `).join('');
+
+    //    payment.innerHTML = Payment;
+    //}
 
     //async function Couponselect(value){
 
@@ -254,7 +251,7 @@
         })
             .done((data) => {
                 const CouponFrag = $(document.createDocumentFragment());
-                const Coupons = `<p>${data}元</p>`
+                const Coupons = `${data}元`
                 CouponFrag.append(Coupons);
                 $('#pay').html(CouponFrag)
             })
@@ -262,14 +259,14 @@
     }
 
     btn.addEventListener('click', () => {
-        const payid = payment.value
-        fetch(`@Url.Content("~/Shop/Purchase")?payment=${payid}`)
+
+        fetch('@Url.Content("~/Shop/Purchase")')
             .then(() => {
                 Swal.fire({
-                    title: "結帳成功!",
-                    text: "訂單已送至電子信箱!",
+                    title: "訂單成功!",
+                    text: "訂單詳細已送至電子信箱!",
                     icon: "success",
-                }).then((result) => { if (result.isConfirmed) { window.location.href = "OrderDetail" } })
+                }).then((result) => { if (result.isConfirmed) { window.location.href = "/payment/index" } })
             })
             .then(() => { fetch(`@Url.Content("~/Shop/orderview")`) }).then(() => {
                 for (var p = 1; p <= count; p++) {
