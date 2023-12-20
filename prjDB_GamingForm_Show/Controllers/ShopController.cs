@@ -1306,6 +1306,8 @@ namespace prjDB_GamingForm_Show.Controllers
             [HttpPost]
 			public IActionResult AddToCar(CShoppingCarViewModel vm)
             {
+				_db.Products.Load();
+				_db.Members.Load();
 				int memberID = 0;
 				if ((HttpContext.Session.GetInt32(CDictionary.SK_UserID) != null)) {
 					memberID = (int)HttpContext.Session.GetInt32(CDictionary.SK_UserID);
@@ -1343,7 +1345,7 @@ namespace prjDB_GamingForm_Show.Controllers
 							x.FImagePath = product.FImagePath;
 							x.Count = vm.txtCount;
 							x.ProductID = product.ProductId;
-						x.MemberName = product.Member.Name;
+						    x.MemberName = product.Member.Name; ////這我需要解釋。
 						car.Add(x);
                     }
 					else { return Json(new { success = false , message="購物車內容重複"}); }
