@@ -20,16 +20,10 @@
             </th>
             <th>
                 商品名稱
-            </th>
-            <th>
-                內容描述
-            </th>
+            </th>            
             <th>
                 申請會員
-            </th>
-            <th>
-                商品圖片
-            </th>
+            </th>            
             <th>
                 申請審核日期
             </th>
@@ -45,18 +39,12 @@
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.ProductName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.ProductContent)
-                </td>
+                </td>                
                 <td>
                     @Html.DisplayFor(modelItem => item.Member.Name)
-                </td>
+                </td>                
                 <td>
-                    @Html.DisplayFor(modelItem => item.FImagePath)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.AvailableDate)
+                    @item.AvailableDate.ToString("yyyy/MM/dd")
                 </td>
                 <td>
                     @Html.ActionLink("商品上/下架", "ProductStatusEdit", "Admin", new {  id=item.ProductId  }, new {onclick = "return confirm('確定上/下架嗎?')",@class = "btn btn-dark" })
@@ -90,10 +78,14 @@
                                             <b>商品描述:</b><p>${data[0].productContent}</p></br>
 
                                   `,
-                    showCloseButton: true,
+                    showConfirmButton: true,
                     showCancelButton: true,
+                    confirmButtonText: "前往審核",
 
-                });
+                }).then((result) => {
+                    window.location.href = '@Url.Content("~/Shop/ProductReviewNow")' + '?id=' + data[0].productId;
+                    console.log(`${data[0].productId}`);
+                });;
 
             })
     }
