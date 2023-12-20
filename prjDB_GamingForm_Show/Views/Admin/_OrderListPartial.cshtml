@@ -1,13 +1,11 @@
-﻿@*@model IEnumerable<prjDB_GamingForm_Show.Models.Entities.Order>*@
-@*@model prjDB_GamingForm_Show.Models.Entities.Order*@
-@model IEnumerable<prjDB_GamingForm_Show.Models.Entities.Order>
+﻿@model IEnumerable<prjDB_GamingForm_Show.Models.Entities.Order>
 
 
 @{
-    ViewData["Title"] = "OrderList";
-    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    ViewData["Title"] = "OrderListPartial";
+    
     var totalOrders = Model.Count();
-    var totalAmount = Math.Floor(Model.Where(p=>p.StatusId==16 || p.StatusId == 15).Sum(p => p.SumPrice));
+    var totalAmount = Math.Floor(Model.Where(p => p.StatusId == 16 || p.StatusId == 15).Sum(p => p.SumPrice));
     //var averagePrice = Model.Any() ? Model.Average(o => o.SumPrice) : 0;
     var averagePrice = Model.Any() ? Math.Floor(Model.Average(o => o.SumPrice)) : 0;
 }
@@ -27,13 +25,11 @@
     @if (Model.Any())
     {
         <label for="start">開始日期:</label>
-        <input type="date" id="start" name="startday" value="2023-01-01" min="2023-01-01" max="2099-12-31" />
-
-@*        <label for="start">結束日期:</label>
-        <input type="date" id="end" name="endday" value="@DateTime.Now.ToString("yyyy-MM-dd")" min="2023-01-01" max="2099-12-31" />*@
+        <input type="date" id="start" name="startday" value="@ViewBag.StartDate" min="2023-01-01" max="2099-12-31" />
 
         <label for="end">結束日期:</label>
-        <input type="date" id="end" name="endday" value="@DateTime.Now.ToString("yyyy-MM-dd")" min="2023-01-01" max="2099-12-31" />
+        <input type="date" id="end" name="endday" value="@ViewBag.EndDate" min="2023-01-01" max="2099-12-31" />
+
 
 
         <select id="sel_Com" name="ST" style="margin-top:3px;width:200px;" onchange="updateOrderList()">
@@ -46,7 +42,12 @@
         </select>
 
         <input type="submit" value="查詢" class="btn btn-dark" />
+
+        
     }
+
+
+
 
 }
 
@@ -102,7 +103,7 @@
                 <td>
                     @item.OrderDate.ToString("yyyy/MM/dd")
                 </td>
-                <td>                   
+                <td>
                     @{
                         var pday = item.PaymentDate;
                         var payday = pday.HasValue ? pday.Value.ToString("yyyy/MM/dd") : string.Empty;
@@ -117,7 +118,7 @@
                     @Html.DisplayFor(modelItem => formattedDate)
                 </td>
                 <td>
-                   
+
                     @Html.DisplayFor(modelItem => item.Payment.Name)
                 </td>
 
@@ -132,36 +133,3 @@
         }
     </tbody>
 </table>
-
-
-
-
-@*        <div id="orderListPartial">
-            @Html.Partial("_OrderListPartial", Model)
-        </div>
-
-@section scripts {
-    <script>
-        function updateOrderList() {
-            // 在這裡設置時間選擇器的值
-            var startDate = document.getElementById("start").value;
-            var endDate = document.getElementById("end").value;
-
-            // 使用 AJAX 或其他方式將日期值發送到伺服器端，更新頁面
-            // 在此示例中，我們使用 fetch 進行簡單的 AJAX 請求
-            fetch("/Admin/OrderListPartial?startday=" + startDate + "&endday=" + endDate, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            })
-                .then(response => response.text())
-                .then(html => {
-                    // 更新包含訂單列表的部分視圖
-                    document.getElementById("orderListPartial").innerHTML = html;
-                })
-                .catch(error => console.error('Error:', error));
-        }
-    </script>*@
-
-}

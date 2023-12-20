@@ -168,11 +168,11 @@
     @{
         if (Model.Count() == 0)
         {
-                                <h1 id="totalcount" class="text-center mb-5 wow fadeInUp" data-wow-delay="0.1s">懸賞清單</h1>
+                                    <h1 id="totalcount" class="text-center mb-5 wow fadeInUp" data-wow-delay="0.1s">懸賞清單</h1>
         }
         else
         {
-                                <h1 id="totalcount" class="text-center mb-5 wow fadeInUp" data-wow-delay="0.1s">相關結果共@(Model.Count())筆</h1>
+                                    <h1 id="totalcount" class="text-center mb-5 wow fadeInUp" data-wow-delay="0.1s">相關結果共@(Model.Count())筆</h1>
         }
     }
     
@@ -209,7 +209,7 @@
                 <div id="tab-1" class="tab-pane fade show p-0 active">
                     <div class="job-item p-4 mb-4">
                         <div id="resultlist" class="row g-4" style="background-color:black;border-radius:20px">
-                            @foreach (var item in Model)
+                            @* @foreach (var item in Model)
                             {
                                 <div class="col-sm-12 col-md-8 d-flex align-items-center">
                                     <img class="flex-shrink-0 img-fluid border rounded" src="~/images/@Html.DisplayFor(modelItem => item.imgfilepath)" alt="" style="width: 80px; height: 80px;">
@@ -231,13 +231,13 @@
                                     <small class="text-truncate"><i class="far fa-regular fa-chart-bar text-primary me-2"></i>狀態 : @Html.DisplayFor(modelItem => item.status)</small>
                                     <small class="text-truncate"><i class="far fa-calendar-alt text-primary me-2"></i>Last Update : @Html.DisplayFor(modelItem => item.modifieddate)</small>
                                 </div>
-                            }
+                            } *@
                         </div>
 
                     </div>
                     @Html.ActionLink("回懸賞首頁", "DeputeMain", "Depute", null, new { @class = "btn btn-primary py-3 px-5", @id = "btndp" })
                 </div>
-
+                <input type="hidden" value="@ViewBag.name" id="categorykey" />
             </div>
 
         </div>
@@ -248,7 +248,7 @@
     <script>
         const text = document.querySelector('#text');
         loadSkillClassess();
-        // MutiSearch(@ViewBag.name)
+        MutiSearch($('#categorykey').val())
         let keyword = [];
         $('#search').click(() => { MutiSearch(text.value) });
         $('#money').change(() => { MutiSearch(keyword) });
@@ -278,10 +278,10 @@
                     let checkValue;
                     $('.form-check-input.skillclass').click(function () {
                         var isChecked = $(this).is(":checked");
-                        console.log(isChecked)
+                        // console.log(isChecked)
                         checkValue = $(this).attr("name");
                         checkID = $(this).val();
-                        console.log(checkValue); //on
+                        // console.log(checkValue); //on
                         var tag = `<div class="tag_list" onclick="Tags2(event)" id="${checkValue}-2">${checkValue}<span>X</span></div>`
                         if (isChecked == false) {
                             checkID = "";
@@ -405,13 +405,13 @@
                     const StatusFrag = $(document.createDocumentFragment());
                     const Status = data.map(Status =>
                         `
-                                                                <div class="col order-12">
-                                                                                        <input class="form-check-input status" type="checkbox" id="${Status}-1" value="${Status}" name="${Status}">
-                                                                        <label class="form-check-label" for="${Status}-1">
-                                                                         ${Status}
-                                                                </label>
-                                                                </div>
-                                                                 `
+                        <div class="col order-12">
+                                                <input class="form-check-input status" type="checkbox" id="${Status}-1" value="${Status}" name="${Status}">
+                                <label class="form-check-label" for="${Status}-1">
+                                    ${Status}
+                        </label>
+                        </div>
+                            `
                     )
 
                     StatusFrag.append(Status);
@@ -478,31 +478,32 @@
                     const lstFrag = $(document.createDocumentFragment());
                     const resultlist = data.map(resultlist =>
                         `
-                                                                        <div  class="col-sm-12 col-md-8 d-flex align-items-center">
-                                                                                <img class="flex-shrink-0 img-fluid border rounded" src="/images/${resultlist.imgfilepath}" alt="" style="width: 80px; height: 80px;">
-                                                                        <div class="text-start ps-4">
-                                                                                <h5 class="mb-3">${resultlist.title}</h5>
-                                                                                <span class="text-truncate me-3"><i class="fa fa-map-marker-alt text-primary me-2"></i>${resultlist.region}</span>
-                                                                                <span class="text-truncate me-3"><i class="fa fa-user-tie text-primary me-2"></i>${resultlist.providername}</span>
-                                                                                <span class="text-truncate me-3"><i class="far fa-clock text-primary me-2"></i>${resultlist.startdate}</span>
-                                                                        <span class="text-truncate me-3"><i class="far fa-money-bill-alt text-primary me-2"></i>${resultlist.salary}</span>
-                                                                                <span class="text-truncate me-3"><i class="far fa-solid fa-eye text-primary me-2"></i>${resultlist.viewcount}</span>
-                                                                        </div>
-                                                                        </div>
-                                                                        <div class="col-sm-12 col-md-4 d-flex flex-column align-items-start align-items-md-end justify-content-center">
-                                                                        <div class="d-flex mb-3">
-                                                                                <a class="btn btn-light btn-square me-3" href="#" onclick=SetFav(${resultlist.id})><i class="far fa-heart text-primary"></i></a>
-                                                                                        <a href="/Depute/DeputeDetails/${resultlist.id}" class="btn btn-primary" id="btndp" target="_blank">詳細...</a>
-                                                                                <a href="/Depute/Apply/${resultlist.id}" class="btn btn-primary" id=" btndp">我要應徵...</a>
-                                                                        </div>
-                                                                                        <small class="text-truncate"><i class="far fa-regular fa-chart-bar text-primary me-2"></i>狀態 : ${resultlist.status}</small>
-                                                                                        <small class="text-truncate"><i class="far fa-calendar-alt text-primary me-2"></i>Last Update : ${resultlist.modifieddate}</small>
-                                                                        </div>
+                        <div  class="col-sm-12 col-md-8 d-flex align-items-center">
+                                <img class="flex-shrink-0 img-fluid border rounded" src="/images/${resultlist.imgfilepath}" alt="" style="width: 80px; height: 80px;">
+                        <div class="text-start ps-4">
+                                <h5 class="mb-3">${resultlist.title}</h5>
+                                <span class="text-truncate me-3"><i class="fa fa-map-marker-alt text-primary me-2"></i>${resultlist.region}</span>
+                                <span class="text-truncate me-3"><i class="fa fa-user-tie text-primary me-2"></i>${resultlist.providername}</span>
+                                <span class="text-truncate me-3"><i class="far fa-clock text-primary me-2"></i>${resultlist.startdate}</span>
+                        <span class="text-truncate me-3"><i class="far fa-money-bill-alt text-primary me-2"></i>${resultlist.salary}</span>
+                                <span class="text-truncate me-3"><i class="far fa-solid fa-eye text-primary me-2"></i>${resultlist.viewcount}</span>
+                        </div>
+                        </div>
+                        <div class="col-sm-12 col-md-4 d-flex flex-column align-items-start align-items-md-end justify-content-center">
+                        <div class="d-flex mb-3">
+                                <a class="btn btn-light btn-square me-3" href="#" onclick=SetFav(${resultlist.id})><i class="far fa-heart text-primary"></i></a>
+                                        <a href="/Depute/DeputeDetails/${resultlist.id}" class="btn btn-primary" id="btndp" target="_blank">詳細...</a>
+                                <a href="/Depute/Apply/${resultlist.id}" class="btn btn-primary" id=" btndp">我要應徵...</a>
+                        </div>
+                                        <small class="text-truncate"><i class="far fa-regular fa-chart-bar text-primary me-2"></i>狀態 : ${resultlist.status}</small>
+                                        <small class="text-truncate"><i class="far fa-calendar-alt text-primary me-2"></i>Last Update : ${resultlist.modifieddate}</small>
+                        </div>
 
-                                                                                `
+                                `
                     )
                     lstFrag.append(resultlist);
-                    $('#resultlist').html(lstFrag);
+                    // $('#resultlist').html(lstFrag);
+                    pageMove(data);
                     // pagination.addEventListener('click', event => {
                     //     event.preventDefault()
                     //     if (event.target.tagName === 'A') {
@@ -510,7 +511,7 @@
                     //     }
                     // })
                     // getTotalPages(data);
-                    pageMove(data);
+                    
                 })
         }
         function loadHotkey() {
@@ -530,7 +531,6 @@
                     $('#hotkey').html(HkFrag)
                 })
         }
-
         function SetFav(value) {
             $.ajax('@Url.Content("~/Depute/Fav")', {
                 "type": 'Post', //POST、PUT、DELETE
@@ -561,12 +561,6 @@
                 })
             
         }
-
-     
-
-
-
-
         //熱門關鍵字:
 
     </script>
@@ -596,6 +590,7 @@
                       `
             }
             pagination.innerHTML = pageItemContent
+            getPageData(1, choiceMovies)
         }
 
         //篩選出指定頁面的資料並顯示
