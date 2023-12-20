@@ -26,12 +26,12 @@ namespace prjDB_GamingForm_Show.Controllers
         }
         public COrderViewModel orderview(int? id)
         {
-            
             COrderViewModel vm = new COrderViewModel();
             //var order = _db.Orders.Where(x => x.MemberId == HttpContext.Session.GetInt32(CDictionary.SK_UserID))
             //            .OrderByDescending(x => x.OrderId).Take(1)
-            //            .Select(x => new { x.OrderId, x.Payment.Name, x.Coupon.Title, x.OrderDate, MemberName = x.Member.Name});
-            var order = _db.Orders.Where(x => x.OrderId == id).Select(x => new { x.OrderId, x.Payment.Name, x.Coupon.Title, x.OrderDate, MemberName = x.Member.Name });
+            //            .Select(x => new { x.OrderId, x.Payment.Name, x.Coupon.Title, x.OrderDate });
+            var order = _db.Orders.Where(x => x.OrderId == id)
+                        .Select(x => new { x.OrderId, x.Payment.Name, x.Coupon.Title, x.OrderDate, x.SumPrice });
             COrderViewModel n = null;
 
             foreach (var i in order)
@@ -42,45 +42,29 @@ namespace prjDB_GamingForm_Show.Controllers
                     CouponTitle = i.Title,
                     OrderDate = i.OrderDate,
                     PaymentName = i.Name,
-                    MemberName = i.MemberName,
-                    products = new List<CProductNamePrice>()
+                    Sumprice = (double)i.SumPrice,
+                    products = new List<CProductNamePrice>(),
                 };
 
                 var orderproduct = _db.OrderProducts.Where(x => x.OrderId == i.OrderId).Select(x => x.ProductId);
                 foreach (var pp in orderproduct)
                 {
-                    var op = _db.Products.Where(x => x.ProductId == pp).Select(x => new { x.ProductName, x.Price });
+                    var op = _db.Products.Where(x => x.ProductId == pp).Select(x => new { x.ProductName, x.FImagePath,x.Price });
                     CProductNamePrice cpnp = null;
                     foreach (var ppp in op)
                     {
                         cpnp = new CProductNamePrice()
                         {
                             ProductName = ppp.ProductName,
-                            Price = ppp.Price
+                            Price = ppp.Price,
+                            FImagePath = ppp.FImagePath
                         };
                         n.products.Add(cpnp);
                     }
                 }
-                if (n.Coupon != null)
-                {
-                    if (n.Coupon.Discount != 0)
-                    {
-                        double dis = (double)n.Coupon.Discount;
-                        n.Sumprice = (double)n.products.Sum(c => c.Price) * dis;
-                    }
-                    else
-                    {
-                        int reduce = (int)n.Coupon.Reduce;
-                        n.Sumprice = (int)n.products.Sum(c => c.Price) - reduce;
-                    }
-                }
-                else
-                {
-                    n.Sumprice = (double)n.products.Sum(x => x.Price);
-
-                }
                 vm = n;
             }
+            //SendOrderEmail(vm);
             return vm;
         }
         //step1 : 網頁導入傳值到前端
@@ -96,7 +80,7 @@ namespace prjDB_GamingForm_Show.Controllers
             {
                 { "MerchantTradeNo",  orderId},
                 { "MerchantTradeDate",  DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss")},
-                { "TotalAmount",  vm.Sumprice.ToString()},
+                { "TotalAmount",  vm.Sumprice.ToString("#0")},
                 { "TradeDesc",  "無"},
                 { "ItemName",  "Groot"},
                 { "ExpireDate",  "3"},
@@ -105,7 +89,8 @@ namespace prjDB_GamingForm_Show.Controllers
                 { "CustomField3",  ""},
                 { "CustomField4",  ""},
                 { "ReturnURL",  $"{website}Ecpay/AddPayInfo"},
-                { "OrderResultURL", $"{website}Shop/OrderSuccess/{vm.OrderId}"},
+                //{ "OrderResultURL", $"{website}Shop/OrderSuccess/{vm.OrderId}"},
+                { "OrderResultURL", $"https://localhost:7056/Shop/OrderSuccess/{vm.OrderId}"},
                 { "PaymentInfoURL",  $"{website}Ecpay/AddAccountInfo"},
                 { "ClientRedirectURL",  $"{website}Payment/AccountInfo/{orderId}"},
                 { "MerchantID",  "3002607"},

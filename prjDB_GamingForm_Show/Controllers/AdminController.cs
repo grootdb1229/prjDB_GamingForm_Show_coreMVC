@@ -354,7 +354,7 @@ namespace prjDB_GamingForm_Show.Controllers
             };
             _db.NewsLetters.Add(dbn);
             _db.SaveChanges();
-            return Json(new { success = true, message = "電子報已成功發送！" });
+            return RedirectToAction("Newsletter");
         }
         public IActionResult Resend(int? id)
         {
