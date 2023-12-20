@@ -1339,7 +1339,7 @@ namespace prjDB_GamingForm_Show.Controllers
 						var OrdersList = _db.OrderProducts.Where(x => x.ProductId == product.ProductId).Select(x => x.Order);//已經購買的商品不能加入
 						Order order = OrdersList.FirstOrDefault(x => x.MemberId == memberID);
 						if (order != null)
-						{ return Json(new { success = false, message = "以購買過的商品" }); }
+						{ return Json(new { success = false, message = "已購買過的商品" }); }
 					}
 
 						var listCheck = car.Any(a => a.ProductName == product.ProductName); //重複商品不能加入
@@ -1394,7 +1394,7 @@ namespace prjDB_GamingForm_Show.Controllers
                         var OrdersList = _db.OrderProducts.Where(x => x.ProductId == product.ProductId).Select(x => x.Order);//已經購買的商品不能加入
                         Order order = OrdersList.FirstOrDefault(x => x.MemberId == memberID);
                         if (order != null)
-                        { return Json(new { success = false, message = "以購買過的商品" }); }
+                        { return Json(new { success = false, message = "已購買過的商品" }); }
                     }
 
                     var listCheck = car.Any(a => a.ProductName == product.ProductName);
