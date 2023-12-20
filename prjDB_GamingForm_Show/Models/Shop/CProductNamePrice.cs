@@ -4,6 +4,7 @@
     {
         public string ProductName { get; set; }
 
+        public string FImagePath { get; set; }
         public decimal Price { get; set; }
     }
 }

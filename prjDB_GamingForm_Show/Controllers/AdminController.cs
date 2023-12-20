@@ -1534,6 +1534,34 @@ namespace prjDB_GamingForm_Show.Controllers
             _db.SaveChanges();
             return RedirectToAction("ADeputeList");
         }
+
+        public IActionResult ADeputeDelete(CAdminDepute vm)
+        {
+            var data = from n in _db.DeputeRecords
+                       where n.DeputeId == vm.txtID
+                       select n;
+            
+            _db.DeputeRecords.RemoveRange(data);
+
+            var data2 = from n in _db.DeputeSkills
+                       where n.DeputeId == vm.txtID
+                       select n;
+
+            _db.DeputeSkills.RemoveRange(data2);
+
+            var data3 = from n in _db.DeputeComplains
+                        where n.DeputeId == vm.txtID
+                        select n;
+
+            _db.DeputeComplains.RemoveRange(data3);
+
+            var data4 = from n in _db.Deputes
+                       where n.DeputeId == vm.txtID
+                       select n;
+            _db.Deputes.RemoveRange(data4);
+            _db.SaveChanges();
+            return RedirectToAction("ADeputeList");
+        }
         public IActionResult ACDeputeList(CAdminDepute vm)
         {
             _db.Members.Load();
@@ -1603,19 +1631,31 @@ namespace prjDB_GamingForm_Show.Controllers
 
         //}
 
-        public IActionResult OrderList(DateTime? startday, DateTime? endday ,string? ST)
+        public IActionResult OrderList(DateTime? startday, DateTime? endday, string? ST)
         {
-            IQueryable<Order> query = _db.Orders.Include(a => a.Payment).Include(a => a.Coupon).Include(a=>a.Status);
 
-            if ((startday.HasValue && endday.HasValue)|| ST!=null)
+            if (endday == null)
+                endday = DateTime.Now;
+
+            IQueryable<Order> query = _db.Orders.Include(a => a.Payment).Include(a => a.Coupon).Include(a => a.Status);
+
+            if (startday.HasValue && endday.HasValue )
             {
-                query = query.Where(p => p.CompletedDate >= startday.Value && p.OrderDate <= endday.Value&&p.Status.Name == ST);
+                if (ST == "請選擇訂單狀態")
+                {
+                    query = query.Where(p => p.CompletedDate >= startday.Value && p.OrderDate <= endday.Value);                    
+                }
+                else 
+                {
+                    query = query.Where(p => p.CompletedDate >= startday.Value && p.OrderDate <= endday.Value && p.Status.Name == ST);
+                }
             }
 
-                     
+
             List<Order> orders = query.ToList();
 
             return View(orders);
+
         }
 
 

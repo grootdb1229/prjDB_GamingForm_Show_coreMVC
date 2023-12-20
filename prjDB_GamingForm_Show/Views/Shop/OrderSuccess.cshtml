@@ -14,17 +14,35 @@
         </div>
             <div class="bottom">
                 <h3>購物清單</h3>
-                @foreach (var p in Model.products)
-                {
-                <div class="row">
-                        <div class="col" style="color:black"> @p.ProductName</div>
-                        <div class="col" style="color:black">@p.Price.ToString("#0")元</div>
-                    </div>
-                }
-            </div>
+            <table class="table table-dark table-hover">
+    <thead>
+        <tr>
+            <th scope="col">圖片</th>
+            <th scope="col">產品名稱</th>
+            <th scope="col">價格</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var p in Model.products)
+        {
+            <tr>
+                <td ><img src=~/images/shop/@p.FImagePath alt="Product Image" style="max-width: 120px; max-height: 120px;"></td>
+                            <td style="color: white; vertical-align: middle;">@p.ProductName</td>
+                            <td style="color: white; vertical-align: middle;">@p.Price.ToString("#0")元</td>
+            </tr>
+        }
+    </tbody>
+            </table>
+        </div>
+        <div class="wrap">
+            @{
+            var memberid = Context.Session.GetInt32(CDictionary.SK_UserID);//取會員id，作為參數傳送
+                <a class="btn btn-light" style="float: right;" href="@Url.Content("/Blog/List")">訂單總覽</a>
+            }
+        </div>
     </div>
     
-
+ 
 </div>
 @*<div>
     <h4>COrderViewModel</h4>
@@ -124,7 +142,7 @@
     }
 
     .wrap {
-        width: 310px;
+        width: 500px;
         margin: 0 auto;
     }
 
@@ -140,8 +158,8 @@
             padding-right: 105px;
             font-size: 18px;
             font-weight: bold;
-            color: black;
-            background-color: white;
+            color: white;
+            background-color:#212529;
         }
 
     .price {
@@ -153,7 +171,7 @@
     }
 
         .price span {
-            color: black;
+            color: white;
         }
 
     .total {
@@ -163,12 +181,12 @@
         padding-bottom: 13px;
         display: flex;
         justify-content: space-between;
-        background-color: white;
+        background-color: #212529;
     }
 
         .total span {
             font-size: 20px;
-            color: black;
+            color: white;
             font-weight: bold;
         }
 
@@ -183,8 +201,8 @@
             padding-right: 105px;
             font-size: 18px;
             font-weight: bold;
-            color: black;
-            background-color: white;
+            color: white;
+            background-color: #212529;
         }
 
     .list {
@@ -198,12 +216,12 @@
         margin-left: 20px;
         font-size: 20px;
         font-weight: bold;
-        color: black;
+        color: white;
     }
 
     .item h4 {
         margin-left: 20px;
         margin-bottom: 5px;
-        color: black;
+        color: white;
     }
 </style>
