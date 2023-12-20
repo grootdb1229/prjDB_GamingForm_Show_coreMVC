@@ -1532,7 +1532,7 @@ namespace prjDB_GamingForm_Show.Controllers
                         {
                             double dis = (double)i.Discount;
                             sumprice = (double)car.Sum(c => c.Price) * dis;
-                        }
+                        }	
                         else
                         {
                             int reduce = (int)i.Reduce;
