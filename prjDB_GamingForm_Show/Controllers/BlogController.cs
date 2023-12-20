@@ -442,7 +442,36 @@ namespace prjDB_GamingForm_Show.Controllers
 
             return Content("檢舉成功");
         }
+        public IActionResult HotBlog()
+        {
+            var hb = _db.Blogs.Where(b => b.SubTagId != 14).OrderByDescending(b=>b.SubBlogs.SelectMany(s=>s.Articles).Sum(a=>a.ViewCount)).Take(5)
+                .Select(b => new
+            {
+                b.Title,
+                b.BlogId,
+                ArticleViewCount = b.SubBlogs.SelectMany(sb => sb.Articles).Sum(a => a.ViewCount)
+            }); ;
+            
+            return Json(hb);
+        }
+        public IActionResult HotArticle(int blogid)
+        {
+            int num = 5;
+            int anum = _db.Articles.Where(a => a.SubBlog.BlogId == blogid).Count();
+            if(anum<num)
+                num= anum;
+            var ha = _db.Articles.Where(a => a.SubBlog.BlogId == blogid).OrderByDescending(a => a.ViewCount).Take(num)
+                .Select(a => new
+                {
+                    a.Title,
+                    blogid=a.SubBlog.BlogId,
+                    a.ArticleId,
+                    subtitle=a.SubBlog.Title
+                }
+                );;
 
+            return Json(ha);
+        }
 
     }
 }

@@ -486,14 +486,17 @@ namespace prjDB_GamingForm_Show.Controllers
         //首頁類別跟數量
         public IActionResult DeputeCount()
         {
+            _db.Skills.Load();
+            _db.SkillClasses.Load();
+            _db.DeputeSkills.Load();
             var SkillClasses = _db.SkillClasses;
             List<CDeputeViewModel> slist = new List<CDeputeViewModel>();
             CDeputeViewModel x = null;
             foreach (var item in SkillClasses)
             {
-                var datas = from n in List.AsEnumerable()
-                            where n.deputeContent.Contains(item.Name)
-                            select n;
+                var datas = from n in _db.DeputeSkills.AsEnumerable()
+                            where n.Skill.SkillClassId == item.SkillClassId
+                            select n.Skill.SkillClass;
 
                 x = new CDeputeViewModel()
                 {

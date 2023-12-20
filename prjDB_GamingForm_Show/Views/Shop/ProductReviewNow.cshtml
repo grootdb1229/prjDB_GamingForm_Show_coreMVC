@@ -1,0 +1,83 @@
+﻿@model prjDB_GamingForm_Show.Models.Entities.Product
+
+@{
+    ViewData["Title"] = "ProductReviewNow";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div>
+    <h4>商品審核</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            編號
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.ProductId)
+        </dd>
+        <dt>
+            名稱
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.ProductName)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Price)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Price)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.AvailableDate)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.AvailableDate)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.ProductContent)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.ProductContent)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.UnitStock)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.UnitStock)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.StatusId)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.StatusId)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.ViewCount)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.ViewCount)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.MemberId)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.MemberId)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.FImagePath)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.FImagePath)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Goods)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Goods)
+        </dd>
+    </dl>
+</div>
+<div>
+    @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
+    <a asp-action="Index">Back to List</a>
+</div>

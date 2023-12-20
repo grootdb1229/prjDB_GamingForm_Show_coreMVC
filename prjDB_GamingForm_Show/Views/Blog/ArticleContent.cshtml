@@ -166,6 +166,18 @@
                                 </li>
                             </ul>
                         </div>
+                        @{
+                            if (Context.Session.GetInt32(CDictionary.SK_UserID) == null)
+                            {
+                                <button style="float:right;margin:0 5px;border:none;" type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                                    發表回覆
+                                </button>
+                            }
+                            else
+                            {
+                                @Html.ActionLink("發表回覆", "ReplyCreate", "Blog", new { AFId = Model.articles.FirstOrDefault().ArticleId, FId = Model.blogs.FirstOrDefault().BlogId }, new { @class = "btn btn-danger", style = "float:right;margin:0 5px;border:none;" })
+                            }
+                        }
                         <!-- HTML 中的按鈕 -->
                         <button id="copyButton" class="btn btn-info" data-clipboard-target="#urlToCopy" style="float:right;margin:0 5px">分享</button>
                         <!-- 顯示的網址 -->
@@ -199,7 +211,7 @@
                             }
                             @*------Line按鈕------*@
 
-
+                           
 
 
                         </div>
