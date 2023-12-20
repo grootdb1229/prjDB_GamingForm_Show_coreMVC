@@ -30,7 +30,10 @@
     <link href="~/Layout/startup2-1.0.0/lib/animate/animate.min.css" rel="stylesheet">
 
     <!-- Customized Bootstrap Stylesheet -->
-    <link href="~/Layout/startup2-1.0.0/css/bootstrap.min.css" rel="stylesheet">
+
+    @*
+    _取消
+    <link href="~/Layout/startup2-1.0.0/css/bootstrap.min.css" rel="stylesheet"> *@
 
     <!-- Template Stylesheet -->
     <link href="~/Layout/startup2-1.0.0/css/style.css" rel="stylesheet">
@@ -39,9 +42,15 @@
 <body>
     <input type="hidden" id="MId" value="@Model.First().MemberId" />
     <!-- Spinner Start -->
-    <div id="spinner" class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
+
+
+@*   
+    _取消 這程式碼阻斷了CSS運行
+<div id="spinner" class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
         <div class="spinner"></div>
-    </div>
+    </div> *@
+
+
     <!-- Spinner End -->
     <!-- Topbar Start -->
     @* <div class="container-fluid bg-dark px-5 d-none d-lg-block">
@@ -82,7 +91,7 @@
                         <div class="navbar-nav ms-auto py-0">
                             <a href="@Url.Action("MemberPageTest" , "Member")" class="nav-item nav-link active">我的首頁</a>
                             <a href="@Url.Action("Edit" , "Member")" class="nav-item nav-link">修改資料</a>
-                            <a href="@Url.Action("MyBlog" , "Member")" class="nav-item nav-link">我的部落格</a>
+                            <a href="@Url.Action("MyBlog" , "Member")"  class="nav-item nav-link">我的部落格</a>
                             <div class="nav-item dropdown">
                                 <a href="@Url.Action("MyCollectionList" , "Member")" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">我的作品</a>
                                 <div class="dropdown-menu m-0">
@@ -136,20 +145,25 @@
             }
 
         }
-        <div id="header-carousel" class="carousel slide carousel-fade" data-bs-ride="carousel">
-            <div class="carousel-inner">
-                <div class="carousel-item active">
-                    <img class="w-100" src="~/Layout/startup2-1.0.0/img/carousel-1.jpg" alt="Image">
+        @* 大輪播牆 *@
+        <div>
+            @*   _取消
+
+            <div id="header-carousel" class="carousel slide carousel-fade" data-bs-ride="carousel"> *@
+            @* <div class="carousel-inner"> *@
+                @* <div class="carousel-item active"> *@
+                    <div>
+                    <img class="w-100" src="~/images/05.jfif" alt="Image">
                     <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
                         <div class="p-3" style="max-width: 900px;">
-                            <h5 class="text-white text-uppercase mb-3 animated slideInDown">Creative & Innovative</h5>
-                            <h1 class="display-1 text-white mb-md-4 animated zoomIn">Creative & Innovative Digital Solution</h1>
+                            <h5 class="text-white text-uppercase mb-3 animated slideInDown">格魯特遊戲論壇 </h5>
+                            <h1 class="display-1 text-white mb-md-4 animated zoomIn">最佳遊戲論壇</h1>
                             <a href="quote.html" class="btn btn-primary py-md-3 px-md-5 me-3 animated slideInLeft">Free Quote</a>
                             <a href="" class="btn btn-outline-light py-md-3 px-md-5 animated slideInRight">Contact Us</a>
                         </div>
                     </div>
                 </div>
-                <div class="carousel-item">
+              @*   <div class="carousel-item">
                     <img class="w-100" src="~/Layout/startup2-1.0.0/img/carousel-2.jpg" alt="Image">
                     <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
                         <div class="p-3" style="max-width: 900px;">
@@ -159,9 +173,9 @@
                             <a href="" class="btn btn-outline-light py-md-3 px-md-5 animated slideInRight">Contact Us</a>
                         </div>
                     </div>
-                </div>
-            </div>
-            <button class="carousel-control-prev" type="button" data-bs-target="#header-carousel"
+                </div> *@
+            @* </div> *@
+   @*          <button class="carousel-control-prev" type="button" data-bs-target="#header-carousel"
                     data-bs-slide="prev">
                 <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                 <span class="visually-hidden">Previous</span>
@@ -170,7 +184,7 @@
                     data-bs-slide="next">
                 <span class="carousel-control-next-icon" aria-hidden="true"></span>
                 <span class="visually-hidden">Next</span>
-            </button>
+            </button> *@
         </div>
     </div>
     <!-- Navbar & Carousel End -->
@@ -293,7 +307,7 @@
     <div class="container-fluid py-5 wow fadeInUp" data-wow-delay="0.1s">
         <div class="container py-5">
             <div class="section-title text-center position-relative pb-3 mb-5 mx-auto" style="max-width: 600px;">
-                <h5 class="fw-bold text-primary text-uppercase">我的作品</h5>
+                <h5>我的作品</h5>
                 <h1 class="mb-0">作品</h1>
             </div>
             <div class="card-group" id="Collection">
@@ -840,17 +854,17 @@
                  <div class="row g-5">
                      <div class="col-lg-7">
                          <div class="section-title position-relative pb-3 mb-5">
-                             <h5 class="fw-bold text-primary text-uppercase">我的資料</h5>
+                             <h5>我的資料</h5>
                              <h1 class="mb-0">${data[0].mycomment}</h1>
                          </div>
                          <div class="row g-0 mb-3">
                              <div class="col-sm-6 wow zoomIn" data-wow-delay="0.2s">
-                                 <h5 class="mb-3" id="membername"><i class="fa fa-check text-primary me-3"></i>姓名:${data[0].name}</h5>
-                                 <h5 class="mb-3"><i class="fa fa-check text-primary me-3"></i>性別:${genderName}</h5>
+                                         <h5 class="mb-3" id="membername"><i class="fa fa-check"style="color:#930000;"></i>姓名:${data[0].name}</h5>
+                                     <h5 class="mb-3"><i class="fa fa-check "style="color:#930000;"></i>性別:${genderName}</h5>
                              </div>
                              <div class="col-sm-6 wow zoomIn" data-wow-delay="0.4s">
-                                 <h5 class="mb-3"><i class="fa fa-check text-primary me-3"></i>年紀:${howOld}</h5>
-                                 <h5 class="mb-3"><i class="fa fa-check text-primary me-3"></i>電話:${data[0].phone}</h5>
+                                     <h5 class="mb-3"><i class="fa fa-check "style="color:#930000;"></i>年紀:${howOld}</h5>
+                                     <h5 class="mb-3"><i class="fa fa-check "style="color:#930000;"></i>電話:${data[0].phone}</h5>
                              </div>
 
                          </div>
@@ -860,10 +874,10 @@
                              </div>
                              <div class="ps-4">
                                  <h5 class="mb-2">歡迎來信詢問</h5>
-                                 <h4 class="text-primary mb-0">${data[0].email}</h4>
+                                     <h4 style="color:#930000;">${data[0].email}</h4>
                              </div>
                          </div>
-                         <a href="quote.html" class="btn btn-primary py-3 px-5 mt-3 wow zoomIn" data-wow-delay="0.9s">寫信</a>
+                         <a href="quote.html" class="btn btn-danger py-3 px-5 mt-3 wow zoomIn" data-wow-delay="0.9s">寫信</a>
                      </div>
                      <div class="col-lg-5" style="min-height: 500px;">
                          <div class="position-relative h-100">
