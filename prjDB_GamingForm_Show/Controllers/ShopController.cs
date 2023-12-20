@@ -95,8 +95,14 @@ namespace prjDB_GamingForm_Show.Controllers
 				var data = _db.Products.Where(x => x.ProductId == id).Select(x => new { x.ProductId, x.ProductName, x.Price, x.ProductContent, x.MemberId, x.FImagePath });
 				return Json(data);
 			}
+
+			public IActionResult ProductReviewNow(int id)
+			{
+				Product data = _db.Products.Where(p => p.ProductId == id).Select(p => p).FirstOrDefault();
+				return View(data);
+            }
 			//檢舉
-            public IActionResult ProductComplain(CProductAdmin vm)
+			public IActionResult ProductComplain(CProductAdmin vm)
             {
                 if (HttpContext.Session.GetInt32(CDictionary.SK_UserID) != null)
                 {
