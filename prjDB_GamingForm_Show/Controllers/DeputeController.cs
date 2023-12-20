@@ -635,7 +635,7 @@ namespace prjDB_GamingForm_Show.Controllers
                 return Json(new { success = false, message = ex.Message });
             }
         }
-        public IActionResult Apply(int id)
+        public IActionResult Apply(int id, int? inviterID = null)
         { 
             Depute o = _db.Deputes.FirstOrDefault(_ => _.DeputeId == id);
             if (o == null)
@@ -655,6 +655,8 @@ namespace prjDB_GamingForm_Show.Controllers
                 int memberStatus = _db.Members.FirstOrDefault(_ => _.MemberId == HttpContext.Session.GetInt32(CDictionary.SK_UserID)).StatusId;
                 HttpContext.Session.SetInt32(CDictionary.SK_會員狀態編號, memberStatus);
             }
+            //if(inviterID!=null)
+            //    1
             return View(o);
         }
         [HttpPost]
