@@ -9,18 +9,22 @@
 
   <ItemGroup>
     <Compile Remove="bin\**" />
+    <Compile Remove="DB\**" />
     <Compile Remove="Models\Depute\**" />
     <Compile Remove="wwwroot\assets\**" />
     <Compile Remove="wwwroot\MemberImage\**" />
     <Content Remove="bin\**" />
+    <Content Remove="DB\**" />
     <Content Remove="Models\Depute\**" />
     <Content Remove="wwwroot\assets\**" />
     <Content Remove="wwwroot\MemberImage\**" />
     <EmbeddedResource Remove="bin\**" />
+    <EmbeddedResource Remove="DB\**" />
     <EmbeddedResource Remove="Models\Depute\**" />
     <EmbeddedResource Remove="wwwroot\assets\**" />
     <EmbeddedResource Remove="wwwroot\MemberImage\**" />
     <None Remove="bin\**" />
+    <None Remove="DB\**" />
     <None Remove="Models\Depute\**" />
     <None Remove="wwwroot\assets\**" />
     <None Remove="wwwroot\MemberImage\**" />
@@ -47,13 +51,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="DB\" />
     <Folder Include="Models\Entities\" />
     <Folder Include="wwwroot\files\depute\" />
     <Folder Include="wwwroot\images\MemberCollectionPreView\" />
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="wwwroot\files\DEMO_depute\2.委託案件.zip" />
     <None Include="wwwroot\Layout\iPortfolio\assets\js\main.js" />
     <None Include="wwwroot\Layout\iPortfolio\assets\vendor\aos\aos.cjs.js" />
     <None Include="wwwroot\Layout\iPortfolio\assets\vendor\aos\aos.esm.js" />
