@@ -1,0 +1,155 @@
+﻿@model IEnumerable<prjDB_GamingForm_Show.Models.Entities.Order>
+
+@{
+    ViewData["Title"] = "OrderListcheck";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    var totalOrders = Model.Count();
+    var totalAmount = Math.Floor(Model.Where(p => p.StatusId == 16 || p.StatusId == 15).Sum(p => p.SumPrice));
+    //var averagePrice = Model.Any() ? Model.Average(o => o.SumPrice) : 0;
+    var averagePrice = Model.Any() ? Math.Floor(Model.Average(o => o.SumPrice)) : 0;
+}
+
+<div style="font-size:25px">
+    查詢起始日期:@((ViewBag.start as DateTime?)?.ToShortDateString()) /
+    查詢結束日期:@((ViewBag.end as DateTime?)?.ToShortDateString()) /
+    訂單狀態:@ViewBag.ST
+    <br />
+    總訂單數:@totalOrders 筆  /  訂單總額:@totalAmount 元  /  平均金額:@averagePrice 元
+    <br />
+</div>
+
+@using (Html.BeginForm())
+{
+
+        <label for="start">開始日期:</label>
+        <input type="date" id="start" name="startday" value="2023-01-01" min="2023-01-01" max="2099-12-31" />
+
+        @*        <label for="start">結束日期:</label>
+        <input type="date" id="end" name="endday" value="@DateTime.Now.ToString("yyyy-MM-dd")" min="2023-01-01" max="2099-12-31" />*@
+
+        <label for="end">結束日期:</label>
+        <input type="date" id="end" name="endday" value="@DateTime.Now.ToString("yyyy-MM-dd")" min="2023-01-01" max="2099-12-31" />
+
+
+        <select id="sel_Com" name="ST" style="margin-top:3px;width:200px;" onchange="updateOrderList()">
+            <option>請選擇訂單狀態</option>
+            <option>未付款</option>
+            <option>已付款</option>
+            <option>已出貨</option>
+            <option>已完成</option>
+            <option>取消訂單</option>
+        </select>
+
+        @*<input type="submit" value="查詢" class="btn btn-dark" />*@
+
+        <button id="btn_Search" type="button" class="btn btn-danger" data-bs-dismiss="modal">查詢</button>
+    
+
+}
+
+
+<table class="table table-dark table-hover" style="color:white ; font-size:20px">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.OrderId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MemberId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CouponId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.OrderDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PaymentDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CompletedDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PaymentId)
+            </th>
+
+            <th>
+                @Html.DisplayNameFor(model => model.StatusId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SumPrice)
+            </th>
+
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.OrderId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MemberId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Coupon.Title)
+                </td>
+                <td>
+                    @item.OrderDate.ToString("yyyy/MM/dd")
+                </td>
+                <td>
+                    @{
+                        var pday = item.PaymentDate;
+                        var payday = pday.HasValue ? pday.Value.ToString("yyyy/MM/dd") : string.Empty;
+                    }
+                    @Html.DisplayFor(modelitem => payday)
+                </td>
+                <td>
+                    @{
+                        var completedDate = item.CompletedDate;
+                        var formattedDate = completedDate.HasValue ? completedDate.Value.ToString("yyyy/MM/dd") : string.Empty;
+                    }
+                    @Html.DisplayFor(modelItem => formattedDate)
+                </td>
+                <td>
+
+                    @Html.DisplayFor(modelItem => item.Payment.Name)
+                </td>
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.Status.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SumPrice)
+                </td>
+
+            </tr>
+        }
+    </tbody>
+</table>
+
+@section Scripts
+    {
+    <script>
+        const btnSearch = document.querySelector('#btn_Search');
+
+        btnSearch.addEventListener('click', () => {
+            var startday = document.getElementById("start").value;
+            var endday = document.getElementById("end").value;
+            var ST = document.getElementById("sel_Com").value;
+
+
+            var url = `@Url.Content("~/Admin/OrderListcheck")?startday=${startday}&endday=${endday}&ST=${ST}`;
+
+
+            fetch(url)
+                .then(response => response.text())
+                .then(data => {
+                    //confirm(`${data}`);
+                    window.location.href = url;
+                });
+        });
+    </script>
+}

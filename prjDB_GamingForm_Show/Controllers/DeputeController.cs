@@ -683,7 +683,7 @@ namespace prjDB_GamingForm_Show.Controllers
                 CDeputeEmail emailContent = new CDeputeEmail()
                 {
                     memberName = _db.Members.FirstOrDefault(_ => _.MemberId == currentDepute.ProviderId).Name,
-                    email = _db.Members.FirstOrDefault(_ => _.MemberId == currentDepute.ProviderId).Email,
+                    email = currentDepute.Provider.Email,
                     deputeTitle = currentDepute.Title,
                     deputeStartDate = currentDepute.StartDate.ToString("yyyy/MM/dd"),
                     deputeStatus = currentDepute.Status.Name,
@@ -918,7 +918,7 @@ namespace prjDB_GamingForm_Show.Controllers
             //寄件者
             message.From.Add(new MailboxAddress("grootdb1229", "grootdb1229@gmail.com"));
             //收件者
-            message.To.Add(new MailboxAddress(vm.memberName, email));
+            message.To.Add(new MailboxAddress(vm.memberName, vm.email));
             //標題
             message.Subject = $"格魯特-委託[{vm.deputeTitle}]狀態更新";
             //內容
