@@ -55,6 +55,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="wwwroot\files\MemberDemo\Demo文件.docx" />
     <None Include="wwwroot\Layout\iPortfolio\assets\js\main.js" />
     <None Include="wwwroot\Layout\iPortfolio\assets\vendor\aos\aos.cjs.js" />
     <None Include="wwwroot\Layout\iPortfolio\assets\vendor\aos\aos.esm.js" />
