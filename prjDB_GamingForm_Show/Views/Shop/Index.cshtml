@@ -122,25 +122,30 @@
         document.addEventListener("DOMContentLoaded", function () {
             $.ajax('@Url.Content("~/Shop/ShopADShow")', {
                 "type": 'get',
-                "success": function (datas) {   
+                "success": function (datas) {
                     Swal.fire({
-                        heightAuto:false,
-                        width:200,                        
+                        heightAuto: false,
+                        width: 500,
                         title: `${datas.title}`,
                         html: `<div class="my-custom-content">${datas.content}</div>`,
-                        imageUrl: `../AD/${datas.imgPath}`,                        
+                        imageUrl: `../AD/${datas.imgPath}`,
                         imageAlt: "Custom image",
-                        confirmButtonText:'關閉廣告',
+                        confirmButtonText: '關閉廣告',
                         background: '#272727',
                         customClass: {
-                            image: 'my-custom-image',// 添加自定義 CSS class
+                            image: 'my-custom-image', // 添加自定義 CSS class
                             title: 'my-custom-title', // 添加自定義 CSS class
                             content: 'my-custom-content' // 添加自定義 CSS class
+                        },
+                        imageClick: function () {
+                            // 在這裡添加點擊圖片後的操作，比如將用戶重定向到指定頁面
+                            window.location.href = '@Url.Content("~/Depute/DeputeDetails")?id=48';
                         }
                     });
                 }
-            })
+            });
         });
+
 
         function Addtocar(value) {
             $.ajax('@Url.Content("~/Shop/AddToCar2")', {
