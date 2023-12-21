@@ -19,17 +19,13 @@
                     <div class="accordion accordion-flush" id="accordionFlushExample">
                         @Html.ActionLink("我要上架", "Create", "Shop", null, new { @class = "btn btn-outline-dark mt-auto" })
                         @{
+                            
                             if (!string.IsNullOrEmpty(ViewBag.Productlist))
                             {
                                 <div class="alert alert-danger">@ViewBag.Productlist</div>
                             }
-                            if (!string.IsNullOrEmpty(ViewBag.message))
+                                foreach (var item in Model)
                             {
-                                <div class="alert alert-danger">@ViewBag.message</div>
-                            }
-                        }
-                        @foreach (var item in Model)
-                        {
                             string CountString = "flush-collapseOne" + item.ProductId.ToString();
 
                             <div class="accordion-item">
@@ -57,7 +53,10 @@
                                     </div>
                                 </div>
                             </div>
+                            
+                            }
                         }
+
                     </div>
                 </div>
             </div>
