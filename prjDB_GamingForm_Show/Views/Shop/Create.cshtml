@@ -158,9 +158,14 @@
             var adultScore = data['AdultClassificationScore'];
             var isRacy = data['IsImageRacyClassified'];
             var racyScore = data['RacyClassificationScore'];
+            var isGory = data['IsImageGoryClassified']
             var number = index + 1;
 
             var messages = [];
+            alert(JSON.stringify(data));
+            if (isGory) {
+                alert("暴力")
+            }
 
             if (isAdult) {
                 messages.push(`圖片${number}-色情內容指數:${(adultScore * 100).toFixed(2)}%，請斟酌使用`);
