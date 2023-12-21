@@ -2865,7 +2865,7 @@ textarea.form-control-lg {
 }
 .btn:hover {
     color: var(--bs-btn-hover-color);
-    background-color: #4F4F4F;
+    background-color: #a81d1d;
     border-color: var(--bs-btn-hover-border-color);
 }
 .btn-check + .btn:hover {
@@ -3517,11 +3517,11 @@ textarea.form-control-lg {
   color: var(--bs-dropdown-link-hover-color);
   background-color: var(--bs-dropdown-link-hover-bg);
 }
-.dropdown-item.active, .dropdown-item:active {
-  color: var(--bs-dropdown-link-active-color);
-  text-decoration: none;
-  background-color: var(--bs-dropdown-link-active-bg);
-}
+    .dropdown-item.active, .dropdown-item:active {
+        color: var(--bs-dropdown-link-active-color);
+        text-decoration: none;
+        background-color: #a81d1d;
+    }
 .dropdown-item.disabled, .dropdown-item:disabled {
   color: var(--bs-dropdown-link-disabled-color);
   pointer-events: none;

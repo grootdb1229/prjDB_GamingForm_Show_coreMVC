@@ -1693,7 +1693,7 @@ namespace prjDB_GamingForm_Show.Controllers
 					{
                         statusname = data.Status.Name;
                     }
-                    if (_db.OrderProducts.Where(x => x.ProductId == data.ProductId).Select(x => x).Count() == 0)
+                    if (_db.Products.Where(x => x.ProductId == data.ProductId).Select(x => x).Count() == 0)
                     {
                         ViewBag.Productlist = "您目前沒有任何商品";
                     }
@@ -1766,7 +1766,7 @@ namespace prjDB_GamingForm_Show.Controllers
 				s += "</div>";
 				var message = new MimeMessage();
 				message.From.Add(new MailboxAddress("grootdb1229", "grootdb1229@gmail.com"));
-				message.To.Add(new MailboxAddress(_db.Members.FirstOrDefault(x => x.MemberId == HttpContext.Session.GetInt32(CDictionary.SK_UserID)).Name, "kakuc0e0ig@gmail.com"));
+				message.To.Add(new MailboxAddress(_db.Members.FirstOrDefault(x => x.MemberId == HttpContext.Session.GetInt32(CDictionary.SK_UserID)).Name, "alan90306@gmail.com"));
 				message.Subject = "Your Order from GrootShopping";
 				message.Body = new TextPart("html")
 				{
