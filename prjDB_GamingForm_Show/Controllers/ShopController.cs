@@ -1676,7 +1676,7 @@ namespace prjDB_GamingForm_Show.Controllers
 				_db.Statuses.Load();
 				List<CProductViewModel> vm = new List<CProductViewModel>();
 				string statusname = "";
-				var datas = _db.Products.Where(x => x.MemberId == 34)//HttpContext.Session.GetInt32(CDictionary.SK_UserID))
+				var datas = _db.Products.Where(x => x.MemberId == HttpContext.Session.GetInt32(CDictionary.SK_UserID))
 						.OrderByDescending(x => x.ProductId);
                 CProductViewModel products = null;
 				foreach (var data in datas) 

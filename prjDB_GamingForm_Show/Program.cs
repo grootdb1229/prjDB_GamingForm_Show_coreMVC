@@ -34,7 +34,7 @@ app.MapControllerRoute(
 //pattern: "{controller=Blog}/{action=List}/{id?}");
 pattern: "{controller=Shop}/{action=Index}/{id?}");
 //pattern: "{controller=Depute}/{action=DeputeMain}/{id?}");
-//pattern: "{controller=Admin}/{action=Index}/{id?}");
+pattern: "{controller=Admin}/{action=Index}/{id?}");
 //pattern: "{controller=Home}/{action=Homepage}/{id?}");
 
 app.Run();

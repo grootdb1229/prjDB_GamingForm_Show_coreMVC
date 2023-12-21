@@ -23,7 +23,7 @@
                     <input id="upload_img" name="Photos" style="display:none;" multiple="multiple" onchange="previewImages(this)" type="file">
                     <i class="fa-solid fa-file"></i>上傳圖片
                 </label>
-                <button onclick="analyze()">分析</button>
+                <button onclick="showResults()" class="btn btn-warning">AI仲裁成人內容</button>
                 <div id="imagePreviewContainer" style="width:100%">
                     <!-- 預覽圖片將顯示在這裡 -->
                 </div>
@@ -97,13 +97,13 @@
     </div>
 
     @section Scripts
- {
+    {
     <!--子標籤視窗大小-->
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <!--圖片仲裁用-->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
     <script type="text/javascript">
-        var arrayBuffer;
+        var results = [];
         $("#upload_img").bind("change", function () {
             var files = this.files;
             for (var i = 0; i < files.length; i++) {
@@ -112,13 +112,13 @@
                     var reader = new FileReader();
                     reader.onload = (function (index) {
                         return function () {
-                            arrayBuffer = this.result;
+                            var arrayBuffer = this.result;
                             var blob = new Blob([arrayBuffer], {
                                 type: "image/jpeg"
                             });
                             var urlCreater = window.URL || window.webkitURL;
                             var imageUrl = urlCreater.createObjectURL(blob);
-                            analyze(index);
+                            analyze(index, arrayBuffer);
                         };
                     })(i);
                     reader.readAsArrayBuffer(files[i]);
@@ -128,7 +128,7 @@
                 }
             }
         });
-        function analyze(i) {
+        function analyze(index, arrayBuffer) {
             var params = {
                 // Request parameters
                 "CacheImage": false,
@@ -145,25 +145,56 @@
                 // Request body
                 data: arrayBuffer,
                 processData: false
-            }).done(function (data) {                
-                var isAdult = data['IsImageAdultClassified'];
-                var adultScore = data['AdultClassificationScore'];
-                var isRacy = data['IsImageRacyClassified'];
-                var racyScore = data['RacyClassificationScore'];
-                if (isAdult) {
-                    alert(`圖片${i}-色情內容指數:${(adultScore * 100).toFixed(2)}%`);
-                }
-                if (isRacy) {
-                    alert(`圖片${i}-性暗示指數:${(racyScore * 100).toFixed(2)}%`);
-                }
-                if (!isAdult && !isRacy) {
-                    alert(`圖片${i}-未偵測到色情或性暗示內容`)
-                }
+            }).done(function (data) {
+                var resultMessage = getResultMessage(index, data);  // 根據不同情況取得不同的結果字串
+                results[index] = resultMessage;  // 存放結果到陣列中
             }).fail(function (err) {
                 alert(err.statusText);
             });
         }
 
+        function getResultMessage(index, data) {
+            var isAdult = data['IsImageAdultClassified'];
+            var adultScore = data['AdultClassificationScore'];
+            var isRacy = data['IsImageRacyClassified'];
+            var racyScore = data['RacyClassificationScore'];
+            var number = index + 1;
+
+            var messages = [];
+
+            if (isAdult) {
+                messages.push(`圖片${number}-色情內容指數:${(adultScore * 100).toFixed(2)}%，請斟酌使用`);
+            }
+
+            if (isRacy) {
+                messages.push(`圖片${number}-性暗示指數:${(racyScore * 100).toFixed(2)}%，請斟酌使用`);
+            }
+
+            if (!isAdult && !isRacy) {
+                messages.push(`圖片${number}-未偵測到色情或性暗示內容`);
+            }
+
+            return messages;
+        }
+
+
+        function showResults() {
+            var content = '<div>';
+            for (var i = 0; i < results.length; i++) {
+                var messages = results[i];
+                for (var j = 0; j < messages.length; j++) {
+                    content += `<p>${messages[j]}</p>`;
+                }
+            }
+            content += '</div>';
+
+            Swal.fire({
+                title: '分析結果',
+                html: content,
+                icon: 'info',
+                confirmButtonText: '確定'
+            });
+        }
     </script>
     <!--往上圖片仲裁用-->
 
@@ -265,16 +296,16 @@
                 const data = await response.json();
 
                 const Language = data.map(x => `
-                                        <div class="col-3">
-                                            <label style="margin-bottom: 10px; display: block;">
-                                                     
-                                    <input type="checkbox" name="GameTag" value="${x.subTagId}" onchange="submitTags()">${x.name}
-                                            </label>
-                                        </div>
-                                    `).join('');
+                                                    <div class="col-3">
+                                                        <label style="margin-bottom: 10px; display: block;">
+
+                                                <input type="checkbox" name="GameTag" value="${x.subTagId}" onchange="submitTags()">${x.name}
+                                                        </label>
+                                                    </div>
+                                                `).join('');
 
                 LangDiv.innerHTML = Language;
-             
+
             }
 
 
@@ -284,15 +315,15 @@
                 const data = await response.json();
 
                 const Tag = data.map(x => `
-                                        <div class="col-3">
-                                            <label style="margin-bottom: 10px; display: block;">
-                                             <input type="checkbox" name="GameTag" value="${x.subTagId}" onchange="submitTags()">${x.name}
-                                            </label>
-                                        </div>
-                                    `).join('');
+                                                    <div class="col-3">
+                                                        <label style="margin-bottom: 10px; display: block;">
+                                                         <input type="checkbox" name="GameTag" value="${x.subTagId}" onchange="submitTags()">${x.name}
+                                                        </label>
+                                                    </div>
+                                                `).join('');
 
                 TagDiv.innerHTML = Tag;
-              
+
             }
             LoadLang();
             LoadTag();
@@ -321,8 +352,7 @@
 
 
             //最終資料遞交
-            async function submitForm(event) 
-            {
+            async function submitForm(event) {
                 //六面旗幟必須通過才允許建立資料。
                 var TagValid = false;
                 var PicValid = false;
