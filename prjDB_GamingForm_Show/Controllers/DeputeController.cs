@@ -444,7 +444,7 @@ namespace prjDB_GamingForm_Show.Controllers
                                select new 
                                {   n.DeputeId,
                                    Title = (n.Depute.Title.Length > 15) ? n.Depute.Title.Substring(0,10) : n.Depute.Title,
-                                   DeputeContent = (n.Depute.DeputeContent.Length>15) ? n.Depute.DeputeContent.Substring(0, 20) : n.Depute.DeputeContent, 
+                                   DeputeContent = (n.Depute.DeputeContent.Length>15) ? n.Depute.DeputeContent.Substring(0, 10) : n.Depute.DeputeContent, 
                                    n.Depute.Provider.Name, 
                                    n.Depute.Provider.FImagePath 
                                }).Distinct();
@@ -468,12 +468,15 @@ namespace prjDB_GamingForm_Show.Controllers
             Random rnd = new Random();
             int count = rnd.Next(0, Rcolist.Count()-1);
             List<CDeputeViewModel> Rcolist2 = new List<CDeputeViewModel>();
+            if(Rcolist.Count()>0)
+            { 
             for (int i = 1; i <= 6; i++)
             {
                 Rcolist2.Add(Rcolist[count]);
                 Rcolist.RemoveAt(count);
                 count = rnd.Next(0, Rcolist.Count);
 
+            }
             }
             return PartialView(Rcolist2);
 
