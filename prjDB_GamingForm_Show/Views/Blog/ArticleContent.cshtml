@@ -101,13 +101,13 @@
                                                     -webkit-transition: all 0.3s;
                                                     -o-transition: all 0.3s;
                                                     transition: all 0.3s;
-                                                    border: ridge 5px black;" type="button" class="btn btn-danger" id="btnCreate" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                                                   " type="button" class="btn btn-danger" id="btnCreate" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
                                             發表回覆
                                         </button>
                                     }
                                     else
                                     {
-                                        @Html.ActionLink("發表回覆", "ReplyCreate", "Blog", new { FId = Model.blogs.FirstOrDefault().BlogId,AFId=Model.articles.FirstOrDefault().ArticleId }, new { id = "btnCreate", @class = "btn", style = "font-size:15px;color:#ffffff;padding:17px 15px 13px 30px;display: inline-block;background: #a81d1d;-webkit-transform: skewX(-15deg);                                                -ms-transform: skewX(-15deg);                                                transform: skewX(-15deg);                                                -webkit-transition: all 0.3s;                                                -o-transition: all 0.3s;                                                transition: all 0.3s;                                                border: ridge 5px black;" })
+                                        @Html.ActionLink("發表回覆", "ReplyCreate", "Blog", new { FId = Model.blogs.FirstOrDefault().BlogId,AFId=Model.articles.FirstOrDefault().ArticleId }, new { id = "btnCreate", @class = "btn", style = "font-size:15px;color:#ffffff;padding:17px 15px 13px 30px;display: inline-block;background: #a81d1d;-webkit-transform: skewX(-15deg);                                                -ms-transform: skewX(-15deg);                                                transform: skewX(-15deg);                                                -webkit-transition: all 0.3s;                                                -o-transition: all 0.3s;                                                transition: all 0.3s;                                                " })
                                     }
                                 }
                             </li>
@@ -205,17 +205,8 @@
                                             {
                                                 @Html.ActionLink("修改", "ArticleEdit", "Blog", new { AFId = Model.articles.FirstOrDefault().ArticleId, FId = Model.blogs.FirstOrDefault().BlogId }, new { style = "color:black;", @class = "dropdown-item" })
                                                 @*   <button type="button" class="btn btn-warning" style="float:right;margin: 0 5px" onclick="location.href='@Url.Action( "ArticleEdit","Blog", new { AFId = Model.articles.FirstOrDefault().ArticleId ,FId = Model.blogs.FirstOrDefault().BlogId})'">修改</button> *@
-                                                @Html.ActionLink("刪除", "ArticleDelete", "Blog", new { AFId = Model.articles.FirstOrDefault().ArticleId, FId = Model.blogs.FirstOrDefault().BlogId }, new { style = "color:black;", @class = "dropdown-item" })
-                                                @* <button type="button" class="btn btn-secondary" style="float:right;margin:0 5px" onclick="ArticleDelete()">刪除文章</button> *@
-                                            }
-                                            <script>
-                                                function ArticleDelete() {
-                                                    var result = confirm('確定刪除嗎?');
-                                                    if (result) {
-                                                        location.href = '@Html.Raw(Url.Action("ArticleDelete", "Blog", new { FId = Model.blogs.FirstOrDefault().BlogId, AFId = Model.articles.FirstOrDefault().ArticleId }))';
-                                                    }
-                                                }
-                                            </script>
+                                                @Html.ActionLink("刪除", "ArticleDelete", "Blog", new { AFId = Model.articles.FirstOrDefault().ArticleId, FId = Model.blogs.FirstOrDefault().BlogId }, new { style = "color:black;", @class = "dropdown-item", onclick = "return confirm('確定要刪除嗎?')" })                                               
+                                            }                                         
                                         </li>
                                     </ul>
                                 </li>
