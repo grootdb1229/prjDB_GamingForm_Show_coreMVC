@@ -51,7 +51,6 @@
     <Folder Include="Models\Entities\" />
     <Folder Include="wwwroot\files\depute\" />
     <Folder Include="wwwroot\images\MemberCollectionPreView\" />
-    <Folder Include="wwwroot\images\shop\" />
   </ItemGroup>
 
   <ItemGroup>

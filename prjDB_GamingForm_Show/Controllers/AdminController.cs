@@ -1519,7 +1519,16 @@ namespace prjDB_GamingForm_Show.Controllers
         {
             IEnumerable<CDeputeViewModel> datas = null;
             CDeputtListLoad x = new CDeputtListLoad(_host, _db);
-            datas = x.List.OrderBy(n => n.id).ToList();
+            datas = x.List.OrderByDescending(n => n.modifieddate).ToList();
+            return View(datas);
+        }
+        public IActionResult ADeputeSearch(string keyword)
+        {
+            if(string.IsNullOrEmpty(keyword))
+                return View();
+            IEnumerable<CDeputeViewModel> datas = null;
+            CDeputtListLoad x = new CDeputtListLoad(_host, _db);
+            datas = x.List.Where(n => n.providername.Contains(keyword)).ToList();
             return View(datas);
         }
         public IActionResult ADeputeEdit(CAdminDepute vm)
