@@ -10,7 +10,9 @@
 }
 
 <div style="font-size:25px">
-    查詢起始日期:@ViewBag.start / 查詢結束日期:@ViewBag.end / 訂單狀態:@ViewBag.ST   
+    查詢起始日期:@((ViewBag.start as DateTime?)?.ToShortDateString()) /
+    查詢結束日期:@((ViewBag.end as DateTime?)?.ToShortDateString()) /
+    訂單狀態:@ViewBag.ST
     <br />
     總訂單數:@totalOrders 筆  /  訂單總額:@totalAmount 元  /  平均金額:@averagePrice 元
     <br />
@@ -142,7 +144,7 @@
             fetch(`@Url.Content("~/Admin/OrderListcheck")?startday=${startday}&endday=${endday}&ST=${ST}`)
                 .then(response => response.text())
                 .then(data => {
-                    confirm(`${data}`);
+                    
                     window.location.href = "/Admin/OrderListcheck"
                 });
         })

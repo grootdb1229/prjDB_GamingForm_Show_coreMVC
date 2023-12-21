@@ -1693,10 +1693,6 @@ namespace prjDB_GamingForm_Show.Controllers
 
             return View(orders);
 
-
-
-
-
         }
 
 
