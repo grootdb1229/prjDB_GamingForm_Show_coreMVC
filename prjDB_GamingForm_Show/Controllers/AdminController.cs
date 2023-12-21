@@ -117,7 +117,7 @@ namespace prjDB_GamingForm_Show.Controllers
             {
                 vm = new CAdminCheckProductViewModel
                 {
-                    Products = _db.Products.Include(m => m.Member).Skip(i每頁筆數 * i頁數).Take(i每頁筆數),
+                    Products = _db.Products.Include(m => m.Member).Where(x=>x.StatusId ==1||x.StatusId==2).Skip(i每頁筆數 * i頁數).Take(i每頁筆數),
                     Members = _db.Members.Skip(i每頁筆數 * i頁數).Take(i每頁筆數)
                 };
 
@@ -127,7 +127,7 @@ namespace prjDB_GamingForm_Show.Controllers
             {
                 vm = new CAdminCheckProductViewModel
                 {
-                    Products = _db.Products.Include(m => m.Member).Where(p => p.ProductName.Contains(kyvm.txtKeyWord)).Skip(i每頁筆數 * i頁數).Take(i每頁筆數),
+                    Products = _db.Products.Include(m => m.Member).Where(p => p.ProductName.Contains(kyvm.txtKeyWord)).Where(x => x.StatusId == 1 || x.StatusId == 2).Skip(i每頁筆數 * i頁數).Take(i每頁筆數),
                     Members = _db.Members.Skip(i每頁筆數 * i頁數).Take(i每頁筆數)
                 };
                 return View(vm);
@@ -151,7 +151,7 @@ namespace prjDB_GamingForm_Show.Controllers
                 HttpContext.Session.SetInt32(CDictionary.SK_管理者觀看商品清單頁數使用關鍵字, i頁數);
                 vm = new CAdminCheckProductViewModel
                 {
-                    Products = _db.Products.Include(m => m.Member).Skip(i每頁筆數 * i頁數).Take(i每頁筆數),
+                    Products = _db.Products.Include(m => m.Member).Where(x => x.StatusId == 1 || x.StatusId == 2).Skip(i每頁筆數 * i頁數).Take(i每頁筆數),
                     Members = _db.Members.Skip(i每頁筆數 * i頁數).Take(i每頁筆數)
                 };
                 return View(vm);
@@ -160,7 +160,7 @@ namespace prjDB_GamingForm_Show.Controllers
             {
                 vm = new CAdminCheckProductViewModel
                 {
-                    Products = _db.Products.Include(m => m.Member).Where(p => p.ProductName.Contains(kyvm.txtKeyWord)).Skip(i每頁筆數 * i頁數).Take(i每頁筆數),
+                    Products = _db.Products.Include(m => m.Member).Where(p => p.ProductName.Contains(kyvm.txtKeyWord)).Where(x => x.StatusId == 1 || x.StatusId == 2).Skip(i每頁筆數 * i頁數).Take(i每頁筆數),
                     Members = _db.Members.Skip(i每頁筆數 * i頁數).Take(i每頁筆數)
                 };
                 return View(vm);
@@ -182,7 +182,7 @@ namespace prjDB_GamingForm_Show.Controllers
                 HttpContext.Session.SetInt32(CDictionary.SK_管理者觀看商品清單頁數使用關鍵字, i頁數);
                 vm = new CAdminCheckProductViewModel
                 {
-                    Products = _db.Products.Include(m => m.Member).Skip(i每頁筆數 * i頁數).Take(i每頁筆數),
+                    Products = _db.Products.Include(m => m.Member).Where(x => x.StatusId == 1 || x.StatusId == 2).Skip(i每頁筆數 * i頁數).Take(i每頁筆數),
                     Members = _db.Members.Skip(i每頁筆數 * i頁數).Take(i每頁筆數)
                 };
                 return View(vm);
@@ -191,7 +191,7 @@ namespace prjDB_GamingForm_Show.Controllers
             {
                 vm = new CAdminCheckProductViewModel
                 {
-                    Products = _db.Products.Include(m => m.Member).Where(p => p.ProductName.Contains(kyvm.txtKeyWord)).Skip(i每頁筆數 * i頁數).Take(i每頁筆數),
+                    Products = _db.Products.Include(m => m.Member).Where(p => p.ProductName.Contains(kyvm.txtKeyWord)).Where(x => x.StatusId == 1 || x.StatusId == 2).Skip(i每頁筆數 * i頁數).Take(i每頁筆數),
                     Members = _db.Members.Skip(i每頁筆數 * i頁數).Take(i每頁筆數)
                 };
                 return View(vm);
@@ -217,6 +217,28 @@ namespace prjDB_GamingForm_Show.Controllers
                 _db.SaveChanges();
             }
             return RedirectToAction("ProductList");
+        }
+
+        public IActionResult ProductStatusReview(int id)
+        {
+            Product product = _db.Products.FirstOrDefault(p => p.ProductId == id);
+            if (product == null)
+            {
+                return RedirectToAction("ProductList");
+            }
+            else
+            {
+                if (product.StatusId == 1)
+                {
+                    product.StatusId = 7;
+                }
+                else if (product.StatusId == 7)
+                {
+                    product.StatusId = 1;
+                }
+                _db.SaveChanges();
+            }
+            return RedirectToAction("ProductReview");
         }
         public IActionResult ProductReview()
         {
@@ -246,24 +268,22 @@ namespace prjDB_GamingForm_Show.Controllers
         public IActionResult ProductComplain()
         {
             List<CProductComplainViewModel> ProductComplain = new List<CProductComplainViewModel>();
-            var datas = _db.ProductComplains.OrderBy(x => x.Id).Select(x => new { x.Id, x.ProductId, x.MemeberId, x.ReplyContent, x.ReportDate, x.Status.Name, x.SubTagId });
+            var datas = _db.ProductComplains.OrderByDescending(x => x.Id).Select(x => new { x.Id, x.ProductId, x.MemeberId, x.ReplyContent, x.ReportDate, x.Status.Name, Subtag= x.SubTag.Name });
 
             CProductComplainViewModel pc = new CProductComplainViewModel();
             foreach (var data in datas)
             {
-                var subtag = _db.SubTags.Where(x => x.SubTagId == data.SubTagId).Select(x => new { x.Name });
-                foreach (var i in subtag)
-                {
-                    pc.Id = data.Id;
-                    pc.ProductId = data.ProductId;
-                    pc.MemeberId = data.MemeberId;
-                    pc.SubTag = i.Name;
-                    pc.ReplyContent = data.ReplyContent;
-                    pc.ReportDate = data.ReportDate;
-                    pc.Status = data.Name;
-                    ProductComplain.Add(pc);
-                }
-
+                pc = new CProductComplainViewModel()
+                { 
+                    Id = data.Id,
+                    ProductId = data.ProductId,
+                    MemeberId = data.MemeberId,
+                    SubTag = data.Subtag,
+                    ReplyContent = data.ReplyContent,
+                    ReportDate = data.ReportDate,
+                    Status = data.Name
+                };
+                 ProductComplain.Add(pc);
             }
             return View(ProductComplain);
         }
@@ -324,8 +344,8 @@ namespace prjDB_GamingForm_Show.Controllers
             //                          where E.Email.Contains("alan")
             //                          select E.Email).ToList();
             List<string> Emails = new List<string>();
-            //Emails.Add("alan90306@gmail.com");
-            Emails.Add("kakuc0e0ig@gmail.com");
+            Emails.Add("alan90306@gmail.com");
+            //Emails.Add("kakuc0e0ig@gmail.com");
             //Emails.Add("iamau3vm0@gmail.com");
             NewsLetter.Emails = Emails;
             foreach (string Address in NewsLetter.Emails)
@@ -361,8 +381,8 @@ namespace prjDB_GamingForm_Show.Controllers
             var data = _db.NewsLetters.Where(x => x.Id == id).FirstOrDefault();
             List<string> Emails = new List<string>();
             Emails.Add("alan90306@gmail.com");
-            Emails.Add("kakuc0e0ig@gmail.com");
-            Emails.Add("iamau3vm0@gmail.com");
+            //Emails.Add("kakuc0e0ig@gmail.com");
+            //Emails.Add("iamau3vm0@gmail.com");
             CNewsLetter newsLetters = new CNewsLetter()
             {
                 Title = data.Title,
@@ -1179,7 +1199,7 @@ namespace prjDB_GamingForm_Show.Controllers
                         blogs = _db.Blogs.Include(p => p.SubTag),
                         subTags = _db.SubTags.Include(p => p.Tag),
                         subBlogs = _db.SubBlogs.Include(p => p.Blog),
-                        articles = _db.Articles.Include(p => p.SubBlog).ThenInclude(p => p.Blog).Where(b => b.Title.Contains(kyvm.txtKeyWord) || b.SubBlog.Title.Contains(kyvm.txtKeyWord) || b.SubBlog.Blog.Title.Contains(kyvm.txtKeyWord)).Skip(i每頁筆數 * i頁數).Take(i每頁筆數)
+                        articles = _db.Articles.Include(p => p.SubBlog).ThenInclude(p => p.Blog).Where(p => p.Title.Contains(kyvm.txtKeyWord) || p.SubBlog.Title.Contains(kyvm.txtKeyWord) || p.SubBlog.Blog.Title.Contains(kyvm.txtKeyWord)).Skip(i每頁筆數 * i頁數).Take(i每頁筆數)
                     };
                 }
                 else
@@ -1667,47 +1687,50 @@ namespace prjDB_GamingForm_Show.Controllers
 
         }
 
-        //public IActionResult OrderListcheck(DateTime? startday, DateTime? endday, string? ST)
-        //{
+        public IActionResult OrderListcheck(DateTime? startday, DateTime? endday, string? ST)
+        {
+            if (endday == null)
+                endday = DateTime.Now;
+
+            ViewBag.start = startday;
+            ViewBag.end = endday;
+            if (ST == "請選擇訂單狀態")
+            {
+                ViewBag.ST = "無指定";
+            }
+            else 
+            { 
+            ViewBag.ST = ST;
+            }
+
+            IQueryable<Order> query = _db.Orders.Include(a => a.Payment).Include(a => a.Coupon).Include(a => a.Status);
+
+            if (startday.HasValue && endday.HasValue)
+            {
+                if (ST == "請選擇訂單狀態")
+                {
+                    query = query.Where(p => p.CompletedDate >= startday.Value && p.OrderDate <= endday.Value);
+                }
+                else
+                {
+                    query = query.Where(p => p.CompletedDate >= startday.Value && p.OrderDate <= endday.Value && p.Status.Name == ST);
+                }
+            }
 
 
+            List<Order> orders = query.ToList();
 
+            return View(orders);
 
-        //}
-
-
-
-            //public IActionResult OrderListPartial(DateTime? startday, DateTime? endday, string? ST)
-            //{
-            //    if (endday == null)
-            //        endday = DateTime.Now;
-
-            //    ViewBag.StartDate = startday?.ToString("yyyy-MM-dd") ?? "2023-01-01"; // Default value if startday is null
-            //    ViewBag.EndDate = endday?.ToString("yyyy-MM-dd") ?? DateTime.Now.ToString("yyyy-MM-dd");
-
-            //    IQueryable<Order> query = _db.Orders.Include(a => a.Payment).Include(a => a.Coupon).Include(a => a.Status);
-
-            //    if (startday.HasValue && endday.HasValue)
-            //    {
-            //        if (ST == "請選擇訂單狀態")
-            //        {
-            //            query = query.Where(p => p.CompletedDate >= startday.Value && p.OrderDate <= endday.Value);
-            //        }
-            //        else
-            //        {
-            //            query = query.Where(p => p.CompletedDate >= startday.Value && p.OrderDate <= endday.Value && p.Status.Name == ST);
-            //        }
-            //    }
-
-            //    List<Order> orders = query.ToList();
-
-            //    return PartialView("_OrderListPartial", orders);
-            //}
-
-
-
-            #endregion
         }
+
+
+
+
+
+
+        #endregion
+    }
 
 
 

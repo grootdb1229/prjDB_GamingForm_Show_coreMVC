@@ -37,7 +37,7 @@ namespace prjDB_GamingForm_Show.Controllers
                 {
                     //tags = _db.Tags.Select(p => p),
                     subTags = _db.SubTags.Where(s => s.TagId == 4 && s.SubTagId != 14).Select(p => p),
-                    blogs = _db.Blogs.Where(b => b.SubTagId != 14 && b.Title.Contains(kw.txtKeyWord)).Include(b => b.SubBlogs).ThenInclude(s => s.Articles).Select(p => p),
+                    blogs = _db.Blogs.Where(b => b.SubTagId != 14 && b.Title.Trim().Contains(kw.txtKeyWord.Trim())).Include(b => b.SubBlogs).ThenInclude(s => s.Articles).Select(p => p),
                     //subBlogs = _db.SubBlogs.Include(a => a.Articles).Select(p => p),
                     //articles = _db.Articles.Where(a => a.SubBlog.Blog.SubTagId != 14).OrderByDescending(a => a.ModifiedDate).Select(p => p),
 
@@ -145,7 +145,7 @@ namespace prjDB_GamingForm_Show.Controllers
                     articles = _db.Articles
                         .Include(a => a.Replies)
                         .Include(a => a.Member)
-                        .Where(a => a.SubBlog.BlogId == FId && (a.Title.Contains(kw.txtKeyWord) || a.ArticleContent.Contains(kw.txtKeyWord)))
+                        .Where(a => a.SubBlog.BlogId == FId && (a.Title.Trim().Contains(kw.txtKeyWord.Trim()) || a.ArticleContent.Contains(kw.txtKeyWord)))
                         .OrderByDescending(a => a.IsPinned)  
                         .ThenByDescending(a => a.ModifiedDate)
                         .Select(p => p),

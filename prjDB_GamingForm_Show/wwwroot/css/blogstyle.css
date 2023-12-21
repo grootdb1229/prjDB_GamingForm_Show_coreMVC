@@ -1056,8 +1056,7 @@ ol {
 	transform: skewX(-15deg);
 	-webkit-transition: all 0.3s;
 	-o-transition: all 0.3s;
-	transition: all 0.3s;
-	border: ridge 5px black;
+	transition: all 0.3s;	
 }
 
 	.nav-options .nav-menu ul li.selected-item a {
