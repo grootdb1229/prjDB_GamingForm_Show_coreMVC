@@ -9,8 +9,10 @@
         public string? deputeStartDate {  get; set; }
         public string? deputeStatus {  get; set; }
         public string? recordStatus {  get; set; }
+        public string? recordReplyContent { get; set; }
         public string? workerName {  get; set; }
         public int deputeRecordCount {  get; set; }
         public string progress {  get; set; }
+        public string hasFile {  get; set; }
     }
 }
