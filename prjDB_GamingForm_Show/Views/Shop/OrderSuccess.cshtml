@@ -10,7 +10,7 @@
         <h3>訂單成功  訂單編號:@Model.OrderId</h3>
         <div class="total">
             <span>總計</span>
-            <span>NT$@Html.DisplayFor(model => model.Sumprice)</span>
+            <span>@Model.Sumprice.ToString("#0")元</span>
         </div>
             <div class="bottom">
                 <h3>購物清單</h3>
