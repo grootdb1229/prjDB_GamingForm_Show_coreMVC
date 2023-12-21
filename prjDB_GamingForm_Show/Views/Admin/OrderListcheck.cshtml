@@ -20,8 +20,7 @@
 
 @using (Html.BeginForm())
 {
-    @if (Model.Any())
-    {
+
         <label for="start">開始日期:</label>
         <input type="date" id="start" name="startday" value="2023-01-01" min="2023-01-01" max="2099-12-31" />
 
@@ -41,10 +40,10 @@
             <option>取消訂單</option>
         </select>
 
-        <input type="submit" value="查詢" class="btn btn-dark" />
+        @*<input type="submit" value="查詢" class="btn btn-dark" />*@
 
-        <button id="btn_Search" type="button" class="btn btn-danger" data-bs-dismiss="modal">查詢A</button>
-    }
+        <button id="btn_Search" type="button" class="btn btn-danger" data-bs-dismiss="modal">查詢</button>
+    
 
 }
 
@@ -134,25 +133,23 @@
 @section Scripts
     {
     <script>
-        var startday = document.getElementById("start").value;
-        var endday = document.getElementById("end").value;
-        var ST = document.getElementById("sel_Com").value;
         const btnSearch = document.querySelector('#btn_Search');
 
         btnSearch.addEventListener('click', () => {
+            var startday = document.getElementById("start").value;
+            var endday = document.getElementById("end").value;
+            var ST = document.getElementById("sel_Com").value;
 
-            fetch(`@Url.Content("~/Admin/OrderListcheck")?startday=${startday}&endday=${endday}&ST=${ST}`)
+
+            var url = `@Url.Content("~/Admin/OrderListcheck")?startday=${startday}&endday=${endday}&ST=${ST}`;
+
+
+            fetch(url)
                 .then(response => response.text())
                 .then(data => {
-                    
-                    window.location.href = "/Admin/OrderListcheck"
+                    //confirm(`${data}`);
+                    window.location.href = url;
                 });
-        })
-
-
+        });
     </script>
-
-
-
-
 }
