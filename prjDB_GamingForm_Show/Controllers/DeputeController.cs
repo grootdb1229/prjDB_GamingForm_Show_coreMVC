@@ -805,12 +805,14 @@ namespace prjDB_GamingForm_Show.Controllers
 
                 CDeputeEmail content = new CDeputeEmail()
                 {
-                    memberName=oriDeputRecord.Depute.Provider.Name,
-                    workerName=oriDeputRecord.Member.Name,
-                    email=oriDeputRecord.Depute.Provider.Email,
-                    deputeTitle= oriDeputRecord.Depute.Title,
-                    deputeStatus=oriDeputRecord.ApplyStatus.Name,
-                    progress=CDictionary.PROGRESS_會員完成委託
+                    memberName = oriDeputRecord.Depute.Provider.Name,
+                    workerName = oriDeputRecord.Member.Name,
+                    email = oriDeputRecord.Depute.Provider.Email,
+                    deputeTitle = oriDeputRecord.Depute.Title,
+                    recordReplyContent = oriDeputRecord.ReplyContent,
+                    recordStatus = oriDeputRecord.ApplyStatus.Name,
+                    hasFile = oriDeputRecord.ReplyFileName == null ? "Ｘ" : "Ｖ",
+                    progress = CDictionary.PROGRESS_會員完成委託
                 };
                 _ = Task.Run(() => SendDeputeEmail(content));
                 return Json(new { success = true, message = "案件已提交" });
@@ -880,23 +882,23 @@ namespace prjDB_GamingForm_Show.Controllers
             {
                 case CDictionary.PROGRESS_會員應徵委託:
                     diffContent = $"您發佈的委託「{vm.deputeTitle}」有新的應徵者，目前共有　{vm.deputeRecordCount}　位會員向您投遞履歷";
-                    diffTable = "<tr><td style=\"border: 1px solid #ccc; padding: 8px;\">委託標題</td><td style=\"border: 1px solid #ccc; padding: 8px;\">發佈日期</td><td style=\"border: 1px solid #ccc; padding: 8px;\">應徵人數</td></tr>" +
-                        $"<tr><td style=\"border: 1px solid #ccc; padding: 8px;\">{vm.deputeTitle}</td><td style=\"border: 1px solid #ccc; padding: 8px;\">{vm.deputeStartDate}</td><td style=\"border: 1px solid #ccc; padding: 8px;\">{vm.deputeRecordCount}</td></tr></tbody></table></li>";
+                    diffTable = "<tr><td style=\"border: 1px solid #ccc; padding: 8px;text-align: center;\">委託標題</td><td style=\"border: 1px solid #ccc; padding: 8px;text-align: center;\">發佈日期</td><td style=\"border: 1px solid #ccc; padding: 8px;text-align: center;\">應徵人數</td></tr>" +
+                        $"<tr><td style=\"border: 1px solid #ccc; padding: 8px;text-align: center;\">{vm.deputeTitle}</td><td style=\"border: 1px solid #ccc; padding: 8px;text-align: center;\">{vm.deputeStartDate}</td><td style=\"border: 1px solid #ccc; padding: 8px;text-align: center;\">{vm.deputeRecordCount}</td></tr></tbody></table></li>";
                     break;
                 case CDictionary.PROGRESS_委託者決定合作:
                     diffContent = $"您應徵的委託「{vm.deputeTitle}」委託者已決定與您合作";
-                    diffTable = "<tr><td style=\"border: 1px solid #ccc; padding: 8px;\">委託標題</td><td style=\"border: 1px solid #ccc; padding: 8px;\">委託內容</td><td style=\"border: 1px solid #ccc; padding: 8px;\">目前狀態</td></tr>" +
-                        $"<tr><td style=\"border: 1px solid #ccc; padding: 8px;\">{vm.deputeTitle}</td><td style=\"border: 1px solid #ccc; padding: 8px;\">{vm.deputeContent}</td><td style=\"border: 1px solid #ccc; padding: 8px;\">{vm.recordStatus}</td></tr></tbody></table></li>";
+                    diffTable = "<tr><td style=\"border: 1px solid #ccc; padding: 8px;text-align: center;\">委託標題</td><td style=\"border: 1px solid #ccc; padding: 8px;text-align: center;\">委託內容</td><td style=\"border: 1px solid #ccc; padding: 8px;text-align: center;\">目前狀態</td></tr>" +
+                        $"<tr><td style=\"border: 1px solid #ccc; padding: 8px;text-align: center;\">{vm.deputeTitle}</td><td style=\"border: 1px solid #ccc; padding: 8px;text-align: center;\">{vm.deputeContent}</td><td style=\"border: 1px solid #ccc; padding: 8px;text-align: center;\">{vm.recordStatus}</td></tr></tbody></table></li>";
                     break;
                 case CDictionary.PROGRESS_會員完成委託:
-                    diffContent = $"您發佈的的委託「{vm.deputeTitle}」狀態已更新為「{vm.deputeStatus}」";
-                    diffTable = "<tr><td style=\"border: 1px solid #ccc; padding: 8px;\">委託標題</td><td style=\"border: 1px solid #ccc; padding: 8px;\">執行會員</td><td style=\"border: 1px solid #ccc; padding: 8px;\">目前狀態</td></tr>" +
-                        $"<tr><td style=\"border: 1px solid #ccc; padding: 8px;\">{vm.deputeTitle}</td><td style=\"border: 1px solid #ccc; padding: 8px;\">{vm.workerName}</td><td style=\"border: 1px solid #ccc; padding: 8px;\">{vm.recordStatus}</td></tr></tbody></table></li>";
+                    diffContent = $"您發佈的的委託「{vm.deputeTitle}」狀態已更新為「{vm.recordStatus}」";
+                    diffTable = "<tr><td style=\"border: 1px solid #ccc; padding: 8px;text-align: center;\">委託標題</td><td style=\"border: 1px solid #ccc; padding: 8px;text-align: center;\">執行會員</td><td style=\"border: 1px solid #ccc; padding: 8px;text-align: center;\">回覆內容</td><td style=\"border: 1px solid #ccc; padding: 8px;text-align: center;\">有無副檔</td></tr>" +
+                        $"<tr><td style=\"border: 1px solid #ccc; padding: 8px;text-align: center;\">{vm.deputeTitle}</td><td style=\"border: 1px solid #ccc; padding: 8px;text-align: center;\">{vm.workerName}</td><td style=\"border: 1px solid #ccc; padding: 8px;text-align: center;\">{vm.recordReplyContent}</td><td style=\"border: 1px solid #ccc; padding: 8px;text-align: center;\">{vm.hasFile}</td>";
                     break;
                 case CDictionary.PROGRESS_委託者確認完成:
                     diffContent = $"您的委託「{vm.deputeTitle}」委託者已確認完成";
-                    diffTable = "<tr><td style=\"border: 1px solid #ccc; padding: 8px;\">委託標題</td><td style=\"border: 1px solid #ccc; padding: 8px;\">委託內容</td><td style=\"border: 1px solid #ccc; padding: 8px;\">目前狀態</td></tr>" +
-                        $"<tr><td style=\"border: 1px solid #ccc; padding: 8px;\">{vm.deputeTitle}</td><td style=\"border: 1px solid #ccc; padding: 8px;\">{vm.deputeContent}</td><td style=\"border: 1px solid #ccc; padding: 8px;\">{vm.deputeStatus}</td></tr></tbody></table></li>";
+                    diffTable = "<tr><td style=\"border: 1px solid #ccc; padding: 8px;text-align: center;\">委託標題</td><td style=\"border: 1px solid #ccc; padding: 8px;text-align: center;\">委託內容</td><td style=\"border: 1px solid #ccc; padding: 8px;text-align: center;\">目前狀態</td></tr>" +
+                        $"<tr><td style=\"border: 1px solid #ccc; padding: 8px;text-align: center;\">{vm.deputeTitle}</td><td style=\"border: 1px solid #ccc; padding: 8px;text-align: center;\">{vm.deputeContent}</td><td style=\"border: 1px solid #ccc; padding: 8px;text-align: center;\">{vm.recordStatus}</td></tr></tbody></table></li>";
                     break;
             }
             //頂標(免改)
@@ -1016,7 +1018,8 @@ namespace prjDB_GamingForm_Show.Controllers
                 memberName = deputeRecord.Member.Name,
                 email = deputeRecord.Member.Email,
                 deputeTitle = depute.Title,
-                deputeStatus = deputeRecord.ApplyStatus.Name,
+                deputeContent=depute.DeputeContent,
+                recordStatus = deputeRecord.ApplyStatus.Name,
                 progress = CDictionary.PROGRESS_委託者確認完成
             };
             _ = Task.Run(() => SendDeputeEmail(content));
