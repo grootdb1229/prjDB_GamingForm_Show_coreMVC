@@ -1179,7 +1179,7 @@ namespace prjDB_GamingForm_Show.Controllers
                         blogs = _db.Blogs.Include(p => p.SubTag),
                         subTags = _db.SubTags.Include(p => p.Tag),
                         subBlogs = _db.SubBlogs.Include(p => p.Blog),
-                        articles = _db.Articles.Include(p => p.SubBlog).ThenInclude(p => p.Blog).Where(b => b.Title.Contains(kyvm.txtKeyWord) || b.SubBlog.Title.Contains(kyvm.txtKeyWord) || b.SubBlog.Blog.Title.Contains(kyvm.txtKeyWord)).Skip(i每頁筆數 * i頁數).Take(i每頁筆數)
+                        articles = _db.Articles.Include(p => p.SubBlog).ThenInclude(p => p.Blog).Where(p => p.Title.Contains(kyvm.txtKeyWord) || p.SubBlog.Title.Contains(kyvm.txtKeyWord) || p.SubBlog.Blog.Title.Contains(kyvm.txtKeyWord)).Skip(i每頁筆數 * i頁數).Take(i每頁筆數)
                     };
                 }
                 else
@@ -1658,47 +1658,54 @@ namespace prjDB_GamingForm_Show.Controllers
 
         }
 
-        //public IActionResult OrderListcheck(DateTime? startday, DateTime? endday, string? ST)
-        //{
+        public IActionResult OrderListcheck(DateTime? startday, DateTime? endday, string? ST)
+        {
+            if (endday == null)
+                endday = DateTime.Now;
+
+            ViewBag.start = startday;
+            ViewBag.end = endday;
+            if (ST == "請選擇訂單狀態")
+            {
+                ViewBag.ST = "無指定";
+            }
+            else 
+            { 
+            ViewBag.ST = ST;
+            }
+
+            IQueryable<Order> query = _db.Orders.Include(a => a.Payment).Include(a => a.Coupon).Include(a => a.Status);
+
+            if (startday.HasValue && endday.HasValue)
+            {
+                if (ST == "請選擇訂單狀態")
+                {
+                    query = query.Where(p => p.CompletedDate >= startday.Value && p.OrderDate <= endday.Value);
+                }
+                else
+                {
+                    query = query.Where(p => p.CompletedDate >= startday.Value && p.OrderDate <= endday.Value && p.Status.Name == ST);
+                }
+            }
+
+
+            List<Order> orders = query.ToList();
+
+            return View(orders);
 
 
 
 
-        //}
 
-
-
-            //public IActionResult OrderListPartial(DateTime? startday, DateTime? endday, string? ST)
-            //{
-            //    if (endday == null)
-            //        endday = DateTime.Now;
-
-            //    ViewBag.StartDate = startday?.ToString("yyyy-MM-dd") ?? "2023-01-01"; // Default value if startday is null
-            //    ViewBag.EndDate = endday?.ToString("yyyy-MM-dd") ?? DateTime.Now.ToString("yyyy-MM-dd");
-
-            //    IQueryable<Order> query = _db.Orders.Include(a => a.Payment).Include(a => a.Coupon).Include(a => a.Status);
-
-            //    if (startday.HasValue && endday.HasValue)
-            //    {
-            //        if (ST == "請選擇訂單狀態")
-            //        {
-            //            query = query.Where(p => p.CompletedDate >= startday.Value && p.OrderDate <= endday.Value);
-            //        }
-            //        else
-            //        {
-            //            query = query.Where(p => p.CompletedDate >= startday.Value && p.OrderDate <= endday.Value && p.Status.Name == ST);
-            //        }
-            //    }
-
-            //    List<Order> orders = query.ToList();
-
-            //    return PartialView("_OrderListPartial", orders);
-            //}
-
-
-
-            #endregion
         }
+
+
+
+
+
+
+        #endregion
+    }
 
 
 
