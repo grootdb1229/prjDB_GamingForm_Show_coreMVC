@@ -79,8 +79,11 @@
                         <div class="col mb-5">
                             <div class="card h-100">                       
                             <a href="@Url.Content("~/Shop/Details")?id=@item.ProductId">  <img class="card-img-top" src="~/images/shop/@item.FImagePath" alt="..." style="height:25vh;object-fit:contain; background-color: black; " /></a>
-                                <div class="card-body p-3" style="background-color:#4F4F4F">
-                                    <div class="text-center" style="height:20vh;">
+                                
+                            <div class="card-body p-3" style="background-color:#4F4F4F">
+                                   
+                                <div class="text-center" style="height:25vh;">
+                                    <div style="height:35px">
                                         @{
                                             string[] tags = item.SubTagName.Split('/');
                                             foreach (var t in tags)
@@ -88,8 +91,11 @@
                                                 <span class="badge text-bg-light">@t</span>
                                             }
                                         }
-                                        <div style="margin: 10px">
-                                        <h4 class="fw-bolder" style="color:#fffafa">@item.ProductName</h4>
+                                    </div>
+                                    <div class="text-center" style="height:25vh; margin: 30px;">
+                                       
+                                        <h5 class="fw-bolder" style="color:#fffafa">@item.ProductName</h5>
+                                   
                                     @*     @{
                                             var productName = @item.ProductName;
 
@@ -116,13 +122,13 @@
 
                                         </div>
                                     </div>
-                                    <div style="background-color:black; position: relative; height: 38px;">
-
-                                        <input type="button" value="加入購物車" class="btn btn-outline-dark mt-auto" value="@item.ProductId" onclick="Addtocar(@item.ProductId)" style=" position: absolute; right: 0;" />
-                                        <div style="position: absolute;bottom:6px; left: 0;">
-                                            <span style="color:white;  ">NT$@item.Price.ToString("#0")</span>
-                                        </div>
+                                <div style="background-color:black;border-radius:  10px; position: relative; height: 37px; display: flex; align-items: center;">
+                                    <div style="flex: 1; position: relative; text-align: center;">
+                                        <span style="color:white;">NT$@item.Price.ToString("#0")</span>
                                     </div>
+                                    <input type="button" value="加入購物車" class="btn btn-outline-dark mt-auto" value="@item.ProductId" onclick="Addtocar(@item.ProductId)" style="flex: 1;" />     
+                                </div>
+
                                 </div>
                             </div>
                         </div>
@@ -342,27 +348,29 @@
         //標籤搜尋END
 
         //以下是商品呈現標準格式
-        function createProductCard(product) {
+        function createProductCard(product) { 
             return `
                             <div class="col mb-5">
                                 <div class="card h-100">
-                                    <div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem">Sale</div>
-                                                                           <a href="@Url.Content("~/Shop/Details")?id=${product.ProductId}"><img class="card-img-top" src="/images/shop/${product.FImagePath}" alt="..." style="height:25vh;object-fit:contain; background-color: black; " /></a>
-                                            <div class="card-body p-3"style="background-color:#4F4F4F">
-                                        <div class="text-center">
-                                            ${product.SubTagName.split('/').map(tag => `<span class="badge text-bg-light">${tag}</span>`).join("")}
+                                  <a href="@Url.Content("~/Shop/Details")?id=${product.ProductId}"><img class="card-img-top" 
+                                src="/images/shop/${product.FImagePath}" alt="..." style="height:25vh;object-fit:contain; background-color: black; " /></a>
+                                <div class="card-body p-3"style="background-color:#4F4F4F">
+                                  
+                               <div class="text-center" style="height:25vh;">
+                        <div style="height:35px">
+                     ${product.SubTagName.split('/').map(tag => `<span class="badge text-bg-light">${tag}</span>`).join("")}
+                                 </div>
+                            <div class="text-center" style="height:25vh; margin: 30px;">
+                                        <h5 class="fw-bolder" style="color:#fffafa">${product.ProductName}</h5>
+                                  </div>
+                                 </div>
 
-                                                <div style="margin: 10px">
-                                                        <h4 class="fw-bolder" style="color:#fffafa">${product.ProductName}</h5>
-                                            </div>
-                                        </div>
-
-                                                   <div style="background-color:black; position: relative; height: 38px;">
-                                                                                           <input type="button" value="加入購物車" class="btn btn-outline-dark mt-auto" value="${product.ProductId}"  onclick="Addtocar(${product.ProductId})" style=" position: absolute; right: 0;"/>
-                                                <div style="position: absolute;bottom:6px; left: 0;">
-                                              <span style="color:weight; ">NT$${product.Price}</span>
-                                              </div>
-                                              </div>
+                          <div style="background-color:black;border-radius:  10px; position: relative; height: 37px; display: flex; align-items: center;">
+                                 <div style="flex: 1; position: relative; text-align: center;">
+                                           <span style="color:white;">NT$${product.Price}</span>
+                                </div>
+                                  <input type="button" value="加入購物車" class="btn btn-outline-dark mt-auto" value="${product.ProductId}" onclick="Addtocar(${product.ProductId})" style="flex: 1;" />
+                         </div>
                                     </div>
                                 </div>
                             </div>
