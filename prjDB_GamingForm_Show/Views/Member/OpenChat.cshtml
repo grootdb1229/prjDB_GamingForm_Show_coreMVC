@@ -85,6 +85,12 @@
         flex-direction: column;
     }
     
+    .profile_img{
+        border-radius: 50%;
+        width: 90px;
+        height: 90px;
+        object-fit: cover; /* 保持圖片比例，裁切以填滿元素 */
+    }
 </style>
 <head>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
@@ -142,6 +148,7 @@
                 // 如果 data 有效，則添加圖像元素
                 if (data) {
                     var imgElement = $("<img>").attr("src", `../MemberPhoto/${data}`).attr("alt", "Member Image").css("margin-right", "10px");
+                    imgElement.addClass("profile_img");  // 新增這行以添加類別
                     listItem.append(imgElement);
                 }
 

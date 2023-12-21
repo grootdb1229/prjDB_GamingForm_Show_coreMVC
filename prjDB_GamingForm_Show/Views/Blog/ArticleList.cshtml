@@ -78,13 +78,13 @@
                                                 -webkit-transition: all 0.3s;
                                                 -o-transition: all 0.3s;
                                                 transition: all 0.3s;
-                                                border: ridge 5px black;" type="button" class="btn btn-danger" id="btnCreate" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                                                " type="button" class="btn btn-danger" id="btnCreate" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
                                             發表文章
                                         </button>
                                     }
                                     else
                                     {
-                                        @Html.ActionLink("發表文章", "ArticleCreate", "Blog", new { FId = Model.blogs.FirstOrDefault().BlogId }, new { id = "btnCreate", @class = "btn" ,style="font-size:15px;color:#ffffff;padding:17px 15px 13px 30px;display: inline-block;background: #a81d1d;-webkit-transform: skewX(-15deg);                                                -ms-transform: skewX(-15deg);                                                transform: skewX(-15deg);                                                -webkit-transition: all 0.3s;                                                -o-transition: all 0.3s;                                                transition: all 0.3s;                                                border: ridge 5px black;"})
+                                        @Html.ActionLink("發表文章", "ArticleCreate", "Blog", new { FId = Model.blogs.FirstOrDefault().BlogId }, new { id = "btnCreate", @class = "btn" ,style="font-size:15px;color:#ffffff;padding:17px 15px 13px 30px;display: inline-block;background: #a81d1d;-webkit-transform: skewX(-15deg);                                                -ms-transform: skewX(-15deg);                                                transform: skewX(-15deg);                                                -webkit-transition: all 0.3s;                                                -o-transition: all 0.3s;                                                transition: all 0.3s;                                               "})
                                     }
                                 }
                             </li>
