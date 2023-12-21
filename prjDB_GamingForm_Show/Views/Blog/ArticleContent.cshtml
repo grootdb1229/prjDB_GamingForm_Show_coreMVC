@@ -243,8 +243,13 @@
 
                         <script>
                             function shareOnFacebook() {
+                                var FId = @Model.blogs.FirstOrDefault().BlogId;
+                                var AFId = @Model.articles.FirstOrDefault().ArticleId;
+                                var encordAB = encodeURIComponent('&AFId=');
+                                var shareUrl = "https://www.facebook.com/sharer.php?u=https://prjdbgamingformshow20231219140402.azurewebsites.net/Blog/ArticleContent?FId=" + FId + encordAB + AFId ;
+                                window.open(`${shareUrl}`,'_blank');
                                 // 使用 window.open 在新視窗中打開 Facebook 分享連結
-                                window.open('https://www.facebook.com/sharer.php?u=https://prjdbgamingformshow20231219140402.azurewebsites.net/Blog/ArticleContent?FId=9&AFId=1235', '_blank');
+                                //window.open('https://www.facebook.com/sharer.php?u=https://prjdbgamingformshow20231219140402.azurewebsites.net/Blog/ArticleContent?FId=9&AFId=1235', '_blank');
                             }
                         </script>
 
