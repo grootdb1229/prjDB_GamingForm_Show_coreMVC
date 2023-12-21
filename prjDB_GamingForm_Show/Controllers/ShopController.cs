@@ -859,7 +859,7 @@ namespace prjDB_GamingForm_Show.Controllers
 								x.Price = product.Price;
 								x.AvailableDate = product.AvailableDate;
 								x.ProductContent = product.ProductContent;
-								x.UnitStock = product.UnitStock;
+								x.UnitStock = 99; /*product.UnitStock;*/
 								x.StatusId = 7;//記得改回7
 								x.MemberId = product.MemberID;
 

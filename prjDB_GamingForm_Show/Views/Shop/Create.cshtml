@@ -78,14 +78,14 @@
         </div>
         <p id="ProductcontentAlert" style="color:red"></p><!--沒內文之警示-->
 
-        <div class="form-group">
+     @*    <div class="form-group">
             @Html.LabelFor(model => model.UnitStock, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                 @Html.EditorFor(model => model.UnitStock, new { htmlAttributes = new { @class = "form-control", id = "Unitstock" } })
                 @Html.ValidationMessageFor(model => model.UnitStock, "", new { @class = "text-danger" })
             </div>
         </div>
-        <p id="UnitStockAlert" style="color:red"></p><!--沒金額之警示-->
+        <p id="UnitStockAlert" style="color:red"></p><!--沒金額之警示--> *@
         <hr />
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
@@ -328,7 +328,7 @@
                 var PicValid = false;
                 var NameValid = false;
                 var PriceValid = false;
-                var UnitStockValid = false;
+                // var UnitStockValid = false;
                 var ProductContentValid = false;
 
                 // 正則表達式，匹配一個或多個數字
@@ -340,7 +340,7 @@
                 const gameTagOptions = document.getElementById("GameTagOptions").value; //你必須要選擇至少一個標籤
                 const ProductName = document.getElementById("_Productname");//商品名
                 const ProductPrice = document.getElementById("_ProductPrice");//價格
-                const UnitStock = document.getElementById("Unitstock");//總數
+                // const UnitStock = document.getElementById("Unitstock");//總數
                 event.preventDefault(); // 阻止表單的默認提交行為
                 await submitTags(); // 等待 submitTags 完成
 
@@ -405,27 +405,27 @@
                     }
                 }
                 //庫存處理
-                if (UnitStock.value.trim() === "") {
-                    // 如果輸入框為空，顯示錯誤信息
-                    UnitStockAlert.innerHTML = "請輸入產品庫存。";
-                    UnitStockValid = false;
+                // if (UnitStock.value.trim() === "") {
+                //     // 如果輸入框為空，顯示錯誤信息
+                //     UnitStockAlert.innerHTML = "請輸入產品庫存。";
+                //     UnitStockValid = false;
 
-                } else {
-                    var priceValue = parseInt(ProductPrice.value, 10);
-                    if (!amountRegex.test(ProductPrice.value) || !(priceValue > 1)) {
-                        // 如果不是正確的阿拉伯數字，或者不大於1，顯示錯誤信息
-                        UnitStockAlert.innerHTML = "產品庫存必須是正常的阿拉伯數字且大於1";
-                        UnitStockAlert.style.color = "red";
-                        UnitStockValid = false;
+                // } else {
+                //     var priceValue = parseInt(ProductPrice.value, 10);
+                //     if (!amountRegex.test(ProductPrice.value) || !(priceValue > 1)) {
+                //         // 如果不是正確的阿拉伯數字，或者不大於1，顯示錯誤信息
+                //         UnitStockAlert.innerHTML = "產品庫存必須是正常的阿拉伯數字且大於1";
+                //         UnitStockAlert.style.color = "red";
+                //         UnitStockValid = false;
 
-                    } else {
-                        // 其他情況，顯示正確信息
-                        UnitStockAlert.innerHTML = "&#10003;通過";
-                        UnitStockAlert.style.color = "#79FF79";
-                        UnitStockValid = true;
+                //     } else {
+                //         // 其他情況，顯示正確信息
+                //         UnitStockAlert.innerHTML = "&#10003;通過";
+                //         UnitStockAlert.style.color = "#79FF79";
+                //         UnitStockValid = true;
 
-                    }
-                }
+                //     }
+                // }
 
                 //內文處理
                 if (ProductContent.value.length < 10) {
@@ -439,12 +439,12 @@
                     ProductContentValid = true
 
                 }
-                if (TagValid && PicValid && NameValid && PriceValid && UnitStockValid && ProductContentValid) {
+                if (TagValid && PicValid && NameValid && PriceValid  && ProductContentValid) {
                     document.getElementById('productform').submit(); // 手動提交表單
                 }
                 else { ProductAlert.innerHTML = "仍有資歷尚未填妥"; }
             }
-                        
+                        // && UnitStockValid
 
 
 
