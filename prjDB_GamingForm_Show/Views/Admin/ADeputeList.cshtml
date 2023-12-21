@@ -6,12 +6,12 @@
 }
 <div class="container">
     <div class="row">
-        <div class="col-md-auto">
-            <input type="text" id="text" name="txtKeyword" class="form-control border-0" placeholder="請輸入想尋找的委託..." />
+        @* <div class="col-md-auto">
+            <input type="text" id="text2" class="form-control border-0" placeholder="請輸入想尋找的委託..." />
         </div>
         <div class="col-md-auto">
-            <button id="search" name="txtKeyword" class="btn btn-dark border-0 w-100">搜尋</button>
-        </div>
+            <button id="search" type="button" class="btn btn-dark border-0 w-100" onclick="ACDeputeSearch()">搜尋</button>
+        </div> *@
     </div>
 </div>
 <table class="table table-dark table-hover" style="color:white ; font-size:20px">
@@ -37,7 +37,7 @@
             </th>
         </tr>
     </thead>
-    <tbody>
+    <tbody id="resultlist">
         @foreach (var item in Model)
         {
             <tr>
@@ -69,14 +69,27 @@
             </tr>
         }
     </tbody>
-    
+
 </table>
 
+
 @section Scripts
-    {
+{
 
     <script>
-        // $('.btn btn-dark status').click(() => { test2() })
+
+        async function ACDeputeSearch() {
+            $.ajax('@Url.Content("~/Admin/ADeputeSearch")', {
+                "type": 'get', //POST、PUT、DELETE//
+                "data": { "keyword": $('#text2').val() },
+                "dataType": "json"
+            })
+                .done((data) => {
+                    console.log(data)
+
+                })
+
+        }
 
         async function StatusEdit(value) {
 
@@ -114,7 +127,7 @@
                 })
                     .done(() => { window.location.href = "/Admin/ADeputeList" })
             }
-            
+
         }
 
         async function Delete(value) {
@@ -142,9 +155,9 @@
                     Swal.fire("已取消動作", "", "info");
                 }
             });
-            
-                
-            
+
+
+
 
         }
     </script>

@@ -6,7 +6,7 @@
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
-<<h2 style="margin-left:5px ; font-size:45px">商品清單</h2>
+<h2 style="margin-left:5px ; font-size:45px">新品審核</h2>
 @using (Html.BeginForm())
 {
     <p style="display:inline;font-size:30px;margin-left:5px;margin-right:10px">商品名稱關鍵字查詢 : </p> @Html.TextBox("txtKeyWord",null,new{@class = "col-form-label"})
@@ -47,7 +47,7 @@
                     @item.AvailableDate.ToString("yyyy/MM/dd")
                 </td>
                 <td>
-                    @Html.ActionLink("商品上/下架", "ProductStatusEdit", "Admin", new {  id=item.ProductId  }, new {onclick = "return confirm('確定上/下架嗎?')",@class = "btn btn-dark" })
+                    @Html.ActionLink("商品上/下架", "ProductStatusReview", "Admin", new {  id=item.ProductId  }, new {onclick = "return confirm('確定上/下架嗎?')",@class = "btn btn-dark" })
                     <button type="button" class="btn btn-dark status" onclick="ProductDetail(@Html.DisplayFor(modelItem => item.ProductId))">商品詳情</button>
                 </td>
             </tr>
@@ -79,13 +79,8 @@
 
                                   `,
                     showConfirmButton: true,
-                    showCancelButton: true,
-                    confirmButtonText: "前往審核",
 
-                }).then((result) => {
-                    window.location.href = '@Url.Content("~/Shop/ProductReviewNow")' + '?id=' + data[0].productId;
-                    console.log(`${data[0].productId}`);
-                });;
+                })
 
             })
     }
