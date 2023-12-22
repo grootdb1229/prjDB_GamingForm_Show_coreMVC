@@ -466,17 +466,19 @@ namespace prjDB_GamingForm_Show.Controllers
             }
 
             Random rnd = new Random();
-            int count = rnd.Next(0, Rcolist.Count()-1);
+            int count = rnd.Next(0, Rcolist.Count() - 1);
             List<CDeputeViewModel> Rcolist2 = new List<CDeputeViewModel>();
-            if(Rcolist.Count()>0)
-            { 
-            for (int i = 1; i <= 6; i++)
+            if (Rcolist.Count() > 0)
             {
-                Rcolist2.Add(Rcolist[count]);
-                Rcolist.RemoveAt(count);
-                count = rnd.Next(0, Rcolist.Count);
-
-            }
+                for (int i = 1; i <= 6; i++)
+                {
+                    if(i<= Rcolist.Count())
+                    { 
+                    Rcolist2.Add(Rcolist[count]);
+                    Rcolist.RemoveAt(count);
+                    count = rnd.Next(0, Rcolist.Count);
+                    }
+                }
             }
             return PartialView(Rcolist2);
 
