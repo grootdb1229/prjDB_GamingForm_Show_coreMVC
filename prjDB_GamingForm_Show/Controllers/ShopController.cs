@@ -67,6 +67,7 @@ namespace prjDB_GamingForm_Show.Controllers
                         n.Product.ProductName,
                         n.Product.Price,
                         n.Product.FImagePath,
+						n.Product.ViewCount,
                         SubTagName = n.SubTag.Name
                     })
                     .OrderByDescending(x => x.Price)
@@ -81,6 +82,7 @@ namespace prjDB_GamingForm_Show.Controllers
                         ProductName = item.ProductName,
                         Price = item.Price,
                         FImagePath = item.FImagePath,
+						ViewCount = item.ViewCount,
                         SubTagName = s
                     };
                 }).ToList();
@@ -92,7 +94,8 @@ namespace prjDB_GamingForm_Show.Controllers
 
 			public IActionResult ProductInfo(int? id)
 			{
-				var data = _db.Products.Where(x => x.ProductId == id).Select(x => new { x.ProductId, x.ProductName, x.Price, x.ProductContent, x.MemberId, x.FImagePath });
+				_db.Statuses.Load();
+				var data = _db.Products.Where(x => x.ProductId == id).Select(x => new { x.ProductId, x.ProductName, x.Price, x.ProductContent, x.MemberId, x.FImagePath,x.Status.Name});
 				return Json(data);
 			}
 
@@ -101,11 +104,14 @@ namespace prjDB_GamingForm_Show.Controllers
 				Product data = _db.Products.Where(p => p.ProductId == id).Select(p => p).FirstOrDefault();
 				return View(data);
             }
+
+			[HttpPost]
 			//檢舉
 			public IActionResult ProductComplain(CProductAdmin vm)
             {
                 if (HttpContext.Session.GetInt32(CDictionary.SK_UserID) != null)
                 {
+
                     _db.ProductComplains.Add(
                         new ProductComplain
                         {
@@ -152,108 +158,6 @@ namespace prjDB_GamingForm_Show.Controllers
                 return Content(result, "application/json");
             }
 
-			//public List<CShopPageViewModel> List { get; set; }
-			//public IActionResult test(CKeyWord ck)
-			//{
-			//    String CK = ck.txtKeyword;
-			//    _db.ProductTags.Load();
-			//    _db.Products.Load();
-			//    _db.SubTags.Load();
-			//    List<CShopPageViewModel> List = new List<CShopPageViewModel>();
-			//    CShopPageViewModel Pdb = null;
-			//    if (string.IsNullOrEmpty(CK))
-			//    {
-			//        var data = (from n in _db.ProductTags
-			//                    where n.Product.StatusId == 1
-			//                    select new
-			//                    {
-			//                        n.Product.ProductId,
-			//                        n.Product.ProductName,
-			//                        n.Product.Price,
-			//                        n.Product.FImagePath,
-			//                        n.SubTag.Name
-			//                    }).ToList();
-			//        foreach (var item in data)
-			//        {
-			//            string s = "";
-			//            var tagname = _db.ProductTags.Where(x => x.ProductId == item.ProductId).Select(x => x.SubTag.Name).ToList();
-			//            foreach (var t in tagname)
-			//            {
-			//                s += t.ToString() + "/";
-			//            }
-			//            Pdb = new CShopPageViewModel
-			//            {
-			//                ProductId = item.ProductId,
-			//                ProductName = item.ProductName,
-			//                Price = item.Price,
-			//                FImagePath = item.FImagePath,
-			//                SubTagName = s
-			//            };
-			//            List.Add(Pdb);
-			//        };
-			//    }
-			//    else
-			//    {
-			//        var data = from n in _db.ProductTags
-			//                   where n.Product.ProductName.Contains(CK) && n.Product.StatusId == 1
-			//                   select new
-			//                   {
-			//                       n.Product.ProductId,
-			//                       n.Product.ProductName,
-			//                       n.Product.Price,
-			//                       n.Product.FImagePath,
-			//                       SubTagName = n.SubTag.Name
-			//                   };
-			//        foreach (var item in data)
-			//        {
-			//            string s = "";
-			//            var tagname = _db.ProductTags.Where(x => x.ProductId == item.ProductId).Select(x => x.SubTag.Name).ToList();
-			//            foreach (var t in tagname)
-			//            {
-			//                s += t.ToString() + "/";
-			//            }
-			//            Pdb = new CShopPageViewModel
-			//            {
-			//                ProductId = item.ProductId,
-			//                ProductName = item.ProductName,
-			//                Price = item.Price,
-			//                FImagePath = item.FImagePath,
-			//                SubTagName = s
-			//            };
-			//            List.Add(Pdb);
-			//        };
-			//    }
-			//    bool flag = false;
-			//    List<CShopPageViewModel> List2 = new List<CShopPageViewModel>();
-			//    List2.Add(List[0]);
-			//    for (int i = 1; i < List.Count; i++)
-			//    {
-			//        for (int j = 0; j < List2.Count; j++)
-			//        {
-			//            if (List[i].ProductId == List2[j].ProductId)
-			//            {
-			//                flag=true; 
-			//                break;
-			//            }
-			//        }
-			//        if (flag == false)
-			//        { 
-			//            List2.Add(List[i]);
-			//        }
-			//        flag = false;
-			//    }
-
-			//    string json = "";
-			//    ViewBag.Car = 0;
-			//    if (HttpContext.Session.Keys.Contains(CDictionary.SK_PURCHASED_PRODUCES_LIST))
-			//    {
-			//        json = HttpContext.Session.GetString(CDictionary.SK_PURCHASED_PRODUCES_LIST);
-			//        List<ShoppingCar> car = JsonSerializer.Deserialize<List<ShoppingCar>>(json);
-			//        ViewBag.Car = car.Count();
-			//    }
-			//    List = List.Distinct().ToList();
-			//    return View(List2);
-			//}
 			public IActionResult Carousel()//大廣告牆
 			{
 				return PartialView();
@@ -445,6 +349,7 @@ namespace prjDB_GamingForm_Show.Controllers
 									n.Product.ProductName,
 									n.Product.Price,
 									n.Product.FImagePath,
+									n.Product.ViewCount,
 									n.SubTag.Name
 								}).ToList();
 					foreach (var item in data)
@@ -461,6 +366,7 @@ namespace prjDB_GamingForm_Show.Controllers
 							ProductName = item.ProductName,
 							Price = item.Price,
 							FImagePath = item.FImagePath,
+							ViewCount=item.ViewCount,
 							SubTagName = s
 						};
 						List.Add(Pdb);
@@ -476,6 +382,7 @@ namespace prjDB_GamingForm_Show.Controllers
 									n.Product.ProductName,
 									n.Product.Price,
 									n.Product.FImagePath,
+									n.Product.ViewCount,
 									SubTagName = n.SubTag.Name
 								}).ToList();
 					foreach (var item in data)
@@ -492,6 +399,7 @@ namespace prjDB_GamingForm_Show.Controllers
 							ProductName = item.ProductName,
 							Price = item.Price,
 							FImagePath = item.FImagePath,
+							ViewCount = item.ViewCount,
 							SubTagName = s
 						};
 						List.Add(Pdb);
@@ -560,6 +468,7 @@ namespace prjDB_GamingForm_Show.Controllers
 						n.Product.ProductName,
 						n.Product.Price,
 						n.Product.FImagePath,
+						n.Product.ViewCount,
 						SubTagName = n.SubTag.Name
 					})
 					.ToList();
@@ -573,6 +482,7 @@ namespace prjDB_GamingForm_Show.Controllers
 						ProductName = item.ProductName,
 						Price = item.Price,
 						FImagePath = item.FImagePath,
+						ViewCount = item.ViewCount,
 						SubTagName = s
 					};
 				}).ToList();
@@ -607,6 +517,7 @@ namespace prjDB_GamingForm_Show.Controllers
 						n.Product.ProductName,
 						n.Product.Price,
 						n.Product.FImagePath,
+						n.Product.ViewCount,
 						SubTagName = n.SubTag.Name
 					})
 					.OrderByDescending(x => x.AvailableDate.Date)
@@ -621,6 +532,7 @@ namespace prjDB_GamingForm_Show.Controllers
 						ProductName = item.ProductName,
 						Price = item.Price,
 						FImagePath = item.FImagePath,
+						ViewCount = item.ViewCount,
 						SubTagName = s
 					};
 				}).ToList();
@@ -655,6 +567,7 @@ namespace prjDB_GamingForm_Show.Controllers
 						n.Product.ProductName,
 						n.Product.Price,
 						n.Product.FImagePath,
+						n.Product.ViewCount,
 						SubTagName = n.SubTag.Name
 					})
 					.OrderByDescending(x => x.Price)
@@ -669,6 +582,7 @@ namespace prjDB_GamingForm_Show.Controllers
 						ProductName = item.ProductName,
 						Price = item.Price,
 						FImagePath = item.FImagePath,
+						ViewCount = item.ViewCount,
 						SubTagName = s
 					};
 				}).ToList();
@@ -703,6 +617,7 @@ namespace prjDB_GamingForm_Show.Controllers
 						n.Product.ProductName,
 						n.Product.Price,
 						n.Product.FImagePath,
+						n.Product.ViewCount,
 						SubTagName = n.SubTag.Name
 					})
 					.OrderBy(x => x.Price)
@@ -717,6 +632,7 @@ namespace prjDB_GamingForm_Show.Controllers
 						ProductName = item.ProductName,
 						Price = item.Price,
 						FImagePath = item.FImagePath,
+						ViewCount = item.ViewCount,
 						SubTagName = s
 					};
 				}).ToList();
@@ -765,7 +681,7 @@ namespace prjDB_GamingForm_Show.Controllers
 			public IActionResult Coupon()
 			{
 				var Coupon = _db.Coupons
-					.Where(p => p.StatusId == 23)
+					.Where(p =>p.StatusId == 23)
 					.Select(s => new
 					{
 						s.CouponId,
@@ -1231,7 +1147,8 @@ namespace prjDB_GamingForm_Show.Controllers
 					SubTagName = gtag,
 					SubTagName_Lan = ltag,
 					favourite = Likestatus,
-					MulPic= MulPicString
+					MulPic= MulPicString,
+					ViewCount= x.ViewCount
 				};
 				x.ViewCount++;
 				_db.SaveChanges();
@@ -1363,7 +1280,6 @@ namespace prjDB_GamingForm_Show.Controllers
 					ViewBag.Car = car.Count();
 				}
                 return Json(new { success = true});
-                //return RedirectToAction("Index");
             }
 
 
@@ -1644,28 +1560,9 @@ namespace prjDB_GamingForm_Show.Controllers
 							n.products.Add(cpnp);
 						}
 					}
-					//if (n.Coupon != null)
-					//{
-					//	if (n.Coupon.Discount != 0)
-					//	{
-					//		double dis = (double)n.Coupon.Discount;
-					//		n.Sumprice = (double)n.products.Sum(c => c.Price) * dis;
-					//	}
-					//	else
-					//	{
-					//		int reduce = (int)n.Coupon.Reduce;
-					//		n.Sumprice = (int)n.products.Sum(c => c.Price) - reduce;
-					//	}
-					//}
-					//else
-					//{
-					//	n.Sumprice = (double)n.products.Sum(x => x.Price);
-
-					//}
+					
 					vm.Add(n);
-					//var price = _db.Orders.Where(x => x.OrderId == i.OrderId).FirstOrDefault();
-					//price.SumPrice = (decimal)n.Sumprice;
-					//_db.SaveChanges();
+
                 }
 				
 				return View(vm);
@@ -1681,18 +1578,6 @@ namespace prjDB_GamingForm_Show.Controllers
                 CProductViewModel products = null;
 				foreach (var data in datas) 
 				{
-					if (data.Status.Name == "Active")
-					{
-						statusname = "販售中";
-					}
-					else if (data.Status.Name == "Inactive")
-					{
-						statusname = "停售中";
-					}
-					else
-					{
-                        statusname = data.Status.Name;
-                    }
                     if (_db.Products.Where(x => x.ProductId == data.ProductId).Select(x => x).Count() == 0)
                     {
                         ViewBag.Productlist = "您目前沒有任何商品";
@@ -1703,7 +1588,8 @@ namespace prjDB_GamingForm_Show.Controllers
 						ProductName = data.ProductName,
 						Price = data.Price,
 						ProductContent = data.ProductContent,
-                        StatusName = statusname,
+                        StatusName = data.Status.Name,
+						ViewCount = data.ViewCount,
                         sells = _db.OrderProducts.Where(x=>x.ProductId==data.ProductId).Select(x=>x).Count()
 					};
 					vm.Add(products);
