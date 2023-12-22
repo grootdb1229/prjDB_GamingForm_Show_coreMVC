@@ -10,13 +10,13 @@
         color: black !important;
     }
 </style>
-<h2 style="margin-left:350px">商品管理</h2>
+<h2 style="margin-left:290px">商品管理</h2>
 
 <div class="container-fluid">
-    @Html.ActionLink("我要上架", "Create", "Shop", null, new { @class = "btn btn-outline-dark mt-auto" ,@style="margin-left:340px"})
+    @Html.ActionLink("我要上架", "Create", "Shop", null, new { @class = "btn btn-outline-dark mt-auto" ,@style="margin-left:280px"})
     <div class="row justify-content-center align-items-center min-vh-100">
         
-        <div class="col-lg-7">
+        <div class="col-lg-8">
             <div class="container-xxl py-5">
                 
                 <div id="popmenu" class="container" style="margin-bottom:10px">
@@ -28,37 +28,66 @@
                             {
                                 <div class="alert alert-danger">@ViewBag.Productlist</div>
                             }
-                                foreach (var item in Model)
-                            {
-                            string CountString = "flush-collapseOne" + item.ProductId.ToString();
+                            <table class="table table-dark table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>編號</th>
+                                        <th>商品名稱</th>
+                                        <th>銷售量</th>
+                                        <th>價格</th>
+                                        <th>狀態</th>
+                                        <th>操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model)
+                                    {
+                                        <tr>
+                                            <td>@Html.DisplayFor(modelItem => item.ProductId)</td>
+                                            <td>@Html.DisplayFor(modelItem => item.ProductName)</td>
+                                            <td>@Html.DisplayFor(modelItem => item.sells)</td>
+                                            <td>@item.Price.ToString("#0")元</td>
+                                            <td>@Html.DisplayFor(modelItem => item.StatusName)</td>
+                                            <td>
+                                                <button type="button" class="btn btn-outline-dark" onclick="ProductDetail(@Html.DisplayFor(modelItem => item.ProductId))">商品詳情</button>
+                                                @Html.ActionLink("測試修改", "Edit", "Shop", new { id = item.ProductId }, new { @class = "btn btn-outline-dark" })
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
 
-                            <div class="accordion-item">
-                                <h2 class="accordion-header">
-                                    <button class="accordion-button " type="button" data-bs-toggle="collapse" data-bs-target="#@CountString" aria-expanded="true" aria-controls="@CountString">
-                                        <div class="col-2" style="color:black">
-                                            編號:@Html.DisplayFor(modelItem => item.ProductId)
-                                        </div>
-                                        <div class="col-6" style="color:black">
-                                        商品名稱:@Html.DisplayFor(modelItem => item.ProductName)
-                                        </div>
-                                        <div class="col" style="color:black">
-                                        銷售量:@Html.DisplayFor(modelItem => item.sells)
-                                        </div>
-                                    </button>
-                                </h2>
-                                <div id="@CountString" class="accordion-collapse collapse  " data-bs-parent="#accordionFlushExample">
-                                    <div class="accordion-body">
-                                            <div class="row">
-                                            <div class="col" style="color:black">價格:@item.Price.ToString("#0")元</div>
-                                            <div class="col" style="color:black">狀態:@Html.DisplayFor(modelItem => item.StatusName)</div>
-                                            <button type="button" class="btn btn-outline-dark mt-auto col" onclick="ProductDetail(@Html.DisplayFor(modelItem => item.ProductId))">商品詳情</button>
-                                            @Html.ActionLink("測試修改", "Edit", "Shop", new { id = item.ProductId }, new { @class = "btn btn-outline-dark mt-auto col" })
-                                            </div>
-                                    </div>
-                                </div>
-                            </div>
+                            //     foreach (var item in Model)
+                            // {
+                            // string CountString = "flush-collapseOne" + item.ProductId.ToString();
+
+                            // <div class="accordion-item">
+                            //     <h2 class="accordion-header">
+                            //         <button class="accordion-button " type="button" data-bs-toggle="collapse" data-bs-target="#@CountString" aria-expanded="true" aria-controls="@CountString">
+                            //             <div class="col-2" style="color:black">
+                            //                 編號:@Html.DisplayFor(modelItem => item.ProductId)
+                            //             </div>
+                            //             <div class="col-6" style="color:black">
+                            //             商品名稱:@Html.DisplayFor(modelItem => item.ProductName)
+                            //             </div>
+                            //             <div class="col" style="color:black">
+                            //             銷售量:@Html.DisplayFor(modelItem => item.sells)
+                            //             </div>
+                            //         </button>
+                            //     </h2>
+                            //     <div id="@CountString" class="accordion-collapse collapse  " data-bs-parent="#accordionFlushExample">
+                            //         <div class="accordion-body">
+                            //                 <div class="row">
+                            //                 <div class="col" style="color:black">價格:@item.Price.ToString("#0")元</div>
+                            //                 <div class="col" style="color:black">狀態:@Html.DisplayFor(modelItem => item.StatusName)</div>
+                            //                 <button type="button" class="btn btn-outline-dark mt-auto col" onclick="ProductDetail(@Html.DisplayFor(modelItem => item.ProductId))">商品詳情</button>
+                            //                 @Html.ActionLink("測試修改", "Edit", "Shop", new { id = item.ProductId }, new { @class = "btn btn-outline-dark mt-auto col" })
+                            //                 </div>
+                            //         </div>
+                            //     </div>
+                            // </div>
                             
-                            }
+                            // }
                         }
 
                     </div>
