@@ -23,7 +23,7 @@
                     <input id="upload_img" name="Photos" style="display:none;" multiple="multiple" onchange="previewImages(this)" type="file">
                     <i class="fa-solid fa-file"></i>上傳圖片
                 </label>
-                <button onclick="analyze()">分析</button>
+                <button onclick="showResults()" class="btn btn-warning">AI仲裁成人內容</button>
                 <div id="imagePreviewContainer" style="width:100%">
                     <!-- 預覽圖片將顯示在這裡 -->
                 </div>
@@ -78,32 +78,33 @@
         </div>
         <p id="ProductcontentAlert" style="color:red"></p><!--沒內文之警示-->
 
-        <div class="form-group">
+     @*    <div class="form-group">
             @Html.LabelFor(model => model.UnitStock, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                 @Html.EditorFor(model => model.UnitStock, new { htmlAttributes = new { @class = "form-control", id = "Unitstock" } })
                 @Html.ValidationMessageFor(model => model.UnitStock, "", new { @class = "text-danger" })
             </div>
         </div>
-        <p id="UnitStockAlert" style="color:red"></p><!--沒金額之警示-->
+        <p id="UnitStockAlert" style="color:red"></p><!--沒金額之警示--> *@
         <hr />
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
                 <input type="submit" value="送出並新增" class="btn btn-outline-dark mt-auto" id="btnsubmit" />
                 <p id="ProductAlert" style="color:red"></p><!--沒金額之警示-->
+                <button type="submit" id="Demo" class="btn btn-primary btn-lg mb-2">Demo3</button>
             </div>
         </div>
 
     </div>
 
     @section Scripts
- {
+    {
     <!--子標籤視窗大小-->
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <!--圖片仲裁用-->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
     <script type="text/javascript">
-        var arrayBuffer;
+        var results = [];
         $("#upload_img").bind("change", function () {
             var files = this.files;
             for (var i = 0; i < files.length; i++) {
@@ -112,13 +113,13 @@
                     var reader = new FileReader();
                     reader.onload = (function (index) {
                         return function () {
-                            arrayBuffer = this.result;
+                            var arrayBuffer = this.result;
                             var blob = new Blob([arrayBuffer], {
                                 type: "image/jpeg"
                             });
                             var urlCreater = window.URL || window.webkitURL;
                             var imageUrl = urlCreater.createObjectURL(blob);
-                            analyze(index);
+                            analyze(index, arrayBuffer);
                         };
                     })(i);
                     reader.readAsArrayBuffer(files[i]);
@@ -128,7 +129,7 @@
                 }
             }
         });
-        function analyze(i) {
+        function analyze(index, arrayBuffer) {
             var params = {
                 // Request parameters
                 "CacheImage": false,
@@ -145,25 +146,61 @@
                 // Request body
                 data: arrayBuffer,
                 processData: false
-            }).done(function (data) {                
-                var isAdult = data['IsImageAdultClassified'];
-                var adultScore = data['AdultClassificationScore'];
-                var isRacy = data['IsImageRacyClassified'];
-                var racyScore = data['RacyClassificationScore'];
-                if (isAdult) {
-                    alert(`圖片${i}-色情內容指數:${(adultScore * 100).toFixed(2)}%`);
-                }
-                if (isRacy) {
-                    alert(`圖片${i}-性暗示指數:${(racyScore * 100).toFixed(2)}%`);
-                }
-                if (!isAdult && !isRacy) {
-                    alert(`圖片${i}-未偵測到色情或性暗示內容`)
-                }
+            }).done(function (data) {
+                var resultMessage = getResultMessage(index, data);  // 根據不同情況取得不同的結果字串
+                results[index] = resultMessage;  // 存放結果到陣列中
             }).fail(function (err) {
                 alert(err.statusText);
             });
         }
 
+        function getResultMessage(index, data) {
+            var isAdult = data['IsImageAdultClassified'];
+            var adultScore = data['AdultClassificationScore'];
+            var isRacy = data['IsImageRacyClassified'];
+            var racyScore = data['RacyClassificationScore'];
+            var isGory = data['IsImageGoryClassified']
+            var number = index + 1;
+
+            var messages = [];
+            alert(JSON.stringify(data));
+            if (isGory) {
+                alert("暴力")
+            }
+
+            if (isAdult) {
+                messages.push(`圖片${number}-色情內容指數:${(adultScore * 100).toFixed(2)}%，請斟酌使用`);
+            }
+
+            if (isRacy) {
+                messages.push(`圖片${number}-性暗示指數:${(racyScore * 100).toFixed(2)}%，請斟酌使用`);
+            }
+
+            if (!isAdult && !isRacy) {
+                messages.push(`圖片${number}-未偵測到色情或性暗示內容`);
+            }
+
+            return messages;
+        }
+
+
+        function showResults() {
+            var content = '<div>';
+            for (var i = 0; i < results.length; i++) {
+                var messages = results[i];
+                for (var j = 0; j < messages.length; j++) {
+                    content += `<p>${messages[j]}</p>`;
+                }
+            }
+            content += '</div>';
+
+            Swal.fire({
+                title: '分析結果',
+                html: content,
+                icon: 'info',
+                confirmButtonText: '確定'
+            });
+        }
     </script>
     <!--往上圖片仲裁用-->
 
@@ -265,16 +302,16 @@
                 const data = await response.json();
 
                 const Language = data.map(x => `
-                                        <div class="col-3">
-                                            <label style="margin-bottom: 10px; display: block;">
-                                                     
-                                    <input type="checkbox" name="GameTag" value="${x.subTagId}" onchange="submitTags()">${x.name}
-                                            </label>
-                                        </div>
-                                    `).join('');
+                                                    <div class="col-3">
+                                                        <label style="margin-bottom: 10px; display: block;">
+
+                                                <input type="checkbox" name="GameTag" value="${x.subTagId}" onchange="submitTags()">${x.name}
+                                                        </label>
+                                                    </div>
+                                                `).join('');
 
                 LangDiv.innerHTML = Language;
-             
+
             }
 
 
@@ -284,15 +321,15 @@
                 const data = await response.json();
 
                 const Tag = data.map(x => `
-                                        <div class="col-3">
-                                            <label style="margin-bottom: 10px; display: block;">
-                                             <input type="checkbox" name="GameTag" value="${x.subTagId}" onchange="submitTags()">${x.name}
-                                            </label>
-                                        </div>
-                                    `).join('');
+                                                    <div class="col-3">
+                                                        <label style="margin-bottom: 10px; display: block;">
+                                                         <input type="checkbox" name="GameTag" value="${x.subTagId}" onchange="submitTags()">${x.name}
+                                                        </label>
+                                                    </div>
+                                                `).join('');
 
                 TagDiv.innerHTML = Tag;
-              
+
             }
             LoadLang();
             LoadTag();
@@ -318,31 +355,40 @@
 
                 return true;
             }
-
-
+        const ProductContent = document.getElementById("productcontent")//產品內文
+        const fileInput = document.getElementById("upload_img");//必須至少配一張圖
+        const gameTagOptions = document.getElementById("GameTagOptions").value; //你必須要選擇至少一個標籤
+        const ProductName = document.getElementById("_Productname");//商品名
+        const ProductPrice = document.getElementById("_ProductPrice");//價格
+       
+        
+        document.getElementById("Demo").addEventListener('click', function () {
+            
+            // 添加文字內容
+            ProductContent.value = '遊玩咕嚕的角色，以踏上拾回自己寶貝的旅程。你會需要爬上摩多山、潛入幽暗森林，並做出困難的抉擇。究竟誰會取得優勢：狡猾的咕嚕，還是無辜的史麥戈呢？';
+            ProductName.value = '魔戒：咕噜';
+            ProductPrice.value = '500';
+        });
             //最終資料遞交
-            async function submitForm(event) 
-            {
+            async function submitForm(event) {
                 //六面旗幟必須通過才允許建立資料。
                 var TagValid = false;
                 var PicValid = false;
                 var NameValid = false;
                 var PriceValid = false;
-                var UnitStockValid = false;
+                // var UnitStockValid = false;
                 var ProductContentValid = false;
 
                 // 正則表達式，匹配一個或多個數字
                 var amountRegex = /^\d+$/u;
 
 
-                const ProductContent = document.getElementById("productcontent")//產品內文
-                const fileInput = document.getElementById("upload_img");//必須至少配一張圖
-                const gameTagOptions = document.getElementById("GameTagOptions").value; //你必須要選擇至少一個標籤
-                const ProductName = document.getElementById("_Productname");//商品名
-                const ProductPrice = document.getElementById("_ProductPrice");//價格
-                const UnitStock = document.getElementById("Unitstock");//總數
+                // const UnitStock = document.getElementById("Unitstock");//總數
                 event.preventDefault(); // 阻止表單的默認提交行為
                 await submitTags(); // 等待 submitTags 完成
+
+
+
 
 
                 //標籤處理
@@ -405,27 +451,27 @@
                     }
                 }
                 //庫存處理
-                if (UnitStock.value.trim() === "") {
-                    // 如果輸入框為空，顯示錯誤信息
-                    UnitStockAlert.innerHTML = "請輸入產品庫存。";
-                    UnitStockValid = false;
+                // if (UnitStock.value.trim() === "") {
+                //     // 如果輸入框為空，顯示錯誤信息
+                //     UnitStockAlert.innerHTML = "請輸入產品庫存。";
+                //     UnitStockValid = false;
 
-                } else {
-                    var priceValue = parseInt(ProductPrice.value, 10);
-                    if (!amountRegex.test(ProductPrice.value) || !(priceValue > 1)) {
-                        // 如果不是正確的阿拉伯數字，或者不大於1，顯示錯誤信息
-                        UnitStockAlert.innerHTML = "產品庫存必須是正常的阿拉伯數字且大於1";
-                        UnitStockAlert.style.color = "red";
-                        UnitStockValid = false;
+                // } else {
+                //     var priceValue = parseInt(ProductPrice.value, 10);
+                //     if (!amountRegex.test(ProductPrice.value) || !(priceValue > 1)) {
+                //         // 如果不是正確的阿拉伯數字，或者不大於1，顯示錯誤信息
+                //         UnitStockAlert.innerHTML = "產品庫存必須是正常的阿拉伯數字且大於1";
+                //         UnitStockAlert.style.color = "red";
+                //         UnitStockValid = false;
 
-                    } else {
-                        // 其他情況，顯示正確信息
-                        UnitStockAlert.innerHTML = "&#10003;通過";
-                        UnitStockAlert.style.color = "#79FF79";
-                        UnitStockValid = true;
+                //     } else {
+                //         // 其他情況，顯示正確信息
+                //         UnitStockAlert.innerHTML = "&#10003;通過";
+                //         UnitStockAlert.style.color = "#79FF79";
+                //         UnitStockValid = true;
 
-                    }
-                }
+                //     }
+                // }
 
                 //內文處理
                 if (ProductContent.value.length < 10) {
@@ -439,12 +485,12 @@
                     ProductContentValid = true
 
                 }
-                if (TagValid && PicValid && NameValid && PriceValid && UnitStockValid && ProductContentValid) {
+                if (TagValid && PicValid && NameValid && PriceValid  && ProductContentValid) {
                     document.getElementById('productform').submit(); // 手動提交表單
                 }
                 else { ProductAlert.innerHTML = "仍有資歷尚未填妥"; }
             }
-                        
+                        // && UnitStockValid
 
 
 

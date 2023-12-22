@@ -5,11 +5,29 @@
     ViewData["Title"] = "ProductList";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
+@section Styles{
+    <style>
+        tr {
+            color: white;
+        }
 
-<h2 style="margin-left:5px ; font-size:45px">商品清單</h2>
+        th {
+            font-size: 15px;
+        }
+
+        td {
+            font-size: 15px;
+        }
+
+        .table-hover tbody tr:hover {
+            background-color: wheat; /* 設定你想要的自定義顏色 */
+        }
+    </style>
+}
+<h2 style="margin-left:5px ; font-size:45px;color:white">商品清單</h2>
 @using (Html.BeginForm())
 {
-    <p style="display:inline;font-size:30px;margin-left:5px;margin-right:10px">商品名稱關鍵字查詢 : </p> @Html.TextBox("txtKeyWord",null,new{@class = "col-form-label"})
+    <p style="display:inline;font-size:20px;margin-left:5px;margin-right:10px;color:white">商品名稱關鍵字查詢 : </p> @Html.TextBox("txtKeyWord",null,new{@class = "col-form-label"})
     <input type="submit" value="查詢" class="btn btn-dark" />
 }
 @*<p style="margin-top:5px"></p>*@
@@ -20,22 +38,22 @@
 <table class="table table-dark table-hover" style="color:white ; font-size:20px">
     <thead>
         <tr>
-            <th>
+            <th class="col-1">
                 商品編號
             </th>
-            <th>
+            <th class="col-2">
                 商品名稱
             </th>
-            <th>
+            <th class="col-1">
                 商品單價
             </th>
-            <th>
+            <th class="col-2">
                 最後更新日期
             </th>
-            <th>
+            <th class="col-2">
                 商品狀態
             </th>
-            <th>
+            <th class="col-1">
                 上架者
             </th>
             <th></th>
@@ -54,7 +72,7 @@
                 {
                     s = "尚未開始販售";
                 }
-                else if (item.StatusId == 4)
+                else if (item.StatusId == 7)
                 {
                     s = "審核中";
                 }
@@ -106,6 +124,7 @@
                     html: `
                                             <img src="../images/shop/${data[0].fImagePath}" alt="..." style="height:25vh; " /></br>
                                             <b>商品編號:</b><p>${data[0].productId}</p></br>
+                                            <b>商品狀態:</b><p>${data[0].name}</p></br>
                                             <b>商品名稱:</b><p>${data[0].productName}</p></br>
                                             <b>上架會員編號:</b><p>${data[0].memberId}</p></br>
                                             <b>價格:</b><p>${data[0].price}</p></br>

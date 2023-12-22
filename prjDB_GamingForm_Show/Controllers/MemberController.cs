@@ -201,9 +201,8 @@ namespace prjDB_GamingForm_Show.Controllers
         //Send ValidationEmail
         public IActionResult SendEmail()
         {
-
-            string ValGuid = new Guid().ToString("D");
-            HttpContext.Session.SetString(CDictionary.SK_Validation_Guid, ValGuid);
+            int ValNumber = new Random().Next(1000,10000);
+            HttpContext.Session.SetInt32(CDictionary.SK_Validation_Number , ValNumber);
             var message = new MimeMessage();
             message.From.Add(new MailboxAddress("grootdb1229", "grootdb1229@gmail.com"));
             message.To.Add(new MailboxAddress("alan90306", "alan90306@gmail.com"));
@@ -212,9 +211,8 @@ namespace prjDB_GamingForm_Show.Controllers
             {
                 Text = "<!DOCTYPE html>" +
                         "<html>" +
-                        "<h2> 您的驗證碼 及 會員編號 </h3>" +
-                        "<p> 您的會員編號為:" + HttpContext.Session.GetInt32(CDictionary.SK_Confirmed_MemberID) + "</p>" +
-                        "<p> 您的驗證碼為:" + HttpContext.Session.GetString(CDictionary.SK_Validation_Guid) + "</p>" +
+                        "<h2>您的驗證碼</h2>" +
+                        "<p>您的驗證碼為:" + HttpContext.Session.GetInt32(CDictionary.SK_Validation_Number) + "</p>" +
                         "</html>"
             };
 
@@ -226,6 +224,31 @@ namespace prjDB_GamingForm_Show.Controllers
                 client.Disconnect(true);
             }
             return RedirectToAction("ValidationPage", "Member");
+        }
+        public void SendEmail(string EmailAddress) 
+        {
+            int ValNumber = new Random().Next(1000, 10000);
+            HttpContext.Session.SetInt32(CDictionary.SK_Validation_Number, ValNumber);
+            var message = new MimeMessage();
+            message.From.Add(new MailboxAddress("grootdb1229", "grootdb1229@gmail.com"));
+            message.To.Add(new MailboxAddress("alan90306", "alan90306@gmail.com"));
+            message.Subject = "Test mail of asp.net Core";
+            message.Body = new TextPart("html")
+            {
+                Text = "<!DOCTYPE html>" +
+                        "<html>" +
+                        "<h2>您的驗證碼</h2>" +
+                        "<p>您的驗證碼為:" + HttpContext.Session.GetInt32(CDictionary.SK_Validation_Number) + "</p>" +
+                        "</html>"
+            };
+
+            using (var client = new SmtpClient())
+            {
+                client.Connect("smtp.gmail.com", 587, false);
+                client.Authenticate("grootdb1229@gmail.com", "fmgx uucs lgkv vqxm");
+                client.Send(message);
+                client.Disconnect(true);
+            }
         }
         //public IActionResult SendOrderEmail(OrederProductViewModel VM)
         //{
@@ -257,28 +280,22 @@ namespace prjDB_GamingForm_Show.Controllers
         //}
         #endregion
         #region PasswordValidation
-        public IActionResult ForgetPassword()
-        {
-            return View();
-        }
+        //public IActionResult ForgetPassword()
+        //{
+        //    return View();
+        //}
         [HttpPost]
-        public IActionResult ForgetPassword(CForgetPasswordViewModel CF)
+        public IActionResult ForgetPassword(CLoginViewModel CL)
         {
+            string result = "沒有此信箱";
             var Emails = from e in _db.Members
                          select e.Email;
-            //IQueryable<IEnumerable<char>> memberEmails = Emails;
-            if (Emails.Contains(CF.txtConfirm_Email))
+            if (Emails.Contains(CL.txtConfirm_Email))
             {
-                int Confirmed_MemberID = (from m in _db.Members
-                                          where m.Email == CF.txtConfirm_Email
-                                          select m.MemberId).FirstOrDefault();
-                HttpContext.Session.SetInt32(CDictionary.SK_Confirmed_MemberID, Confirmed_MemberID);
-                return RedirectToAction("SendEmail", "Member");
+                SendEmail(CL.txtConfirm_Email);
+                result = "已寄出";
             }
-            else
-            {
-                return RedirectToAction("Login", "Home");
-            }
+            return Content(result);
         }
         public IActionResult ValidationPage()
         {
@@ -315,8 +332,15 @@ namespace prjDB_GamingForm_Show.Controllers
         {
             var data = from m in _db.Members
                        where m.MemberId == id
-                       select new { m.Mycomment, m.Name, m.Phone, m.Gender, m.Birth.Year, m.FImagePath, m.Email };
+                       select new { m.Mycomment, m.Name, m.Phone, m.Gender, m.Birth.Year, m.FImagePath, m.Email , m.Password};
             return Json(data);
+        }
+
+        public IActionResult MemInfoForMaui() 
+        {
+            var datas = from m in _db.Members
+                        select new { m.Name, m.Email, m.Password , m.Phone , m.Gender, m.Birth.Year };
+            return Json(datas);
         }
         public IActionResult MyCollectionList(int? id)
         {
@@ -574,6 +598,13 @@ namespace prjDB_GamingForm_Show.Controllers
             string imgPath = _db.Members.Where(m => m.Name == name).Select(m => m.FImagePath).FirstOrDefault();
             return imgPath;
         }
+
+        public int GetMemberId(string name)
+        {
+            int id = _db.Members.Where(m => m.Name == name).Select(m => m.MemberId).FirstOrDefault();
+            return id;
+        }
+
         public IActionResult ChatPV(string recevier)
         {
             var senderid = _db.Members.Where(a => a.Name == HttpContext.Session.GetString(CDictionary.SK_UserName)).Select(a => a.MemberId).FirstOrDefault();

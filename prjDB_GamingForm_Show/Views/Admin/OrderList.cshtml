@@ -7,7 +7,7 @@
     ViewData["Title"] = "OrderList";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
     var totalOrders = Model.Count();
-    var totalAmount = Math.Floor(Model.Where(p=>p.StatusId==16 || p.StatusId == 15).Sum(p => p.SumPrice));
+    var totalAmount = Math.Floor(Model.Where(p => p.StatusId == 16 || p.StatusId == 15).Sum(p => p.SumPrice));
     //var averagePrice = Model.Any() ? Model.Average(o => o.SumPrice) : 0;
     var averagePrice = Model.Any() ? Math.Floor(Model.Average(o => o.SumPrice)) : 0;
 }
@@ -24,29 +24,27 @@
 
 @using (Html.BeginForm())
 {
-    @if (Model.Any())
-    {
-        <label for="start">開始日期:</label>
-        <input type="date" id="start" name="startday" value="2023-01-01" min="2023-01-01" max="2099-12-31" />
 
-@*        <label for="start">結束日期:</label>
-        <input type="date" id="end" name="endday" value="@DateTime.Now.ToString("yyyy-MM-dd")" min="2023-01-01" max="2099-12-31" />*@
+    <label for="start" style="font-size:20px">開始日期:</label>
+    <input type="date" style="font-size:20px" id="start" name="startday" value="2023-01-01" min="2023-01-01" max="2099-12-31" />
 
-        <label for="end">結束日期:</label>
-        <input type="date" id="end" name="endday" value="@DateTime.Now.ToString("yyyy-MM-dd")" min="2023-01-01" max="2099-12-31" />
+    <label for="end" style="font-size:20px">結束日期:</label>
+    <input type="date" style="font-size:20px" id="end" name="endday" value="@DateTime.Now.ToString("yyyy-MM-dd")" min="2023-01-01" max="2099-12-31" />
 
 
-        <select id="sel_Com" name="ST" style="margin-top:3px;width:200px;" onchange="updateOrderList()">
-            <option>請選擇訂單狀態</option>
-            <option>未付款</option>
-            <option>已付款</option>
-            <option>已出貨</option>
-            <option>已完成</option>
-            <option>取消訂單</option>
-        </select>
+    <select id="sel_Com" name="ST" style="margin-top:3px;width:200px;height:34.61px;font-size:20px" onchange="updateOrderList()">
+        <option>請選擇訂單狀態</option>
+        <option>未付款</option>
+        <option>已付款</option>
+        <option>已出貨</option>
+        <option>已完成</option>
+        <option>取消訂單</option>
+    </select>
 
-        <input type="submit" value="查詢" class="btn btn-dark" />
-    }
+    @*<input type="submit" value="查詢" class="btn btn-dark" />*@
+    
+        <button id="btn_Search" type="button" class="btn btn-danger" data-bs-dismiss="modal">查詢</button>
+
 
 }
 
@@ -102,7 +100,7 @@
                 <td>
                     @item.OrderDate.ToString("yyyy/MM/dd")
                 </td>
-                <td>                   
+                <td>
                     @{
                         var pday = item.PaymentDate;
                         var payday = pday.HasValue ? pday.Value.ToString("yyyy/MM/dd") : string.Empty;
@@ -117,7 +115,7 @@
                     @Html.DisplayFor(modelItem => formattedDate)
                 </td>
                 <td>
-                   
+
                     @Html.DisplayFor(modelItem => item.Payment.Name)
                 </td>
 
@@ -133,35 +131,26 @@
     </tbody>
 </table>
 
-
-
-
-@*        <div id="orderListPartial">
-            @Html.Partial("_OrderListPartial", Model)
-        </div>
-
-@section scripts {
+@section Scripts
+    {
     <script>
-        function updateOrderList() {
-            // 在這裡設置時間選擇器的值
-            var startDate = document.getElementById("start").value;
-            var endDate = document.getElementById("end").value;
+        const btnSearch = document.querySelector('#btn_Search');
 
-            // 使用 AJAX 或其他方式將日期值發送到伺服器端，更新頁面
-            // 在此示例中，我們使用 fetch 進行簡單的 AJAX 請求
-            fetch("/Admin/OrderListPartial?startday=" + startDate + "&endday=" + endDate, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            })
+        btnSearch.addEventListener('click', () => {
+            var startday = document.getElementById("start").value;
+            var endday = document.getElementById("end").value;
+            var ST = document.getElementById("sel_Com").value;
+
+            
+            var url = `@Url.Content("~/Admin/OrderListcheck")?startday=${startday}&endday=${endday}&ST=${ST}`;
+
+            
+            fetch(url)
                 .then(response => response.text())
-                .then(html => {
-                    // 更新包含訂單列表的部分視圖
-                    document.getElementById("orderListPartial").innerHTML = html;
-                })
-                .catch(error => console.error('Error:', error));
-        }
-    </script>*@
-
+                .then(data => {
+                    //confirm(`${data}`);                    
+                    window.location.href = url;
+                });
+        });
+    </script>
 }

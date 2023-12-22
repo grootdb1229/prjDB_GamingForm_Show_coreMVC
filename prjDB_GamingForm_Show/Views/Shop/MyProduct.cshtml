@@ -11,25 +11,25 @@
     }
 </style>
 <h2 style="margin-left:350px">商品管理</h2>
+
 <div class="container-fluid">
+    @Html.ActionLink("我要上架", "Create", "Shop", null, new { @class = "btn btn-outline-dark mt-auto" ,@style="margin-left:340px"})
     <div class="row justify-content-center align-items-center min-vh-100">
+        
         <div class="col-lg-7">
             <div class="container-xxl py-5">
+                
                 <div id="popmenu" class="container" style="margin-bottom:10px">
                     <div class="accordion accordion-flush" id="accordionFlushExample">
-                        @Html.ActionLink("我要上架", "Create", "Shop", null, new { @class = "btn btn-outline-dark mt-auto" })
+                        
                         @{
+                            
                             if (!string.IsNullOrEmpty(ViewBag.Productlist))
                             {
                                 <div class="alert alert-danger">@ViewBag.Productlist</div>
                             }
-                            if (!string.IsNullOrEmpty(ViewBag.message))
+                                foreach (var item in Model)
                             {
-                                <div class="alert alert-danger">@ViewBag.message</div>
-                            }
-                        }
-                        @foreach (var item in Model)
-                        {
                             string CountString = "flush-collapseOne" + item.ProductId.ToString();
 
                             <div class="accordion-item">
@@ -57,7 +57,10 @@
                                     </div>
                                 </div>
                             </div>
+                            
+                            }
                         }
+
                     </div>
                 </div>
             </div>
@@ -82,6 +85,7 @@
                     html: `
                                             <img src="../images/shop/${data[0].fImagePath}" alt="..." style="height:25vh; " /></br>
                                             <b>商品編號:</b><p>${data[0].productId}</p></br>
+                                            <b>商品狀態:</b><p>${data[0].name}</p></br>
                                             <b>商品名稱:</b><p>${data[0].productName}</p></br>
                                             <b>上架會員編號:</b><p>${data[0].memberId}</p></br>
                                             <b>價格:</b><p>${data[0].price}</p></br>

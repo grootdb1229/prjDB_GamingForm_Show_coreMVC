@@ -4,23 +4,40 @@
     ViewData["Title"] = "Newsletter";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
+@section Styles{
+    <style>
+        tr {
+            color: white;
+        }
 
-<h2 style="margin-left:5px ; font-size:45px">電子報</h2>
+        th {
+            font-size: 15px;
+        }
+
+        td {
+            font-size: 15px;
+        }
+
+        .table-hover tbody tr:hover {
+            background-color: wheat; /* 設定你想要的自定義顏色 */
+        }
+    </style>
+}
+<h2 style="margin-left:5px ; font-size:45px;color:white">電子報</h2>
 
 <p>
-    @*<button class="btn btn-dark" type="button" onclick="CreateNewsletter()">新增電子報</button>*@
     @Html.ActionLink("新增電子報", "SendNewsLetter", "Admin", null, new {@class="text-center btn btn-dark"})
 </p>
 <table class="table table-dark table-hover" style="color:white ; font-size:20px">
     <thead>
         <tr>
-            <th>
+            <th class="col-1">
                 編號
             </th>
-            <th>
+            <th class="col-2">
                 電子報標題
             </th>
-            <th>
+            <th class="col-5">
                 電子報內容
             </th>
             <th></th>

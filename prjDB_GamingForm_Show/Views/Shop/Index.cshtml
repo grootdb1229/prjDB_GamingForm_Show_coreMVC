@@ -26,14 +26,14 @@
     <header class="" id="headerCarousel">
     </header>
     <body>
-        <p>
+ @*        <p>
 
             <div class="container-fluid bg-primary mb-5 wow fadeIn" data-wow-delay="0.1s" style="padding: 35px;">
                 <div class="col-md-3">
                     @Html.ActionLink("我要上架", "Create", "Shop", null, new { @class = "btn btn-outline-dark mt-auto" })
                 </div>
             </div>
-        </p>
+        </p> *@
         <div id="Eroor"></div>
 
 <div class="container px-4 px-lg-5 mt-5">      
@@ -78,10 +78,13 @@
                     {
                         <div class="col mb-5">
                             <div class="card h-100">
-                                <div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem">Sale</div>
-                                <a href="@Url.Content("~/Shop/Details")?id=@item.ProductId">  <img class="card-img-top" src="~/images/shop/@item.FImagePath" alt="..." style="height:25vh; " /></a>
-                                <div class="card-body p-3" style="background-color:#4F4F4F">
-                                    <div class="text-center">
+                            <div class="badge bg-dark text-white position-absolute bi bi-eye" style="top: 0.5rem; right: 0.5rem">@item.ViewCount</div>
+                            <a href="@Url.Content("~/Shop/Details")?id=@item.ProductId">  <img class="card-img-top" src="~/images/shop/@item.FImagePath" alt="..." style="height:25vh;object-fit:contain; background-color: black; " /></a>
+                                
+                            <div class="card-body p-3" style="background-color:#4F4F4F">
+                                   
+                                <div class="text-center" style="height:25vh;">
+                                    <div style="height:35px">
                                         @{
                                             string[] tags = item.SubTagName.Split('/');
                                             foreach (var t in tags)
@@ -89,17 +92,44 @@
                                                 <span class="badge text-bg-light">@t</span>
                                             }
                                         }
-                                        <div style="margin: 10px">
-                                            <h4 class="fw-bolder" style="color:#fffafa">@item.ProductName</h4>
-                                        </div>
                                     </div>
-                                    <div style="background-color:black; position: relative; height: 38px;">
+                                    <div class="text-center" style="height:25vh; margin: 30px;">
+                                       
+                                        <h5 class="fw-bolder" style="color:#fffafa">@item.ProductName</h5>
+                                   
+                                    @*     @{
+                                            var productName = @item.ProductName;
 
-                                        <input type="button" value="加入購物車" class="btn btn-outline-dark mt-auto" value="@item.ProductId" onclick="Addtocar(@item.ProductId)" style=" position: absolute; right: 0;" />
-                                        <div style="position: absolute;bottom:6px; left: 0;">
-                                            <span style="color:white; ">NT$@item.Price.ToString("#0")</span>
+                                            // 限制字元數
+                                            var maxLength = 15;
+
+                                            // 檢查字元數是否超過限制
+                                            if (productName.Length > maxLength)
+                                            {
+                                            // 如果超過，截斷字串並加上"..."
+                                                var truncatedProductName = productName.Substring(0, maxLength) + "...";
+                                                // 將處理過的字串設定到元素內
+                                                productName = truncatedProductName;
+                                                <h4 class="fw-bolder" style="color:#fffafa">@productName</h4> 
+                                            }
+                                            else
+                                            {
+                                                // 如果未超過，直接顯示原字串
+                                                <h4 class="fw-bolder" style="color:#fffafa">@productName</h4>
+                                            } *@
+                                        
+
+
+
                                         </div>
                                     </div>
+                                <div style="background-color:black;border-radius:  10px; position: relative; height: 37px; display: flex; align-items: center;">
+                                    <div style="flex: 1; position: relative; text-align: center;">
+                                        <span style="color:white;">NT$@item.Price.ToString("#0")</span>
+                                    </div>
+                                    <input type="button" value="加入購物車" class="btn btn-outline-dark mt-auto" value="@item.ProductId" onclick="Addtocar(@item.ProductId)" style="flex: 1;" />     
+                                </div>
+
                                 </div>
                             </div>
                         </div>
@@ -115,6 +145,7 @@
     }
 
 </style>
+
 @section Scripts
 {
     <script>
@@ -122,25 +153,30 @@
         document.addEventListener("DOMContentLoaded", function () {
             $.ajax('@Url.Content("~/Shop/ShopADShow")', {
                 "type": 'get',
-                "success": function (datas) {   
+                "success": function (datas) {
                     Swal.fire({
-                        heightAuto:false,
-                        width:200,                        
+                        heightAuto: false,
+                        width: 500,
                         title: `${datas.title}`,
                         html: `<div class="my-custom-content">${datas.content}</div>`,
-                        imageUrl: `../AD/${datas.imgPath}`,                        
+                        imageUrl: `../AD/${datas.imgPath}`,
                         imageAlt: "Custom image",
-                        confirmButtonText:'關閉廣告',
+                        confirmButtonText: '關閉廣告',
                         background: '#272727',
                         customClass: {
-                            image: 'my-custom-image',// 添加自定義 CSS class
+                            image: 'my-custom-image', // 添加自定義 CSS class
                             title: 'my-custom-title', // 添加自定義 CSS class
                             content: 'my-custom-content' // 添加自定義 CSS class
-                        }
+                        },
+                        // imageClick: function () {
+                        //     // 在這裡添加點擊圖片後的操作，比如將用戶重定向到指定頁面
+                        //     window.location.href = '@Url.Content("~/Depute/DeputeDetails")?id=48';
+                        // }
                     });
                 }
-            })
+            });
         });
+
 
         function Addtocar(value) {
             $.ajax('@Url.Content("~/Shop/AddToCar2")', {
@@ -313,27 +349,29 @@
         //標籤搜尋END
 
         //以下是商品呈現標準格式
-        function createProductCard(product) {
+        function createProductCard(product) { 
             return `
                             <div class="col mb-5">
                                 <div class="card h-100">
-                                    <div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem">Sale</div>
-                                                           <a href="@Url.Content("~/Shop/Details")?id=${product.ProductId}"><img class="card-img-top" src="/images/shop/${product.FImagePath}" alt="..." style="height:25vh; " /></a>
-                                            <div class="card-body p-3"style="background-color:#4F4F4F">
-                                        <div class="text-center">
-                                            ${product.SubTagName.split('/').map(tag => `<span class="badge text-bg-light">${tag}</span>`).join("")}
+                                  <a href="@Url.Content("~/Shop/Details")?id=${product.ProductId}"><img class="card-img-top" 
+                                src="/images/shop/${product.FImagePath}" alt="..." style="height:25vh;object-fit:contain; background-color: black; " /></a>
+                                <div class="card-body p-3"style="background-color:#4F4F4F">
+                                  
+                               <div class="text-center" style="height:25vh;">
+                        <div style="height:35px">
+                     ${product.SubTagName.split('/').map(tag => `<span class="badge text-bg-light">${tag}</span>`).join("")}
+                                 </div>
+                            <div class="text-center" style="height:25vh; margin: 30px;">
+                                        <h5 class="fw-bolder" style="color:#fffafa">${product.ProductName}</h5>
+                                  </div>
+                                 </div>
 
-                                                <div style="margin: 10px">
-                                                        <h4 class="fw-bolder" style="color:#fffafa">${product.ProductName}</h5>
-                                            </div>
-                                        </div>
-
-                                                   <div style="background-color:black; position: relative; height: 38px;">
-                                                                                           <input type="button" value="加入購物車" class="btn btn-outline-dark mt-auto" value="${product.ProductId}"  onclick="Addtocar(${product.ProductId})" style=" position: absolute; right: 0;"/>
-                                                <div style="position: absolute;bottom:6px; left: 0;">
-                                              <span style="color:weight; ">NT$${product.Price}</span>
-                                              </div>
-                                              </div>
+                          <div style="background-color:black;border-radius:  10px; position: relative; height: 37px; display: flex; align-items: center;">
+                                 <div style="flex: 1; position: relative; text-align: center;">
+                                           <span style="color:white;">NT$${product.Price}</span>
+                                </div>
+                                  <input type="button" value="加入購物車" class="btn btn-outline-dark mt-auto" value="${product.ProductId}" onclick="Addtocar(${product.ProductId})" style="flex: 1;" />
+                         </div>
                                     </div>
                                 </div>
                             </div>
