@@ -4,32 +4,50 @@
     ViewData["Title"] = "ProductComplain";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
+@section Styles{
+    <style>
+        tr {
+            color: white;
+        }
 
-<h2 style="margin-left:5px ; font-size:45px">商品申訴</h2>
+        th {
+            font-size: 15px;
+        }
+
+        td {
+            font-size: 15px;
+        }
+
+        .table-hover tbody tr:hover {
+            background-color: wheat; /* 設定你想要的自定義顏色 */
+        }
+    </style>
+}
+<h2 style="margin-left:5px ; font-size:45px;color:white">商品申訴</h2>
 
 
 <table class="table table-dark table-hover" style="color:white ; font-size:20px">
     <thead>
         <tr>
-            <th>
+            <th class="col-1">
                 編號
             </th>
-            <th>
+            <th class="col-1">
                 商品編號
             </th>
-            <th>
+            <th class="col-1">
                 申訴人ID
             </th>
-            <th>
+            <th class="col-2">
                 申訴理由
             </th>
-            <th>
+            <th class="col-2">
                 申訴內容
             </th>
-            <th>
+            <th class="col-2">
                 申訴時間
             </th>
-            <th>
+            <th class="col-1">
                 申訴狀態
             </th>
             <th></th>
@@ -63,6 +81,7 @@
             <td>
                     <button type="button" class="btn btn-dark status" onclick="ProductDetail(@Html.DisplayFor(modelItem => item.ProductId))">商品詳情</button>
                     <button type="button" class="btn btn-dark status" onclick="StatusEdit(@Html.DisplayFor(modelItem => item.Id))">修改狀態</button>
+                    @Html.ActionLink("商品審核", "ProductStatusReview", "Admin", new {  id=item.ProductId  }, new {onclick = "return confirm('確定下架嗎?')",@class = "btn btn-dark" })
             </td>
         </tr>
 }
@@ -130,6 +149,7 @@
                         html: `
                                     <img src="../images/shop/${data[0].fImagePath}" alt="..." style="height:25vh; " /></br>
                                     <b>商品編號:</b><p>${data[0].productId}</p></br>
+                                    <b>商品狀態:</b><p>${data[0].name}</p></br>
                                     <b>商品名稱:</b><p>${data[0].productName}</p></br>
                                     <b>上架會員編號:</b><p>${data[0].memberId}</p></br>
                                     <b>價格:</b><p>${data[0].price}</p></br>

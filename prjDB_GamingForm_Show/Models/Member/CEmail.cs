@@ -1,7 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using MimeKit;
+using System.Net.Mail;
+using SmtpClient = MailKit.Net.Smtp.SmtpClient;
 
 namespace prjDB_GamingForm_Show.Models.Member
 {
+   
     public class CEmail
     {
         public string ToEmail { get; set; }
@@ -9,5 +13,8 @@ namespace prjDB_GamingForm_Show.Models.Member
         public string EmailBody { get; set; }
         public List<string> Emails { get;set; }
         public View EmailView { get; set; }
+
+        
     }
+     
 }
