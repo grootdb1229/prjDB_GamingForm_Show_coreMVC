@@ -17,17 +17,65 @@
         <div class="row">
           <div >
             <h2>訂單管理</h2>
-            <div class="container-xxl py-5">
+                <div class="container-xxl py-5">
+                    @{
+                        if (!string.IsNullOrEmpty(ViewBag.Buylist))
+                        {
+                            <div class="alert alert-danger">您目前沒有任何紀錄</div>
+                        }
+                    }
                 <div id="popmenu" class="container" style="margin-bottom:10px">
                     <div class="accordion accordion-flush" id="accordionFlushExample">
+                            <table class="table table-dark table-striped">
+                                <thead>
+                                    <tr>
+                                        <th style="color: white;  vertical-align: middle;">訂單編號</th>
+                                        <th style="color: white;  vertical-align: middle;">下單日期</th>
+                                        <th style="color: white; text-align: center; vertical-align: middle;">付款金額</th>
+                                        <th style="color: white; text-align: center; vertical-align: middle;">付款狀態</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model)
+                                    {
+                                        string CountString = "flush-collapseOne" + item.OrderId.ToString();
 
-                        @{
-                            if (!string.IsNullOrEmpty(ViewBag.Buylist))
-                            {
-                                <div class="alert alert-danger">您目前沒有任何紀錄</div>
-                            }
-                        }
-                        @foreach (var item in Model)
+                                        <tr>
+                                            <td colspan="4">
+                                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#@CountString" aria-expanded="true" aria-controls="@CountString">
+                                                    <div class="row" style="color: white;">
+                                                        <div class="col-2">訂單編號: @Html.DisplayFor(modelItem => item.OrderId)</div>
+                                                        <div class="col-5">下單日期: @Html.DisplayFor(modelItem => item.OrderDate)</div>
+                                                        <div class="col-3">付款金額: @item.Sumprice.ToString("#0")元</div>
+                                                        <div class="col-2">@Html.DisplayFor(modelItem => item.payok)</div>
+                                                    </div>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="4">
+                                                <div id="@CountString" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
+                                                    <div class="accordion-body">
+                                                        <div class="row">
+                                                            <div class="col" style="color:white">使用優惠卷: @item.CouponTitle</div>
+                                                        </div>
+                                                        @foreach (var p in item.products)
+                                                        {
+                                                            <div class="row">
+                                                                <div class="col" style="color:wheat"> @p.ProductName</div>
+                                                                <div class="col" style="color:wheat">@p.Price.ToString("#0")元</div>
+                                                            </div>
+                                                        }
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+
+                     
+                      @*   @foreach (var item in Model)
                         {
                             string CountString = "flush-collapseOne" + item.OrderId.ToString();
 
@@ -63,7 +111,7 @@
                                     </div>
                                 </div>
                             </div>
-                        }
+                        } *@
                     </div>
                 </div>
             </div>

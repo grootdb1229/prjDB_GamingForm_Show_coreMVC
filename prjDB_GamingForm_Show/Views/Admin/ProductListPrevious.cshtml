@@ -5,11 +5,29 @@
     ViewData["Title"] = "ProductList";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
+@section Styles{
+    <style>
+        tr {
+            color: white;
+        }
 
-<h2 style="margin-left:5px ; font-size:45px">商品清單</h2>
+        th {
+            font-size: 15px;
+        }
+
+        td {
+            font-size: 15px;
+        }
+
+        .table-hover tbody tr:hover {
+            background-color: wheat; /* 設定你想要的自定義顏色 */
+        }
+    </style>
+}
+<h2 style="margin-left:5px ; font-size:45px;color:white">商品清單</h2>
 @using (Html.BeginForm())
 {
-    <p style="display:inline;font-size:30px;margin-left:5px;margin-right:10px">商品名稱關鍵字查詢 : </p> @Html.TextBox("txtKeyWord",null,new{@class = "col-form-label"})
+    <p style="display:inline;font-size:20px;margin-left:5px;margin-right:10px;color:white">商品名稱關鍵字查詢 : </p> @Html.TextBox("txtKeyWord",null,new{@class = "col-form-label"})
     <input type="submit" value="查詢" class="btn btn-dark" />
 }
 @*<p style="margin-top:5px"></p>*@
@@ -20,22 +38,22 @@
 <table class="table table-dark table-hover" style="color:white ; font-size:20px">
     <thead>
         <tr>
-            <th>
-                商品編號
+            <th class="col-1">
+                編號
             </th>
-            <th>
-                商品名稱
+            <th class="col-2">
+                名稱
             </th>
-            <th>
-                商品單價
+            <th class="col-1">
+                單價
             </th>
-            <th>
+            <th class="col-2">
                 最後更新日期
             </th>
-            <th>
+            <th class="col-2">
                 商品狀態
             </th>
-            <th>
+            <th class="col-1">
                 上架者
             </th>
             <th></th>
@@ -44,19 +62,24 @@
     <tbody>
         @{
             string s = "";
+            string productStatus = "";
+
             foreach (var item in Model.Products)
             {
                 if (item.StatusId == 1)
                 {
                     s = "販售中";
+                    productStatus = "online";
                 }
                 else if (item.StatusId == 2)
                 {
                     s = "尚未開始販售";
+                    productStatus = "offline";
                 }
                 else if (item.StatusId == 7)
                 {
                     s = "審核中";
+                    productStatus = "review";
                 }
                 string d = item.AvailableDate.ToString("yyyy / MM / dd");
                 string p = item.Price.ToString("0.##");
@@ -80,8 +103,8 @@
                         @Html.DisplayFor(modelItem => item.Member.Name)
                     </td>
                     <td>
-                        @Html.ActionLink("商品上/下架", "ProductStatusEdit", "Admin", new {  id=item.ProductId  }, new {onclick = "return confirm('確定上/下架嗎?')",@class = "btn btn-dark" })
-                        <button type="button" class="btn btn-dark status" onclick="ProductDetail(@Html.DisplayFor(modelItem => item.ProductId))">商品詳情</button>
+                        @Html.ActionLink("商品上/下架", "ProductStatusEdit", "Admin", new { id = item.ProductId }, new { onclick = "return confirm('確定上/下架嗎?')", @class = productStatus })
+                        <button type="button" style=" border-radius: 5px  ;padding: 3px;" class="btn btn-dark status" onclick="ProductDetail(@Html.DisplayFor(modelItem => item.ProductId))">商品詳情</button>
                     </td>
                 </tr>
             }
@@ -106,6 +129,7 @@
                     html: `
                                                 <img src="../images/shop/${data[0].fImagePath}" alt="..." style="height:25vh; " /></br>
                                                 <b>商品編號:</b><p>${data[0].productId}</p></br>
+                                                <b>商品狀態:</b><p>${data[0].name}</p></br>
                                                 <b>商品名稱:</b><p>${data[0].productName}</p></br>
                                                 <b>上架會員編號:</b><p>${data[0].memberId}</p></br>
                                                 <b>價格:</b><p>${data[0].price}</p></br>

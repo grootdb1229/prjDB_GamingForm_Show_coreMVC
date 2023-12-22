@@ -473,10 +473,12 @@ namespace prjDB_GamingForm_Show.Controllers
             {
                 for (int i = 1; i <= 6; i++)
                 {
+                    if(i<= Rcolist.Count())
+                    { 
                     Rcolist2.Add(Rcolist[count]);
                     Rcolist.RemoveAt(count);
                     count = rnd.Next(0, Rcolist.Count);
-
+                    }
                 }
             }
             return PartialView(Rcolist2);
