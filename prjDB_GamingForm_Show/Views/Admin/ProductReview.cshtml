@@ -47,7 +47,7 @@
                     @item.AvailableDate.ToString("yyyy/MM/dd")
                 </td>
                 <td>
-                    @Html.ActionLink("商品上/下架", "ProductStatusReview", "Admin", new {  id=item.ProductId  }, new {onclick = "return confirm('確定上/下架嗎?')",@class = "btn btn-dark" })
+                    @Html.ActionLink("商品上架", "ProductStatusReview", "Admin", new {  id=item.ProductId  }, new {onclick = "return confirm('即將審核上架')",@class = "btn btn-dark" })
                     <button type="button" class="btn btn-dark status" onclick="ProductDetail(@Html.DisplayFor(modelItem => item.ProductId))">商品詳情</button>
                 </td>
             </tr>

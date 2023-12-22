@@ -1,41 +1,23 @@
-﻿using DB_GamingForm_Show.Job.DeputeClass;
-using MailKit.Search;
+﻿using MailKit.Net.Smtp;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis;
-using Microsoft.DotNet.Scaffolding.Shared.Messaging;
 using Microsoft.EntityFrameworkCore;
+using MimeKit;
 using NuGet.Packaging;
 using prjDB_GamingForm_Show.Models;
 using prjDB_GamingForm_Show.Models.Entities;
+using prjDB_GamingForm_Show.Models.Member;
 using prjDB_GamingForm_Show.Models.Shop;
 using prjDB_GamingForm_Show.ViewModels;
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Dynamic;
-using System.Linq;
-using System.Reflection.PortableExecutable;
-using System.Runtime.CompilerServices;
-using System.Runtime.ConstrainedExecution;
-using System.Security.Cryptography.Xml;
 using System.Text;
 using System.Text.Json;
-using System.Transactions;
-using MailKit;
-using MailKit.Net.Smtp;
-using MimeKit;
-using NuGet.Protocol.Plugins;
-using Microsoft.AspNetCore.Http;
-using System.Diagnostics.Metrics;
-using static Org.BouncyCastle.Asn1.Cmp.Challenge;
-using prjDB_GamingForm_Show.Models.Member;
 
 namespace prjDB_GamingForm_Show.Controllers
 {
-	namespace prjDB_GamingForm_Show.Controllers
-	{
-		public class ShopController : Controller
+    namespace prjDB_GamingForm_Show.Controllers
+    {
+        public class ShopController : Controller
 		{
 
 			private readonly IWebHostEnvironment _host;

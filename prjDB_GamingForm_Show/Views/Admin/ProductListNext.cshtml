@@ -5,7 +5,29 @@
     ViewData["Title"] = "ProductList";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
+<style>
+    .offline {
+        background-color: #4F4F4F; /*  #750000; */
+        color: #ADADAD; /* #750000; */
+        padding: 3px;
+        border-radius: 5px
+    }
 
+    .review {
+        background-color: #4F4F4F;
+        color: #ADADAD;
+        padding: 3px;
+        border-radius: 5px
+    }
+
+
+    .online {
+        background-color: #009100;
+        color: #F0FFF0;
+        padding: 3px;
+        border-radius: 5px
+    }
+</style>
 <h2 style="margin-left:5px ; font-size:45px">商品清單</h2>
 @using (Html.BeginForm())
 {
@@ -44,19 +66,24 @@
     <tbody>
         @{
             string s = "";
+            string productStatus = "";
+
             foreach (var item in Model.Products)
             {
                 if (item.StatusId == 1)
                 {
                     s = "販售中";
+                    productStatus = "online";
                 }
                 else if (item.StatusId == 2)
                 {
                     s = "尚未開始販售";
+                    productStatus = "offline";
                 }
                 else if (item.StatusId == 7)
                 {
                     s = "審核中";
+                    productStatus = "review";
                 }
                 string d = item.AvailableDate.ToString("yyyy / MM / dd");
                 string p = item.Price.ToString("0.##");
@@ -80,8 +107,8 @@
                         @Html.DisplayFor(modelItem => item.Member.Name)
                     </td>
                     <td>
-                        @Html.ActionLink("商品上/下架", "ProductStatusEdit", "Admin", new {  id=item.ProductId  }, new {onclick = "return confirm('確定上/下架嗎?')",@class = "btn btn-dark" })
-                        <button type="button" class="btn btn-dark status" onclick="ProductDetail(@Html.DisplayFor(modelItem => item.ProductId))">商品詳情</button>
+                        @Html.ActionLink("商品上/下架", "ProductStatusEdit", "Admin", new { id = item.ProductId }, new { onclick = "return confirm('確定上/下架嗎?')", @class = productStatus })
+                        <button type="button" style=" border-radius: 5px;padding: 3px;" class="btn btn-dark status" onclick="ProductDetail(@Html.DisplayFor(modelItem => item.ProductId))">商品詳情</button>
                     </td>
                 </tr>
             }
