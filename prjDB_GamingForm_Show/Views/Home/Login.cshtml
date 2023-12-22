@@ -106,23 +106,20 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body" style="color:black">
-                    <form asp-action="ForgetPassword" enctype="multipart/form-data">
-                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <div class="text-danger"></div>
                         <div class="form-group">
-                            <label asp-for="txtConfirm_Email" class="control-label"></label>
-                            <input asp-for="txtConfirm_Email" class="form-control" />
-                            <span asp-validation-for="txtConfirm_Email" class="text-danger"></span>
+                            <label id="txtConfirm_Email1" class="control-label"></label>
+                            <input id="txtConfirm_Email2" class="form-control" />
                         </div>
                         <div class="form-group">
                             <input type="submit" value="驗證電子信箱" class="btn btn-primary" style="margin-top:16px" id="ValEmail"/>
                         </div>
                         <div id="ValResult">
-
                         </div>
-                    </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">關閉</button>
+                    <div id="test"></div>
                 </div>
             </div>
         </div>
@@ -159,21 +156,16 @@
     btnFP.addEventListener('click', function () {
         $('#ForgetPassword').modal('show')
     });
-
+    var txtConfirmEmail = document.querySelector('#txtConfirm_Email2')
     var ValEmail = document.querySelector('#ValEmail')
     ValEmail.addEventListener('click', function()
     {
-        fetch('@Url.Content("~/Member/ForgetPassword")')
+        fetch(`@Url.Content("~/Home/ForgetPassword")?txtConfirm_Email=${txtConfirmEmail.value}`)
             .then(response => {
-                if (!response.ok) {
-                    throw new Error(`HTTP error! Status: ${response.status}`);
-                }
-                return response.json();
+                return response.text();
             })
             .then(data => {
-                console.log(data);
-            })
-            .catch(error => {
-                console.error('Error fetching data:', error);
+                $('#test').html(data);
+    });
     });
 </script>
