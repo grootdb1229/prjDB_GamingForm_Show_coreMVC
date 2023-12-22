@@ -598,6 +598,13 @@ namespace prjDB_GamingForm_Show.Controllers
             string imgPath = _db.Members.Where(m => m.Name == name).Select(m => m.FImagePath).FirstOrDefault();
             return imgPath;
         }
+
+        public int GetMemberId(string name)
+        {
+            int id = _db.Members.Where(m => m.Name == name).Select(m => m.MemberId).FirstOrDefault();
+            return id;
+        }
+
         public IActionResult ChatPV(string recevier)
         {
             var senderid = _db.Members.Where(a => a.Name == HttpContext.Session.GetString(CDictionary.SK_UserName)).Select(a => a.MemberId).FirstOrDefault();

@@ -141,10 +141,16 @@
             for (i = 0; i < list.length; i++) {
                 const reseponse = await fetch('@Url.Content("~/Member/GetMemberImg")?name=' + encodeURIComponent(list[i]))
                 const data = await reseponse.text();
+                const idres = await fetch('@Url.Content("~/Member/GetMemberId")?name=' + encodeURIComponent(list[i]))
+                const id = await idres.text();
+                
                 // $("#IDList").append($("<li></li>").attr("class", "list-group-item").text(list[i]));
                 // 創建新的 li 元素
-                var listItem = $("<li></li>").attr("class", "list-group-item").css("display", "flex").css("align-items", "center");;
-
+                var listItem = $("<li></li>").attr("class", "list-group-item").css("display", "flex").css("align-items", "center").click(function () {
+                    // 在點擊事件中呼叫 handleListItemClick 方法並傳遞 memberId 參數
+                    handleListItemClick(id);
+                });;
+                
                 // 如果 data 有效，則添加圖像元素
                 if (data) {
                     var imgElement = $("<img>").attr("src", `../MemberPhoto/${data}`).attr("alt", "Member Image").css("margin-right", "10px");
@@ -160,6 +166,10 @@
                 $("#IDList").append(listItem);
             }
         });
+
+        function handleListItemClick(id) {
+            window.location.href = `@Url.Content("~/Member/MemberPageTest")?id=${id}`;
+        }
 
         $('#sendButton').on('click', sendMessageToAllUser);
 
