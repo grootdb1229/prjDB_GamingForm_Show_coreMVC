@@ -427,16 +427,28 @@ namespace prjDB_GamingForm_Show.Controllers
         {
             return View();
         }
+        public IActionResult MyArticleList(int? id) 
+        {
+            return View();
+        }
         public IActionResult MyArticles(int? id)
         {
             var data = _db.Articles.Include(a => a.SubBlog).ThenInclude(s => s.Blog)
                 .Where(a => a.MemberId == (int)id)
                 .Select(a => a);
             var datas = from A in _db.Articles
-                        where A.MemberId == HttpContext.Session.GetInt32(CDictionary.SK_UserID)
+                        where A.MemberId == id
                         select A;
             return Json(data);
         }
+        public IActionResult MyDeputeList(int? id) 
+        {
+            return View();
+        }
+        //public IActionResult MyDeputes(int? id) 
+        //{ 
+        //   var data = _db.Deputes
+        //}
         public IActionResult MyWishList()
         {
             return View();
