@@ -84,15 +84,37 @@ namespace prjDB_GamingForm_Show.Controllers
         [HttpPost]
         public IActionResult ForgetPassword(CLoginViewModel CL)
         {
-            string result = "沒有此信箱";
+            string result = "沒有此信箱，請重新輸入";
             var Emails = from e in _db.Members
                          select e.Email;
             if (Emails.Contains(CL.txtConfirm_Email))
             {
+                HttpContext.Session.SetString(CDictionary.SK_Member_Email, CL.txtConfirm_Email);
                 SendEmail();
                 result = "已寄出信件";
             }
             return Content(result);
+        }
+        [HttpPost]
+        public IActionResult CheckValNumber(CLoginViewModel CL) 
+        {
+            string result = "驗證碼錯誤請重新輸入";
+            if (CL.txtVal_Number == HttpContext.Session.GetInt32(CDictionary.SK_Validation_Number)) 
+            {
+                result = "驗證碼正確";
+            }
+            return Content(result);
+        }
+
+        public IActionResult ResetPassword(CLoginViewModel CL)
+        {
+            if (CL.txtVal_Password == CL.Check_txtVal_Password) 
+            {
+                Member member = _db.Members.Where(m => m.Email == HttpContext.Session.GetString(CDictionary.SK_Member_Email)).First();
+                member.Password = CL.txtVal_Password;
+                _db.SaveChanges();
+            }
+            return Content("密碼修改成功");
         }
         public IActionResult Logout()
         {
