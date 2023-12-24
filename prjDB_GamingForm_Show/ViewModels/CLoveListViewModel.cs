@@ -15,5 +15,6 @@ namespace prjDB_GamingForm_Show.ViewModels
         [DisplayName("產品金額")]
         public decimal Price { get; set; }
         public string? FImagePath { get; set; }
+        public bool IsPurchased { get; set; }
     }
 }

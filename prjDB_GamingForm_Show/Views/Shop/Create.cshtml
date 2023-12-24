@@ -355,19 +355,13 @@
 
                 return true;
             }
-        const ProductContent = document.getElementById("productcontent")//產品內文
-        const fileInput = document.getElementById("upload_img");//必須至少配一張圖
-        const gameTagOptions = document.getElementById("GameTagOptions").value; //你必須要選擇至少一個標籤
-        const ProductName = document.getElementById("_Productname");//商品名
-        const ProductPrice = document.getElementById("_ProductPrice");//價格
-       
-        
+
         document.getElementById("Demo").addEventListener('click', function () {
-            
+
             // 添加文字內容
-            ProductContent.value = '遊玩咕嚕的角色，以踏上拾回自己寶貝的旅程。你會需要爬上摩多山、潛入幽暗森林，並做出困難的抉擇。究竟誰會取得優勢：狡猾的咕嚕，還是無辜的史麥戈呢？';
-            ProductName.value = '魔戒：咕噜';
-            ProductPrice.value = '500';
+            document.getElementById("productcontent").value = '遊玩咕嚕的角色，以踏上拾回自己寶貝的旅程。你會需要爬上摩多山、潛入幽暗森林，並做出困難的抉擇。究竟誰會取得優勢：狡猾的咕嚕，還是無辜的史麥戈呢？';
+            document.getElementById("_Productname").value = '魔戒：咕噜';
+            document.getElementById("_ProductPrice").value = '-500';
         });
             //最終資料遞交
             async function submitForm(event) {
@@ -381,7 +375,14 @@
 
                 // 正則表達式，匹配一個或多個數字
                 var amountRegex = /^\d+$/u;
+            const ProductContent = document.getElementById("productcontent")//產品內文
+            const fileInput = document.getElementById("upload_img");//必須至少配一張圖
+            const gameTagOptions = document.getElementById("GameTagOptions").value; //你必須要選擇至少一個標籤
+            const ProductName = document.getElementById("_Productname");//商品名
+            const ProductPrice = document.getElementById("_ProductPrice");//價格
 
+
+          
 
                 // const UnitStock = document.getElementById("Unitstock");//總數
                 event.preventDefault(); // 阻止表單的默認提交行為
