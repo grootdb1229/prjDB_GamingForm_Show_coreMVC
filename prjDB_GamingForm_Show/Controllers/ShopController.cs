@@ -264,25 +264,29 @@ namespace prjDB_GamingForm_Show.Controllers
 			}
             public IActionResult LoveList()
             {
-			var aa=	_db.WishLists.Where(x => x.MemberId == HttpContext.Session.GetInt32(CDictionary.SK_UserID)).Select(a => a.Product).ToList();
-				List < CLoveListViewModel> LL= new List<CLoveListViewModel>();
-                
-				foreach (var x in aa)
-				{
-					CLoveListViewModel CLVM =new CLoveListViewModel();
-					CLVM.ProductId=x.ProductId;
-					CLVM.FImagePath = x.FImagePath;
-					CLVM.ProductName = x.ProductName;
-					CLVM.Price= x.Price;
-					LL.Add(CLVM);
-				}
+                int memberId = HttpContext.Session.GetInt32(CDictionary.SK_UserID) ?? 0;
 
-				//ViewBag.LList = LL.Count();
-				//TP.LListCount=LL.Count();
-				return View(LL);
+                var purchasedProducts = _db.Orders
+				  .Where(o => o.MemberId == memberId)
+				   .SelectMany(o => o.OrderProducts.Select(op => op.ProductId))
+				   .ToList();
+
+                var loveList = _db.WishLists
+                    .Where(x => x.MemberId == memberId)
+                    .Select(a => new CLoveListViewModel
+                    {
+                        ProductId = a.Product.ProductId,
+                        FImagePath = a.Product.FImagePath,
+                        ProductName = a.Product.ProductName,
+                        Price = a.Product.Price,
+                        IsPurchased = purchasedProducts.Contains(a.Product.ProductId)
+                    })
+                    .ToList();
+
+                return View(loveList);
             }
 
-			public IActionResult OrderSuccess(int?id)
+            public IActionResult OrderSuccess(int?id)
 			{
                 var order = _db.Orders.Where(x => x.OrderId==id).FirstOrDefault();
                 order.PaymentDate = DateTime.Now;
