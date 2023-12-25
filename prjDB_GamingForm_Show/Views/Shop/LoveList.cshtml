@@ -22,6 +22,7 @@
             <tr>
                 <td class="table-secondary">
                     @Html.DisplayFor(modelItem => item.ProductName)
+                    @if (item.IsPurchased == true) {<p style="color:red">已購買過</p> }
                 </td>
                 <td class="table-secondary">
                     <a href='@Url.Content("~/Shop/Details")?id=@item.ProductId'>
@@ -32,8 +33,13 @@
                     @Html.DisplayFor(modelItem => item.Price)
                 </td>
                 <td class="table-secondary">
-                    <button class="AddtoCar" data-product-id="@item.ProductId">加入購物車</button> |
-                    <button class="removeButton" data-product-id="@item.ProductId">移除最愛</button>
+                    @if (item.IsPurchased == true)
+                    {
+                        <button class="AddtoCar" data-product-id="@item.ProductId" disabled>加入購物車</button>
+                        <button class="removeButton" data-product-id="@item.ProductId">移除最愛</button>
+                    }else{
+                    <button class="AddtoCar" data-product-id="@item.ProductId">加入購物車</button> 
+                    <button class="removeButton" data-product-id="@item.ProductId">移除最愛</button>}
                 </td>
             </tr>
         }

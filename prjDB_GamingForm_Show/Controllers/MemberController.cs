@@ -225,7 +225,7 @@ namespace prjDB_GamingForm_Show.Controllers
             }
             return RedirectToAction("ValidationPage", "Member");
         }
-        public void SendEmail(string EmailAddress) 
+         public void SendEmail(string EmailAddress) 
         {
             int ValNumber = new Random().Next(1000, 10000);
             HttpContext.Session.SetInt32(CDictionary.SK_Validation_Number, ValNumber);
@@ -280,23 +280,7 @@ namespace prjDB_GamingForm_Show.Controllers
         //}
         #endregion
         #region PasswordValidation
-        //public IActionResult ForgetPassword()
-        //{
-        //    return View();
-        //}
-        
-        public IActionResult ForgetPassword(CLoginViewModel CL)
-        {
-            string result = "沒有此信箱";
-            var Emails = from e in _db.Members
-                         select e.Email;
-            if (Emails.Contains(CL.txtConfirm_Email))
-            {
-                SendEmail(CL.txtConfirm_Email);
-                result = "已寄出";
-            }
-            return Content(result);
-        }
+       
         public IActionResult ValidationPage()
         {
             return View();
@@ -443,16 +427,28 @@ namespace prjDB_GamingForm_Show.Controllers
         {
             return View();
         }
+        public IActionResult MyArticleList(int? id) 
+        {
+            return View();
+        }
         public IActionResult MyArticles(int? id)
         {
             var data = _db.Articles.Include(a => a.SubBlog).ThenInclude(s => s.Blog)
                 .Where(a => a.MemberId == (int)id)
                 .Select(a => a);
             var datas = from A in _db.Articles
-                        where A.MemberId == HttpContext.Session.GetInt32(CDictionary.SK_UserID)
+                        where A.MemberId == id
                         select A;
             return Json(data);
         }
+        public IActionResult MyDeputeList(int? id) 
+        {
+            return View();
+        }
+        //public IActionResult MyDeputes(int? id) 
+        //{ 
+        //   var data = _db.Deputes
+        //}
         public IActionResult MyWishList()
         {
             return View();

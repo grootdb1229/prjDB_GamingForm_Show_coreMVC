@@ -9,6 +9,21 @@
 @section Styles
     {
     <style>
+        tr {
+            color: white;
+        }
+
+        th {
+            font-size: 15px;
+        }
+
+        td {
+            font-size: 15px;
+        }
+
+        .table-hover tbody tr:hover {
+            background-color: wheat; /* 設定你想要的自定義顏色 */
+        }
         .ck {
             height: 400px;
         }
@@ -29,21 +44,21 @@
 
 <div class="row ">
     <div class="col-md-4 mx-auto">
-        <h2 style=" font-size:45px">電子報設定</h2>
+        <h2 style=" font-size:45px;color:white">電子報設定</h2>
         <form asp-action="SendNewsLetter">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="Title" class="control-label">電子報標題</label>
+                <label asp-for="Title" class="control-label" style="color:white">電子報標題</label>
                 <input asp-for="Title" class="form-control" />
                 <span asp-validation-for="Title" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="HtmlContent" class="control-label">電子報內容</label>
+                <label asp-for="HtmlContent" class="control-label" style="color:white">電子報內容</label>
                 <textarea asp-for="HtmlContent" id="editor" name="HtmlContent"></textarea>
             </div>
             <div class="form-group">
-                <input type="submit" class="text-center btn btn-dark" ></input>
                 @Html.ActionLink("取消", "Newsletter", "Admin", null, new {@class="text-center btn btn-dark"})
+                <input type="submit" class="text-center btn btn-dark" />
             </div>
         </form>
     </div>

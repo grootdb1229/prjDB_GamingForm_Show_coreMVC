@@ -78,7 +78,9 @@
 
             <!-- 右側：文字和按鈕 -->
             <div class="col-md-6">
+                <div class="badge bg-dark text-white bi bi-eye" style="top: 0.5rem; right: 0.5rem">@Model.ViewCount</div>
                 <h1 class="display-5 fw-bolder">@Html.DisplayFor(model => model.ProductName)</h1>
+
                 <div>
                     <div>遊戲類型</div>
                     @{
@@ -167,6 +169,8 @@
                 <div class="scrollable-content">
                     <p class="lead">@Html.DisplayFor(model => model.ProductContent)</p>
                 </div>
+
+
                 @*------檢舉------*@
                 <button type="button" class="btn btn-dark status" style="float:right" onclick="test2(@Html.DisplayFor(model => model.ProductId))">檢舉</button>
                 @using (Html.BeginForm("AddToCar", "Shop", FormMethod.Post, new { id = "addToCartForm" }))
@@ -264,22 +268,19 @@
                     btnlike.addEventListener('click', async () => {
                         const response = await fetch(`@Url.Content("~/Shop/favourite")?id=${@Model.ProductId}&isLiked=${isLiked}`);
                         const data = await response.json();
-
+                       
+                        const clickElement = document.getElementById('clicked');
                         const imgElement = document.getElementById('unclicked');
 
                         if (data.message === "加入最愛" || data.message === "你加過了" )
                         {
                             isLiked = !isLiked; // 切換狀態
 
-                            if (isLiked) {
-                                // 更換為加入最愛時的圖片路徑
-                                imgElement.src = '@Url.Content("~/images/shop/heart.png")';
-                                console.log(data.message + "進來後");
-                            } else {
-                                //變成沒有加入最愛的路徑
-                                imgElement.src = '@Url.Content("~/images/shop/hollowheart.png")';
-                                console.log(data.message + "進來後");
-                            }
+                            // 確認 clickElement 是否存在
+                            clickElement && (clickElement.src = isLiked ? '@Url.Content("~/images/shop/hollowheart.png")' : '@Url.Content("~/images/shop/heart.png")');
+
+                            // 確認 imgElement 是否存在
+                            imgElement && (imgElement.src = isLiked ? '@Url.Content("~/images/shop/heart.png")' : '@Url.Content("~/images/shop/hollowheart.png")');
                         }
                         getLoveList();
                     });

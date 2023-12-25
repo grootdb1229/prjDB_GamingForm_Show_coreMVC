@@ -3,12 +3,15 @@ using MailKit.Search;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query.Internal;
+using MimeKit;
 using Newtonsoft.Json;
 using prjDB_GamingForm_Show.Models;
 using prjDB_GamingForm_Show.Models.Entities;
 using prjDB_GamingForm_Show.ViewModels;
 using System.Diagnostics;
+using System.Net.Mail;
 using System.Text.Json;
+using SmtpClient = MailKit.Net.Smtp.SmtpClient;
 
 namespace prjDB_GamingForm_Show.Controllers
 {
@@ -51,6 +54,67 @@ namespace prjDB_GamingForm_Show.Controllers
         public IActionResult test()
         {
             return View();
+        }
+        public void SendEmail()
+        {
+            int ValNumber = new Random().Next(1000, 10000);
+            HttpContext.Session.SetInt32(CDictionary.SK_Validation_Number, ValNumber);
+            var message = new MimeMessage();
+            message.From.Add(new MailboxAddress("grootdb1229", "grootdb1229@gmail.com"));
+            message.To.Add(new MailboxAddress("alan90306", "alan90306@gmail.com"));
+            message.Subject = "Test mail of asp.net Core";
+            message.Body = new TextPart("html")
+            {
+                Text = "<!DOCTYPE html>" +
+                        "<html>" +
+                        "<h2>您的驗證碼</h2>" +
+                        "<p>您的驗證碼為:" + HttpContext.Session.GetInt32(CDictionary.SK_Validation_Number) + "</p>" +
+                        "</html>"
+            };
+
+            using (var client = new SmtpClient())
+            {
+                client.Connect("smtp.gmail.com", 587, false);
+                client.Authenticate("grootdb1229@gmail.com", "fmgx uucs lgkv vqxm");
+                client.Send(message);
+                client.Disconnect(true);
+            }
+        }
+
+        [HttpPost]
+        public IActionResult ForgetPassword(CLoginViewModel CL)
+        {
+            string result = "沒有此信箱，請重新輸入";
+            var Emails = from e in _db.Members
+                         select e.Email;
+            if (Emails.Contains(CL.txtConfirm_Email))
+            {
+                HttpContext.Session.SetString(CDictionary.SK_Member_Email, CL.txtConfirm_Email);
+                SendEmail();
+                result = "已寄出信件";
+            }
+            return Content(result);
+        }
+        [HttpPost]
+        public IActionResult CheckValNumber(CLoginViewModel CL) 
+        {
+            string result = "驗證碼錯誤請重新輸入";
+            if (CL.txtVal_Number == HttpContext.Session.GetInt32(CDictionary.SK_Validation_Number)) 
+            {
+                result = "驗證碼正確";
+            }
+            return Content(result);
+        }
+
+        public IActionResult ResetPassword(CLoginViewModel CL)
+        {
+            if (CL.txtVal_Password == CL.Check_txtVal_Password) 
+            {
+                Member member = _db.Members.Where(m => m.Email == HttpContext.Session.GetString(CDictionary.SK_Member_Email)).First();
+                member.Password = CL.txtVal_Password;
+                _db.SaveChanges();
+            }
+            return Content("密碼修改成功");
         }
         public IActionResult Logout()
         {

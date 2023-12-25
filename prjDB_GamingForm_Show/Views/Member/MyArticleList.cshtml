@@ -1,0 +1,47 @@
+﻿
+@{
+    ViewData["Title"] = "MyArticleList";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<h2 style="text-align:center">我的文章列表</h2>
+<div class="container">
+  <div class="row row-cols-6" id="ArticleList">
+    <div class="col">發表論壇</div>
+    <div class="col">子版</div>
+    <div class="col">標題</div>
+    <div class="col">瀏覽數</div>
+    <div class="col">修改日期</div>
+    <div class="col">連結</div>
+  </div>
+</div>
+
+@section Scripts
+{
+     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+     <script>
+         $(document).ready(function()
+         {
+            fetch('@Url.Content("~/Member/MyArticles")?id=@Context.Session.GetInt32(CDictionary.SK_UserID)')
+            .then(response=>response.json())
+            .then(data=>{
+            console.log(data)
+            for(let index=0 ; index < data.length ; index++)
+            {
+                  
+                            // 新增六個欄位
+                            var Html =
+                            `
+                            <div class="col">  ${data[index].subBlog.blog.title}  </div>
+                            <div class="col">  ${data[index].subBlog.title}  </div>
+                            <div class="col">  ${data[index].title}  </div>
+                            <div class="col">  ${data[index].viewCount}  </div>
+                            <div class="col">  ${data[index].modifiedDate.toString().split('T')[0]}</div>
+                                            <div class="col"><a class="btn btn-info" href="/Blog/ArticleContent?FId=${data[index].subBlog.blogId}&AFId=${data[index].articleId}">連結</a></div>
+                            `
+                            // 將新行加入表格
+                            $('#ArticleList').append(Html);
+            }
+            })
+         })
+     </script>
+}

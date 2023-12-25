@@ -8,6 +8,21 @@
 @*<link rel="stylesheet" href="~/css/blogstyle.css" type="text/css">*@
 @section Styles {
     <style>
+        tr {
+            color: white;
+        }
+
+        th {
+            font-size: 15px;
+        }
+
+        td {
+            font-size: 15px;
+        }
+
+        .table-hover tbody tr:hover {
+            background-color: wheat; /* 設定你想要的自定義顏色 */
+        }
         input {
             margin: 3px 0px;
         }
@@ -35,10 +50,10 @@
 }
 
 
-<div class="row" style="margin:10px auto;width:650px;background-color:#4F4F4F">
-    <div class="col-md-12" style="background-color:#4F4F4F;border-radius:8px;box-shadow:0px 0px 8px 8px #cccccc">
+<div class="row">
+    <div class="col-md-4 mx-auto">
         <div>
-            <h2 style="text-align:center;margin:10px auto;color:whitesmoke;border-bottom:dotted">更改電子報</h2>
+            <h2 style="font-size:45px;color:white">更改電子報</h2>
         </div>
         <form asp-action="NewsletterEdit" method="post" onsubmit="return validateForm()">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -46,11 +61,11 @@
             <input type="hidden" name="Id" value="@Model.Id" />
 
             <div class="form-group">
-                <label class="control-label">電子報標題</label>
+                <label asp-for="Title" class="control-label" style="color:white">電子報標題</label>
                 <input asp-for="Title" class="form-control" id="articleTitle" />
                 <span asp-validation-for="Title" class="text-danger"></span>
             </div>
-            <label>文章內容</label>
+            <label asp-for="HtmlContent" class="control-label" style="color:white">電子報內容</label>
             <textarea asp-for="HtmlContent" name="HtmlContent" id="editor" style="resize:none; height:700px; width: 100%;color:black">
 
             </textarea>
