@@ -13,7 +13,7 @@
 }
 
 
-<div style="font-size:25px">
+<div style="font-size:25px ; color:white">
     總訂單數:@totalOrders 筆  /   訂單總額:@totalAmount 元  /  平均金額:@averagePrice 元
     <br />
 </div>
@@ -25,10 +25,10 @@
 @using (Html.BeginForm())
 {
 
-    <label for="start" style="font-size:20px">開始日期:</label>
+    <label for="start" style="font-size:20px; color:white">開始日期:</label>
     <input type="date" style="font-size:20px" id="start" name="startday" value="2023-01-01" min="2023-01-01" max="2099-12-31" />
 
-    <label for="end" style="font-size:20px">結束日期:</label>
+    <label for="end" style="font-size:20px; color:white">結束日期:</label>
     <input type="date" style="font-size:20px" id="end" name="endday" value="@DateTime.Now.ToString("yyyy-MM-dd")" min="2023-01-01" max="2099-12-31" />
 
 

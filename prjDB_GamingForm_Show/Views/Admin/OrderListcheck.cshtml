@@ -15,15 +15,11 @@
 <div style="font-size:20px;color:aliceblue;">
     查詢起始日期:@((ViewBag.start as DateTime?)?.ToShortDateString()) /
     查詢結束日期:@((ViewBag.end as DateTime?)?.ToShortDateString()) /
-    查詢訂單狀態為:@ViewBag.ST
-    
-    <br />
+    查詢訂單狀態為:@ViewBag.ST    
     @{
         if (ViewBag.ST == "無指定")
         {
-        <p>總訂單數:@totalOrders 筆 / </p>
-        <p> 已成交訂單總額:@totalOrdersPrice 元 /</p>
-        <p>已成交訂單平均單價:@totalOrderAvg.ToString("F2") 元</p>
+        <p>總訂單數:@totalOrders 筆 / 已成交訂單總額:@totalOrdersPrice 元 / 已成交訂單平均單價:@totalOrderAvg.ToString("F2") 元</p>
         }
         if (ViewBag.ST == "未付款")
         {
@@ -31,9 +27,7 @@
             var NoPayOrdersPrice = Math.Floor(Model.Where(p => p.StatusId == 13).Sum(p => p.SumPrice)); //未成交訂單總額
             var NoPayAvg = NoPayOrdersPrice / NoPayOrders; //未付款訂單平均
 
-            <p>未付款訂單數:@NoPayOrders 筆 / </p>
-            <p>未付款訂單總額:@NoPayOrdersPrice 元 /</p>
-            <p>未付款訂單平均單價:@NoPayAvg.ToString("F2") 元</p>
+            <p>未付款訂單數:@NoPayOrders 筆 / 未付款訂單總額:@NoPayOrdersPrice 元 / 未付款訂單平均單價:@NoPayAvg.ToString("F2") 元</p>
         }
         if (ViewBag.ST == "已付款")
         {
@@ -41,24 +35,19 @@
             var FinishOrdersPrice = Math.Floor(Model.Where(p => p.StatusId == 16 || p.StatusId == 14 || p.StatusId == 15).Sum(p => p.SumPrice)); //已完成訂單總額
             var FinishOrdersAvg = FinishOrdersPrice / FinishOrders; //已完成訂單平均
 
-            <p>已付款訂單數:@FinishOrders 筆 / </p>
-            <p>未付款訂單總額:@FinishOrdersPrice 元 /</p>
-            <p>未付款訂單平均單價:@FinishOrdersAvg.ToString("F2") 元</p>
+            <p>已付款訂單數:@FinishOrders 筆 / 已付款訂單總額:@FinishOrdersPrice 元 / 已付款訂單平均單價:@FinishOrdersAvg.ToString("F2") 元</p>
         
         }
     }
-    <br />
-
-    <br />
 </div>
 
 @using (Html.BeginForm())
 {
 
-    <label for="start" style="font-size:20px">開始日期:</label>
+    <label for="start" style="font-size:20px; color:white">開始日期:</label>
     <input type="date" style="font-size:20px" id="start" name="startday" value="2023-01-01" min="2023-01-01" max="2099-12-31" />
 
-    <label for="end" style="font-size:20px">結束日期:</label>
+    <label for="end" style="font-size:20px; color:white">結束日期:</label>
     <input type="date" style="font-size:20px" id="end" name="endday" value="@DateTime.Now.ToString("yyyy-MM-dd")" min="2023-01-01" max="2099-12-31" />
 
 
