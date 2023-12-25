@@ -38,7 +38,7 @@ namespace prjDB_GamingForm_Show.Controllers
             ViewBag.Name = name;
             return View();
         }
-        int i每頁筆數 = 8;
+        int i每頁筆數 = 7;
         int i頁數 = 0;
         public IActionResult MemberList(CKeyWordViewModel vm)
         {
