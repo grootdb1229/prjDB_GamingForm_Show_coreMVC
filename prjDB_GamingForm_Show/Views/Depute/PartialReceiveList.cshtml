@@ -72,17 +72,20 @@
                         <td class="text-center">
                             @i.Depute.Title
                         </td>
-                        <td class="text-truncate col-2" style="max-width: 150px;">
-                            @{
-                                if (i.RecordContent != null)
-                                {
-                                    @i.RecordContent
+                        <td>
+                            <div class="text-truncate" style="max-width: 150px;">
+                                @{
+                                    if (i.RecordContent != null)
+                                    {
+                                        @i.RecordContent
+                                    }
+                                    else
+                                    {
+                                        @:未提供自介內容
+                                    }
                                 }
-                                else
-                                {
-                                    @:未提供自介內容
-                                }
-                            }
+                            </div>
+                            <button type="button" class="btn btn-link btn-sm" onclick="toggleContent(this)">檢視內容</button>
                         </td>
                         <td class="text-center">
                             @i.ApplyStatus.Name
@@ -148,17 +151,20 @@
                         <td class="text-center">
                             @i.Depute.Title
                         </td>
-                        <td class="text-truncate col-2" style="max-width: 150px;">
-                            @{
-                                if (i.RecordContent != null)
-                                {
-                                    @i.RecordContent
+                        <td>
+                            <div class="text-truncate" style="max-width: 150px;">
+                                @{
+                                    if (i.RecordContent != null)
+                                    {
+                                        @i.RecordContent
+                                    }
+                                    else
+                                    {
+                                        @:未提供自介內容
+                                    }
                                 }
-                                else
-                                {
-                                    @:未提供自介內容
-                                }
-                            }
+                            </div>
+                            <button type="button" class="btn btn-link btn-sm" onclick="toggleContent(this)">檢視內容</button>
                         </td>
                         <td class="text-center">
                             @i.ApplyStatus.Name
@@ -231,17 +237,20 @@
                         <td class="text-center">
                             @i.Depute.Title
                         </td>
-                        <td class="text-truncate" style="max-width: 150px;">
-                            @{
-                                if (i.RecordContent != null)
-                                {
-                                    @i.RecordContent
+                        <td >
+                            <div class="text-truncate" style="max-width: 150px;">
+                                @{
+                                    if (i.RecordContent != null)
+                                    {
+                                        @i.RecordContent
+                                    }
+                                    else
+                                    {
+                                        @:未提供自介內容
+                                    }
                                 }
-                                else
-                                {
-                                    @:未提供自介內容
-                                }
-                            }
+                            </div>
+                            <button type="button" class="btn btn-link btn-sm" onclick="toggleContent(this)">檢視內容</button>
                         </td>
                         <td class="text-center" hidden>
                             @i.ApplyStatus.Name

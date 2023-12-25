@@ -50,7 +50,7 @@
                                             <td>@Html.DisplayFor(modelItem => item.StatusName)</td>
                                             <td>
                                                 <button type="button" class="btn btn-outline-dark" onclick="ProductDetail(@Html.DisplayFor(modelItem => item.ProductId))">商品詳情</button>
-                                                @Html.ActionLink("測試修改", "Edit", "Shop", new { id = item.ProductId }, new { @class = "btn btn-outline-dark" })
+                                                @Html.ActionLink("修改商品", "Edit", "Shop", new { id = item.ProductId }, new { @class = "btn btn-outline-dark" })
                                             </td>
                                         </tr>
                                     }

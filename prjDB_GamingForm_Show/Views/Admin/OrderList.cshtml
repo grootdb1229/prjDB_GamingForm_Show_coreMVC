@@ -72,13 +72,13 @@
     <input type="date" style="font-size:20px" id="end" name="endday" value="@DateTime.Now.ToString("yyyy-MM-dd")" min="2023-01-01" max="2099-12-31" />
 
 
-    <select id="sel_Com" name="ST" style="margin-top:3px;width:200px;height:34.61px;font-size:20px" onchange="updateOrderList()">
+    <select id="sel_Com" name="ST" style="margin-top:3px;width:200px;height:34.61px;font-size:20px">
         <option>請選擇訂單狀態</option>
         <option>未付款</option>
         <option>已付款</option>
-        <option>已出貨</option>
+@*        <option>已出貨</option>
         <option>已完成</option>
-        <option>取消訂單</option>
+        <option>取消訂單</option>*@
     </select>
 
     @*<input type="submit" value="查詢" class="btn btn-dark" />*@
