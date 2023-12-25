@@ -1713,7 +1713,7 @@ namespace prjDB_GamingForm_Show.Controllers
                 }
                 else if (ST == "未付款")
                 {
-                    query = query.Where(p => p.CompletedDate >= startday.Value && p.OrderDate <= endday.Value&&p.Status.StatusId == 13);
+                    query = query.Where(p => /*p.CompletedDate >= startday.Value && p.OrderDate <= endday.Value &&*/ p.Status.StatusId == 13);
                 }
                 else
                 {
