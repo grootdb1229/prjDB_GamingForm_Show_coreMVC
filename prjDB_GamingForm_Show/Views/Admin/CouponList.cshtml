@@ -5,6 +5,21 @@
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 <style>
+    tr {
+        color: white;
+    }
+
+    th {
+        font-size: 15px;
+    }
+
+    td {
+        font-size: 15px;
+    }
+
+    .table-hover tbody tr:hover {
+        background-color: wheat; /* 設定你想要的自定義顏色 */
+    }
     .offline {
         background-color: #4F4F4F;
         color: #ADADAD;
@@ -20,10 +35,10 @@
     }
 </style>
 
-<h2 style="margin-left:5px ; font-size:45px">優惠券清單</h2>
+<h2 style="margin-left:5px ; font-size:45px;color:white">優惠券清單</h2>
 @using (Html.BeginForm())
 {
-    <p style="display:inline;font-size:30px;margin-left:5px;margin-right:10px;">名稱關鍵字查詢 : </p> @Html.TextBox("txtKeyWord", null, new { @class = "col-form-label" })
+    <p style="display:inline;font-size:20px;margin-left:5px;margin-right:10px;color:white">名稱關鍵字查詢 : </p> @Html.TextBox("txtKeyWord", null, new { @class = "col-form-label" })
     <input type="submit" value="查詢" class="btn btn-dark" />
 }
 

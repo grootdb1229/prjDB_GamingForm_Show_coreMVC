@@ -117,7 +117,7 @@ namespace prjDB_GamingForm_Show.Controllers
             {
                 vm = new CAdminCheckProductViewModel
                 {
-                    Products = _db.Products.Include(m => m.Member).Where(x=>x.StatusId ==1||x.StatusId==2).Skip(i每頁筆數 * i頁數).Take(i每頁筆數),
+                    Products = _db.Products.Include(m => m.Member).Where(x=>x.StatusId ==1||x.StatusId==2).OrderByDescending(x => x.ProductId).Skip(i每頁筆數 * i頁數).Take(i每頁筆數),
                     Members = _db.Members.Skip(i每頁筆數 * i頁數).Take(i每頁筆數)
                 };
 
@@ -127,7 +127,7 @@ namespace prjDB_GamingForm_Show.Controllers
             {
                 vm = new CAdminCheckProductViewModel
                 {
-                    Products = _db.Products.Include(m => m.Member).Where(p => p.ProductName.Contains(kyvm.txtKeyWord)).Where(x => x.StatusId == 1 || x.StatusId == 2).Skip(i每頁筆數 * i頁數).Take(i每頁筆數),
+                    Products = _db.Products.Include(m => m.Member).Where(p => p.ProductName.Contains(kyvm.txtKeyWord)).Where(x => x.StatusId == 1 || x.StatusId == 2).OrderByDescending(x => x.ProductId).Skip(i每頁筆數 * i頁數).Take(i每頁筆數),
                     Members = _db.Members.Skip(i每頁筆數 * i頁數).Take(i每頁筆數)
                 };
                 return View(vm);
@@ -151,7 +151,7 @@ namespace prjDB_GamingForm_Show.Controllers
                 HttpContext.Session.SetInt32(CDictionary.SK_管理者觀看商品清單頁數使用關鍵字, i頁數);
                 vm = new CAdminCheckProductViewModel
                 {
-                    Products = _db.Products.Include(m => m.Member).Where(x => x.StatusId == 1 || x.StatusId == 2).Skip(i每頁筆數 * i頁數).Take(i每頁筆數),
+                    Products = _db.Products.Include(m => m.Member).Where(x => x.StatusId == 1 || x.StatusId == 2).OrderByDescending(x=>x.ProductId).Skip(i每頁筆數 * i頁數).Take(i每頁筆數),
                     Members = _db.Members.Skip(i每頁筆數 * i頁數).Take(i每頁筆數)
                 };
                 return View(vm);
@@ -160,7 +160,7 @@ namespace prjDB_GamingForm_Show.Controllers
             {
                 vm = new CAdminCheckProductViewModel
                 {
-                    Products = _db.Products.Include(m => m.Member).Where(p => p.ProductName.Contains(kyvm.txtKeyWord)).Where(x => x.StatusId == 1 || x.StatusId == 2).Skip(i每頁筆數 * i頁數).Take(i每頁筆數),
+                    Products = _db.Products.Include(m => m.Member).Where(p => p.ProductName.Contains(kyvm.txtKeyWord)).Where(x => x.StatusId == 1 || x.StatusId == 2).OrderByDescending(x => x.ProductId).Skip(i每頁筆數 * i頁數).Take(i每頁筆數),
                     Members = _db.Members.Skip(i每頁筆數 * i頁數).Take(i每頁筆數)
                 };
                 return View(vm);
@@ -182,7 +182,7 @@ namespace prjDB_GamingForm_Show.Controllers
                 HttpContext.Session.SetInt32(CDictionary.SK_管理者觀看商品清單頁數使用關鍵字, i頁數);
                 vm = new CAdminCheckProductViewModel
                 {
-                    Products = _db.Products.Include(m => m.Member).Where(x => x.StatusId == 1 || x.StatusId == 2).Skip(i每頁筆數 * i頁數).Take(i每頁筆數),
+                    Products = _db.Products.Include(m => m.Member).Where(x => x.StatusId == 1 || x.StatusId == 2).OrderByDescending(x => x.ProductId).Skip(i每頁筆數 * i頁數).Take(i每頁筆數),
                     Members = _db.Members.Skip(i每頁筆數 * i頁數).Take(i每頁筆數)
                 };
                 return View(vm);
@@ -191,7 +191,7 @@ namespace prjDB_GamingForm_Show.Controllers
             {
                 vm = new CAdminCheckProductViewModel
                 {
-                    Products = _db.Products.Include(m => m.Member).Where(p => p.ProductName.Contains(kyvm.txtKeyWord)).Where(x => x.StatusId == 1 || x.StatusId == 2).Skip(i每頁筆數 * i頁數).Take(i每頁筆數),
+                    Products = _db.Products.Include(m => m.Member).Where(p => p.ProductName.Contains(kyvm.txtKeyWord)).Where(x => x.StatusId == 1 || x.StatusId == 2).OrderByDescending(x => x.ProductId).Skip(i每頁筆數 * i頁數).Take(i每頁筆數),
                     Members = _db.Members.Skip(i每頁筆數 * i頁數).Take(i每頁筆數)
                 };
                 return View(vm);
