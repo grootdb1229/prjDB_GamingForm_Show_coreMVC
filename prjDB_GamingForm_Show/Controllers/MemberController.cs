@@ -445,10 +445,27 @@ namespace prjDB_GamingForm_Show.Controllers
         {
             return View();
         }
-        //public IActionResult MyDeputes(int? id) 
-        //{ 
-        //   var data = _db.Deputes
-        //}
+        public IActionResult DeputeApplying(int? id) 
+        {
+            return View();
+        }
+        public IActionResult ReturnMyApply(int? id) 
+        {
+            _db.Statuses.Load();
+            _db.Regions.Load();
+            var data = _db.DeputeRecords.Include(D=>D.Depute)
+                       .Where(D=>D.MemberId == id).Select(D=>D);
+            return Json(data);
+        }
+        public IActionResult MyDeputes(int? id)
+        {
+            var data = new
+            {
+                DeputeRecords = _db.DeputeRecords.Where(d => d.MemberId == id),
+                DeputeR1 = _db.Deputes.SelectMany(d => d.DeputeRecords.Where(c => c.MemberId == id)),
+            };
+            return Json(data);
+        }
         public IActionResult MyWishList()
         {
             return View();

@@ -50,6 +50,7 @@
             <span id="rn" style="font-size:30px;color:cornsilk">@ViewBag.SendToName</span>
             <span id="sn" hidden>@Context.Session.GetString(CDictionary.SK_UserName)</span>
         </div>
+            <a type="button" class="btn btn-primary btn-sm" style="margin-right:35px" href="~/depute/create?workerid=@Model.FirstOrDefault().ReceiverId">邀請合作</a>
         <button type="button" class="btn btn-primary" style="position: absolute; top: 5px; right: 5px; font-size: 20px; background: none; border: none;" onclick="closeChat()">
             <i class="fa-solid fa-xmark"></i>
         </button>

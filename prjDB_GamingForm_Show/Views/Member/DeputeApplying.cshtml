@@ -1,0 +1,55 @@
+﻿
+@{
+    ViewData["Title"] = "DeputeApplying";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2 style="text-align:center">正在應徵的委託</h2>
+<div class="container">
+    <div class="row row-cols-6" id="ApplyingList">
+        <div class="col">委託標題</div>
+        <div class="col">薪水</div>
+        <div class="col">工作地點</div>
+        <div class="col">應徵狀態</div>
+        <div class="col">最後更新日期</div>
+        <div class="col">連結</div>
+    </div>
+</div>
+
+@section Scripts
+{
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script>
+        $(document).ready(function () 
+        {
+            fetch('@Url.Content("~/Member/ReturnMyApply")?id=@Context.Session.GetInt32(CDictionary.SK_UserID)')
+            .then(response=>response.json())
+                .then(data => 
+                { 
+                    console.log(data);
+                    for (let index = 0; index < data.length; index++) 
+                    {
+                        console.log(data[index].applyStatus.name=="合作中"?"1":"2")
+                        // 新增六個欄位
+                        if (data[index].applyStatus.name == "已投遞" || data[index].applyStatus.name == "審核中") 
+                        {
+                            var Html =
+                                `
+                            <div class="col">  ${data[index].depute.title}  </div>
+                            <div class="col">  ${data[index].depute.salary}元  </div>
+                            <div class="col">  ${data[index].depute.region.city}  </div>
+                            <div class="col">  ${data[index].applyStatus.name}</div>
+                            <div class="col">  ${data[index].depute.modifiedate.toString().split('T')[0]}</div>
+                            <div class="col"><a class="btn btn-info" href="/Depute/DeputeDetails?id=${data[index].deputeId}">連結</a></div>
+                            `
+                            // 將新行加入表格
+                            $('#ApplyingList').append(Html);
+                        }
+                    }
+                })
+        })
+
+
+
+    </script>
+}
