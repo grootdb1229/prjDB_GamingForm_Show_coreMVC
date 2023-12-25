@@ -36,7 +36,7 @@
                             <div class="col">  ${data[index].title}  </div>
                             <div class="col">  ${data[index].viewCount}  </div>
                             <div class="col">  ${data[index].modifiedDate.toString().split('T')[0]}</div>
-                            <div class="col">  <button class="btn btn-info">連結</button>  </div>
+                                            <div class="col"><a class="btn btn-info" href="/Blog/ArticleContent?FId=${data[index].subBlog.blogId}&AFId=${data[index].articleId}">連結</a></div>
                             `
                             // 將新行加入表格
                             $('#ArticleList').append(Html);
