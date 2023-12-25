@@ -38,7 +38,7 @@ namespace prjDB_GamingForm_Show.Controllers
             ViewBag.Name = name;
             return View();
         }
-        int i每頁筆數 = 8;
+        int i每頁筆數 = 7;
         int i頁數 = 0;
         public IActionResult MemberList(CKeyWordViewModel vm)
         {
@@ -1711,9 +1711,13 @@ namespace prjDB_GamingForm_Show.Controllers
                 {
                     query = query.Where(p => p.CompletedDate >= startday.Value && p.OrderDate <= endday.Value);
                 }
+                else if (ST == "未付款")
+                {
+                    query = query.Where(p => p.CompletedDate >= startday.Value && p.OrderDate <= endday.Value&&p.Status.StatusId == 13);
+                }
                 else
                 {
-                    query = query.Where(p => p.CompletedDate >= startday.Value && p.OrderDate <= endday.Value && p.Status.Name == ST);
+                    query = query.Where(p => p.CompletedDate >= startday.Value && p.OrderDate <= endday.Value && p.Status.StatusId == 14 || p.StatusId == 15 || p.StatusId == 16);
                 }
             }
 
