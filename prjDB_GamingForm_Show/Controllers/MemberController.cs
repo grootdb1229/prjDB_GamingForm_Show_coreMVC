@@ -284,7 +284,7 @@ namespace prjDB_GamingForm_Show.Controllers
         //{
         //    return View();
         //}
-        [HttpPost]
+        
         public IActionResult ForgetPassword(CLoginViewModel CL)
         {
             string result = "沒有此信箱";

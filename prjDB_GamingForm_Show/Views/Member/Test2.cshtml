@@ -1,24 +1,42 @@
-﻿<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>文章標題</title>
-    <style>
-        body 
-        {
-            text-align: center; /* 將內容置中 */
-        }
-    </style>
-</head>
-<body>
-    <header>
-        <h1>文章標題</h1>
-        <p>作者：作者名稱</p>
-        <p>日期：發佈日期</p>
-    </header>
+﻿@{
+    ViewData["Title"] = "Test2";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
 
-    <article>
-    </article>
-</body>
-</html>
+<h2>Test2</h2>
+<div>
+</div>
+@section Scripts
+{
+
+
+    <script>
+        var result = "";
+        GetCookie();
+        function GetCookie() {
+            $.ajax('@Url.Content("~/Member/ForgetPassword")', {
+                "type": 'Post', //POST、PUT、DELETE
+                "dataType": "text"
+            })
+                .done((data) => {
+
+                    console.log(data);
+                    result = data;
+            // lstFrag.append(list);
+            // $('#history').html(lstFrag);
+            GetResult();
+        })
+                }
+
+        function GetResult() 
+        {
+            if(data == "沒")
+            $('#result').html('sadasdas')
+        
+        }
+    </script>
+
+
+
+
+}
