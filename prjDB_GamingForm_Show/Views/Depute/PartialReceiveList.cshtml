@@ -97,7 +97,7 @@
                             @i.Depute.Modifiedate.ToString("yyyy/MM/dd HH:mm")
                         </td>
                         <td class="text-center">
-                            @Html.ActionLink("詳細資料", "deputeDetails", new { id = i.Id }, new { @class = "btn btn-secondary" })
+                            @Html.ActionLink("詳細資料", "deputeDetails", new { id = i.DeputeId }, new { @class = "btn btn-secondary" })
                             <button class="btn btn-danger" onclick="deleteDeputeRecordAlert(@i.Id)">撤回</button>
                         </td>
                     </tr>
@@ -183,7 +183,7 @@
                                     @Html.ActionLink("完成", "ReplyDepute", new { id = i.Id }, new { @class = "btn btn-success"+replyDisabled })
                                 }
                             }
-                            @Html.ActionLink("詳細資料", "deputeDetails", new { id = i.Id }, new { @class = "btn btn-secondary" })
+                            @Html.ActionLink("詳細資料", "deputeDetails", new { id = i.DeputeId }, new { @class = "btn btn-secondary" })
                             <button class="btn btn-danger" onclick="deleteDeputeRecordAlert(@i.Id)">撤回</button>
                         </td>
                     </tr>
@@ -270,7 +270,7 @@
                                 hasFile = i.ReplyFileName == null ? "disabled" : "";
                             }
                             <button type="button" class="btn btn-info" onclick="downloadFile(event)" @hasFile>檔案下載</button>
-                            @Html.ActionLink("詳細資料", "deputeDetails", new { id = i.Id }, new { @class = "btn btn-secondary" })
+                            @Html.ActionLink("詳細資料", "deputeDetails", new { id = i.DeputeId }, new { @class = "btn btn-secondary" })
                         </td>
                     </tr>
                 }
