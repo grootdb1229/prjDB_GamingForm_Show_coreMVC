@@ -171,7 +171,7 @@
                                 {
                                     <button type="button" onclick="confirm(@i.DeputeId)" class="btn btn-info">確認</button>
                                 }
-                                //若狀態為合作中編輯按鈕不可使用
+                                //若狀態為合作中確認按鈕不可使用
                                 else
                                 {
                                     <button class="btn btn-info disabled">確認</button>
@@ -246,6 +246,7 @@
                         </td>
                         <td class="text-center">
                             <button class="btn btn-secondary btn-ReleaseDeputeDetails" onclick="detailsDepute(@i.DeputeId)">詳細資料</button>
+                            <button class="btn btn-danger btn-ReleaseDeputeDelete" onclick="deleteDeputeAlert(@i.DeputeId)" data_deputeid=@i.DeputeId>刪除</button>
                         </td>
                     </tr>
                 }
@@ -302,12 +303,12 @@
             scrollbarPadding: false,
             title: `確認委託`,
             html: `<ul class="list-group">
-                            <li class="list-group-item text-reset bg-dark">主題：${data.title}</li>
-                            <li class="list-group-item text-reset bg-dark">檔案簡介：${data.replyContent}</li>
-                            <li class="list-group-item text-reset bg-dark">
-                               <a type="button" id="download" class="btn btn-info" ${hasFile}>檔案下載</a>
-                            </li>
-                        </ul>`,
+                                <li class="list-group-item text-reset bg-dark">主題：${data.title}</li>
+                                <li class="list-group-item text-reset bg-dark">檔案簡介：${data.replyContent}</li>
+                                <li class="list-group-item text-reset bg-dark">
+                                   <a type="button" id="download" class="btn btn-info" ${hasFile}>檔案下載</a>
+                                </li>
+                            </ul>`,
             icon: "info",
             showCancelButton: true,
             confirmButtonText: "確認完成!",
@@ -320,11 +321,11 @@
                 downloadbtn.href = `@Url.Content("~/depute/downloadFile")?fileName=${data.replyFileName}`;
                 console.log(downloadbtn.href);
             }
-        }).then((result) => {
+        }).then(async (result) => {
             if (result.isConfirmed) {
                 var deputerecordstatus = JSON.stringify({ id: data.id, statusid: 16 });
                 console.log(deputerecordstatus);
-                fetch(`@Url.Content("~/depute/changeDeputeRecordStatus")?jsonString=${deputerecordstatus}`);
+                const response = await fetch(`@Url.Content("~/depute/changeDeputeRecordStatus")?jsonString=${deputerecordstatus}`);
                 swalWithBootstrapButtons.fire({
                     color: "#D0D0D0",
                     background: "#343a40",
@@ -388,55 +389,55 @@
             const isCooperating = applyer.status.includes("合作中") || applyer.status.includes("已完成");
             const canChangeStatus = isCooperating ? "disabled" : "";
             return `<div class="accordion-item">
-                        <h2 class="accordion-header">
-                            <button class="accordion-button collapsed" onclick="readed(${applyer.id},event)" type="button" data-bs-toggle="collapse" data-bs-target="#collapse${applyer.workerName}" aria-expanded="false" aria-controls="collapse${applyer.workerName}">
-                            ${index + 1}-${applyer.workerName}<span class="badge text-bg-info">${applyer.status}</span>
-                            </button>
-                        </h2>
-                        <div id="collapse${applyer.workerName}" class="accordion-collapse collapse" data-bs-parent="#accordionExample" style="">
-                        <div class="accordion-body">
-                            <table class="table">
-                            <thead>
-                                <tr>
-                                <th style="color:black" scope="col-1">性別</th>
-                                <th style="color:black" scope="col-1">Email</th>
-                                <th style="color:black" scope="col-1">手機</th>
-                                <th style="color:black" scope="col-1">生日</th>
-                                <th style="color:black" scope="col-1">會員頁面連結</th>
-                                <th style="color:black" scope="col-1">狀態</th>
-                                <th style="color:black" scope="col-1">狀態管理</th>
-                                <th style="color:black" scope="col-1"></th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr>
-                            <td class="align-middle" style="color:black">${applyer.applyerGender}</td>
-                            <td class="align-middle" style="color:black">${applyer.applyerEmail}</td>
-                            <td class="align-middle" style="color:black">${applyer.applyerPhone}</td>
-                            <td class="align-middle" style="color:black">${applyer.applyerBirth}</td>
-                            <td class="align-middle" style="color:black"><a href='@Url.Content("~/member/MemberPageTest")?id=${applyer.workerId}'>${applyer.workerName}</a></td>
-                            <td class="align-middle" style="color:black" id="currentStatus">${applyer.status}</td>
-                            <td class="align-middle" style="color:black">
-                                <select class="form-select" aria-label="Default select example" ${canChangeStatus}>
-                                <option selected>請選擇欲修改的狀態</option>
-                                <option value="7">審核中</option>
-                                <option value="10">合作中</option>
-                                <option value="11">備選</option>
-                                </select>
-                            </td>
-                            <td>
-                                <button class="btn btn-info" onclick="changeStatus(${applyer.id},event)" ${canChangeStatus}>更改</button>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                        </div>
-                        <ul class="list-group">
-                            <li class="list-group-item text-center">應徵會員補充資訊</li>
-                            <li class="list-group-item text-start" style="white-space: pre-line;">${applyer.applyerContent}</li>
-                        </ul>
-                        </div>
-                    </div>`});
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" onclick="readed(${applyer.id},event)" type="button" data-bs-toggle="collapse" data-bs-target="#collapse${applyer.workerName}" aria-expanded="false" aria-controls="collapse${applyer.workerName}">
+                                ${index + 1}-${applyer.workerName}<span class="badge text-bg-info">${applyer.status}</span>
+                                </button>
+                            </h2>
+                            <div id="collapse${applyer.workerName}" class="accordion-collapse collapse" data-bs-parent="#accordionExample" style="">
+                            <div class="accordion-body">
+                                <table class="table">
+                                <thead>
+                                    <tr>
+                                    <th style="color:black" scope="col-1">性別</th>
+                                    <th style="color:black" scope="col-1">Email</th>
+                                    <th style="color:black" scope="col-1">手機</th>
+                                    <th style="color:black" scope="col-1">生日</th>
+                                    <th style="color:black" scope="col-1">會員頁面連結</th>
+                                    <th style="color:black" scope="col-1">狀態</th>
+                                    <th style="color:black" scope="col-1">狀態管理</th>
+                                    <th style="color:black" scope="col-1"></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td class="align-middle" style="color:black">${applyer.applyerGender}</td>
+                                <td class="align-middle" style="color:black">${applyer.applyerEmail}</td>
+                                <td class="align-middle" style="color:black">${applyer.applyerPhone}</td>
+                                <td class="align-middle" style="color:black">${applyer.applyerBirth}</td>
+                                <td class="align-middle" style="color:black"><a href='@Url.Content("~/member/MemberPageTest")?id=${applyer.workerId}'>${applyer.workerName}</a></td>
+                                <td class="align-middle" style="color:black" id="currentStatus">${applyer.status}</td>
+                                <td class="align-middle" style="color:black">
+                                    <select class="form-select" aria-label="Default select example" ${canChangeStatus}>
+                                    <option selected>請選擇欲修改的狀態</option>
+                                    <option value="7">審核中</option>
+                                    <option value="10">合作中</option>
+                                    <option value="11">備選</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <button class="btn btn-info" onclick="changeStatus(${applyer.id},event)" ${canChangeStatus}>更改</button>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                            </div>
+                            <ul class="list-group">
+                                <li class="list-group-item text-center">應徵會員補充資訊</li>
+                                <li class="list-group-item text-start" style="white-space: pre-line;">${applyer.applyerContent}</li>
+                            </ul>
+                            </div>
+                        </div>`});
         const titleapplyer = await document.querySelector('#accordionExample');
         titleapplyer.innerHTML = applyers.join("");
     }
@@ -469,7 +470,7 @@
         viewstatus.innerHTML = statusname;
         badgestatus.innerHTML = statusname;
         if (statusname == "合作中") {
-            sendMessageBySignalR(workerName, "合作")
+            await sendMessageBySignalR(workerName, "合作");
             const allbadge = badgestatus.parentNode.parentNode.parentNode.parentNode.querySelectorAll('span');
             const allbadgeArray = Array.from(allbadge);
             allbadgeArray.forEach(badges => {
@@ -547,6 +548,7 @@
                 fetch(`@Url.Content("~/depute/deletedepute")?id=${deputeID}`)
                     .then(() => {
                         loadReleaseList();
+                        loadOverview();
                     });
 
             } else if (
@@ -575,61 +577,61 @@
             background: "#343a40",
             scrollbarPadding: false,
             html: `<div class="text-reset"> <ul class="list-group ">
-                        <li class="list-group-item bg-dark d-flex justify-content-between align-items-start">
-                            <div class="ms-2 me-auto"  >
-                            <div class="fw-bold" style="text-align:left;">標題</div>
-                            <div style="text-align:left;">${data.title}</div>
-                            </div>
-                        </li>
-                        <li class="list-group-item bg-dark d-flex justify-content-between align-items-start">
-                            <div class="ms-2 me-auto" style=":black">
-                            <div class="fw-bold" style="text-align:left;">內容</div>
-                            <div style="text-align:left;white-space: pre-wrap;">${data.deputeContent}</div>
-                            </div>
-                        </li>
-                        <li class="list-group-item bg-dark d-flex justify-content-between align-items-start">
-                            <div class="ms-2 me-auto" style=":black">
-                            <div class="fw-bold" style="text-align:left;">地區</div>
-                            <div style="text-align:left;">${data.region}</div>
-                            </div>
-                        </li>
-                        <li class="list-group-item bg-dark d-flex justify-content-between align-items-start">
-                            <div class="ms-2 me-auto" style=":black">
-                            <div class="fw-bold" style="text-align:left;">狀態</div>
-                            <div style="text-align:left;">${data.status}</div>
-                            </div>
-                        </li>
-                        <li class="list-group-item bg-dark d-flex justify-content-between align-items-start">
-                            <div class="ms-2 me-auto" style=":black">
-                            <div class="fw-bold" style="text-align:left;">應徵人數</div>
-                            <div style="text-align:left;">${data.count}</div>
-                            </div>
-                        </li>
-                        <li class="list-group-item bg-dark d-flex justify-content-between align-items-start">
-                            <div class="ms-2 me-auto" style=":black">
-                            <div class="fw-bold" style="text-align:left;">報酬</div>
-                            <div style="text-align:left;">${data.salary}</div>
-                            </div>
-                        </li>
-                        <li class="list-group-item bg-dark d-flex justify-content-between align-items-start">
-                            <div class="ms-2 me-auto" style=":black">
-                            <div class="fw-bold" style="text-align:left;">雇主姓名</div>
-                            <div style="text-align:left;">${data.providername}</div>
-                            </div>
-                        </li>
-                        <li class="list-group-item bg-dark d-flex justify-content-between align-items-start">
-                            <div class="ms-2 me-auto" style=":black">
-                            <div class="fw-bold" style="text-align:left;">發佈日期</div>
-                            <div style="text-align:left;">${data.startdate}</div>
-                            </div>
-                        </li>
-                        <li class="list-group-item bg-dark d-flex justify-content-between align-items-start">
-                            <div class="ms-2 me-auto" style=":black">
-                            <div class="fw-bold" style="text-align:left;">更新日期</div>
-                            <div style="text-align:left;">${data.modifieddate}</div>
-                            </div>
-                        </ul>
-                    </div>`
+                            <li class="list-group-item bg-dark d-flex justify-content-between align-items-start">
+                                <div class="ms-2 me-auto"  >
+                                <div class="fw-bold" style="text-align:left;">標題</div>
+                                <div style="text-align:left;">${data.title}</div>
+                                </div>
+                            </li>
+                            <li class="list-group-item bg-dark d-flex justify-content-between align-items-start">
+                                <div class="ms-2 me-auto" style=":black">
+                                <div class="fw-bold" style="text-align:left;">內容</div>
+                                <div style="text-align:left;white-space: pre-wrap;">${data.deputeContent}</div>
+                                </div>
+                            </li>
+                            <li class="list-group-item bg-dark d-flex justify-content-between align-items-start">
+                                <div class="ms-2 me-auto" style=":black">
+                                <div class="fw-bold" style="text-align:left;">地區</div>
+                                <div style="text-align:left;">${data.region}</div>
+                                </div>
+                            </li>
+                            <li class="list-group-item bg-dark d-flex justify-content-between align-items-start">
+                                <div class="ms-2 me-auto" style=":black">
+                                <div class="fw-bold" style="text-align:left;">狀態</div>
+                                <div style="text-align:left;">${data.status}</div>
+                                </div>
+                            </li>
+                            <li class="list-group-item bg-dark d-flex justify-content-between align-items-start">
+                                <div class="ms-2 me-auto" style=":black">
+                                <div class="fw-bold" style="text-align:left;">應徵人數</div>
+                                <div style="text-align:left;">${data.count}</div>
+                                </div>
+                            </li>
+                            <li class="list-group-item bg-dark d-flex justify-content-between align-items-start">
+                                <div class="ms-2 me-auto" style=":black">
+                                <div class="fw-bold" style="text-align:left;">報酬</div>
+                                <div style="text-align:left;">${data.salary}</div>
+                                </div>
+                            </li>
+                            <li class="list-group-item bg-dark d-flex justify-content-between align-items-start">
+                                <div class="ms-2 me-auto" style=":black">
+                                <div class="fw-bold" style="text-align:left;">雇主姓名</div>
+                                <div style="text-align:left;">${data.providername}</div>
+                                </div>
+                            </li>
+                            <li class="list-group-item bg-dark d-flex justify-content-between align-items-start">
+                                <div class="ms-2 me-auto" style=":black">
+                                <div class="fw-bold" style="text-align:left;">發佈日期</div>
+                                <div style="text-align:left;">${data.startdate}</div>
+                                </div>
+                            </li>
+                            <li class="list-group-item bg-dark d-flex justify-content-between align-items-start">
+                                <div class="ms-2 me-auto" style=":black">
+                                <div class="fw-bold" style="text-align:left;">更新日期</div>
+                                <div style="text-align:left;">${data.modifieddate}</div>
+                                </div>
+                            </ul>
+                        </div>`
         });
     }
 

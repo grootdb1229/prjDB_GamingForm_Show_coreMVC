@@ -754,22 +754,17 @@ namespace prjDB_GamingForm_Show.Controllers
         {
             //partialrelease-刪除
             Depute o = _db.Deputes.Where(_ => _.DeputeId == id).Select(_ => _).FirstOrDefault();
-            var dro = _db.DeputeRecords.Where(_ => _.DeputeId == id).Select(_ => _);
-            var dso = _db.DeputeSkills.Where(_ => _.DeputeId == id).Select(_ => _);
+            var dro = _db.DeputeRecords.Where(_ => _.DeputeId == id).ToList();
+            var dso = _db.DeputeSkills.Where(_ => _.DeputeId == id).ToList();
+            var dco = _db.DeputeComplains.Where(_ => _.DeputeId == id).ToList();
+            
             if (dro != null)
-            {
-                foreach (var item in dro)
-                {
-                    _db.DeputeRecords.Remove(item);
-                }
-            }
+                _db.DeputeRecords.RemoveRange(dro);
             if (dso != null)
-            {
-                foreach (var item in dso)
-                {
-                    _db.DeputeSkills.Remove(item);
-                }
-            }
+                _db.DeputeSkills.RemoveRange(dso);
+            if (dco != null)
+                _db.DeputeComplains.RemoveRange(dco);
+
             _db.Deputes.Remove(o);
             _db.SaveChanges();
             return RedirectToAction("HomeFrame");
@@ -972,6 +967,9 @@ namespace prjDB_GamingForm_Show.Controllers
 
             //修改該會員應徵狀態
             deputeRecord.ApplyStatusId = vm.statusid;
+            //為使郵件中的委託紀錄狀態為最新，故需先更新一次_db
+            //(放外面，因為有可能使用者選備選)
+            _db.SaveChanges();
 
             switch (vm.statusid)
             {
@@ -991,7 +989,7 @@ namespace prjDB_GamingForm_Show.Controllers
         {
             //若與該會員合作，則此委託狀態一併改為合作中，且其他會員的應徵狀態改為備選
             depute.StatusId = 10;
-            deputeRecord.ApplyStatusId = 10;
+            //deputeRecord.ApplyStatusId = 10;
 
             CDeputeEmail content = new CDeputeEmail()
             {
@@ -1012,7 +1010,7 @@ namespace prjDB_GamingForm_Show.Controllers
         {
             //完成委託、委託紀錄
             depute.StatusId = 16;
-            deputeRecord.ApplyStatusId = 16;
+            //deputeRecord.ApplyStatusId = 16;
 
             CDeputeEmail content = new CDeputeEmail()
             {

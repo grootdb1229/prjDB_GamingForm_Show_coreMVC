@@ -27,6 +27,10 @@
         input {
             margin: 3px
         }
+
+        a {
+            text-decoration: none
+        }
     </style>
     }
 <header class="header-section">
@@ -35,8 +39,10 @@
             <div class="nav-menu">
                 <ul>
                     <li>
-                        @Html.ActionLink(Model.blogs.FirstOrDefault().Title, "ArticleList", "Blog", new { FId = Model.blogs.FirstOrDefault().BlogId }, null)
-
+                        @Html.ActionLink(Model.blogs.FirstOrDefault().Title, "ArticleList", "Blog", new { FId = Model.blogs.FirstOrDefault().BlogId }, new
+                            {
+                                style = "font-size:48px"
+                            })
                     </li>
                 </ul>
             </div>
