@@ -38,7 +38,7 @@ namespace prjDB_GamingForm_Show.Controllers
             ViewBag.Name = name;
             return View();
         }
-        int i每頁筆數 = 8;
+        int i每頁筆數 = 7;
         int i頁數 = 0;
         public IActionResult MemberList(CKeyWordViewModel vm)
         {
@@ -1666,17 +1666,17 @@ namespace prjDB_GamingForm_Show.Controllers
             if (endday == null)
                 endday = DateTime.Now;
 
-            IQueryable<Order> query = _db.Orders.Include(a => a.Payment).Include(a => a.Coupon).Include(a => a.Status);
+            IQueryable<Order> query = _db.Orders.Include(a => a.Payment).Include(a => a.Coupon).Include(a => a.Status).OrderByDescending(x => x.OrderId);
 
             if (startday.HasValue && endday.HasValue)
             {
                 if (ST == "請選擇訂單狀態")
                 {
-                    query = query.Where(p => p.CompletedDate >= startday.Value && p.OrderDate <= endday.Value);                    
+                    query = query.Where(p => p.CompletedDate >= startday.Value && p.OrderDate <= endday.Value).OrderByDescending(x=>x.OrderId);                    
                 }
                 else 
                 {
-                    query = query.Where(p => p.CompletedDate >= startday.Value && p.OrderDate <= endday.Value && p.Status.Name == ST);
+                    query = query.Where(p => p.CompletedDate >= startday.Value && p.OrderDate <= endday.Value && p.Status.Name == ST).OrderByDescending(x => x.OrderId);
                 }
             }
 
@@ -1703,17 +1703,21 @@ namespace prjDB_GamingForm_Show.Controllers
             ViewBag.ST = ST;
             }
 
-            IQueryable<Order> query = _db.Orders.Include(a => a.Payment).Include(a => a.Coupon).Include(a => a.Status);
+            IQueryable<Order> query = _db.Orders.Include(a => a.Payment).Include(a => a.Coupon).Include(a => a.Status).OrderByDescending(x => x.OrderId);
 
             if (startday.HasValue && endday.HasValue)
             {
                 if (ST == "請選擇訂單狀態")
                 {
-                    query = query.Where(p => p.CompletedDate >= startday.Value && p.OrderDate <= endday.Value);
+                    query = query.Where(p => p.CompletedDate >= startday.Value && p.OrderDate <= endday.Value).OrderByDescending(x => x.OrderId);
+                }
+                else if (ST == "未付款")
+                {
+                    query = query.Where(p => /*p.CompletedDate >= startday.Value && p.OrderDate <= endday.Value &&*/ p.Status.StatusId == 13);
                 }
                 else
                 {
-                    query = query.Where(p => p.CompletedDate >= startday.Value && p.OrderDate <= endday.Value && p.Status.Name == ST);
+                    query = query.Where(p => p.CompletedDate >= startday.Value && p.OrderDate <= endday.Value && p.Status.StatusId == 14 || p.StatusId == 15 || p.StatusId == 16);
                 }
             }
 

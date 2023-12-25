@@ -11,9 +11,49 @@
     //var averagePrice = Model.Any() ? Model.Average(o => o.SumPrice) : 0;
     var averagePrice = Model.Any() ? Math.Floor(Model.Average(o => o.SumPrice)) : 0;
 }
+@section Styles{
+    <style>
+        tr {
+            color: white;
+        }
+
+        th {
+            font-size: 15px;
+        }
+
+        td {
+            font-size: 15px;
+        }
+
+        .table-hover tbody tr:hover {
+            background-color: wheat; /* 設定你想要的自定義顏色 */
+        }
+
+        .offline {
+            background-color: #4F4F4F; /*  #750000; */
+            color: #ADADAD; /* #750000; */
+            padding: 3px;
+            border-radius: 5px
+        }
+
+        .review {
+            background-color: #4F4F4F;
+            color: #ADADAD;
+            padding: 3px;
+            border-radius: 5px
+        }
 
 
-<div style="font-size:25px">
+        .online {
+            background-color: #009100;
+            color: #F0FFF0;
+            padding: 3px;
+            border-radius: 5px
+        }
+    </style>
+}
+
+<div style="font-size:25px;color:white">
     總訂單數:@totalOrders 筆  /   訂單總額:@totalAmount 元  /  平均金額:@averagePrice 元
     <br />
 </div>
@@ -25,20 +65,20 @@
 @using (Html.BeginForm())
 {
 
-    <label for="start" style="font-size:20px">開始日期:</label>
+    <label for="start" style="font-size:20px;color:white">開始日期:</label>
     <input type="date" style="font-size:20px" id="start" name="startday" value="2023-01-01" min="2023-01-01" max="2099-12-31" />
 
-    <label for="end" style="font-size:20px">結束日期:</label>
+    <label for="end" style="font-size:20px;color:white">結束日期:</label>
     <input type="date" style="font-size:20px" id="end" name="endday" value="@DateTime.Now.ToString("yyyy-MM-dd")" min="2023-01-01" max="2099-12-31" />
 
 
-    <select id="sel_Com" name="ST" style="margin-top:3px;width:200px;height:34.61px;font-size:20px" onchange="updateOrderList()">
+    <select id="sel_Com" name="ST" style="margin-top:3px;width:200px;height:34.61px;font-size:20px">
         <option>請選擇訂單狀態</option>
         <option>未付款</option>
         <option>已付款</option>
-        <option>已出貨</option>
+@*        <option>已出貨</option>
         <option>已完成</option>
-        <option>取消訂單</option>
+        <option>取消訂單</option>*@
     </select>
 
     @*<input type="submit" value="查詢" class="btn btn-dark" />*@
@@ -67,13 +107,6 @@
             <th>
                 @Html.DisplayNameFor(model => model.PaymentDate)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CompletedDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.PaymentId)
-            </th>
-
             <th>
                 @Html.DisplayNameFor(model => model.StatusId)
             </th>
@@ -107,20 +140,13 @@
                     }
                     @Html.DisplayFor(modelitem => payday)
                 </td>
+
                 <td>
                     @{
-                        var completedDate = item.CompletedDate;
-                        var formattedDate = completedDate.HasValue ? completedDate.Value.ToString("yyyy/MM/dd") : string.Empty;
+                        var p = item.PaymentDate;
+                        var pd = pday.HasValue ? "已付款" : "未付款";
                     }
-                    @Html.DisplayFor(modelItem => formattedDate)
-                </td>
-                <td>
-
-                    @Html.DisplayFor(modelItem => item.Payment.Name)
-                </td>
-
-                <td>
-                    @Html.DisplayFor(modelItem => item.Status.Name)
+                    @pd
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.SumPrice)

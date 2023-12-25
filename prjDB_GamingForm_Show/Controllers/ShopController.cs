@@ -1,4 +1,5 @@
-﻿using MailKit.Net.Smtp;
+﻿using Humanizer.Localisation.TimeToClockNotation;
+using MailKit.Net.Smtp;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
@@ -666,16 +667,38 @@ namespace prjDB_GamingForm_Show.Controllers
 
 			public IActionResult Coupon()
 			{
-				var Coupon = _db.Coupons
-					.Where(p =>p.StatusId == 23)
-					.Select(s => new
+				if (HttpContext.Session.GetInt32(CDictionary.SK_UserID) == null)
+				{ 
+					return Json(0);
+				}
+				var memberbirth = _db.Members.Where(x => x.MemberId == HttpContext.Session.GetInt32(CDictionary.SK_UserID)).FirstOrDefault();
+				int birthmonth = memberbirth.Birth.Month;
+                int nowmouth = DateTime.Now.Month;
+				DateTime nowday = DateTime.Now;
+
+
+                List<Coupon> Couponlist = new List<Coupon>();
+                if (birthmonth == nowmouth)
+				{
+                    var Coupon = _db.Coupons.AsEnumerable()
+                   .Where(p => p.StatusId == 23 && DateTime.Parse(p.StartDate) <= nowday && DateTime.Parse(p.EndDate) >= nowday)
+                   .Select(x => x).ToList();
+                    foreach (var x in Coupon)
 					{
-						s.CouponId,
-						s.Title,
-						s.Discount,
-						s.Reduce
-					}).ToList();
-				return Json(Coupon);
+						Couponlist.Add(x);
+					}
+                }
+				else
+				{
+                    var Coupon = _db.Coupons.AsEnumerable()
+                   .Where(p => p.StatusId == 23 && p.CouponId!=3 && DateTime.Parse(p.StartDate) <= nowday && DateTime.Parse(p.EndDate) >= nowday)
+                   .Select(x => x).ToList();
+                    foreach (var x in Coupon)
+                    {
+                        Couponlist.Add(x);
+                    }
+                }
+				return Json(Couponlist);
 			}
 
 			public IActionResult Couponselect(int id)

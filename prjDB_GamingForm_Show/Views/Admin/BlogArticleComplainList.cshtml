@@ -41,14 +41,14 @@
 </head>
 
 
-<h2>檢舉清單</h2>
+<p style="font-size:25px">檢舉清單</p>
 
 
 
 @using (Html.BeginForm())
 {
-    <select id="sel_Com" name="STId" style="margin-top:3px;width:200px;" onchange="updateComplainList()">
-        <option>請選擇違規分類</option>
+    <select id="sel_Com" name="STId" style="width:200px;height:35px;font-size:25px" onchange="updateComplainList()">
+        <option >請選擇違規分類</option>
         @{
             foreach (var type in Model.subTags.Where(s => s.TagId == 6))
             {
@@ -59,7 +59,7 @@
     </select>
 
 
-    <p style="display:inline;font-size:25px;margin-left:5px;margin-right:10px">關鍵字查詢 : </p> @Html.TextBox("txtKeyWord",null,new{@class = "col-form-label"})
+    <p style="display:inline;font-size:25px;margin-left:5px;margin-right:10px">關鍵字查詢 : </p> @Html.TextBox("txtKeyWord",null,new{@class = "col-form-label", style = "margin:0 0 10 0px"})
     <input type="submit" value="查詢" class="btn btn-dark" />
 }
 

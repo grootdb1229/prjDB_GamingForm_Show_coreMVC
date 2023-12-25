@@ -27,14 +27,17 @@
             background-color: #4F4F4F; /*  #750000; */
             color: #ADADAD; /* #750000; */
             padding: 3px;
-            border-radius: 5px
+            border-radius: 5px;
+            display: inline-block;
+
         }
 
         .review {
             background-color: #4F4F4F;
             color: #ADADAD;
             padding: 3px;
-            border-radius: 5px
+            border-radius: 5px;
+            display: inline-block;
         }
 
 
@@ -42,7 +45,8 @@
             background-color: #009100;
             color: #F0FFF0;
             padding: 3px;
-            border-radius: 5px
+            border-radius: 5px;
+            display: inline-block;
         }
     </style>
 }
@@ -119,13 +123,13 @@
                         @d
                     </td>
                     <td>
-                        @s
+                        <div class="@productStatus"> @s</div>
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.Member.Name)
                     </td>
                     <td>
-                        @Html.ActionLink("商品上/下架", "ProductStatusEdit", "Admin", new { id = item.ProductId }, new { onclick = "return confirm('確定上/下架嗎?')", @class = productStatus })
+                        @Html.ActionLink("商品上/下架", "ProductStatusEdit", "Admin", new { id = item.ProductId }, new { onclick = "return confirm('確定上/下架嗎?')", @style = "border-radius: 5px;padding: 3px;", @class = "btn btn-dark status" })
                         <button type="button" style=" border-radius: 5px  ;padding: 3px;" class="btn btn-dark status" onclick="ProductDetail(@Html.DisplayFor(modelItem => item.ProductId))">商品詳情</button>
                     </td>
                 </tr>
