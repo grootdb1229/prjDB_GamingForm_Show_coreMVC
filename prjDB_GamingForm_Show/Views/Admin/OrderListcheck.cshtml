@@ -5,12 +5,59 @@
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
     var totalOrders = Model.Count();  //全部訂單張數
     var totalOrdersPrice = Math.Floor(Model.Sum(p => p.SumPrice)); //全部訂單總額
-    var totalOrderAvg = totalOrdersPrice / totalOrders; // 全部訂單平均
+    var totalOrderAvg = 0;   // 全部訂單平均
+    if (totalOrders != 0)
+    {
+        totalOrderAvg = (int)totalOrdersPrice / totalOrders;
+    }
 
-
-    //var averagePrice = Model.Any() ? Math.Floor(Model.Average(o => o.SumPrice)) : 0;
 
 }
+<div>
+    <!-- 引用 Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- 創建一個 Canvas 元素用於繪製圖表 -->
+    <canvas id="myChart" width="600" height="400"></canvas>
+    @{
+        DateTime? endDate = ViewBag.end as DateTime?;
+        DateTime? startDate = ViewBag.start as DateTime?;
+    }
+       <script>
+       
+        var endDate = new Date(@endDate.Value.ToString("yyyy-MM-dd")); 
+        var startDate = new Date(@startDate.Value.ToString("yyyy-MM-dd"));
+        var ctx = document.getElementById('myChart').getContext('2d');
+        var myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+                datasets: [{
+                    label: '訂單數量',
+                    data: [@Model.Count(p => p.OrderDate >= startDate && (p.CompletedDate <= endDate&&p.CompletedDate<= new DateTime(2023,1,31)))
+                            , @Model.Count(p => p.OrderDate >= startDate && (p.CompletedDate <= endDate))],
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
+
+</div>
+
+
+
+
+
+
 
 <div style="font-size:20px;color:aliceblue;">
     查詢起始日期:@((ViewBag.start as DateTime?)?.ToShortDateString()) /
@@ -19,13 +66,19 @@
     @{
         if (ViewBag.ST == "無指定")
         {
-        <p>總訂單數:@totalOrders 筆 / 已成交訂單總額:@totalOrdersPrice 元 / 已成交訂單平均單價:@totalOrderAvg.ToString("F2") 元</p>
+            <p>總訂單數:@totalOrders 筆 / 已成交訂單總額:@totalOrdersPrice 元 / 已成交訂單平均單價:@totalOrderAvg.ToString("F2") 元</p>
         }
         if (ViewBag.ST == "未付款")
         {
             var NoPayOrders = Model.Where(p => p.StatusId == 13).Count(); //未付款訂單張數
             var NoPayOrdersPrice = Math.Floor(Model.Where(p => p.StatusId == 13).Sum(p => p.SumPrice)); //未成交訂單總額
-            var NoPayAvg = NoPayOrdersPrice / NoPayOrders; //未付款訂單平均
+            var NoPayAvg = 0;
+            if (NoPayOrders == 0)
+                NoPayAvg = 0;//未付款訂單平均
+            else 
+            {
+                NoPayAvg =(int) NoPayOrdersPrice / NoPayOrders;
+            }
 
             <p>未付款訂單數:@NoPayOrders 筆 / 未付款訂單總額:@NoPayOrdersPrice 元 / 未付款訂單平均單價:@NoPayAvg.ToString("F2") 元</p>
         }
@@ -48,9 +101,9 @@
     <label for="start" style="font-size:20px;color:white">開始日期:</label>
     <input type="date" style="font-size:20px" id="start" name="startday" value="2023-01-01" min="2023-01-01" max="2099-12-31" />
 
-    <label for="end" style="font-size:20px;color:white">結束日期:</label>
+@*    <label for="end" style="font-size:20px;color:white">結束日期:</label>
     <label for="start" style="font-size:20px; color:white">開始日期:</label>
-    <input type="date" style="font-size:20px" id="start" name="startday" value="2023-01-01" min="2023-01-01" max="2099-12-31" />
+    <input type="date" style="font-size:20px" id="start" name="startday" value="2023-01-01" min="2023-01-01" max="2099-12-31" />*@
 
     <label for="end" style="font-size:20px; color:white">結束日期:</label>
     <input type="date" style="font-size:20px" id="end" name="endday" value="@DateTime.Now.ToString("yyyy-MM-dd")" min="2023-01-01" max="2099-12-31" />
