@@ -26,10 +26,10 @@
 @using (Html.BeginForm())
 {
 
-    <label for="start" style="font-size:20px">開始日期:</label>
+    <label for="start" style="font-size:20px;color:white">開始日期:</label>
     <input type="date" style="font-size:20px" id="start" name="startday" value="2023-01-01" min="2023-01-01" max="2099-12-31" />
 
-    <label for="end" style="font-size:20px">結束日期:</label>
+    <label for="end" style="font-size:20px;color:white">結束日期:</label>
     <input type="date" style="font-size:20px" id="end" name="endday" value="@DateTime.Now.ToString("yyyy-MM-dd")" min="2023-01-01" max="2099-12-31" />
 
 
@@ -68,12 +68,7 @@
             <th>
                 @Html.DisplayNameFor(model => model.PaymentDate)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CompletedDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.PaymentId)
-            </th>
+   
 
             <th>
                 @Html.DisplayNameFor(model => model.StatusId)
@@ -110,18 +105,10 @@
                 </td>
                 <td>
                     @{
-                        var completedDate = item.CompletedDate;
-                        var formattedDate = completedDate.HasValue ? completedDate.Value.ToString("yyyy/MM/dd") : string.Empty;
+                        var p = item.PaymentDate;
+                        var pd = pday.HasValue ? "已付款" : "未付款";
                     }
-                    @Html.DisplayFor(modelItem => formattedDate)
-                </td>
-                <td>
-
-                    @Html.DisplayFor(modelItem => item.Payment.Name)
-                </td>
-
-                <td>
-                    @Html.DisplayFor(modelItem => item.Status.Name)
+                    @pd
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.SumPrice)
