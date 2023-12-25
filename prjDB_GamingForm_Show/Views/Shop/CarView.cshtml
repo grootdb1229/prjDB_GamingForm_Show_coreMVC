@@ -201,7 +201,7 @@
                                 <tr>
                                    <td style="width: 150px;"><img class="card-img-top" src="../images/shop/christmas_Cupon.jpg" alt="..." style="height:100%; width:100%;" /></td>
                                 <td>${x.title}</td>
-                                   <td>${x.discount !== null ? x.discount : '-'}${x.reduce !== null ? x.reduce : '折'}</td>
+                                   <td>${x.discount !== null ? x.discount*10 : '-'}${x.reduce !== null ? x.reduce : '折'}</td>
                                 <td>
                                             <button type="button" id="CouponSelect" value="${x.couponId}" onclick="Couponselect1(${x.couponId})">
                                         選擇
