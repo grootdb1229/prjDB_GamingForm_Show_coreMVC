@@ -333,6 +333,11 @@ namespace prjDB_GamingForm_Show.Controllers
                        select c;
             return View(data);
         }
+        public IActionResult DeputeInfo(int? id) 
+        {
+            var data = _db.DeputeRecords.Include(d => d.Depute).Where(d1 => d1.MemberId == id).Select(d => d);
+          return Json(data);
+        }
         public IActionResult MyCollection(int? id) 
         {
             var data = from mc in _db.MemberCollections
