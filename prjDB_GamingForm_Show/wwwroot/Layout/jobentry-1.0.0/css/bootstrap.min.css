@@ -2850,7 +2850,7 @@ textarea.form-control-lg {
 
 .btn-check:focus + .btn, .btn:focus {
     outline: 0;
-    box-shadow: 0 0 0 .25rem rgba(0,176,116,0.25)
+    /*box-shadow: 0 0 0 .25rem rgba(0,176,116,0.25)*/
 }
 
 .btn:disabled, .btn.disabled, fieldset:disabled .btn {
@@ -2874,7 +2874,7 @@ textarea.form-control-lg {
         color: #000;
         background-color: #26bc89;
         border-color: #1ab882;
-        box-shadow: 0 0 0 .25rem rgba(0,150,99,0.5)
+        /*box-shadow: 0 0 0 .25rem rgba(0,150,99,0.5)*/
     }
 
     .btn-check:checked + .btn-primary, .btn-check:active + .btn-primary, .btn-primary:active, .btn-primary.active, .show > .btn-primary.dropdown-toggle {
@@ -4566,7 +4566,7 @@ textarea.form-control-lg {
     z-index: 3;
     border-color: #80d8ba;
     outline: 0;
-    box-shadow: 0 0 0 .25rem rgba(0,176,116,0.25)
+    /*box-shadow: 0 0 0 .25rem rgba(0,176,116,0.25)*/
 }
 
 .accordion-header {
