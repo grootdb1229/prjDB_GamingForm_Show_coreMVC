@@ -117,7 +117,9 @@
             </a>
             <button type="button" class="btn btn-info mb-3" onclick="openSkillBrowser()">編輯技能</button>
             <input name="skilllist" id="select-skills" hidden>
-
+            <div>
+            <button type="button" class="btn btn-light mb-3" onclick="DEMO(1)">DEMO</button>
+            </div>
             <div class="form-floating mb-3">
                 <a asp-action="homeframe" class="btn btn-secondary">取消</a>
                 <input type="button" value="送出並發佈" class="btn btn-success" onclick="prepareAndSubmit()" />
@@ -131,6 +133,23 @@
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
     <script>
+        function DEMO(step) {
+            switch (step) {
+                case 1:
+                    $('#Title')[0].value = "神奇寶貝-灌鉛寶貝球";
+                    $('#Salary')[0].value = "9000";
+                    $('#DeputeContent')[0].value = `為了最小化神奇寶貝的勞動輸出，
+我們要打造一顆只需要丟到神奇寶貝，
+可以同時扣血並且收服的灌鉛寶貝球。
+
+希望各方有創意的程式設計好手，加入我們。
+完成這項造福神奇寶貝的創舉。`;
+                    $('#selRegions')[0].selectedIndex = "1";
+                    break;
+            }
+        }
+
+
         document.addEventListener('DOMContentLoaded', () => {
             var status = "";
             if (@Context.Session.GetInt32(CDictionary.SK_會員狀態編號) == 26) {
@@ -487,12 +506,13 @@
             const icon = result.success ? "success" : "error";
             if (result.success) {
                 Swal.fire({
+                    showCancelButton: true,
                     color: "#D0D0D0",
                     background: "#343a40",
                     timer: 4000,
                     timerProgressBar: true,
                     title: `${result.message}`,
-                    html: "將於<b></b>秒跳轉委託首頁",
+                    html: `將於<b></b>秒跳轉委託首頁 或者 <a class="btn btn-success" href="create">繼續發佈</button></a>`,
                     icon: `${icon}`,
                     didOpen: () => {
                         Swal.showLoading();
@@ -507,8 +527,13 @@
                     willClose: () => {
                         clearInterval(timerInterval);
                     }
-                }).then(() => {
-                    window.location.href = '@Url.Action("homeframe", "depute")';
+                }).then((result) => {
+                    if (result.dismiss === Swal.DismissReason.cancel) {
+                        window.location.href = '@Url.Action("create", "depute")';
+                    }
+                    else {
+                        window.location.href = '@Url.Action("homeframe", "depute")';
+                    }
                 })
             };
         }
