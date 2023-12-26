@@ -4,9 +4,8 @@
     ViewData["Title"] = "BlogEdit";
 }
 
-<h2>BlogEdit</h2>
+<h2>修改主版</h2>
 
-<h4>CBlogViewModel</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -29,12 +28,9 @@
                 <img id="imagePreview" src="#" alt="Preview" style="display:none;width:360px;height:108px;" />
             </div>
             
-            <span>
+            <span style="margin:3px">
                 <input type="submit" value="修改" class="btn btn-info" />
-            </span>
-
-            <span>
-                @Html.ActionLink("回到列表", "BlogList", "Admin", new { @class = "btn btn-warning" })
+                @Html.ActionLink("回到列表", "BlogList", "Admin",null, new { @class = "btn btn-warning" })
             </span>
 
         </form>
