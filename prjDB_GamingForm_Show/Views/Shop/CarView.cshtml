@@ -5,12 +5,14 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>購物車</h2>
 
-<p>
-    @Html.ActionLink("繼續購物", "Index", "Shop", null, new { @class = "btn btn-outline-dark mt-auto" })
-</p>
+
+
 <div class="container px-4 px-lg-5 mt-7">
+    <h2>購物車</h2>
+    <p>
+        @Html.ActionLink("繼續購物", "Index", "Shop", null, new { @class = "btn btn-outline-dark mt-auto" })
+    </p>
     <table class="table">
         <thead>
             <tr class="textcolor">
@@ -44,7 +46,7 @@
 
                         <tr class="textcolor">
                             <td>
-                                <img class="card-img-top" src="~/images/shop/@item.FImagePath" alt="..." style="height:120px;" />
+                                <img class="card-img-top" src="~/images/shop/@item.FImagePath" alt="..." style="height:120px; object-fit:contain;" />
                             </td>
                             <td id="@($"name_{count}")">
                                 @Html.DisplayFor(modelItem => item.ProductName)
