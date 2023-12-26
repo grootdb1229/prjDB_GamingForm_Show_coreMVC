@@ -6,7 +6,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-@section Styles{
+@section Styles {
     <style>
         .ip-item:hover {
             background-color: #272727; /* 設定你想要的自定義顏色 */
@@ -14,7 +14,7 @@
 
         .table-hover tbody tr:hover {
             background-color: #272727; /* 設定你想要的自定義顏色 */
-        }   
+        }
     </style>
 }
 
@@ -34,9 +34,9 @@
                     @{
                         foreach (var item in Model.subTags)
                         {
-                                                <li class="@(item.SubTagId == ViewBag.SelectedSubTagId ? "selected-item" : "")">
-                                                    <a href="@Url.Action("List", "Blog", new { FId =item.SubTagId})" ><span>@item.Name </span></a>
-                                                </li>
+                            <li class="@(item.SubTagId == ViewBag.SelectedSubTagId ? "selected-item" : "")">
+                                <a href="@Url.Action("List", "Blog", new { FId =item.SubTagId})"><span>@item.Name </span></a>
+                            </li>
                         }
                     }
                 </ul>
@@ -49,7 +49,7 @@
                         <input type="submit" value="查詢" />
                     }
                 </div>
-            </div>        
+            </div>
         </div>
     </div>
 </header>
@@ -59,7 +59,7 @@
     <div style=" border-radius:5px;float:right;margin-left:10px;margin-right:5%;width:350px;background-color:#4F4F4F;-webkit-box-shadow: #FFF 0 -1px 4px, #ff0 0 -2px 10px, #ff8000 0 -10px 20px, red 0 -18px 40px, 5px 5px 15px 5px rgba(0,0,0,0);
 box-shadow: #FFF 0 -1px 4px, #ff0 0 -2px 10px, #ff8000 0 -10px 20px, red 0 -18px 40px, 5px 5px 15px 5px rgba(0,0,0,0)">
         <div style="padding:10px;">
-            <div id="tbHotBlog">               
+            <div id="tbHotBlog">
             </div>
         </div>
     </div>
@@ -72,9 +72,9 @@ box-shadow: #FFF 0 -1px 4px, #ff0 0 -2px 10px, #ff8000 0 -10px 20px, red 0 -18px
         <div id="div1">@*會顯示輪播廣告*@</div>
         <br />
         @* <div style="display:flex">
-            <a href="@Url.Action("DeputeList","Depute")" target="_blank">
-                <img src="~/images/AD/forjob.jpg" width="275" height="450" alt="" style=" margin-right:15px;border-radius:5px">
-            </a>
+        <a href="@Url.Action("DeputeList","Depute")" target="_blank">
+        <img src="~/images/AD/forjob.jpg" width="275" height="450" alt="" style=" margin-right:15px;border-radius:5px">
+        </a>
         </div> *@
     </div>
     <div class="container">
@@ -82,26 +82,26 @@ box-shadow: #FFF 0 -1px 4px, #ff0 0 -2px 10px, #ff8000 0 -10px 20px, red 0 -18px
             <div class="col-lg-11" style="margin-left:5%;background-color:#4F4F4F;border-radius:8px;box-shadow:0px 0px 8px 8px #cccccc">
                 @{
                     foreach (var item in Model.blogs.OrderByDescending(b => b.SubBlogs.Sum(sb => sb.Articles.Sum(a => a.ViewCount))))
-                        {
-                                            <div class="ip-item" style="border-bottom:1px dotted black;padding:12px;margin:0px;">
-                                                <div class="ip-pic">
-                                                    <a href="@Url.Action("ArticleList", "Blog", new { FId =item.BlogId})">
-                                                        <img src="~/images/Blogimages/@item.FImagePath" width="360" height="108" alt="">
+                    {
+                        <div class="ip-item" style="border-bottom:1px dotted black;padding:12px;margin:0px;">
+                            <div class="ip-pic">
+                                <a href="@Url.Action("ArticleList", "Blog", new { FId =item.BlogId})">
+                                    <img src="~/images/Blogimages/@item.FImagePath" width="360" height="108" alt="" style="object-fit: cover; width: 360px; height: 108px;">
 
-                                                    </a>
-                                                </div>
-                                                <div class="ip-text" style="margin-bottom:24px">
-                                                    <i class="bi bi-caret-up-fill" style="color:red"></i>
-                                                    <a style="text-decoration:none" href="@Url.Action("ArticleList", "Blog", new { FId =item.BlogId})">
-                                                        <span style="color: #FFFFFF;font-size:28px">@item.Title</span>
-                                                    </a>
-                                                    <br />
-                                                    @{
+                                </a>
+                            </div>
+                            <div class="ip-text" style="margin-bottom:24px">
+                                <i class="bi bi-caret-up-fill" style="color:red"></i>
+                                <a style="text-decoration:none" href="@Url.Action("ArticleList", "Blog", new { FId =item.BlogId})">
+                                    <span style="color: #FFFFFF;font-size:28px">@item.Title</span>
+                                </a>
+                                <br />
+                                @{
                                     if (!item.SubBlogs.Any(s => s.Articles.Any()))
                                     {
-                                                                                <a style="text-decoration:none" href="@Url.Action("ArticleList", "Blog", new { FId =item.BlogId})">
-                                                                                    <span style="color: #FFFFFF;font-size:16px">目前還沒有文章</span>
-                                                                                </a>
+                                        <a style="text-decoration:none" href="@Url.Action("ArticleList", "Blog", new { FId =item.BlogId})">
+                                            <span style="color: #FFFFFF;font-size:16px">目前還沒有文章</span>
+                                        </a>
                                         //<p style="font-size:16px">目前還沒有文章</p>
                                     }
                                     else
@@ -110,7 +110,7 @@ box-shadow: #FFF 0 -1px 4px, #ff0 0 -2px 10px, #ff8000 0 -10px 20px, red 0 -18px
                                         .OrderByDescending(a => a.ModifiedDate)
                                         .FirstOrDefault();
 
-                                                                                <a style="font-size:16px;text-decoration:none" href="@Url.Action("ArticleContent", "Blog", new { FId =item.BlogId,AFId=latestArticle.ArticleId})">@latestArticle.Title</a>
+                                        <a style="font-size:16px;text-decoration:none" href="@Url.Action("ArticleContent", "Blog", new { FId =item.BlogId,AFId=latestArticle.ArticleId})">@latestArticle.Title</a>
                                     }
                                                     }<br/>
                                 <i class="bi bi-file-earmark-text" title="昨日發文數" style="">@item.SubBlogs.Sum(subBlog => subBlog.Articles.Count(a => a.ModifiedDate.Date == DateTime.Now.Date.AddDays(-1)))</i>
@@ -147,10 +147,10 @@ box-shadow: #FFF 0 -1px 4px, #ff0 0 -2px 10px, #ff8000 0 -10px 20px, red 0 -18px
                     const encodedFImagePath = encodeURIComponent(data.fImagePath);
                     $('#div1').html(
                         `
-                          <a href="@Url.Content("~/Shop/Details")?id=${data.productId}">
-                          <img src="/images/shop/${data.fImagePath}" width="275vw" style="border-radius:5px"/>
-                        </a>
-                        `
+                              <a href="@Url.Content("~/Shop/Details")?id=${data.productId}">
+                              <img src="/images/shop/${data.fImagePath}" width="275vw" style="border-radius:5px"/>
+                            </a>
+                            `
                     );
                 });
         }
@@ -158,25 +158,25 @@ box-shadow: #FFF 0 -1px 4px, #ff0 0 -2px 10px, #ff8000 0 -10px 20px, red 0 -18px
         setInterval(fetchAndDisplayImage, 3000);
         function fetchHotblog() {
             fetch('@Url.Content("~/Blog/HotBlog")')
-            .then(response=>response.json())
+                .then(response => response.json())
                 .then(data => {
                     var blog = `
-                        <table  class="table table-hover" style="color:antiquewhite; ">
-                    <tr style="text-align:center;font-size:24px">
-                            <th>熱門看板</th>
-                                </tr>`;
-                        
+                            <table  class="table table-hover" style="color:antiquewhite; ">
+                        <tr style="text-align:center;font-size:24px">
+                                <th>熱門看板</th>
+                                    </tr>`;
+
                     for (let i = 0; i < data.length; i++) {
-                        blog+=
-                        `
-                            <tr>
-                               <td>
-                                         <a style="text-decoration:none" href="/Blog/ArticleList?FId=${data[i].blogId}"})">
-                                                  <p>${data[i].title} - 人氣:${data[i].articleViewCount} </p>
-                                     </a>
-                               </td>
-                            </tr>
-                        `
+                        blog +=
+                            `
+                                <tr>
+                                   <td>
+                                             <a style="text-decoration:none" href="/Blog/ArticleList?FId=${data[i].blogId}"})">
+                                                      <p>${data[i].title} - 人氣:${data[i].articleViewCount} </p>
+                                         </a>
+                                   </td>
+                                </tr>
+                            `
                     }
                     blog += ` </table>`;
 
@@ -186,5 +186,5 @@ box-shadow: #FFF 0 -1px 4px, #ff0 0 -2px 10px, #ff8000 0 -10px 20px, red 0 -18px
         fetchHotblog();
     });
 
-    
+
 </script>

@@ -1651,14 +1651,7 @@ namespace prjDB_GamingForm_Show.Controllers
 
         #region 數據
 
-        //public IActionResult OrderList(DateTime startday, DateTime endday)
-        //{
 
-        //    List<Order> orders = _db.Orders.Include(a=>a.Payment).Include(a=>a.Coupon).Where(p=>p.CompletedDate >= startday && p.OrderDate <= endday).ToList();
-
-        //    return View(orders);
-
-        //}
 
         public IActionResult OrderList(DateTime? startday, DateTime? endday, string? ST)
         {
@@ -1709,15 +1702,15 @@ namespace prjDB_GamingForm_Show.Controllers
             {
                 if (ST == "請選擇訂單狀態")
                 {
-                    query = query.Where(p => p.CompletedDate >= startday.Value && p.OrderDate <= endday.Value).OrderByDescending(x => x.OrderId);
+                    query = query.Where(p => p.CompletedDate >= startday.Value && p.CompletedDate <= endday.Value).OrderByDescending(x => x.OrderId);
                 }
                 else if (ST == "未付款")
                 {
-                    query = query.Where(p => /*p.CompletedDate >= startday.Value && p.OrderDate <= endday.Value &&*/ p.Status.StatusId == 13);
+                    query = query.Where(p => p.OrderDate >= startday.Value && p.OrderDate <= endday.Value && p.StatusId == 13);
                 }
                 else
                 {
-                    query = query.Where(p => p.CompletedDate >= startday.Value && p.OrderDate <= endday.Value && p.Status.StatusId == 14 || p.StatusId == 15 || p.StatusId == 16);
+                    query = query.Where(p => p.CompletedDate >= startday.Value && p.PaymentDate < endday.Value && (p.StatusId == 14 || p.StatusId == 15 || p.StatusId == 16));
                 }
             }
 

@@ -99,18 +99,19 @@
                                     <a href="@Url.Action("CreateCollection" ,"Member")" class="dropdown-item">新增作品</a>
                                 </div>
                             </div>
-                        </div>
-                        <div class="nav-item dropdown">
-                            <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">其他歷史紀錄</a>
-                            <div class="dropdown-menu m-0">
-                                <a href="@Url.Content("~/Shop/OrderDetail?id=" + Model.First().MemberId)" class="dropdown-item">我的訂單紀錄</a>
-                                <a href="@Url.Content("~/Shop/MyProduct?id=" + Model.First().MemberId)" class="dropdown-item">我的商品管理</a>
-                                <a href="feature.html" class="dropdown-item">我接的案子、應徵的案子</a>
-                                <a href="@Url.Action("MyArticleList" , "Member" , new{id=Model.First().MemberId})" class="dropdown-item">我的發表文章</a>
-                                <a href="quote.html" class="dropdown-item">我的願望清單</a>
+                            <div class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">其他歷史紀錄</a>
+                                <div class="dropdown-menu m-0">
+                                    <a href="@Url.Content("~/Shop/OrderDetail?id=" + Model.First().MemberId)" class="dropdown-item">我的訂單紀錄</a>
+                                    <a href="@Url.Content("~/Shop/MyProduct?id=" + Model.First().MemberId)" class="dropdown-item">我的商品管理</a>
+                                    <a href="@Url.Action("MyDeputeList" ,"Member" , new{id=Model.First().MemberId})" class="dropdown-item">我接的案子</a>
+                                    <a href="@Url.Action("DeputeApplying" , "Member" , new{id=Model.First().MemberId})" class="dropdown-item">應徵中的案子</a>
+                                    <a href="@Url.Action("MyArticleList" , "Member" , new{id=Model.First().MemberId})" class="dropdown-item">我的發表文章</a>
+
+                                </div>
                             </div>
                         </div>
-                        <a class="nav-item nav-link">聯絡我</a>
+                        
                     </div>
                     <butaton type="button" class="btn text-primary ms-3" data-bs-toggle="modal" data-bs-target="#searchModal"><i class="fa fa-search"></i></butaton>
                 </nav>
@@ -134,8 +135,9 @@
                                     <a href="@Url.Action("MyCollectionList" ,"Member" ,new{id=Model.First().MemberId})" class="dropdown-item">我的作品集</a>
                                 </div>
                             </div>
+                            <a class="nav-item nav-link" onclick="openChat(@Model.FirstOrDefault().MemberId)" style="cursor: pointer;">聯絡我</a>
                         </div>
-                        <a class="nav-item nav-link" onclick="openChat(@Model.FirstOrDefault().MemberId)" style="cursor: pointer;">聯絡我</a>
+                        
                     </div>
                     <butaton type="button" class="btn text-primary ms-3" data-bs-toggle="modal" data-bs-target="#searchModal"><i class="fa fa-search"></i></butaton>
                 </nav>

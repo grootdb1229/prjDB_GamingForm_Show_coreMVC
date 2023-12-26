@@ -888,8 +888,8 @@ namespace prjDB_GamingForm_Show.Controllers
                     break;
                 case CDictionary.PROGRESS_會員完成委託:
                     diffContent = $"您發佈的的委託「{vm.deputeTitle}」狀態已更新為「{vm.recordStatus}」";
-                    diffTable = "<tr><td style=\"border: 1px solid #ccc; padding: 8px;text-align: center;\">委託標題</td><td style=\"border: 1px solid #ccc; padding: 8px;text-align: center;\">執行會員</td><td style=\"border: 1px solid #ccc; padding: 8px;text-align: center;\">回覆內容</td><td style=\"border: 1px solid #ccc; padding: 8px;text-align: center;\">有無副檔</td></tr>" +
-                        $"<tr><td style=\"border: 1px solid #ccc; padding: 8px;text-align: center;\">{vm.deputeTitle}</td><td style=\"border: 1px solid #ccc; padding: 8px;text-align: center;\">{vm.workerName}</td><td style=\"border: 1px solid #ccc; padding: 8px;text-align: center;\">{vm.recordReplyContent}</td><td style=\"border: 1px solid #ccc; padding: 8px;text-align: center;\">{vm.hasFile}</td>";
+                    diffTable = "<tr><td style=\"border: 1px solid #ccc; padding: 8px;text-align: center;\">委託標題</td><td style=\"border: 1px solid #ccc; padding: 8px;text-align: center;\">執行會員</td><td style=\"border: 1px solid #ccc; padding: 8px;text-align: center;\">回覆內容</td><td style=\"border: 1px solid #ccc; padding: 8px;text-align: center;\">有無附件</td></tr>" +
+                        $"<tr><td style=\"border: 1px solid #ccc; padding: 8px;text-align: center;\">{vm.deputeTitle}</td><td style=\"border: 1px solid #ccc; padding: 8px;text-align: center;\">{vm.workerName}</td><td style=\"border: 1px solid #ccc; padding: 8px;text-align: center;\">{vm.recordReplyContent}</td><td style=\"border: 1px solid #ccc; padding: 8px;text-align: center;\">{vm.hasFile}</td></table></li>";
                     break;
                 case CDictionary.PROGRESS_委託者確認完成:
                     diffContent = $"您的委託「{vm.deputeTitle}」委託者已確認完成";
