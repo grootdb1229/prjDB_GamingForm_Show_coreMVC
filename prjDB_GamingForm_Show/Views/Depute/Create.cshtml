@@ -136,10 +136,10 @@
         function DEMO(step) {
             switch (step) {
                 case 1:
-                    $('#Title')[0].value = "神奇寶貝-灌鉛寶貝球";
+                    $('#Title')[0].value = "神奇寶貝-美術設計-灌鉛寶貝球";
                     $('#Salary')[0].value = "9000";
                     $('#DeputeContent')[0].value = `為了最小化神奇寶貝的勞動輸出，
-我們要打造一顆只需要丟到神奇寶貝，
+我們要打造一顆只要丟到神奇寶貝，
 可以同時扣血並且收服的灌鉛寶貝球。
 
 希望各方有創意的程式設計好手，加入我們。
@@ -506,7 +506,6 @@
             const icon = result.success ? "success" : "error";
             if (result.success) {
                 Swal.fire({
-                    showCancelButton: true,
                     color: "#D0D0D0",
                     background: "#343a40",
                     timer: 4000,
@@ -528,12 +527,7 @@
                         clearInterval(timerInterval);
                     }
                 }).then((result) => {
-                    if (result.dismiss === Swal.DismissReason.cancel) {
-                        window.location.href = '@Url.Action("create", "depute")';
-                    }
-                    else {
                         window.location.href = '@Url.Action("homeframe", "depute")';
-                    }
                 })
             };
         }

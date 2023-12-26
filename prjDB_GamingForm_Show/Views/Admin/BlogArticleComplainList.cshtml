@@ -136,11 +136,8 @@
                     @Html.DisplayFor(modelItem => item.ReportDate)
                 </td>
                 <td>
-                    @Html.ActionLink("查看文章", "ArticleContent", "Blog", new { AFId = Model.articles.First().ArticleId , FId = Model.articles.First().SubBlog.BlogId}, new { @class = "btn btn-info" })
-                    @*                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop" onclick="test(@item.Id,@item.ArticleId,@memberId)">
-                處理方式
-                </button>*@
-
+                    @Html.ActionLink("查看文章", "ArticleContent", "Blog", new { AFId = item.ArticleId , FId = item.Article.SubBlog.BlogId}, new { @class = "btn btn-info" , target = "_blank"})
+                    
                     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop" onclick="test(@item.Id,@item.ArticleId,@memberId, '@StName?.Name')">
                         處理方式
                     </button>
