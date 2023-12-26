@@ -103,6 +103,7 @@
         if (chat.SenderName == Context.Session.GetString(CDictionary.SK_UserName))
         {
             <div class="sender">
+                @Context.Session.GetString(CDictionary.SK_UserName)
                 <span class="messageSpan">@chat.ModefiedDate</span>
                 <p class="messageP">@chat.Content</p>
             </div>
@@ -110,6 +111,7 @@
         else
         {
             <div class="receiver">
+                @chat.SenderName
                 <span class="messageSpan">@chat.ModefiedDate</span>
                 <p class="messageP">@chat.Content</p>
             </div>
