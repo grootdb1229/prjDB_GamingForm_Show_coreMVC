@@ -11,18 +11,22 @@
     <Compile Remove="bin\**" />
     <Compile Remove="Models\Depute\**" />
     <Compile Remove="wwwroot\assets\**" />
+    <Compile Remove="wwwroot\files\DEMO_depute\**" />
     <Compile Remove="wwwroot\MemberImage\**" />
     <Content Remove="bin\**" />
     <Content Remove="Models\Depute\**" />
     <Content Remove="wwwroot\assets\**" />
+    <Content Remove="wwwroot\files\DEMO_depute\**" />
     <Content Remove="wwwroot\MemberImage\**" />
     <EmbeddedResource Remove="bin\**" />
     <EmbeddedResource Remove="Models\Depute\**" />
     <EmbeddedResource Remove="wwwroot\assets\**" />
+    <EmbeddedResource Remove="wwwroot\files\DEMO_depute\**" />
     <EmbeddedResource Remove="wwwroot\MemberImage\**" />
     <None Remove="bin\**" />
     <None Remove="Models\Depute\**" />
     <None Remove="wwwroot\assets\**" />
+    <None Remove="wwwroot\files\DEMO_depute\**" />
     <None Remove="wwwroot\MemberImage\**" />
   </ItemGroup>
 
@@ -56,7 +60,6 @@
 
   <ItemGroup>
     <None Include="wwwroot\files\MemberDemo\Demo文件.docx" />
-    <None Include="wwwroot\files\DEMO_depute\2.委託案件.zip" />
     <None Include="wwwroot\Layout\iPortfolio\assets\js\main.js" />
     <None Include="wwwroot\Layout\iPortfolio\assets\vendor\aos\aos.cjs.js" />
     <None Include="wwwroot\Layout\iPortfolio\assets\vendor\aos\aos.esm.js" />
