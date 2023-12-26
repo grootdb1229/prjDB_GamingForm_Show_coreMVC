@@ -160,7 +160,7 @@ namespace prjDB_GamingForm_Show.Controllers
 				.Select(tag => new
 				{
 				tag.Name,
-				Products = tag.ProductTags.Select(x => x.Product).Take(5).ToList()
+				Products = tag.ProductTags.Select(x => x.Product).Where(x=>x.StatusId==1).Take(5).ToList()
 				})
 				.ToList();
 				Trace.WriteLine(randomTagWithProducts);
@@ -181,7 +181,7 @@ namespace prjDB_GamingForm_Show.Controllers
 			}
 			public IActionResult HotTopFive() //取熱門商品
 			{
-				var TopFive = _db.Products.Select(x => new { x.FImagePath, x.ViewCount, x.ProductName, x.ProductId,x.Price }).OrderByDescending(x => x.ViewCount).Take(5).ToList();
+				var TopFive = _db.Products.Where(x=>x.StatusId==1).Select(x => new { x.FImagePath, x.ViewCount, x.ProductName, x.ProductId,x.Price }).OrderByDescending(x => x.ViewCount).Take(5).ToList();
 				return Json(TopFive);
 			}
 			public IActionResult YourFavorite()
@@ -204,7 +204,7 @@ namespace prjDB_GamingForm_Show.Controllers
 				{ userId = (int)HttpContext.Session.GetInt32(CDictionary.SK_UserID); }//有登入複寫Userid，反之維持0。
 				else { return Json(new { message = "請先登入" }); }
 				
-				var top5 = _db.WishLists.Where(x => x.MemberId == userId).Select(x => x.Product).ToList();
+				var top5 = _db.WishLists.Where(x => x.MemberId == userId&&x.Product.StatusId==1).Select(x => x.Product).ToList();
 
                     var OrdersList = _db.Orders.Where(x => x.MemberId == userId).SelectMany(x => x.OrderProducts.Select(a=>a.Product)).ToList();//已經購買的商品不能加入
 
@@ -252,7 +252,7 @@ namespace prjDB_GamingForm_Show.Controllers
 					if (!string.IsNullOrEmpty(item))
 					{
 						datas = from n in _db.Products
-								where n.ProductId == Convert.ToInt32(item)
+								where n.ProductId == Convert.ToInt32(item)&& n.StatusId==1
 								select n;
 						foreach (var data in datas)
 						{

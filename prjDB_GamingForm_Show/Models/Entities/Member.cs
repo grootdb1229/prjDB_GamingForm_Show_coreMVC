@@ -1,28 +1,28 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 
 namespace prjDB_GamingForm_Show.Models.Entities;
 
 public partial class Member
 {
     public int MemberId { get; set; }
-
+    [DisplayName("會員名稱")]
     public string Name { get; set; } = null!;
-
+    [DisplayName("會員手機")]
     public string Phone { get; set; } = null!;
-
+    [DisplayName("生日")]
     public DateTime Birth { get; set; }
-
+    [DisplayName("電子信箱")]
     public string Email { get; set; } = null!;
-
+    [DisplayName("密碼")]
     public string Password { get; set; } = null!;
-
     public string FImagePath { get; set; } = null!;
-
+    [DisplayName("自我介紹")]
     public string? Mycomment { get; set; }
 
     public int BonusPoint { get; set; }
-
+    [DisplayName("性別")]
     public int Gender { get; set; }
 
     public int StatusId { get; set; }
