@@ -15,7 +15,7 @@
             <div asp-validation-summary="ModelOnly" class="text-danger" ></div>
             <div class="form-group">
                 <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" required />
+                <input asp-for="Name" class="form-control" id="name" required />
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -40,7 +40,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="MyComment" class="control-label"></label>
-                <input asp-for="MyComment" class="form-control" />
+                <input asp-for="MyComment" class="form-control" id="mycomment"/>
                 <span asp-validation-for="MyComment" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -58,6 +58,8 @@
             </div>
             <div class="form-group">
                 <input type="submit" value="驗證並註冊" class="btn btn-default" id="ValidationBtn" name="ValidationBtn" />
+                <button id="Demo1" class="btn btn-primary">Demo1</button>
+                <button id="Demo2" class="btn btn-primary">Demo2</button>
             </div>
         </form>
     </div>
@@ -159,6 +161,36 @@
             return true
         }
     }
+
+
+
+
+    document.getElementById("Demo1").addEventListener('click', function () {
+        var name = document.getElementById('name');
+        var phone = document.getElementById('phone');
+        var email = document.getElementById('email');
+        var password = document.getElementById('password')
+        var mycomment = document.getElementById('mycomment')
+        // 添加文字內容
+        name.value = '子倫';
+        phone.value = '0985175815';
+        email.value ='alan90306@gmail.com';
+        password.value = 'as1234567';
+        mycomment.value = '精通動畫、圖片製作的製圖師';
+    });
+    document.getElementById("Demo2").addEventListener('click', function () {
+        var name = document.getElementById('name');
+        var phone = document.getElementById('phone');
+        var email = document.getElementById('email');
+        var password = document.getElementById('password')
+        var mycomment = document.getElementById('mycomment')
+        // 添加文字內容
+        name.value = '子倫';
+        phone.value = '0985175815';
+        email.value ='alan90306@gmail.com';
+        password.value = 'As1234567';
+        mycomment.value = '精通動畫、圖片製作的製圖師';
+    });
 
         // var ValidationBtn = document.querySelector('#ValidationBtn')
         // ValidationBtn.()
