@@ -353,6 +353,7 @@
             return `
                             <div class="col mb-5">
                                 <div class="card h-100">
+                                        <div class="badge bg-dark text-white position-absolute bi bi-eye" style="top: 0.5rem; right: 0.5rem">${product.ViewCount}</div>
                                   <a href="@Url.Content("~/Shop/Details")?id=${product.ProductId}"><img class="card-img-top" 
                                 src="/images/shop/${product.FImagePath}" alt="..." style="height:25vh;object-fit:contain; background-color: black; " /></a>
                                 <div class="card-body p-3"style="background-color:#4F4F4F">
