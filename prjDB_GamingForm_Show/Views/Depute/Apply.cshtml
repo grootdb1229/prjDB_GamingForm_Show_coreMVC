@@ -13,17 +13,21 @@
 <div class="row">
     <div class="col-md-10">
         <form asp-action="Apply" id="formElement">
-            <div class="form-group">
+            <div class="form-group row">
+                <div class="col-6">
                 <label class="control-label">委託主題：</label>
                 <input class="form-control" type="text" value="@Model.Title" disabled />
+                </div>
+                <div class="col-6">
+                <label class="control-label">提供報酬：</label>
+                <input class="form-control" type="text" value="@Model.Salary.ToString("$###,###,##0.00")" disabled />
+                </div>
             </div>
             <div class="form-group">
                 <label class="control-label">委託內容：</label>
                 <textarea class="form-control" type="text" rows="6" disabled>@Model.DeputeContent</textarea>
             </div>
             <div class="form-group">
-                <label class="control-label">提供報酬：</label>
-                <input class="form-control" type="text" value="@Model.Salary.ToString("$###,###,##0.00")" disabled />
             </div>
             <div class="form-group" hidden>
                 <label asp-for="DeputeId" class="control-label"></label>
@@ -39,7 +43,7 @@
             </div>
             <div>
                 <label class="control-label">自我推薦(選填)：</label>
-                <button type="button" onclick="showPreContent()" class="btn btn-warning btn-sm">使用其他範本</button>
+                <button type="button" onclick="showPreContent()" class="btn btn-warning btn-sm">使用歷史範本</button>
                 <br />
                 <label class="control-label">寫下工作相關經驗，個人特質或專長，提升錄取率吧</label>
                 <textarea class="form-control" name="RecordContent" rows="4" cols="50" placeholder="在這裡輸入您的應徵補充資訊..." id="RecordContent"></textarea>
@@ -47,6 +51,8 @@
             <div class="form-group mt-3">
                 <a asp-action="DeputeMain" class="btn btn-secondary">返回</a>
                 <input id="wantmoney" type="button" value="送出並應徵" onclick="prepareAndSubmit()" class="btn btn-success" />
+                <button type="button" class="btn btn-dark btn-sm" onclick="DEMO(1)">Demo火爆小鳥</button>
+                <button type="button" class="btn btn-dark btn-sm" onclick="DEMO(2)">Demo黃鴨</button>
             </div>
         </form>
     </div>
@@ -58,6 +64,23 @@
     }
 
     <script>
+        function DEMO(step) {
+            switch (step) {
+                case 1:
+                    $('#RecordContent')[0].value = `您好，我是一位充滿熱情的遊戲愛好者和創意開發者。
+雖然我在遊戲開發方面的經驗尚待增長，但我對於學習和創建新事物的熱忱無限。
+對於製作這樣的委託項目，我充滿興趣並願意全力以赴，投入我所有的創造力和努力。`;
+                    break;
+                case 2:
+                    $('#RecordContent')[0].value = `您好！
+我是一位具有豐富多元技能的專業人士，擁有程式開發和美術設計的雙重專長。
+在程式方面，我熟悉多種編程語言和開發工具，能夠靈活運用於遊戲開發。
+同時，我對美術設計充滿熱情，能夠創造引人入勝的視覺效果和角色設計。我善於融合技術與藝術，創造出獨特而吸引人的遊戲體驗。
+無論是從技術實現或美術創作角度，我都能為神奇寶貝的遊戲開發貢獻我的力量，追求卓越和創新。`;
+                    break;
+            }
+        }
+
 
         function sendMessageBySignalR() {
             let message = `您的委託-@Model.Title，有新的應徵`
@@ -69,7 +92,7 @@
                 connection.invoke("SystemMessage", "委託", message, connectionId, sendToUserName).catch(function (err) {
                     console.error('傳送錯誤: ' + err.toString());
                 });
-            });            
+            });
         };
         function getSignalRIdByUserName(userName) {
             return new Promise((resolve, reject) => {
@@ -102,7 +125,7 @@
             });
             if (formValues) {
                 console.log(formValues[0].textContent);
-                document.querySelector('#RecordContent').textContent = formValues[0].textContent;
+                document.querySelector('#RecordContent').value = formValues[0].textContent;
             }
            
         }

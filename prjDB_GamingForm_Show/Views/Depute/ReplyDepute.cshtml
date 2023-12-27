@@ -4,7 +4,7 @@
     Layout = "~/Views/Shared/_Layout_DB.cshtml";
 }
 
-<h2 class="mt-5">完成委託</h2>
+<h2 class="mt-5">提交成品</h2>
 <h4>請輸入資訊</h4>
 <hr class="col-10"/>
 <div class="row">
@@ -12,7 +12,7 @@
         <form asp-action="ReplyDepute" id="formElement">
             <input name="id" value="@Model.Id" hidden/>
             <div class="mb-3">
-                <label for="exampleFormControlTextarea1" class="form-label">完成作品說明</label>
+                <label for="exampleFormControlTextarea1" class="form-label">作品說明</label>
                 <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" name="ReplyContent"></textarea>
             </div>
 
@@ -21,8 +21,8 @@
                 <input class="form-control" type="file" id="formFileMultiple" name="formFile">
             </div>
             <div id="providerName" hidden>@ViewBag.applyerName</div>
-            @Html.ActionLink("取消","homeframe","depute",null,new{@class="btn btn-secondary"})
-            <input type="submit" class="btn btn-success" value="完成" id="buttonSubmit" />
+            @Html.ActionLink("取消", "homeframe", "depute", null, new { @class = "btn btn-secondary" })
+            <input type="submit" class="btn btn-success" value="送出" id="buttonSubmit" />
         </form>
     </div>
 </div>
