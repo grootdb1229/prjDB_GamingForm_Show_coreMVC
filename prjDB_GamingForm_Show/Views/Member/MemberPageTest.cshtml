@@ -79,68 +79,67 @@
         @{
             if (Model.First().MemberId == Context.Session.GetInt32(CDictionary.SK_UserID))
             {
-                <nav class="navbar navbar-expand-lg navbar-dark px-5 py-3 py-lg-0">
-                    <a href="@Url.Action("MemberPageTest" , "Member")" class="navbar-brand p-0">
-                        <h1 class="m-0"><i class="fa fa-user-tie me-2"></i>會員中心</h1>
-                        <input type="hidden" name="MemberId" value=@Context.Session.GetInt32(CDictionary.SK_UserID) />
-                    </a>
-                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
-                        <span class="fa fa-bars"></span>
-                    </button>
-                    <div class="collapse navbar-collapse" id="navbarCollapse">
-                        <div class="navbar-nav ms-auto py-0">
-                            <a href="@Url.Action("MemberPageTest" , "Member")" class="nav-item nav-link active">我的首頁</a>
-                            <a href="@Url.Action("Edit" , "Member")" class="nav-item nav-link">修改資料</a>
-                            @*<a href="@Url.Action("MyBlog" , "Member")"  class="nav-item nav-link">我的部落格</a>*@
-                            <div class="nav-item dropdown">
-                                <a href="@Url.Action("MyCollectionList" , "Member")" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">我的作品</a>
-                                <div class="dropdown-menu m-0">
-                                    <a href="@Url.Action("MyCollectionList" ,"Member" , new{id=Model.First().MemberId})" class="dropdown-item">我的作品集</a>
-                                    <a href="@Url.Action("CreateCollection" ,"Member")" class="dropdown-item">新增作品</a>
-                                </div>
-                            </div>
-                            <div class="nav-item dropdown">
-                                <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">其他歷史紀錄</a>
-                                <div class="dropdown-menu m-0">
-                                    <a href="@Url.Content("~/Shop/OrderDetail?id=" + Model.First().MemberId)" class="dropdown-item">我的訂單紀錄</a>
-                                    <a href="@Url.Content("~/Shop/MyProduct?id=" + Model.First().MemberId)" class="dropdown-item">我的商品管理</a>
-                                    <a href="@Url.Action("MyDeputeList" ,"Member" , new{id=Model.First().MemberId})" class="dropdown-item">我接的案子</a>
-                                    <a href="@Url.Action("DeputeApplying" , "Member" , new{id=Model.First().MemberId})" class="dropdown-item">應徵中的案子</a>
-                                    <a href="@Url.Action("MyArticleList" , "Member" , new{id=Model.First().MemberId})" class="dropdown-item">我的發表文章</a>
+                            <nav class="navbar navbar-expand-lg navbar-dark px-5 py-3 py-lg-0">
+                                <a href="@Url.Action("MemberPageTest" , "Member")" class="navbar-brand p-0">
+                                    <h1 class="m-0"><i class="fa fa-user-tie me-2"></i>會員中心</h1>
+                                    <input type="hidden" name="MemberId" value=@Context.Session.GetInt32(CDictionary.SK_UserID) />
+                                </a>
+                                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+                                    <span class="fa fa-bars"></span>
+                                </button>
+                                <div class="collapse navbar-collapse" id="navbarCollapse">
+                                    <div class="navbar-nav ms-auto py-0">
+                                        <a href="@Url.Action("MemberPageTest" , "Member")" class="nav-item nav-link active">我的首頁</a>
+                                        <a href="@Url.Action("Edit" , "Member")" class="nav-item nav-link">修改資料</a>
+                                        @*<a href="@Url.Action("MyBlog" , "Member")"  class="nav-item nav-link">我的部落格</a>*@
+                                        <div class="nav-item dropdown">
+                                            <a href="@Url.Action("MyCollectionList" , "Member")" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">我的作品</a>
+                                            <div class="dropdown-menu m-0">
+                                                <a href="@Url.Action("MyCollectionList" ,"Member" , new{id=Model.First().MemberId})" class="dropdown-item">我的作品集</a>
+                                                <a href="@Url.Action("CreateCollection" ,"Member")" class="dropdown-item">新增作品</a>
+                                            </div>
+                                        </div>
+                                        <div class="nav-item dropdown">
+                                            <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">其他歷史紀錄</a>
+                                            <div class="dropdown-menu m-0">
+                                                <a href="@Url.Content("~/Shop/OrderDetail?id=" + Model.First().MemberId)" class="dropdown-item">我的訂單紀錄</a>
+                                                <a href="@Url.Content("~/Shop/MyProduct?id=" + Model.First().MemberId)" class="dropdown-item">我的商品管理</a>
+                                                <a href="@Url.Action("MyDeputeList" ,"Member" , new{id=Model.First().MemberId})" class="dropdown-item">我接的案子</a>
+                                                <a href="@Url.Action("DeputeApplying" , "Member" , new{id=Model.First().MemberId})" class="dropdown-item">應徵中的案子</a>
+                                                <a href="@Url.Action("MyArticleList" , "Member" , new{id=Model.First().MemberId})" class="dropdown-item">我的發表文章</a>
 
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
                                 </div>
-                            </div>
-                        </div>
-                        
-                    </div>
-                    <butaton type="button" class="btn text-primary ms-3" data-bs-toggle="modal" data-bs-target="#searchModal"><i class="fa fa-search"></i></butaton>
-                </nav>
+                                <butaton type="button" class="btn text-primary ms-3" data-bs-toggle="modal" data-bs-target="#searchModal"><i class="fa fa-search"></i></butaton>
+                            </nav>
             }
             else
             {
-                <nav class="navbar navbar-expand-lg navbar-dark px-5 py-3 py-lg-0">
-                    <a href="@Url.Action("MemberPageTest" , "Member")" class="navbar-brand p-0">
-                        <h1 class="m-0"><i class="fa fa-user-tie me-2"></i>會員中心</h1>
-                        <input type="hidden" name="MemberId" value=@Context.Session.GetInt32(CDictionary.SK_UserID) />
-                    </a>
-                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
-                        <span class="fa fa-bars"></span>
-                    </button>
-                    <div class="collapse navbar-collapse" id="navbarCollapse">
-                        <div class="navbar-nav ms-auto py-0">
-                            <a href="@Url.Action("MemberPageTest" , "Member" , new{id=Model.First().MemberId})" class="nav-item nav-link active">我的首頁</a>
-                            <div class="nav-item dropdown">
-                                <a href="@Url.Action("MyCollectionList" , "Member")" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">我的作品</a>
-                                <div class="dropdown-menu m-0">
-                                    <a href="@Url.Action("MyCollectionList" ,"Member" ,new{id=Model.First().MemberId})" class="dropdown-item">我的作品集</a>
+                            <nav class="navbar navbar-expand-lg navbar-dark px-5 py-3 py-lg-0">
+                                <a href="@Url.Action("MemberPageTest" , "Member")" class="navbar-brand p-0">
+                                    <h1 class="m-0"><i class="fa fa-user-tie me-2"></i>會員中心</h1>
+                                    <input type="hidden" name="MemberId" value=@Context.Session.GetInt32(CDictionary.SK_UserID) />
+                                </a>
+                                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+                                    <span class="fa fa-bars"></span>
+                                </button>
+                                <div class="collapse navbar-collapse" id="navbarCollapse">
+                                    <div class="navbar-nav ms-auto py-0">
+                                        <a href="@Url.Action("MemberPageTest" , "Member" , new{id=Model.First().MemberId})" class="nav-item nav-link active">我的首頁</a>
+                                        <div class="nav-item dropdown">
+                                            <a href="@Url.Action("MyCollectionList" , "Member")" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">我的作品</a>
+                                            <div class="dropdown-menu m-0">
+                                                <a href="@Url.Action("MyCollectionList" ,"Member" ,new{id=Model.First().MemberId})" class="dropdown-item">我的作品集</a>
+                                            </div>
+                                        </div>
+                                        <a class="nav-item nav-link" onclick="openChat(@Model.FirstOrDefault().MemberId)" style="cursor: pointer;">聯絡我</a>
+                                    </div>
                                 </div>
-                            </div>
-                            <a class="nav-item nav-link" onclick="openChat(@Model.FirstOrDefault().MemberId)" style="cursor: pointer;">聯絡我</a>
-                        </div>
-                        
-                    </div>
-                    <butaton type="button" class="btn text-primary ms-3" data-bs-toggle="modal" data-bs-target="#searchModal"><i class="fa fa-search"></i></butaton>
-                </nav>
+                    @*<butaton type="button" class="btn text-primary ms-3" data-bs-toggle="modal" data-bs-target="#searchModal"><i class="fa fa-search"></i></butaton>*@
+                            </nav>
             }
 
         }
@@ -188,7 +187,7 @@
     </div>
     <!-- Navbar & Carousel End -->
     <!-- Full Screen Search Start -->
-    <div class="modal fade" id="searchModal" tabindex="-1">
+    @* <div class="modal fade" id="searchModal" tabindex="-1">
         <div class="modal-dialog modal-fullscreen">
             <div class="modal-content" style="background: rgba(9, 30, 62, .7);">
                 <div class="modal-header border-0">
@@ -202,7 +201,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> *@
     <!-- Full Screen Search End -->
     <!-- Facts Start -->
     <div class="container-fluid facts py-5 pt-lg-0">
@@ -837,7 +836,17 @@
             .then(response => response.json())
             .then(data => {
                 name = data[0].name
+                console.log(data[0].mycomment)
                 console.log(data)
+                var Mycomment;
+                if (console.log(data[0].mycomment) == null) 
+                {
+                    Mycomment = "該會員目前沒有自我介紹";
+                }
+                else 
+                { 
+                   Mycomment = data[0].mycomment
+                }
                 var genderName;
                 var howOld = (@DateTime.Now.Year - data[0].year)
                 if (data.gender = 1) {
@@ -854,7 +863,7 @@
                      <div class="col-lg-7">
                          <div class="section-title position-relative pb-3 mb-5">
                              <h5>我的資料</h5>
-                             <h1 class="mb-0">${data[0].mycomment}</h1>
+                                 <h1 class="mb-0">${Mycomment}</h1>
                          </div>
                          <div class="row g-0 mb-3">
                              <div class="col-sm-6 wow zoomIn" data-wow-delay="0.2s">
