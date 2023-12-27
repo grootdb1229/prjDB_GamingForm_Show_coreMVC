@@ -52,11 +52,11 @@
                     </div>
                 </div>
                 <div class="col-md d-flex align-items-center">
-                    <button class="btn btn-primary m-2" type="button" id="btnCreate" onclick="createContent()" disabled>
+                    <button class="btn btn-primary m-2" type="button" id="btnCreate" onclick="createContent()" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="使用AI生成委託內容" disabled>
                         <span class="spinner-border spinner-border-sm" aria-hidden="true" id="spanSpin" hidden></span>
                         <span role="status" id="spanCreate">生成委託資訊</span>
                     </button>
-                    <button class="btn btn-primary m-2" type="button" id="btnSelSkill" onclick="selectSkill()" disabled>
+                    <button class="btn btn-primary m-2" type="button" id="btnSelSkill" onclick="selectSkill()" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="按主題、內容AI自動選擇技能" disabled>
                         <span class="spinner-border spinner-border-sm" aria-hidden="true" id="spanSkillSpin" hidden></span>
                         <span role="status" id="spanSelSkill">依主題及內容選擇技能</span>
                     </button>
@@ -102,7 +102,10 @@
                 <label asp-for="DeputeContent" class="control-label" for="DeputeContent">委託資訊</label>
                 <span asp-validation-for="DeputeContent" class="text-danger"></span>
             </div>
-
+            <div id="alertNoSel">
+               
+            </div>
+            
             <span id="skillCount" hidden></span>
             <a class="btn btn-secondary mb-3" id="aSkillList"
                tabindex="0"
@@ -118,11 +121,12 @@
             <button type="button" class="btn btn-info mb-3" onclick="openSkillBrowser()">編輯技能</button>
             <input name="skilllist" id="select-skills" hidden>
             <div>
-            <button type="button" class="btn btn-light mb-3" onclick="DEMO(1)">DEMO</button>
             </div>
             <div class="form-floating mb-3">
                 <a asp-action="homeframe" class="btn btn-secondary">取消</a>
                 <input type="button" value="送出並發佈" class="btn btn-success" onclick="prepareAndSubmit()" />
+                <button type="button" class="btn btn-dark btn-sm" onclick="DEMO(1)">DemoUI/UX</button>
+                <button type="button" class="btn btn-dark btn-sm" onclick="DEMO(2)">Demo寶貝球</button>
             </div>
         </form>
     </div>
@@ -136,6 +140,9 @@
         function DEMO(step) {
             switch (step) {
                 case 1:
+                    $('#Title')[0].value = "神奇寶貝-UI/UX設計師";
+                    break;
+                case 2:
                     $('#Title')[0].value = "神奇寶貝-美術設計-灌鉛寶貝球";
                     $('#Salary')[0].value = "9000";
                     $('#DeputeContent')[0].value = `為了最小化神奇寶貝的勞動輸出，
@@ -151,13 +158,17 @@
 
 
         document.addEventListener('DOMContentLoaded', () => {
+            //初始化tooltips by bootstrap
+            const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+            const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+
             var status = "";
             if (@Context.Session.GetInt32(CDictionary.SK_會員狀態編號) == 26) {
                 status = "被封鎖會員無法進行此操作";
                 Swal.fire({
                     color: "#D0D0D0",
                     background: "#343a40",
-                    timer: 4000,
+                    timer: 9000,
                     timerProgressBar: true,
                     title: `${status}`,
                     html: "將於<b></b>秒跳轉首頁",
@@ -220,8 +231,14 @@
                 let skillClassName = dataSkills.skillclasses.find(_ => _.skillClassId === skillClassId).name;
                 selSkills.push({ skillclass: skillClassName, skill: skill });
             });
-
             skillsCount();
+            if (selSkills.length==0){
+                document.querySelector('#alertNoSel').innerHTML = `<div class="alert alert-warning alert-dismissible fade show" role="alert">
+                            <strong>系統判斷無符合的技能，請自行勾選</strong>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>`;
+                alert("noselected");
+            }
 
             btnSelSkill.disabled = false;
             spanSkillSpin.hidden = true;

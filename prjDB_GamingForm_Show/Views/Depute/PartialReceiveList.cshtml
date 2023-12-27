@@ -180,7 +180,7 @@
                                 if (i.ApplyStatus.Name.Contains("合作中") || i.ApplyStatus.Name.Contains("已完成"))
                                 {
                                     string replyDisabled = i.ApplyStatus.Name.Contains("已完成") ? " disabled" : "";
-                                    @Html.ActionLink("完成", "ReplyDepute", new { id = i.Id }, new { @class = "btn btn-success"+replyDisabled })
+                                    @Html.ActionLink("提交成品", "ReplyDepute", new { id = i.Id }, new { @class = "btn btn-success"+replyDisabled })
                                 }
                             }
                             @Html.ActionLink("詳細資料", "deputeDetails", new { id = i.DeputeId }, new { @class = "btn btn-secondary" })
