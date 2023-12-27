@@ -829,7 +829,7 @@ namespace prjDB_GamingForm_Show.Controllers
 
         private async Task<string> ChatAsync(string system, string user, double temp)
         {
-            OpenAIAPI api = new OpenAIAPI("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");
+            OpenAIAPI api = new OpenAIAPI("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");
             var chat = api.Chat.CreateConversation();
             chat.Model = Model.ChatGPTTurbo_16k;
             chat.RequestParameters.Temperature = temp;
