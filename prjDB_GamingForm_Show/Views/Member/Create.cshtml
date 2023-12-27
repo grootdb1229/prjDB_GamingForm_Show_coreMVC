@@ -54,7 +54,7 @@
             <div class="form-group">
                 <label class="control-label">上傳圖片</label>
                 <input type="file" name="photo" class="form-control" onchange="previewImage(this)" />
-                <img id="imagePreview" src="#" alt="Preview" style="display:none;width:360px;height:108px;" />
+                <img id="imagePreview" src="#" alt="Preview" style="object-fit: cover; display:none;max-height:500px" />
             </div>
             <div class="form-group">
                 <input type="submit" value="驗證並註冊" class="btn btn-default" id="ValidationBtn" name="ValidationBtn" />
