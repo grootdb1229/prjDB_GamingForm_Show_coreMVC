@@ -345,8 +345,6 @@ namespace prjDB_GamingForm_Show.Controllers
             //                          select E.Email).ToList();
             List<string> Emails = new List<string>();
             Emails.Add("alan90306@gmail.com");
-            //Emails.Add("kakuc0e0ig@gmail.com");
-            //Emails.Add("iamau3vm0@gmail.com");
             NewsLetter.Emails = Emails;
             foreach (string Address in NewsLetter.Emails)
             {
