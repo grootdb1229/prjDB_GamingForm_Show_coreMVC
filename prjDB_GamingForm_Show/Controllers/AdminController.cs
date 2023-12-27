@@ -1678,10 +1678,55 @@ namespace prjDB_GamingForm_Show.Controllers
 
         }
 
+        //public IActionResult OrderListcheck(DateTime? startday, DateTime? endday, string? ST)
+        //{
+        //    if (endday == null)
+        //        endday = DateTime.Now;
+
+        //    ViewBag.start = startday;
+        //    ViewBag.end = endday;
+        //    if (ST == "請選擇訂單狀態")
+        //    {
+        //        ViewBag.ST = "無指定";
+        //    }
+        //    else 
+        //    { 
+        //    ViewBag.ST = ST;
+        //    }
+
+        //    IQueryable<Order> query = _db.Orders.Include(a => a.Payment).Include(a => a.Coupon).Include(a => a.Status).OrderByDescending(x => x.OrderId);
+
+        //    if (startday.HasValue && endday.HasValue)
+        //    {
+        //        if (ST == "請選擇訂單狀態")
+        //        {
+        //            query = query.Where(p => p.CompletedDate >= startday.Value && p.CompletedDate <= endday.Value).OrderByDescending(x => x.OrderId);
+        //        }
+        //        else if (ST == "未付款")
+        //        {
+        //            query = query.Where(p => p.OrderDate >= startday.Value && p.OrderDate <= endday.Value && p.StatusId == 13);
+        //        }
+        //        else
+        //        {
+        //            query = query.Where(p => p.CompletedDate >= startday.Value && p.PaymentDate < endday.Value && (p.StatusId == 14 || p.StatusId == 15 || p.StatusId == 16));
+        //        }
+        //    }
+
+
+        //    List<Order> orders = query.ToList();
+
+        //    return View(orders);
+
+        //}
+
         public IActionResult OrderListcheck(DateTime? startday, DateTime? endday, string? ST)
         {
             if (endday == null)
                 endday = DateTime.Now;
+
+            // 計算去年同期的日期範圍
+            DateTime? lastYearStartday = startday.HasValue ? new DateTime(startday.Value.Year - 1, startday.Value.Month, startday.Value.Day) : null;
+            DateTime? lastYearEndday = endday.HasValue ? new DateTime(endday.Value.Year - 1, endday.Value.Month, endday.Value.Day) : null;
 
             ViewBag.start = startday;
             ViewBag.end = endday;
@@ -1689,9 +1734,9 @@ namespace prjDB_GamingForm_Show.Controllers
             {
                 ViewBag.ST = "無指定";
             }
-            else 
-            { 
-            ViewBag.ST = ST;
+            else
+            {
+                ViewBag.ST = ST;
             }
 
             IQueryable<Order> query = _db.Orders.Include(a => a.Payment).Include(a => a.Coupon).Include(a => a.Status).OrderByDescending(x => x.OrderId);
@@ -1700,7 +1745,16 @@ namespace prjDB_GamingForm_Show.Controllers
             {
                 if (ST == "請選擇訂單狀態")
                 {
-                    query = query.Where(p => p.CompletedDate >= startday.Value && p.CompletedDate <= endday.Value).OrderByDescending(x => x.OrderId);
+                    // 使用原始日期範圍檢索今年的資料
+                    var currentYearOrders = query.Where(p => p.CompletedDate >= startday.Value && p.CompletedDate <= endday.Value).OrderByDescending(x => x.OrderId).ToList();
+
+                    // 使用去年同期日期範圍檢索去年同期的資料
+                    var lastYearOrders = _db.Orders.Where(p => p.CompletedDate >= lastYearStartday.Value && p.CompletedDate <= lastYearEndday.Value).OrderByDescending(x => x.OrderId).ToList();
+
+                    // 將去年同期的資料合併到今年的資料中
+                    var combinedOrders = currentYearOrders.Concat(lastYearOrders).ToList();
+
+                    return View(combinedOrders);
                 }
                 else if (ST == "未付款")
                 {
@@ -1712,11 +1766,9 @@ namespace prjDB_GamingForm_Show.Controllers
                 }
             }
 
-
             List<Order> orders = query.ToList();
 
             return View(orders);
-
         }
 
 

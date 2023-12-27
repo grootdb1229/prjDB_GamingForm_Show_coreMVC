@@ -467,7 +467,7 @@ namespace prjDB_GamingForm_Show.Controllers
             }
 
             Random rnd = new Random();
-            int count = rnd.Next(0, Rcolist.Count() - 1);
+            int count = rnd.Next(0, Rcolist.Count());
             List<CDeputeViewModel> Rcolist2 = new List<CDeputeViewModel>();
             if (Rcolist.Count() > 0)
             {

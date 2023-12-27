@@ -55,20 +55,30 @@
 
     <!-- 創建一個 Canvas 元素用於繪製圖表 -->
     <canvas id="myChart"></canvas>
+@*     @{
+        DateTime? endDate = ViewBag.end as DateTime?;
+        DateTime? startDate = ViewBag.start as DateTime?;
+    } *@
     @{
         DateTime? endDate = ViewBag.end as DateTime?;
         DateTime? startDate = ViewBag.start as DateTime?;
+        DateTime? lastYearStartDate = startDate.HasValue ? new DateTime(startDate.Value.Year - 1, startDate.Value.Month, startDate.Value.Day) : null;
+        DateTime? lastYearEndDate = endDate.HasValue ? new DateTime(endDate.Value.Year - 1, endDate.Value.Month, endDate.Value.Day) : null;
     }
+
     <script>
         var endDate = new Date(@endDate.Value.ToString("yyyy-MM-dd"));
         var startDate = new Date(@startDate.Value.ToString("yyyy-MM-dd"));
+        var lastYearStartDate = new Date(startDate.getFullYear() - 1, startDate.getMonth(), startDate.getDate());
+        var lastYearEndDate = new Date(endDate.getFullYear() - 1, endDate.getMonth(), endDate.getDate());
+
         var ctx = document.getElementById('myChart').getContext('2d');
         var myChart = new Chart(ctx, {
             type: 'bar',
             data: {
                 labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
                 datasets: [{
-                    label: '訂單數量',
+                    label: '今年訂單數量',
                     data: [@Model.Count(p => p.OrderDate >= startDate && (p.CompletedDate <= endDate && p.CompletedDate <= new DateTime(2023, 1, 31))),
         @Model.Count(p => (p.OrderDate >= startDate && p.OrderDate >= new DateTime(2023, 2, 1)) && (p.CompletedDate <= endDate && p.CompletedDate <= new DateTime(2023, 2, 28))),
         @Model.Count(p => (p.OrderDate >= startDate && p.OrderDate >= new DateTime(2023, 3, 1)) && (p.CompletedDate <= endDate && p.CompletedDate <= new DateTime(2023, 3, 31))),
@@ -84,6 +94,25 @@
                     backgroundColor: 'rgba(75, 192, 192, 0.2)',
                     borderColor: 'rgba(75, 192, 192, 1)',
                     borderWidth: 1
+                }, {
+                    label: '去年同期訂單數量',
+                    data: [@Model.Count(p => p.OrderDate >= lastYearStartDate && (p.CompletedDate <= lastYearEndDate && p.CompletedDate <= new DateTime(2022, 1, 31))),
+        @Model.Count(p => (p.OrderDate >= lastYearStartDate && p.OrderDate >= new DateTime(2022, 2, 1)) && (p.CompletedDate <= lastYearEndDate && p.CompletedDate <= new DateTime(2022, 2, 28))),
+        @Model.Count(p => (p.OrderDate >= lastYearStartDate && p.OrderDate >= new DateTime(2022, 3, 1)) && (p.CompletedDate <= lastYearEndDate && p.CompletedDate <= new DateTime(2022, 3, 31))),
+        @Model.Count(p => (p.OrderDate >= lastYearStartDate && p.OrderDate >= new DateTime(2022, 4, 1)) && (p.CompletedDate <= lastYearEndDate && p.CompletedDate <= new DateTime(2022, 4, 30))),
+        @Model.Count(p => (p.OrderDate >= lastYearStartDate && p.OrderDate >= new DateTime(2022, 5, 1)) && (p.CompletedDate <= lastYearEndDate && p.CompletedDate <= new DateTime(2022, 5, 31))),
+        @Model.Count(p => (p.OrderDate >= lastYearStartDate && p.OrderDate >= new DateTime(2022, 6, 1)) && (p.CompletedDate <= lastYearEndDate && p.CompletedDate <= new DateTime(2022, 6, 30))),
+        @Model.Count(p => (p.OrderDate >= lastYearStartDate && p.OrderDate >= new DateTime(2022, 7, 1)) && (p.CompletedDate <= lastYearEndDate && p.CompletedDate <= new DateTime(2022, 7, 31))),
+        @Model.Count(p => (p.OrderDate >= lastYearStartDate && p.OrderDate >= new DateTime(2022, 8, 1)) && (p.CompletedDate <= lastYearEndDate && p.CompletedDate <= new DateTime(2022, 8, 31))),
+        @Model.Count(p => (p.OrderDate >= lastYearStartDate && p.OrderDate >= new DateTime(2022, 9, 1)) && (p.CompletedDate <= lastYearEndDate && p.CompletedDate <= new DateTime(2022, 9, 30))),
+        @Model.Count(p => (p.OrderDate >= lastYearStartDate && p.OrderDate >= new DateTime(2022, 10, 1)) && (p.CompletedDate <= lastYearEndDate && p.CompletedDate <= new DateTime(2022, 10, 31))),
+        @Model.Count(p => (p.OrderDate >= lastYearStartDate && p.OrderDate >= new DateTime(2022, 11, 1)) && (p.CompletedDate <= lastYearEndDate && p.CompletedDate <= new DateTime(2022, 11, 30))),
+        @Model.Count(p => (p.OrderDate >= lastYearStartDate && p.OrderDate >= new DateTime(2022, 12, 1)) && (p.CompletedDate <= lastYearEndDate && p.CompletedDate <= new DateTime(2022, 12, 31))),
+                        // ... (其他月份的訂單數量)
+                    ],
+                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    borderWidth: 1
                 }]
             },
             options: {
@@ -95,12 +124,8 @@
             }
         });
     </script>
+
 </div>
-
-
-
-
-
 
 
 
@@ -110,14 +135,14 @@
 
 
     <label for="start" style="font-size:20px;color:white">開始日期:</label>
-    <input type="date" style="font-size:20px" id="start" name="startday" value="2023-01-01" min="2023-01-01" max="2099-12-31" />
+    <input type="date" style="font-size:20px" id="start" name="startday" value="2023-01-01" min="2022-01-01" max="2099-12-31" />
 
     @*    <label for="end" style="font-size:20px;color:white">結束日期:</label>
     <label for="start" style="font-size:20px; color:white">開始日期:</label>
     <input type="date" style="font-size:20px" id="start" name="startday" value="2023-01-01" min="2023-01-01" max="2099-12-31" />*@
 
     <label for="end" style="font-size:20px; color:white">結束日期:</label>
-    <input type="date" style="font-size:20px" id="end" name="endday" value="@DateTime.Now.ToString("yyyy-MM-dd")" min="2023-01-01" max="2099-12-31" />
+    <input type="date" style="font-size:20px" id="end" name="endday" value="@DateTime.Now.ToString("yyyy-MM-dd")" min="2022-01-01" max="2099-12-31" />
 
 
     <select id="sel_Com" name="ST" style="margin-top:3px;width:200px;height:34.61px;font-size:20px">
