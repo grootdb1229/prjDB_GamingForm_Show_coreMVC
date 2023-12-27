@@ -2,6 +2,9 @@ using Microsoft.EntityFrameworkCore;
 using prjDB_GamingForm_Show.Models.Entities;
 using System.Text.Json.Serialization;
 using prjDB_GamingForm_Show.Hubs;
+using DotNetEnv;
+
+Env.Load();
 
 var builder = WebApplication.CreateBuilder(args);
 
