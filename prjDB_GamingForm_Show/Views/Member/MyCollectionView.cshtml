@@ -5,11 +5,11 @@
 }
 <!DOCTYPE html>
 <html lang="en">
-<div>
-   <input type="hidden" name="id" value=@Model.First().Id />
-   <h2>@Model.First().Title</h2>
-   <p>@Model.First().Intro</p>
-   <div>
+<div style="text-align: center;">
+    <input type="hidden" name="id" value=@Model.First().Id />
+    <h2>@Model.First().Title</h2>
+    <p>@Model.First().Intro</p>
+    <div style="height:600px; width:600px; display: inline-block; text-align: left;">
         @Html.Raw(Model.First().MyCollection)
-   </div>
+    </div>
 </div>
