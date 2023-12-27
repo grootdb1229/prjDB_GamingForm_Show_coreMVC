@@ -207,7 +207,7 @@
     <!-- Facts Start -->
     <div class="container-fluid facts py-5 pt-lg-0">
         <div class="container py-5 pt-lg-0">
-            <div class="row gx-0">
+            @* <div class="row gx-0">
                 <div class="col-lg-4 wow zoomIn" data-wow-delay="0.1s">
                     <div class="bg-primary shadow d-flex align-items-center justify-content-center p-4" style="height:150px;">
                         <div class="bg-white d-flex align-items-center justify-content-center rounded mb-2" style="width: 60px; height: 60px;">
@@ -241,7 +241,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> *@
         </div>
     </div>
     <!-- Facts Start -->
@@ -903,7 +903,7 @@
             var DivHtml=`
                          <div class="col" >
                          <div class="card h-100" style="border-radius:20px;">
-                         <img src="/images/MemberCollectionPreView/${data[index].fImagePath}" style="border-radius:20px;height:200px;max-height:200px" class="card-img-top" alt="...">
+                             <img src="/images/MemberCollectionPreView/${data[index].fImagePath}" style="object-fit: cover;border-radius:20px;height:200px;max-height:200px" class="card-img-top" alt="...">
                          <div class="card-body" style="height:150px;max-height:150px">
                          <h5 class="card-title">${data[index].title}</h5>
                          <p class="card-text">${data[index].intro}</p>

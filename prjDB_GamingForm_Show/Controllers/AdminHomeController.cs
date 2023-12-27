@@ -30,7 +30,7 @@ namespace prjDB_GamingForm_Show.Controllers
                 HttpContext.Session.SetString(CDictionary.SK_管理者登入資訊使用關鍵字, json使用者);
                 HttpContext.Session.SetString(CDictionary.SK_管理者名稱, admin.Name);
                 HttpContext.Session.SetString(CDictionary.SK_管理者照片路徑, admin.ImgPath);
-                return RedirectToAction("Index","Admin");
+                return RedirectToAction("MemberList", "Admin");
             }
             return View();
         }
