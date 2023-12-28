@@ -340,9 +340,11 @@ namespace prjDB_GamingForm_Show.Controllers
         [HttpPost]
         public IActionResult SendNewsLetter(CNewsLetter NewsLetter)
         {
-            //List<string> EmailData = (from E in _db.Members
-            //                          where E.Email.Contains("alan")
-            //                          select E.Email).ToList();
+            //正式功能
+            //List<string> EmailData = _db.Members.Select(x => x.Email).ToList();
+            //NewsLetter.Emails = EmailData;
+
+            //展示用
             List<string> Emails = new List<string>();
             Emails.Add("alan90306@gmail.com");
             NewsLetter.Emails = Emails;
@@ -377,10 +379,13 @@ namespace prjDB_GamingForm_Show.Controllers
         public IActionResult Resend(int? id)
         {
             var data = _db.NewsLetters.Where(x => x.Id == id).FirstOrDefault();
+            //正式功能
+            //List<string> EmailData = _db.Members.Select(x => x.Email).ToList();
+            //NewsLetter.Emails = EmailData;
+
+            //展示用
             List<string> Emails = new List<string>();
             Emails.Add("alan90306@gmail.com");
-            //Emails.Add("kakuc0e0ig@gmail.com");
-            //Emails.Add("iamau3vm0@gmail.com");
             CNewsLetter newsLetters = new CNewsLetter()
             {
                 Title = data.Title,
