@@ -1661,7 +1661,7 @@ namespace prjDB_GamingForm_Show.Controllers
 				s += "</div>";
 				var message = new MimeMessage();
 				message.From.Add(new MailboxAddress("grootdb1229", "grootdb1229@gmail.com"));
-				message.To.Add(new MailboxAddress(_db.Members.FirstOrDefault(x => x.MemberId == HttpContext.Session.GetInt32(CDictionary.SK_UserID)).Name, "alan90306@gmail.com"));
+				message.To.Add(new MailboxAddress("alan90306", "alan90306@gmail.com"));
 				message.Subject = "Your Order from GrootShopping";
 				message.Body = new TextPart("html")
 				{
