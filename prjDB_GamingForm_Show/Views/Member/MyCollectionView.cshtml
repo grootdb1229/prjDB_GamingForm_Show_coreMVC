@@ -3,13 +3,13 @@
     ViewData["Title"] = "MyCollectionView";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-<!DOCTYPE html>
-<html lang="en">
-<div style="text-align: center;">
+<div style="margin:auto;width:940px;" class="justify-content-center">
     <input type="hidden" name="id" value=@Model.First().Id />
     <h2>@Model.First().Title</h2>
     <p>@Model.First().Intro</p>
-    <div style="height:600px; width:600px; display: inline-block; text-align: left;">
+    <div >
         @Html.Raw(Model.First().MyCollection)
     </div>
 </div>
+
+
