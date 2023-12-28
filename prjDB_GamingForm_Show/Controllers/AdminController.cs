@@ -117,7 +117,7 @@ namespace prjDB_GamingForm_Show.Controllers
             {
                 vm = new CAdminCheckProductViewModel
                 {
-                    Products = _db.Products.Include(m => m.Member).Where(x=>x.StatusId ==1||x.StatusId==2).OrderByDescending(x => x.ProductId).Skip(i每頁筆數 * i頁數).Take(i每頁筆數),
+                    Products = _db.Products.Include(m => m.Member).Where(x => x.StatusId == 1 || x.StatusId == 2).OrderByDescending(x => x.ProductId).Skip(i每頁筆數 * i頁數).Take(i每頁筆數),
                     Members = _db.Members.Skip(i每頁筆數 * i頁數).Take(i每頁筆數)
                 };
 
@@ -151,7 +151,7 @@ namespace prjDB_GamingForm_Show.Controllers
                 HttpContext.Session.SetInt32(CDictionary.SK_管理者觀看商品清單頁數使用關鍵字, i頁數);
                 vm = new CAdminCheckProductViewModel
                 {
-                    Products = _db.Products.Include(m => m.Member).Where(x => x.StatusId == 1 || x.StatusId == 2).OrderByDescending(x=>x.ProductId).Skip(i每頁筆數 * i頁數).Take(i每頁筆數),
+                    Products = _db.Products.Include(m => m.Member).Where(x => x.StatusId == 1 || x.StatusId == 2).OrderByDescending(x => x.ProductId).Skip(i每頁筆數 * i頁數).Take(i每頁筆數),
                     Members = _db.Members.Skip(i每頁筆數 * i頁數).Take(i每頁筆數)
                 };
                 return View(vm);
@@ -244,9 +244,9 @@ namespace prjDB_GamingForm_Show.Controllers
         {
             CAdminCheckProductViewModel vm = new CAdminCheckProductViewModel
             {
-                Products = _db.Products.Include(m => m.Member).Where(p => p.StatusId == 7),                
+                Products = _db.Products.Include(m => m.Member).Where(p => p.StatusId == 7),
                 Members = _db.Members
-            };            
+            };
             return View(vm);
         }
 
@@ -268,13 +268,13 @@ namespace prjDB_GamingForm_Show.Controllers
         public IActionResult ProductComplain()
         {
             List<CProductComplainViewModel> ProductComplain = new List<CProductComplainViewModel>();
-            var datas = _db.ProductComplains.OrderByDescending(x => x.Id).Select(x => new { x.Id, x.ProductId, x.MemeberId, x.ReplyContent, x.ReportDate, x.Status.Name, Subtag= x.SubTag.Name });
+            var datas = _db.ProductComplains.OrderByDescending(x => x.Id).Select(x => new { x.Id, x.ProductId, x.MemeberId, x.ReplyContent, x.ReportDate, x.Status.Name, Subtag = x.SubTag.Name });
 
             CProductComplainViewModel pc = new CProductComplainViewModel();
             foreach (var data in datas)
             {
                 pc = new CProductComplainViewModel()
-                { 
+                {
                     Id = data.Id,
                     ProductId = data.ProductId,
                     MemeberId = data.MemeberId,
@@ -283,7 +283,7 @@ namespace prjDB_GamingForm_Show.Controllers
                     ReportDate = data.ReportDate,
                     Status = data.Name
                 };
-                 ProductComplain.Add(pc);
+                ProductComplain.Add(pc);
             }
             return View(ProductComplain);
         }
@@ -1542,7 +1542,7 @@ namespace prjDB_GamingForm_Show.Controllers
         }
         public IActionResult ADeputeSearch(string keyword)
         {
-            if(string.IsNullOrEmpty(keyword))
+            if (string.IsNullOrEmpty(keyword))
                 return View();
             IEnumerable<CDeputeViewModel> datas = null;
             CDeputtListLoad x = new CDeputtListLoad(_host, _db);
@@ -1567,12 +1567,12 @@ namespace prjDB_GamingForm_Show.Controllers
             var data = from n in _db.DeputeRecords
                        where n.DeputeId == vm.txtID
                        select n;
-            
+
             _db.DeputeRecords.RemoveRange(data);
 
             var data2 = from n in _db.DeputeSkills
-                       where n.DeputeId == vm.txtID
-                       select n;
+                        where n.DeputeId == vm.txtID
+                        select n;
 
             _db.DeputeSkills.RemoveRange(data2);
 
@@ -1583,8 +1583,8 @@ namespace prjDB_GamingForm_Show.Controllers
             _db.DeputeComplains.RemoveRange(data3);
 
             var data4 = from n in _db.Deputes
-                       where n.DeputeId == vm.txtID
-                       select n;
+                        where n.DeputeId == vm.txtID
+                        select n;
             _db.Deputes.RemoveRange(data4);
             _db.SaveChanges();
             return RedirectToAction("ADeputeList");
@@ -1659,16 +1659,21 @@ namespace prjDB_GamingForm_Show.Controllers
 
             IQueryable<Order> query = _db.Orders.Include(a => a.Payment).Include(a => a.Coupon).Include(a => a.Status).OrderByDescending(x => x.OrderId);
 
+            //if (startday.HasValue && endday.HasValue)
+            //{
+            //    if (ST == "請選擇訂單狀態")
+            //    {
+            //        query = query.Where(p => p.CompletedDate >= startday.Value && p.OrderDate <= endday.Value).OrderByDescending(x=>x.OrderId);                    
+            //    }
+            //    else 
+            //    {
+            //        query = query.Where(p => p.CompletedDate >= startday.Value && p.OrderDate <= endday.Value && p.Status.Name == ST).OrderByDescending(x => x.OrderId);
+            //    }
+            //}
+
             if (startday.HasValue && endday.HasValue)
             {
-                if (ST == "請選擇訂單狀態")
-                {
-                    query = query.Where(p => p.CompletedDate >= startday.Value && p.OrderDate <= endday.Value).OrderByDescending(x=>x.OrderId);                    
-                }
-                else 
-                {
-                    query = query.Where(p => p.CompletedDate >= startday.Value && p.OrderDate <= endday.Value && p.Status.Name == ST).OrderByDescending(x => x.OrderId);
-                }
+                query = query.Where(p => p.CompletedDate >= startday.Value && p.CompletedDate <= endday.Value).OrderByDescending(x => x.OrderId);
             }
 
 
@@ -1677,47 +1682,6 @@ namespace prjDB_GamingForm_Show.Controllers
             return View(orders);
 
         }
-
-        //public IActionResult OrderListcheck(DateTime? startday, DateTime? endday, string? ST)
-        //{
-        //    if (endday == null)
-        //        endday = DateTime.Now;
-
-        //    ViewBag.start = startday;
-        //    ViewBag.end = endday;
-        //    if (ST == "請選擇訂單狀態")
-        //    {
-        //        ViewBag.ST = "無指定";
-        //    }
-        //    else 
-        //    { 
-        //    ViewBag.ST = ST;
-        //    }
-
-        //    IQueryable<Order> query = _db.Orders.Include(a => a.Payment).Include(a => a.Coupon).Include(a => a.Status).OrderByDescending(x => x.OrderId);
-
-        //    if (startday.HasValue && endday.HasValue)
-        //    {
-        //        if (ST == "請選擇訂單狀態")
-        //        {
-        //            query = query.Where(p => p.CompletedDate >= startday.Value && p.CompletedDate <= endday.Value).OrderByDescending(x => x.OrderId);
-        //        }
-        //        else if (ST == "未付款")
-        //        {
-        //            query = query.Where(p => p.OrderDate >= startday.Value && p.OrderDate <= endday.Value && p.StatusId == 13);
-        //        }
-        //        else
-        //        {
-        //            query = query.Where(p => p.CompletedDate >= startday.Value && p.PaymentDate < endday.Value && (p.StatusId == 14 || p.StatusId == 15 || p.StatusId == 16));
-        //        }
-        //    }
-
-
-        //    List<Order> orders = query.ToList();
-
-        //    return View(orders);
-
-        //}
 
         public IActionResult OrderListcheck(DateTime? startday, DateTime? endday, string? ST)
         {
@@ -1762,8 +1726,21 @@ namespace prjDB_GamingForm_Show.Controllers
                 }
                 else
                 {
-                    query = query.Where(p => p.CompletedDate >= startday.Value && p.PaymentDate < endday.Value && (p.StatusId == 14 || p.StatusId == 15 || p.StatusId == 16));
+                    // 使用原始日期範圍檢索今年的資料
+                    var currentYearOrders = query.Where(p => p.CompletedDate >= startday.Value && p.CompletedDate <= endday.Value && (p.StatusId == 14 || p.StatusId == 15 || p.StatusId == 16)).OrderByDescending(x => x.OrderId).ToList();
+
+                    // 使用去年同期日期範圍檢索去年同期的資料
+                    var lastYearOrders = _db.Orders.Where(p => p.CompletedDate >= lastYearStartday.Value && p.CompletedDate <= lastYearEndday.Value && (p.StatusId == 14 || p.StatusId == 15 || p.StatusId == 16)).OrderByDescending(x => x.OrderId).ToList();
+
+                    // 將去年同期的資料合併到今年的資料中
+                    var combinedOrders = currentYearOrders.Concat(lastYearOrders).ToList();
+
+                    return View(combinedOrders);
                 }
+                //else
+                //{
+                //    query = query.Where(p => p.CompletedDate >= startday.Value && p.PaymentDate < endday.Value && (p.StatusId == 14 || p.StatusId == 15 || p.StatusId == 16));
+                //}
             }
 
             List<Order> orders = query.ToList();

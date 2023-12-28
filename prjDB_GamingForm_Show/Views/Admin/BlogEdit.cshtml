@@ -2,12 +2,13 @@
 
 @{
     ViewData["Title"] = "BlogEdit";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
-<h2>修改主版</h2>
+<h2 style="text-align:center">修改主版</h2>
 
 <hr />
-<div class="row">
+<div class="row justify-content-center">
     <div class="col-md-4">
         <form asp-action="BlogEdit" method="post" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -25,12 +26,12 @@
             <div class="form-group">
                 <label class="control-label">上傳圖片</label>
                 <input type="file" name="Photo" class="form-control" onchange="previewImage(this)" />
-                <img id="imagePreview" src="#" alt="Preview" style="display:none;width:360px;height:108px;" />
+                <img id="imagePreview" src="#" alt="Preview" style="display:none;width:360px;height:108px;object-fit:cover" />
             </div>
             
-            <span style="margin:3px">
-                <input type="submit" value="修改" class="btn btn-info" />
-                @Html.ActionLink("回到列表", "BlogList", "Admin",null, new { @class = "btn btn-warning" })
+            <span >
+                <input type="submit" value="修改" class="btn btn-danger" />
+                @Html.ActionLink("回到列表", "BlogList", "Admin",null, new { @class = "btn btn-info"  })
             </span>
 
         </form>
