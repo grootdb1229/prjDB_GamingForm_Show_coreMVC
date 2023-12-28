@@ -60,21 +60,3 @@
     </tbody>
 
 </table>
-@*@section Scripts{
-    <script>
-        const lastbtn = document.querySelector('#last');
-        const nextbtn = document.querySelector('#next');
-        nextbtn.addEventListener('click', () => {
-            next();
-        });
-
-        async function next() {
-            const response = await fetch('@Url.Content("~/Admin/BlogListNext")');
-            const datas = await response.json()
-            const blogid = datas.map(b => `${b}`)
-            document.querySelector('bid').innerHTML = blogid.join("")
-            console.log(blogid)
-        }
-
-    </script>
-}*@

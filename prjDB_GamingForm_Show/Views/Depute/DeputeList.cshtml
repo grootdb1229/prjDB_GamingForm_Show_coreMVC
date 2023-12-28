@@ -172,7 +172,7 @@
         }
         else
         {
-                                    <h1 id="totalcount" class="text-center mb-5 wow fadeInUp" data-wow-delay="0.1s">相關結果共@(Model.Count())筆</h1>
+                                    <h1 id="totalcount" class="text-center mb-5 wow fadeInUp" data-wow-delay="0.1s">相關結果有@(Model.Count())筆</h1>
         }
     }
     
@@ -229,7 +229,7 @@
                                         @Html.ActionLink("我要應徵", "Apply", "Depute", new { id = item.id }, new { @class = "btn btn-primary" })
                                     </div>
                                     <small class="text-truncate"><i class="far fa-regular fa-chart-bar text-primary me-2"></i>狀態 : @Html.DisplayFor(modelItem => item.status)</small>
-                                    <small class="text-truncate"><i class="far fa-calendar-alt text-primary me-2"></i>Last Update : @Html.DisplayFor(modelItem => item.modifieddate)</small>
+                                    <small class="text-truncate"><i class="far fa-calendar-alt text-primary me-2"></i>最後更新於 : @Html.DisplayFor(modelItem => item.modifieddate)</small>
                                 </div>
                             } *@
                         </div>
@@ -496,7 +496,7 @@
                     //             <a href="/Depute/Apply/${resultlist.id}" class="btn btn-primary" id=" btndp">我要應徵...</a>
                     //     </div>
                     //                     <small class="text-truncate"><i class="far fa-regular fa-chart-bar text-primary me-2"></i>狀態 : ${resultlist.status}</small>
-                    //                     <small class="text-truncate"><i class="far fa-calendar-alt text-primary me-2"></i>Last Update : ${resultlist.modifieddate}</small>
+                    //                     <small class="text-truncate"><i class="far fa-calendar-alt text-primary me-2"></i>最後更新於 : ${resultlist.modifieddate}</small>
                     //     </div>
 
                     //             `
@@ -627,7 +627,7 @@
                         <a href="/Depute/Apply/${resultlist.id}" class="btn btn-primary" id=" btndp">我要應徵...</a>
                 </div>
                                 <small class="text-truncate"><i class="far fa-regular fa-chart-bar text-primary me-2"></i>狀態 : ${resultlist.status}</small>
-                                <small class="text-truncate"><i class="far fa-calendar-alt text-primary me-2"></i>Last Update : ${resultlist.modifieddate}</small>
+                                <small class="text-truncate"><i class="far fa-calendar-alt text-primary me-2"></i>最後更新於 : ${resultlist.modifieddate}</small>
                 </div>
 
                 `

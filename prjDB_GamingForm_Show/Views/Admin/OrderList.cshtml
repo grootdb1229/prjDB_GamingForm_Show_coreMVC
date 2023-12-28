@@ -7,11 +7,13 @@
     ViewData["Title"] = "OrderList";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
     var totalOrders = Model.Count();
-    var totalAmount = Math.Floor(Model.Where(p => p.StatusId == 16 || p.StatusId == 15).Sum(p => p.SumPrice));
+    var totalPayOrders = Model.Where(p => p.StatusId == 16 || p.StatusId == 14 || p.StatusId == 15).Count();
+    var totalAmount = Math.Floor(Model.Where(p => p.StatusId == 16 || p.StatusId == 14 || p.StatusId == 15).Sum(p => p.SumPrice));
     //var averagePrice = Model.Any() ? Model.Average(o => o.SumPrice) : 0;
-    var averagePrice = Model.Any() ? Math.Floor(Model.Average(o => o.SumPrice)) : 0;
+    var averagePrice = totalAmount / totalPayOrders;
 }
-@section Styles{
+
+    @section Styles{
     <style>
         tr {
             color: white;
@@ -54,7 +56,7 @@
 }
 
 <div style="font-size:25px;color:white">
-    總訂單數:@totalOrders 筆  /   訂單總額:@totalAmount 元  /  平均金額:@averagePrice 元
+        總訂單數:@totalOrders 筆  /   訂單總額:@totalAmount 元  /  平均金額:@averagePrice.ToString("F0") 元
     <br />
 </div>
 
