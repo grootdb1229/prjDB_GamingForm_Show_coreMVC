@@ -2,13 +2,14 @@
 
 @{
     ViewData["Title"] = "BlogCreate";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
-<h2>主版建立</h2>
+<h2 style="text-align:center">主版建立</h2>
 
 
 <hr />
-<div class="row">
+<div class="row justify-content-center">
     <div class="col-md-4">
         <form asp-action="BlogCreate" method="post" enctype="multipart/form-data">
             <!-- your form fields -->      
@@ -22,7 +23,7 @@
 
             </div>
 
-            <select name="SubTagId" class="form-select" style="margin-top:3px">
+            <select name="SubTagId" class="form-select" style="margin-top:3px;width:100%;height:38px;font-size:25px">
                 @{
                     @foreach (var i in Model.subTags)
                     {
@@ -36,15 +37,15 @@
             <div class="form-group">
                 <label class="control-label">上傳圖片(圖片格式:360*108)</label>
                 <input type="file" name="Photo" class="form-control" onchange="previewImage(this)" />
-                <img id="imagePreview" src="#" alt="Preview" style="display:none;width:360px;height:108px;" />
+                <img id="imagePreview" src="#" alt="Preview" style="display:none;width:360px;height:108px;object-fit:cover" />
             </div>
 
 
 
 
             <span>
-                <input type="submit" value="確認新增" class="btn btn-primary" />
-                <a asp-action="BlogList" class="btn btn-danger" style="margin:3px">返回</a>
+                <input type="submit" value="確認新增" class="btn btn-danger" />
+                <a asp-action="BlogList" class="btn btn-info" >返回</a>
             </span>
 
 
