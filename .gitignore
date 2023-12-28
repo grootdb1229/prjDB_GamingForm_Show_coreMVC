@@ -361,7 +361,6 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
-/prjDB_GamingForm_Show/wwwroot/images/shop
 
 # Environment variables
 .env
