@@ -21,7 +21,7 @@
     @{
         if (ViewBag.ST == "無指定")
         {
-            <p>總訂單數:@totalOrders 筆 / 已成交訂單總額:@totalOrdersPrice 元 / 已成交訂單平均單價:@totalOrderAvg.ToString("F2") 元</p>
+            <p>已付款總訂單數:@totalOrders 筆 / 已成交訂單總額:@totalOrdersPrice 元 / 已成交訂單平均單價:@totalOrderAvg.ToString("F0") 元</p>
         }
         if (ViewBag.ST == "未付款")
         {
@@ -35,7 +35,7 @@
                 NoPayAvg = (int)NoPayOrdersPrice / NoPayOrders;
             }
 
-            <p>未付款訂單數:@NoPayOrders 筆 / 未付款訂單總額:@NoPayOrdersPrice 元 / 未付款訂單平均單價:@NoPayAvg.ToString("F2") 元</p>
+            <p>未付款訂單數:@NoPayOrders 筆 / 未付款訂單總額:@NoPayOrdersPrice 元 / 未付款訂單平均單價:@NoPayAvg.ToString("F0") 元</p>
         }
         if (ViewBag.ST == "已付款")
         {

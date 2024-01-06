@@ -2,12 +2,13 @@
 
 @{
     ViewData["Title"] = "BlogSubTagEdit";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
-<h2>修改論壇分類</h2>
+<h2 style="text-align:center">修改論壇分類</h2>
 
 <hr />
-<div class="row">
+<div class="row justify-content-center">
     <div class="col-md-4">
         <form asp-action="BlogSubTagEdit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -21,7 +22,7 @@
             </div>
 
             <span>
-                <input type="submit" value="修改" class="btn btn-danger" />
+                <input type="submit" value="修改" class="btn btn-danger" style="margin:3px" />
                 <a asp-action="BlogCategoryList" class="btn btn-info" style="margin:3px">返回</a>
             </span>
 
