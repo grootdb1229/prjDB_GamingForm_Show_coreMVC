@@ -28,6 +28,8 @@ using OpenAI_API.Chat;
 using Microsoft.AspNetCore.Http.Extensions;
 using Org.BouncyCastle.Ocsp;
 using System.Collections;
+using prjDB_GamingForm_Show.Models.Interface;
+using AspNetCore;
 
 namespace prjDB_GamingForm_Show.Controllers
 {
@@ -35,120 +37,126 @@ namespace prjDB_GamingForm_Show.Controllers
     {
         private readonly IWebHostEnvironment _host;
         private readonly DbGamingFormTestContext _db;
-        public List<CDeputeViewModel> List { get; set; }
+        private readonly CMainPage _mainPage;
+        public List<CDeputeViewModel> IList { get; set; }
         public List<CDeputeViewModel> Temp { get; set; }
         public List<CDeputeViewModel> CookieList { get; set; }
 
         public string[] MutipleKeywords { get; set; }
-        public DeputeController(IWebHostEnvironment host, DbGamingFormTestContext context)
+        public DeputeController
+            (
+            IWebHostEnvironment host, 
+            DbGamingFormTestContext context,
+            CMainPage mainPage)
         {
             _host = host;
             _db = context;
-            ListLoad();
+            _mainPage = mainPage;
         }
         #region 老朱
 
         //TODO #1 讀資料//
-        public void ListLoad()
-        {
-            //te
-            Temp = new List<CDeputeViewModel>();
-            List = new List<CDeputeViewModel>();
-            _db.Members.Load();
-            _db.Statuses.Load();
-            _db.Regions.Load();
-            _db.Deputes.Load();
-            var data = from n in _db.Deputes.AsEnumerable()
-                       orderby n.StartDate descending
-                       select new
-                       {
-                           n.DeputeId,
-                           n.Title,
-                           Name = n.Provider.Name,
-                           SrartDate = n.StartDate.ToString("d"),
-                           Modifiedate = n.Modifiedate.ToString("d"),
-                           n.DeputeContent,
-                           n.Salary,
-                           n.ViewCount,
-                           Status = n.Status.Name,
-                           n.Region.City,
-                           n.Provider.FImagePath,
-                           Skillid = GetSkill(n.DeputeId),
-                           Skillclassid = GetSkillClass(n.DeputeId)
-                       };
-            CDeputeViewModel x = null;
+        //public void ListLoad()
+        //{
+        //    //te
+        //    Temp = new List<CDeputeViewModel>();
+        //    IList = new List<CDeputeViewModel>();
+        //    _db.Members.Load();
+        //    _db.Statuses.Load();
+        //    _db.Regions.Load();
+        //    _db.Deputes.Load();
+        //    var data = from n in _db.Deputes.AsEnumerable()
+        //               orderby n.StartDate descending
+        //               select new
+        //               {
+        //                   n.DeputeId,
+        //                   n.Title,
+        //                   Name = n.Provider.Name,
+        //                   SrartDate = n.StartDate.ToString("d"),
+        //                   Modifiedate = n.Modifiedate.ToString("d"),
+        //                   n.DeputeContent,
+        //                   n.Salary,
+        //                   n.ViewCount,
+        //                   Status = n.Status.Name,
+        //                   n.Region.City,
+        //                   n.Provider.FImagePath,
+        //                   Skillid = GetSkill(n.DeputeId),
+        //                   Skillclassid = GetSkillClass(n.DeputeId)
+        //               };
+        //    CDeputeViewModel x = null;
 
-            foreach (var item in data)
-            {
-                x = new CDeputeViewModel()
-                {
-                    id = item.DeputeId,
-                    title = item.Title,
-                    providername = item.Name,
-                    startdate = item.SrartDate,
-                    modifieddate = item.Modifiedate,
-                    deputeContent = item.DeputeContent,
-                    salary = item.Salary,
-                    viewcount = item.ViewCount,
-                    status = item.Status,
-                    region = item.City,
-                    imgfilepath = item.FImagePath,
-                    listskillid = item.Skillid,
-                    listskillclassid = item.Skillclassid,
+        //    foreach (var item in data)
+        //    {
+        //        x = new CDeputeViewModel()
+        //        {
+        //            id = item.DeputeId,
+        //            title = item.Title,
+        //            providername = item.Name,
+        //            startdate = item.SrartDate,
+        //            modifieddate = item.Modifiedate,
+        //            deputeContent = item.DeputeContent,
+        //            salary = item.Salary,
+        //            viewcount = item.ViewCount,
+        //            status = item.Status,
+        //            region = item.City,
+        //            imgfilepath = item.FImagePath,
+        //            listskillid = item.Skillid,
+        //            listskillclassid = item.Skillclassid,
 
-                };
+        //        };
 
-                List.Add(x);
+        //        IList.Add(x);
 
-            }
-            Temp = List;
-        }
+        //    }
+        //    Temp = IList;
+        //}
 
-        private string GetSkillClass(int deputeId)
-        {
-            string result = "";
-            _db.Skills.Load();
-            _db.SkillClasses.Load();
-            var data = (from n in _db.DeputeSkills
-                        where n.DeputeId == deputeId
-                        select n.Skill.SkillClass.Name).Distinct();
+        //private string GetSkillClass(int deputeId)
+        //{
+        //    string result = "";
+        //    _db.Skills.Load();
+        //    _db.SkillClasses.Load();
+        //    var data = (from n in _db.DeputeSkills
+        //                where n.DeputeId == deputeId
+        //                select n.Skill.SkillClass.Name).Distinct();
 
-            foreach (var item in data)
-            {
-                result += item + ",";
+        //    foreach (var item in data)
+        //    {
+        //        result += item + ",";
 
-            }
-
-
-            return result;
-
-        }
-
-        private string GetSkill(int deputeId)
-        {
-            string result = "";
-            _db.Skills.Load();
-            _db.SkillClasses.Load();
-            var data = (from n in _db.DeputeSkills
-                        where n.DeputeId == deputeId
-                        select n.Skill.Name).Distinct();
-            foreach (var item in data)
-            {
-                result += item + ",";
-
-            }
+        //    }
 
 
-            return result;
-        }
+        //    return result;
+
+        //}
+
+        //private string GetSkill(int deputeId)
+        //{
+        //    _mainPage.ReturnSkill(deputeId);
+        //    string result = "";
+        //    _db.Skills.Load();
+        //    _db.SkillClasses.Load();
+        //    var data = (from n in _db.DeputeSkills
+        //                where n.DeputeId == deputeId
+        //                select n.Skill.Name).Distinct();
+        //    foreach (var item in data)
+        //    {
+        //        result += item + ",";
+
+        //    }
+
+
+        //    return result;
+        //}
 
         public IActionResult DeputeList(int? id)
         {
-
+            IList = _mainPage.ReturnList();
             IEnumerable<CDeputeViewModel> datas = null;
             if (id == null)
             {
-                datas = from n in List
+                datas = from n in IList
                         select n;
 
             }
@@ -161,7 +169,7 @@ namespace prjDB_GamingForm_Show.Controllers
                 foreach (string item in skillname)
                 {
                     ViewBag.name = item;
-                    datas = from n in List
+                    datas = from n in IList
                             where n.listskillclassid.Contains(item)
                             select n;
                 }
@@ -173,17 +181,20 @@ namespace prjDB_GamingForm_Show.Controllers
         }
         public IActionResult DetailSkills(int? id)
         {
-
+            if(id == null)
+             return Content("No result match");
+            else
+            { 
             _db.SkillClasses.Load();
             IEnumerable<string> skillname = (from n in _db.DeputeSkills
                                              where n.DeputeId == id
                                              select n.Skill.Name).Distinct();
             return Json(skillname);
-
+            }
         }
         public IActionResult MutipleSearch(CKeyWord vm)
         {
-            Temp = List;
+            Temp = IList;
             IEnumerable<CDeputeViewModel> datas = null;
             if (vm.txtMutiKeywords != null)
             {
@@ -347,7 +358,7 @@ namespace prjDB_GamingForm_Show.Controllers
             {
                 if (!string.IsNullOrEmpty(item))
                 {
-                    datas = from n in List
+                    datas = from n in IList
                             where n.id == Convert.ToInt32(item)
                             select n;
                     foreach (var data in datas)
@@ -413,7 +424,7 @@ namespace prjDB_GamingForm_Show.Controllers
             {
                 if (!string.IsNullOrEmpty(item))
                 {
-                    datas = from n in List
+                    datas = from n in IList
                             where n.id == Convert.ToInt32(item)
                             select n;
                     foreach (var data in datas)
@@ -535,7 +546,7 @@ namespace prjDB_GamingForm_Show.Controllers
         }
         public IActionResult Status()
         {
-            var datas = from n in List
+            var datas = from n in IList
                         select n.status;
             return Json(datas.Distinct());
         }
@@ -575,11 +586,11 @@ namespace prjDB_GamingForm_Show.Controllers
             IEnumerable<CDeputeViewModel> datas = null;
             if (id == 1)
             {
-                datas = List.OrderByDescending(n => Convert.ToDateTime(n.startdate)).Take(5);
+                datas = IList.OrderByDescending(n => Convert.ToDateTime(n.startdate)).Take(5);
             }
             else
             {
-                datas = List.OrderByDescending(n => n.viewcount).Take(5);
+                datas = IList.OrderByDescending(n => n.viewcount).Take(5);
 
             }
             return Json(datas);
