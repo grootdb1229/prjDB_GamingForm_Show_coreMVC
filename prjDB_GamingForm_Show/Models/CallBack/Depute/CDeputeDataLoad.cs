@@ -3,25 +3,38 @@ using Microsoft.EntityFrameworkCore;
 using prjDB_GamingForm_Show.Models.Entities;
 using System.Collections.Generic;
 
-namespace prjDB_GamingForm_Show.Models.Interface
+namespace prjDB_GamingForm_Show.Models.CallBack.Depute
 {
-    public class CMainPage
+    public class CDeputeDataLoad
     {
+        private static class LazyHolder
+        {
+            internal static CDeputeDataLoad uniqueInstance = new CDeputeDataLoad();
+        }
+        private CDeputeDataLoad()
+        {
+        }
+        public static CDeputeDataLoad getInstance()
+        {
+            return LazyHolder.uniqueInstance;
+        }
+
+
+
         private readonly IWebHostEnvironment _host;
         private readonly DbGamingFormTestContext _db;
-        private readonly DeputeHome _dh;
-        public CMainPage(IWebHostEnvironment host,DbGamingFormTestContext context, DeputeHome home) 
+        private readonly DeputeDataLoad _dataLoad;
+        public CDeputeDataLoad(IWebHostEnvironment host, DbGamingFormTestContext context, DeputeDataLoad dataLoad)
         {
             _host = host;
             _db = context;
-            _dh = home;
+            _dataLoad = dataLoad;
         }
-      
+         
+        private static List<CDeputeViewModel> List {get; set;}
+
         private List<CDeputeViewModel> listLoad()
         {
-            DbGamingFormTestContext _db = new DbGamingFormTestContext();
-            List<CDeputeViewModel> Temp = new List<CDeputeViewModel>();
-            List<CDeputeViewModel> List = new List<CDeputeViewModel>();
             _db.Members.Load();
             _db.Statuses.Load();
             _db.Regions.Load();
@@ -32,7 +45,7 @@ namespace prjDB_GamingForm_Show.Models.Interface
                        {
                            n.DeputeId,
                            n.Title,
-                           Name = n.Provider.Name,
+                           n.Provider.Name,
                            SrartDate = n.StartDate.ToString("d"),
                            Modifiedate = n.Modifiedate.ToString("d"),
                            n.DeputeContent,
@@ -41,36 +54,33 @@ namespace prjDB_GamingForm_Show.Models.Interface
                            Status = n.Status.Name,
                            n.Region.City,
                            n.Provider.FImagePath,
-                           Skillid = GetSkill(n.DeputeId),
-                           Skillclassid = GetSkillClass(n.DeputeId)
+                           Skillid = getSkill(n.DeputeId),
+                           Skillclassid = getSkillClass(n.DeputeId)
 
 
                        };
-            CDeputeViewModel x = null;
+            CDeputeViewModel x = CDeputeViewModel.getInstance();
 
             foreach (var item in data)
             {
-                x = new CDeputeViewModel()
-                {
-                    id = item.DeputeId,
-                    title = item.Title,
-                    providername = item.Name,
-                    startdate = item.SrartDate,
-                    modifieddate = item.Modifiedate,
-                    deputeContent = item.DeputeContent,
-                    salary = item.Salary,
-                    viewcount = item.ViewCount,
-                    status = item.Status,
-                    region = item.City,
-                    imgfilepath = item.FImagePath,
-                    listskillid = item.Skillid,
-                    listskillclassid = item.Skillclassid,
+                x.id = item.DeputeId;
+                x.title = item.Title;
+                x.providername = item.Name;
+                x.startdate = item.SrartDate;
+                x.modifieddate = item.Modifiedate;
+                x.deputeContent = item.DeputeContent;
+                x.salary = item.Salary;
+                x.viewcount = item.ViewCount;
+                x.status = item.Status;
+                x.region = item.City;
+                x.imgfilepath = item.FImagePath;
+                x.listskillid = item.Skillid;
+                x.listskillclassid = item.Skillclassid;
 
-                };
 
                 List.Add(x);
 
-                
+
             }
             return List;
 
@@ -78,7 +88,7 @@ namespace prjDB_GamingForm_Show.Models.Interface
 
         }
 
-        private string GetSkill(int deputeId)
+        private string getSkill(int deputeId)
         {
             string result = "";
             _db.Skills.Load();
@@ -95,7 +105,7 @@ namespace prjDB_GamingForm_Show.Models.Interface
             return result;
         }
 
-        private string GetSkillClass(int deputeId)
+        private string getSkillClass(int deputeId)
         {
             string result = "";
             _db.Skills.Load();
@@ -115,22 +125,23 @@ namespace prjDB_GamingForm_Show.Models.Interface
 
         }
 
-        public List<CDeputeViewModel> ReturnList()
+
+        public List<CDeputeViewModel> returnList()
         {
-            _dh.load += this.listLoad;
-            return _dh.GetList();
+            _dataLoad.dataLoad += listLoad;
+            return _dataLoad.getList();
         }
 
-        public string ReturnSkill(int x)
+        public string returnSkill(int x)
         {
-            _dh.sLoad += this.GetSkill;
-            return _dh.GetSkill(ref x);
+            _dataLoad.skillLoad += getSkill;
+            return _dataLoad.getSkill(ref x);
         }
 
-        public string ReturnSkillClass(int x)
+        public string returnSkillClass(int x)
         {
-            _dh.sLoad += this.GetSkillClass;
-            return _dh.GetSkillClass(ref x);
+            _dataLoad.skillLoad += getSkillClass;
+            return _dataLoad.getSkillClass(ref x);
         }
     }
 }

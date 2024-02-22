@@ -1,31 +1,11 @@
-﻿using prjDB_GamingForm_Show.Models;
-using prjDB_GamingForm_Show.Models.Entities;
-using prjDB_GamingForm_Show.ViewModels;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
-using System.Web;
+﻿using System.ComponentModel;
 
-namespace DB_GamingForm_Show.Job.DeputeClass
+namespace prjDB_GamingForm_Show.DesignPattern.Rules.SingletonPattern
 {
-    public class CDeputeViewModel
+    public class CDeputeViewModel2
     {
-        
-            private static class LazyHolder
-            {
-                internal static CDeputeViewModel uniqueInstance = new CDeputeViewModel();
-            }
-            private CDeputeViewModel()
-            {
-            }
-            public static CDeputeViewModel getInstance()
-            {
-                return LazyHolder.uniqueInstance;
-            }
+        private static volatile CDeputeViewModel2 instance;
+        private static object syncRoot = new Object();
 
         [DisplayName("委託編號")]
         public int id { get; set; }
@@ -69,9 +49,30 @@ namespace DB_GamingForm_Show.Job.DeputeClass
         public string? replyContent { get; set; }
         public string? replyFileName { get; set; }
 
+        // 私有構造函數，防止外部實例化
+        private CDeputeViewModel2()
+        {
+            // 初始化你的屬性
+        }
+
+        // 公共靜態方法來獲取單例實例
+        public static CDeputeViewModel2 GetInstance()
+        {
+            if (instance == null)
+            {
+                lock (syncRoot)
+                {
+                    if (instance == null)
+                    {
+                        instance = new CDeputeViewModel2();
+                    }
+                }
+            }
+            return instance;
+
+        }
 
 
     }
+
 }
-
-

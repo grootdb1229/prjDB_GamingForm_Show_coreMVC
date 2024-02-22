@@ -1,4 +1,4 @@
-﻿namespace prjDB_GamingForm_Show.Models.Interface
+﻿namespace prjDB_GamingForm_Show.Models.CallBack
 {
     public interface IDepute
     {

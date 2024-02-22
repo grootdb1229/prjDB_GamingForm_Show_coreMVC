@@ -28,8 +28,9 @@ using OpenAI_API.Chat;
 using Microsoft.AspNetCore.Http.Extensions;
 using Org.BouncyCastle.Ocsp;
 using System.Collections;
-using prjDB_GamingForm_Show.Models.Interface;
+using prjDB_GamingForm_Show.Models.CallBack;
 using AspNetCore;
+using prjDB_GamingForm_Show.Models.CallBack.Depute;
 
 namespace prjDB_GamingForm_Show.Controllers
 {
@@ -37,122 +38,35 @@ namespace prjDB_GamingForm_Show.Controllers
     {
         private readonly IWebHostEnvironment _host;
         private readonly DbGamingFormTestContext _db;
-        private readonly CMainPage _mainPage;
-        public List<CDeputeViewModel> IList { get; set; }
+        private readonly CDeputeDataLoad _dataLoad = CDeputeDataLoad.getInstance();
+        public List<CDeputeViewModel> IList 
+        {
+            get;
+            set;
+        }
         public List<CDeputeViewModel> Temp { get; set; }
         public List<CDeputeViewModel> CookieList { get; set; }
 
         public string[] MutipleKeywords { get; set; }
         public DeputeController
             (
-            IWebHostEnvironment host, 
+            IWebHostEnvironment host,
             DbGamingFormTestContext context,
-            CMainPage mainPage)
+            CDeputeDataLoad dataLoad)
         {
             _host = host;
             _db = context;
-            _mainPage = mainPage;
+            _dataLoad = dataLoad;
         }
         #region 老朱
 
         //TODO #1 讀資料//
-        //public void ListLoad()
-        //{
-        //    //te
-        //    Temp = new List<CDeputeViewModel>();
-        //    IList = new List<CDeputeViewModel>();
-        //    _db.Members.Load();
-        //    _db.Statuses.Load();
-        //    _db.Regions.Load();
-        //    _db.Deputes.Load();
-        //    var data = from n in _db.Deputes.AsEnumerable()
-        //               orderby n.StartDate descending
-        //               select new
-        //               {
-        //                   n.DeputeId,
-        //                   n.Title,
-        //                   Name = n.Provider.Name,
-        //                   SrartDate = n.StartDate.ToString("d"),
-        //                   Modifiedate = n.Modifiedate.ToString("d"),
-        //                   n.DeputeContent,
-        //                   n.Salary,
-        //                   n.ViewCount,
-        //                   Status = n.Status.Name,
-        //                   n.Region.City,
-        //                   n.Provider.FImagePath,
-        //                   Skillid = GetSkill(n.DeputeId),
-        //                   Skillclassid = GetSkillClass(n.DeputeId)
-        //               };
-        //    CDeputeViewModel x = null;
-
-        //    foreach (var item in data)
-        //    {
-        //        x = new CDeputeViewModel()
-        //        {
-        //            id = item.DeputeId,
-        //            title = item.Title,
-        //            providername = item.Name,
-        //            startdate = item.SrartDate,
-        //            modifieddate = item.Modifiedate,
-        //            deputeContent = item.DeputeContent,
-        //            salary = item.Salary,
-        //            viewcount = item.ViewCount,
-        //            status = item.Status,
-        //            region = item.City,
-        //            imgfilepath = item.FImagePath,
-        //            listskillid = item.Skillid,
-        //            listskillclassid = item.Skillclassid,
-
-        //        };
-
-        //        IList.Add(x);
-
-        //    }
-        //    Temp = IList;
-        //}
-
-        //private string GetSkillClass(int deputeId)
-        //{
-        //    string result = "";
-        //    _db.Skills.Load();
-        //    _db.SkillClasses.Load();
-        //    var data = (from n in _db.DeputeSkills
-        //                where n.DeputeId == deputeId
-        //                select n.Skill.SkillClass.Name).Distinct();
-
-        //    foreach (var item in data)
-        //    {
-        //        result += item + ",";
-
-        //    }
 
 
-        //    return result;
-
-        //}
-
-        //private string GetSkill(int deputeId)
-        //{
-        //    _mainPage.ReturnSkill(deputeId);
-        //    string result = "";
-        //    _db.Skills.Load();
-        //    _db.SkillClasses.Load();
-        //    var data = (from n in _db.DeputeSkills
-        //                where n.DeputeId == deputeId
-        //                select n.Skill.Name).Distinct();
-        //    foreach (var item in data)
-        //    {
-        //        result += item + ",";
-
-        //    }
-
-
-        //    return result;
-        //}
 
         public IActionResult DeputeList(int? id)
         {
-            IList = _mainPage.ReturnList();
+            IList = _dataLoad.returnList();
             IEnumerable<CDeputeViewModel> datas = null;
             if (id == null)
             {
@@ -181,15 +95,15 @@ namespace prjDB_GamingForm_Show.Controllers
         }
         public IActionResult DetailSkills(int? id)
         {
-            if(id == null)
-             return Content("No result match");
+            if (id == null)
+                return Content("No result match");
             else
-            { 
-            _db.SkillClasses.Load();
-            IEnumerable<string> skillname = (from n in _db.DeputeSkills
-                                             where n.DeputeId == id
-                                             select n.Skill.Name).Distinct();
-            return Json(skillname);
+            {
+                _db.SkillClasses.Load();
+                IEnumerable<string> skillname = (from n in _db.DeputeSkills
+                                                 where n.DeputeId == id
+                                                 select n.Skill.Name).Distinct();
+                return Json(skillname);
             }
         }
         public IActionResult MutipleSearch(CKeyWord vm)
@@ -272,7 +186,7 @@ namespace prjDB_GamingForm_Show.Controllers
         public IActionResult DeputeDetails(int? id)
         {
             Cookie(id);
-            CDeputeViewModel pln = null;
+            CDeputeViewModel pln = CDeputeViewModel.getInstance();
             Depute pDb = _db.Deputes.FirstOrDefault(n => n.DeputeId == id);
 
             if (pDb != null)
@@ -285,7 +199,6 @@ namespace prjDB_GamingForm_Show.Controllers
                 _db.SaveChanges();
 
 
-                pln = new CDeputeViewModel();
                 pln.id = pDb.DeputeId;
                 pln.workerId = pDb.ProviderId;
                 pln.providername = pDb.Provider.Name;
@@ -460,18 +373,14 @@ namespace prjDB_GamingForm_Show.Controllers
                                     n.Depute.Provider.Name,
                                     n.Depute.Provider.FImagePath
                                 }).Distinct();
-                CDeputeViewModel x = null;
                 foreach (var item2 in RecoData)
                 {
-
-                    x = new CDeputeViewModel()
-                    {
-                        id = item2.DeputeId,
-                        title = item2.Title,
-                        providername = item2.Name,
-                        deputeContent = item2.DeputeContent,
-                        imgfilepath = item2.FImagePath
-                    };
+                    CDeputeViewModel x = CDeputeViewModel.getInstance();
+                    x.id = item2.DeputeId;
+                    x.title = item2.Title;
+                    x.providername = item2.Name;
+                    x.deputeContent = item2.DeputeContent;
+                    x.imgfilepath = item2.FImagePath;
                     Rcolist.Add(x);
                 }
 
@@ -484,11 +393,11 @@ namespace prjDB_GamingForm_Show.Controllers
             {
                 for (int i = 1; i <= 6; i++)
                 {
-                    if(i<= Rcolist.Count())
-                    { 
-                    Rcolist2.Add(Rcolist[count]);
-                    Rcolist.RemoveAt(count);
-                    count = rnd.Next(0, Rcolist.Count);
+                    if (i <= Rcolist.Count())
+                    {
+                        Rcolist2.Add(Rcolist[count]);
+                        Rcolist.RemoveAt(count);
+                        count = rnd.Next(0, Rcolist.Count);
                     }
                 }
             }
@@ -566,12 +475,11 @@ namespace prjDB_GamingForm_Show.Controllers
                              where n.Skill.SkillClassId == item.SkillClassId
                              select n.DeputeId).Distinct();
 
-                x = new CDeputeViewModel()
-                {
-                    skillid = item.SkillClassId,
-                    skillname = item.Name,
-                    count = datas.Count()
-                };
+                x = CDeputeViewModel.getInstance();
+                x.skillid = item.SkillClassId;
+                x.skillname = item.Name;
+                x.count = datas.Count();
+
 
                 slist.Add(x);
 
@@ -768,7 +676,7 @@ namespace prjDB_GamingForm_Show.Controllers
             var dro = _db.DeputeRecords.Where(_ => _.DeputeId == id).ToList();
             var dso = _db.DeputeSkills.Where(_ => _.DeputeId == id).ToList();
             var dco = _db.DeputeComplains.Where(_ => _.DeputeId == id).ToList();
-            
+
             if (dro != null)
                 _db.DeputeRecords.RemoveRange(dro);
             if (dso != null)
@@ -957,14 +865,14 @@ namespace prjDB_GamingForm_Show.Controllers
         public IActionResult confirmApply(int id)
         {
             var ori = _db.DeputeRecords.FirstOrDefault(_ => _.DeputeId == id && _.ApplyStatusId == 25);
-            CDeputeViewModel data = new CDeputeViewModel()
-            {
-                id = ori.Id,
-                title = ori.Depute.Title,
-                replyContent = ori.ReplyContent,
-                replyFileName = ori.ReplyFileName,
-                workerName = ori.Member.Name
-            };
+            CDeputeViewModel data = CDeputeViewModel.getInstance();
+
+            data.id = ori.Id;
+            data.title = ori.Depute.Title;
+            data.replyContent = ori.ReplyContent;
+            data.replyFileName = ori.ReplyFileName;
+            data.workerName = ori.Member.Name;
+
             return Json(data);
         }
 
@@ -1042,7 +950,7 @@ namespace prjDB_GamingForm_Show.Controllers
             List<CDeputeViewModel> list = new List<CDeputeViewModel>();
             foreach (var item in o)
             {
-                CDeputeViewModel n = new CDeputeViewModel();
+                CDeputeViewModel n = CDeputeViewModel.getInstance();
                 n.id = item.Id;
                 n.workerId = item.MemberId;
                 n.title = item.Depute.Title;
@@ -1065,19 +973,19 @@ namespace prjDB_GamingForm_Show.Controllers
             Depute o = _db.Deputes.FirstOrDefault(_ => _.DeputeId == id);
             if (o == null)
                 return RedirectToAction("HomeFrame");
-            CDeputeViewModel n = new CDeputeViewModel()
-            {
-                title = o.Title,
-                status = o.Status.Name,
-                count = o.DeputeRecords.Count(),
-                deputeContent = o.DeputeContent,
-                //imgfilepath=,
-                providername = o.Provider.Name,
-                region = o.Region.City,
-                salary = o.Salary,
-                startdate = o.StartDate.ToString("yyyy/MM/dd"),
-                modifieddate = o.Modifiedate.ToString("yyyy/MM/dd"),
-            };
+            CDeputeViewModel n = CDeputeViewModel.getInstance();
+
+            n.title = o.Title;
+            n.status = o.Status.Name;
+            n.count = o.DeputeRecords.Count();
+            n.deputeContent = o.DeputeContent;
+            //imgfilepath=;
+            n.providername = o.Provider.Name;
+            n.region = o.Region.City;
+            n.salary = o.Salary;
+            n.startdate = o.StartDate.ToString("yyyy/MM/dd");
+            n.modifieddate = o.Modifiedate.ToString("yyyy/MM/dd");
+
             return Json(n);
         }
 

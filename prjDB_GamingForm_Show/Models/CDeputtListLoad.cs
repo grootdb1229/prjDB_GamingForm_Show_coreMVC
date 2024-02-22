@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using prjDB_GamingForm_Show.Models;
+using prjDB_GamingForm_Show.Models.CallBack.Depute;
 using prjDB_GamingForm_Show.Models.Entities;
 using System;
 using System.Collections.Generic;
@@ -18,11 +19,17 @@ namespace prjDB_GamingForm_Show.ViewModels
 
         private readonly IWebHostEnvironment _host;
         private readonly DbGamingFormTestContext _db;
-        public CDeputtListLoad(IWebHostEnvironment host, DbGamingFormTestContext db)
+        private readonly CDeputeDataLoad _dataLoad;
+        public CDeputtListLoad
+            (
+            IWebHostEnvironment host,
+            DbGamingFormTestContext db,
+            CDeputeDataLoad dataLoad
+            )
         {
             _host = host;
             _db = db;
-            ListLoad();
+            _dataLoad = dataLoad;
         }
 
         public void ListLoad()
@@ -49,24 +56,22 @@ namespace prjDB_GamingForm_Show.ViewModels
                            n.Region.City,
                            n.Provider.FImagePath
                        };
-            CDeputeViewModel x = null;
 
             foreach (var item in data)
             {
-                x = new CDeputeViewModel()
-                {
-                    id = item.DeputeId,
-                    title = item.Title,
-                    providername = item.Name,
-                    startdate = item.SrartDate,
-                    modifieddate = item.Modifiedate,
-                    deputeContent = item.DeputeContent,
-                    salary = item.Salary,
-                    viewcount = item.ViewCount,
-                    status = item.Status,
-                    region = item.City,
-                    imgfilepath = item.FImagePath
-                };
+                CDeputeViewModel x = CDeputeViewModel.getInstance();
+                
+                    x.id = item.DeputeId;
+                    x.title = item.Title;
+                    x.providername = item.Name;
+                    x.startdate = item.SrartDate;
+                    x.modifieddate = item.Modifiedate;
+                    x.deputeContent = item.DeputeContent;
+                    x.salary = item.Salary;
+                    x.viewcount = item.ViewCount;
+                    x.status = item.Status;
+                    x.region = item.City;
+                    x.imgfilepath = item.FImagePath;
 
                 List.Add(x);
                 Temp = List;
