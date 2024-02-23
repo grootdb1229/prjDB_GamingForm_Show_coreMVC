@@ -1,35 +1,15 @@
 ﻿using DB_GamingForm_Show.Job.DeputeClass;
-using Elfie.Serialization;
-using MailKit.Search;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Abstractions;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Identity.Client;
-using Microsoft.IdentityModel.Tokens;
 using MimeKit;
-using Org.BouncyCastle.Bcpg;
 using prjDB_GamingForm_Show.Models;
 using prjDB_GamingForm_Show.Models.Entities;
 using prjDB_GamingForm_Show.Models.Shop;
 using prjDB_GamingForm_Show.ViewModels;
-using System.Collections.Generic;
-using System.Linq;
-using MailKit;
 using MailKit.Net.Smtp;
 using System.Text.Json;
-using System.Web;
-using static prjDB_GamingForm_Show.Controllers.DeputeController;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 using OpenAI_API;
 using OpenAI_API.Models;
-using Azure;
-using OpenAI_API.Chat;
-using Microsoft.AspNetCore.Http.Extensions;
-using Org.BouncyCastle.Ocsp;
-using System.Collections;
-using prjDB_GamingForm_Show.Models.CallBack;
-using AspNetCore;
 using prjDB_GamingForm_Show.Models.CallBack.Depute;
 
 namespace prjDB_GamingForm_Show.Controllers
@@ -38,25 +18,29 @@ namespace prjDB_GamingForm_Show.Controllers
     {
         private readonly IWebHostEnvironment _host;
         private readonly DbGamingFormTestContext _db;
-        private readonly CDeputeDataLoad _dataLoad = CDeputeDataLoad.getInstance();
-        public List<CDeputeViewModel> IList 
-        {
-            get;
-            set;
-        }
-        public List<CDeputeViewModel> Temp { get; set; }
+        private readonly CDeputeDataLoad _dateLoad;
+        private readonly CDeputeSearch _dataSearch;
+        public List<CDeputeViewModel> IList{get;set;}
+        public List<CDeputeViewModel> TempList { get; set; }
         public List<CDeputeViewModel> CookieList { get; set; }
-
         public string[] MutipleKeywords { get; set; }
+
         public DeputeController
             (
             IWebHostEnvironment host,
             DbGamingFormTestContext context,
-            CDeputeDataLoad dataLoad)
+            CDeputeDataLoad dataLoad,
+            CDeputeSearch dataSearch
+            )
+
         {
+             dataLoad = CDeputeDataLoad.getInstance();
+             dataSearch = CDeputeSearch.getInstance();
             _host = host;
             _db = context;
-            _dataLoad = dataLoad;
+            _dateLoad = dataLoad;
+            _dataSearch = dataSearch;
+            
         }
         #region 老朱
 
@@ -66,7 +50,8 @@ namespace prjDB_GamingForm_Show.Controllers
 
         public IActionResult DeputeList(int? id)
         {
-            IList = _dataLoad.returnList();
+            
+            IList = _dateLoad.returnList();
             IEnumerable<CDeputeViewModel> datas = null;
             if (id == null)
             {
@@ -108,80 +93,10 @@ namespace prjDB_GamingForm_Show.Controllers
         }
         public IActionResult MutipleSearch(CKeyWord vm)
         {
-            Temp = IList;
-            IEnumerable<CDeputeViewModel> datas = null;
-            if (vm.txtMutiKeywords != null)
-            {
-                if (vm.txtMutiKeywords[0] != null)
-                {
-                    foreach (var item in vm.txtMutiKeywords)
-                    {
-                        if (!string.IsNullOrEmpty(item))
-                        {
-                            _db.SerachRecords.Add(new SerachRecord { Name = item, CreateDays = (DateTime.Now.Date) });
-                            _db.SaveChanges();
-                        }
-
-                        datas = Temp.Where(n => (n.deputeContent.Trim().ToLower().Contains(item.Trim().ToLower()) ||
-                                                   n.title.Trim().ToLower().Contains(item.Trim().ToLower()) ||
-                                                   n.listskillclassid.Trim().ToLower().Contains(item.Trim().ToLower()) ||
-                                                   n.listskillid.Trim().ToLower().Contains(item.Trim().ToLower()) ||
-                                                   n.providername.Trim().ToLower().Contains(item.Trim().ToLower()) ||
-                                                   n.region.Trim().ToLower().Contains(item.Trim().ToLower()) ||
-                                                   n.status.Trim().ToLower().Contains(item.Trim().ToLower())
-                                                   ))
-                                                   .OrderByDescending(n => n.modifieddate);
-                        Temp = datas.ToList();
-
-                    }
-                }
-            }
-
-            SelectedSearch(vm);
-            Orderby(vm);
-            return Json(Temp);
-
+            return Json(_dataSearch.returnResult(vm));
 
         }
 
-        private void SelectedSearch(CKeyWord vm)
-        {
-            IEnumerable<CDeputeViewModel> datas = Temp.Where(n =>
-                            (DateTime.Now.Date - Convert.ToDateTime(n.modifieddate)).Days <= vm.txtDate &&
-                            n.viewcount >= vm.txtView &&
-                            n.salary >= vm.txtSalary);
-            Temp = datas.ToList();
-        }
-
-        public void Orderby(CKeyWord vm)
-        {
-            IEnumerable<CDeputeViewModel> datas = null;
-            switch (vm.txtOrderby)
-            {
-                case 1:
-                    datas = Temp.OrderByDescending(n => n.salary);
-                    break;
-                case 2:
-                    datas = Temp.OrderByDescending(n => Convert.ToDateTime(n.modifieddate));
-                    break;
-                case 3:
-                    datas = Temp.OrderByDescending(n => n.viewcount);
-                    break;
-                default:
-                    datas = Temp;
-                    break;
-            }
-            if (vm.txtEsc)
-                datas = datas.Reverse();
-            Temp = datas.ToList();
-        }
-        public void Move(CKeyWord vm)
-        {
-            IEnumerable<CDeputeViewModel> datas = null;
-
-            datas = Temp.Skip(10).Take(10);
-            Temp = datas.ToList();
-        }
         //TODO #3 委託詳細
         public IActionResult DeputeDetails(int? id)
         {

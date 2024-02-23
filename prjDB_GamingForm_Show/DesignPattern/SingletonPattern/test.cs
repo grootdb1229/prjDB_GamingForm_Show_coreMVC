@@ -1,7 +1,6 @@
-﻿using System.ComponentModel;
-
-namespace prjDB_GamingForm_Show.DesignPattern.SingletonPattern
+﻿namespace prjDB_GamingForm_Show.DesignPattern.SingletonPattern
 {
+   
 
 
 

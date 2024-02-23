@@ -1,4 +1,5 @@
 ﻿using DB_GamingForm_Show.Job.DeputeClass;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using prjDB_GamingForm_Show.Models.Entities;
 using System.Collections.Generic;
@@ -7,13 +8,13 @@ namespace prjDB_GamingForm_Show.Models.CallBack.Depute
 {
     public class CDeputeDataLoad
     {
+
+        //Static Inner Class
         private static class LazyHolder
         {
             internal static CDeputeDataLoad uniqueInstance = new CDeputeDataLoad();
         }
-        private CDeputeDataLoad()
-        {
-        }
+        private CDeputeDataLoad(){}
         public static CDeputeDataLoad getInstance()
         {
             return LazyHolder.uniqueInstance;
@@ -30,8 +31,7 @@ namespace prjDB_GamingForm_Show.Models.CallBack.Depute
             _db = context;
             _dataLoad = dataLoad;
         }
-         
-        private static List<CDeputeViewModel> List {get; set;}
+        public List<CDeputeViewModel> List {get; set;}
 
         private List<CDeputeViewModel> listLoad()
         {
@@ -82,9 +82,8 @@ namespace prjDB_GamingForm_Show.Models.CallBack.Depute
 
 
             }
+
             return List;
-
-
 
         }
 
@@ -124,24 +123,15 @@ namespace prjDB_GamingForm_Show.Models.CallBack.Depute
             return result;
 
         }
+        
 
 
+        //callback
         public List<CDeputeViewModel> returnList()
         {
             _dataLoad.dataLoad += listLoad;
             return _dataLoad.getList();
         }
-
-        public string returnSkill(int x)
-        {
-            _dataLoad.skillLoad += getSkill;
-            return _dataLoad.getSkill(ref x);
-        }
-
-        public string returnSkillClass(int x)
-        {
-            _dataLoad.skillLoad += getSkillClass;
-            return _dataLoad.getSkillClass(ref x);
-        }
+        
     }
 }

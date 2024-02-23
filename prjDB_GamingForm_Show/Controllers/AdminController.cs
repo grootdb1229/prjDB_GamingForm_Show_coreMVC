@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore.SqlServer.Storage.Internal;
 using MimeKit;
 using prjDB_GamingForm_Show.Models;
 using prjDB_GamingForm_Show.Models.Admin;
+using prjDB_GamingForm_Show.Models.CallBack.Depute;
 using prjDB_GamingForm_Show.Models.Entities;
 using prjDB_GamingForm_Show.Models.Member;
 using prjDB_GamingForm_Show.Models.Shop;
@@ -1537,12 +1538,11 @@ namespace prjDB_GamingForm_Show.Controllers
         //---------------------------論壇---------------------------
 
         #region 委託Admin
-
+        CDeputeDataLoad engine = CDeputeDataLoad.getInstance();
         public IActionResult ADeputeList()
         {
             IEnumerable<CDeputeViewModel> datas = null;
-            CDeputtListLoad x = new CDeputtListLoad(_host, _db);
-            datas = x.List.OrderByDescending(n => n.modifieddate).ToList();
+            datas = engine.returnList().OrderByDescending(n => n.modifieddate).ToList();
             return View(datas);
         }
         public IActionResult ADeputeSearch(string keyword)
@@ -1550,8 +1550,7 @@ namespace prjDB_GamingForm_Show.Controllers
             if (string.IsNullOrEmpty(keyword))
                 return View();
             IEnumerable<CDeputeViewModel> datas = null;
-            CDeputtListLoad x = new CDeputtListLoad(_host, _db);
-            datas = x.List.Where(n => n.providername.Contains(keyword)).ToList();
+            datas = engine.List.Where(n => n.providername.Contains(keyword)).ToList();
             return View(datas);
         }
         public IActionResult ADeputeEdit(CAdminDepute vm)

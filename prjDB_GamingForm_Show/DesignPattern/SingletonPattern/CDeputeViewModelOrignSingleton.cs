@@ -2,7 +2,7 @@
 {
     public enum CDeputeViewModelOrignSingleton
     {
-        INSTANCE;
+       
         
     }
 }
