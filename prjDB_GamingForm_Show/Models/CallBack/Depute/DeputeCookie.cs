@@ -1,22 +1,34 @@
-﻿using static prjDB_GamingForm_Show.Models.CallBack.Ddepute;
+﻿using Microsoft.AspNetCore.Mvc;
+using prjDB_GamingForm_Show.Models.Shop;
+using static prjDB_GamingForm_Show.Models.CallBack.Ddepute;
 
 namespace prjDB_GamingForm_Show.Models.CallBack.Depute
 {
-    public class DeputeCookie
+    public class DeputeCookie:Controller
     {
 
         internal event CookieDelegate setcookie;
         internal event CookieDelegate getcookie;
+        internal event FavDelegate setfav;
+        internal event DataDelegate getfav;
+        
 
-        public void setCookie(int? id)
+        public IActionResult setCookie(CKeyWord vm)
         {
-            setcookie(id);
+            return (setcookie(vm));
         }
-        public void getCookie(int? id)
+        public IActionResult getCookie(CKeyWord vm)
         {
-            getcookie(id);
+            return Json(getcookie(vm));
         }
 
-
+        public bool setFav(int? id)
+        {
+            return setfav(id);
+        }
+        public IActionResult getFav(CKeyWord vm)
+        {
+            return Json(getfav(vm));
+        }
     }
 }

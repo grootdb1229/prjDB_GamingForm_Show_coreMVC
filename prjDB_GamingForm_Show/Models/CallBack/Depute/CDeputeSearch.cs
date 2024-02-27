@@ -1,46 +1,34 @@
 ﻿using DB_GamingForm_Show.Job.DeputeClass;
+using Microsoft.AspNetCore.Mvc;
 using prjDB_GamingForm_Show.Models.Entities;
 using prjDB_GamingForm_Show.Models.Shop;
 
 namespace prjDB_GamingForm_Show.Models.CallBack.Depute
 {
-    public class CDeputeSearch
+    public class CDeputeSearch:Controller
     {
-
-        //Static Inner Class
-        private static class LazyHolder
-        {
-            internal static CDeputeSearch uniqueInstance = new CDeputeSearch();
-        }
-
-        private CDeputeSearch() {}
-
-        public static CDeputeSearch getInstance()
-        {
-            return LazyHolder.uniqueInstance;
-        }
         //DI
-        private readonly IWebHostEnvironment _host;
         private readonly DbGamingFormTestContext _db;
         //Callback
-        private readonly DeputeDataSearch _dataSearch;
-        
+        private DeputeDataSearch _dataSearch;
+        private CDeputeDataLoad _dataLoad;
+        private List<CDeputeViewModel> _temp;
         public CDeputeSearch
         (
-            IWebHostEnvironment host, 
             DbGamingFormTestContext context,
-            DeputeDataSearch dataSearch
+            DeputeDataSearch dataSearch,
+            List<CDeputeViewModel> temp
         )
         {
-            _host = host;
             _db = context;
             _dataSearch = dataSearch;
+            _dataSearch.mutisearch += getMutiSearch;
+            _temp = temp;
         }
-        public List<CDeputeViewModel> Temp { get; set; }
-        public CDeputeDataLoad dataLoad = CDeputeDataLoad.getInstance();
-        private List<CDeputeViewModel> mutipleSearch(CKeyWord vm)
+
+        public IActionResult getMutiSearch(CKeyWord vm)
         {
-            Temp = dataLoad.returnList();
+            _temp = _dataLoad.getList(vm) as List<CDeputeViewModel>;
             IEnumerable<CDeputeViewModel> datas = null;
             if (vm.txtMutiKeywords != null)
             {
@@ -54,7 +42,7 @@ namespace prjDB_GamingForm_Show.Models.CallBack.Depute
                             _db.SaveChanges();
                         }
 
-                        datas = Temp.Where(n => (n.deputeContent.Trim().ToLower().Contains(item.Trim().ToLower()) ||
+                        datas = _temp.Where(n => (n.deputeContent.Trim().ToLower().Contains(item.Trim().ToLower()) ||
                                                    n.title.Trim().ToLower().Contains(item.Trim().ToLower()) ||
                                                    n.listskillclassid.Trim().ToLower().Contains(item.Trim().ToLower()) ||
                                                    n.listskillid.Trim().ToLower().Contains(item.Trim().ToLower()) ||
@@ -63,7 +51,7 @@ namespace prjDB_GamingForm_Show.Models.CallBack.Depute
                                                    n.status.Trim().ToLower().Contains(item.Trim().ToLower())
                                                    ))
                                                    .OrderByDescending(n => n.modifieddate);
-                        Temp = datas.ToList();
+                        _temp = datas.ToList();
 
                     }
                 }
@@ -71,58 +59,47 @@ namespace prjDB_GamingForm_Show.Models.CallBack.Depute
 
             selectedSearch(vm);
 
-            return Temp;
+            return Json(_temp);
         }
-
         private void selectedSearch(CKeyWord vm)
         {
-            IEnumerable<CDeputeViewModel> datas = Temp.Where(n =>
+            IEnumerable<CDeputeViewModel> datas = _temp.Where(n =>
                             (DateTime.Now.Date - Convert.ToDateTime(n.modifieddate)).Days <= vm.txtDate &&
                             n.viewcount >= vm.txtView &&
                             n.salary >= vm.txtSalary);
-            Temp = datas.ToList();
+            _temp = datas.ToList();
             orderBy(vm);
 
         }
-
         private void orderBy(CKeyWord vm)
         {
             IEnumerable<CDeputeViewModel> datas = null;
             switch (vm.txtOrderby)
             {
                 case 1:
-                    datas = Temp.OrderByDescending(n => n.salary);
+                    datas = _temp.OrderByDescending(n => n.salary);
                     break;
                 case 2:
-                    datas = Temp.OrderByDescending(n => Convert.ToDateTime(n.modifieddate));
+                    datas = _temp.OrderByDescending(n => Convert.ToDateTime(n.modifieddate));
                     break;
                 case 3:
-                    datas = Temp.OrderByDescending(n => n.viewcount);
+                    datas = _temp.OrderByDescending(n => n.viewcount);
                     break;
                 default:
-                    datas = Temp;
+                    datas = _temp;
                     break;
             }
             if (vm.txtEsc)
+                
                 datas = datas.Reverse();
-            Temp = datas.ToList();
-
-            returnResult(vm);
+            _temp = datas.ToList();
 
         }
-
-
         public void Move()
         {
             IEnumerable<CDeputeViewModel> datas = null;
-            datas = Temp.Skip(10).Take(10);
-            Temp = datas.ToList();
-        }
-
-        public List<CDeputeViewModel> returnResult(CKeyWord vm)
-        {
-            _dataSearch.mutiResult += mutipleSearch;
-            return _dataSearch.mutiSearch(ref vm);
+            datas = _temp.Skip(10).Take(10);
+            _temp = datas.ToList();
         }
 
         

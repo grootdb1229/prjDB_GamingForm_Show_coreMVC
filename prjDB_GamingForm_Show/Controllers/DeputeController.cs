@@ -18,13 +18,10 @@ namespace prjDB_GamingForm_Show.Controllers
     {
         private readonly IWebHostEnvironment _host;
         private readonly DbGamingFormTestContext _db;
-        private readonly CDeputeDataLoad _dateLoad;
-        private readonly CDeputeSearch _dataSearch;
-        public List<CDeputeViewModel> IList{get;set;}
-        public List<CDeputeViewModel> TempList { get; set; }
-        public List<CDeputeViewModel> CookieList { get; set; }
-        public string[] MutipleKeywords { get; set; }
-
+        private CDeputeDataLoad _dateLoad;
+        private CDeputeSearch _dataSearch;
+        public List<CDeputeViewModel> IList { get; set; } 
+        public List<CDeputeViewModel> CookieList { get; set; } 
         public DeputeController
             (
             IWebHostEnvironment host,
@@ -34,13 +31,11 @@ namespace prjDB_GamingForm_Show.Controllers
             )
 
         {
-             dataLoad = CDeputeDataLoad.getInstance();
-             dataSearch = CDeputeSearch.getInstance();
             _host = host;
             _db = context;
             _dateLoad = dataLoad;
             _dataSearch = dataSearch;
-            
+
         }
         #region 老朱
 
@@ -48,22 +43,21 @@ namespace prjDB_GamingForm_Show.Controllers
 
 
 
-        public IActionResult DeputeList(int? id)
+        public IActionResult DeputeList(CKeyWord vm)
         {
-            
-            IList = _dateLoad.returnList();
+
+            IList = _dateLoad.getList(vm) as List<CDeputeViewModel>;
             IEnumerable<CDeputeViewModel> datas = null;
-            if (id == null)
+            if (vm.txtId == null)
             {
                 datas = from n in IList
                         select n;
-
             }
             else
-            {
+            {   
                 _db.SkillClasses.Load();
                 IEnumerable<string> skillname = from n in _db.SkillClasses
-                                                where n.SkillClassId == id
+                                                where n.SkillClassId == vm.txtId
                                                 select n.Name;
                 foreach (string item in skillname)
                 {
@@ -72,8 +66,6 @@ namespace prjDB_GamingForm_Show.Controllers
                             where n.listskillclassid.Contains(item)
                             select n;
                 }
-
-
             }
             return View(datas);
 
@@ -93,7 +85,7 @@ namespace prjDB_GamingForm_Show.Controllers
         }
         public IActionResult MutipleSearch(CKeyWord vm)
         {
-            return Json(_dataSearch.returnResult(vm));
+            return Json(_dataSearch.getMutiSearch(vm));
 
         }
 

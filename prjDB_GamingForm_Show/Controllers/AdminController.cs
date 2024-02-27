@@ -1,20 +1,13 @@
 ﻿using DB_GamingForm_Show.Job.DeputeClass;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.SqlServer.Storage.Internal;
 using MimeKit;
 using prjDB_GamingForm_Show.Models;
 using prjDB_GamingForm_Show.Models.Admin;
 using prjDB_GamingForm_Show.Models.CallBack.Depute;
 using prjDB_GamingForm_Show.Models.Entities;
-using prjDB_GamingForm_Show.Models.Member;
 using prjDB_GamingForm_Show.Models.Shop;
 using prjDB_GamingForm_Show.ViewModels;
-using System.Drawing;
-using System.Runtime.Intrinsics.Arm;
-using System.Runtime.Intrinsics.X86;
-using System.Security.Cryptography;
 using SmtpClient = MailKit.Net.Smtp.SmtpClient;
 
 namespace prjDB_GamingForm_Show.Controllers
@@ -22,13 +15,19 @@ namespace prjDB_GamingForm_Show.Controllers
     public class AdminController : AdminUseSuperController
     {
         private IWebHostEnvironment _enviro = null; //論壇圖片
-        private readonly IWebHostEnvironment _host;
         private readonly DbGamingFormTestContext _db;
-        public AdminController(IWebHostEnvironment host, DbGamingFormTestContext db, IWebHostEnvironment p)
+        private CDeputeDataLoad _dataLoad;
+        public AdminController
+        (
+            DbGamingFormTestContext db,
+            IWebHostEnvironment p,
+            CDeputeDataLoad dataLoad
+            
+        )
         {
-            _host = host;
             _db = db;
             _enviro = p;//論壇圖片
+            _dataLoad = dataLoad;
         }
 
 
@@ -70,7 +69,6 @@ namespace prjDB_GamingForm_Show.Controllers
                 {
                     i頁數++;
                 }
-
                 HttpContext.Session.SetInt32(CDictionary.SK_管理者觀看會員清單頁數使用關鍵字, i頁數);
                 var members = from m in _db.Members.Skip(i每頁筆數 * i頁數).Take(i每頁筆數)
                               select m;
@@ -1538,19 +1536,22 @@ namespace prjDB_GamingForm_Show.Controllers
         //---------------------------論壇---------------------------
 
         #region 委託Admin
-        CDeputeDataLoad engine = CDeputeDataLoad.getInstance();
-        public IActionResult ADeputeList()
+        public IActionResult ADeputeList(CKeyWord vm)
         {
+            List<CDeputeViewModel> list = new List<CDeputeViewModel>();
+            list = _dataLoad.getList(vm) as List<CDeputeViewModel>;
             IEnumerable<CDeputeViewModel> datas = null;
-            datas = engine.returnList().OrderByDescending(n => n.modifieddate).ToList();
+            datas = list.OrderByDescending(n => n.modifieddate).ToList();
             return View(datas);
         }
-        public IActionResult ADeputeSearch(string keyword)
+        public IActionResult ADeputeSearch(CKeyWord vm)
         {
-            if (string.IsNullOrEmpty(keyword))
+            List<CDeputeViewModel> list = new List<CDeputeViewModel>();
+            list = _dataLoad.getList(vm) as List<CDeputeViewModel>;
+            if (string.IsNullOrEmpty(vm.txtKeyword))
                 return View();
             IEnumerable<CDeputeViewModel> datas = null;
-            datas = engine.List.Where(n => n.providername.Contains(keyword)).ToList();
+            datas = list.Where(n => n.providername.Contains(vm.txtKeyword)).ToList();
             return View(datas);
         }
         public IActionResult ADeputeEdit(CAdminDepute vm)
@@ -1645,12 +1646,6 @@ namespace prjDB_GamingForm_Show.Controllers
 
 
         #endregion
-
-
-
-
-
-
         #region 數據
 
 

@@ -1,14 +1,16 @@
 ﻿using DB_GamingForm_Show.Job.DeputeClass;
+using Microsoft.AspNetCore.Mvc;
 using prjDB_GamingForm_Show.Models.Shop;
 
 namespace prjDB_GamingForm_Show.Models.CallBack
 {
     public class Ddepute
     {
-        public delegate List<CDeputeViewModel> DataDelegate();
-        public delegate string SkillDelegate(int x);
-        public delegate List<CDeputeViewModel>  MutiSearch(CKeyWord vm);
-        public delegate void CookieDelegate(int? id);
+        public delegate IActionResult DataDelegate(CKeyWord vm);
+        public delegate IActionResult MutiSearch(CKeyWord vm);
+        public delegate IActionResult CookieDelegate(CKeyWord vm);
+        public delegate bool FavDelegate(int? id);
+        public delegate IActionResult SkillDelegate(CKeyWord vm);
 
     }
 }

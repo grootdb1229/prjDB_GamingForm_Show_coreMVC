@@ -1,11 +1,11 @@
 ﻿using System.ComponentModel;
 
-namespace prjDB_GamingForm_Show.DesignPattern.Rules.SingletonPattern
+namespace prjDB_GamingForm_Show.Vincent.DesignPattern.SingletonPattern
 {
     public class CDeputeViewModel2
     {
         private static volatile CDeputeViewModel2 instance;
-        private static object syncRoot = new Object();
+        private static object syncRoot = new object();
 
         [DisplayName("委託編號")]
         public int id { get; set; }

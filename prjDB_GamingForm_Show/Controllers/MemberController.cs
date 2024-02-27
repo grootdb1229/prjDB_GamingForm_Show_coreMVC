@@ -3,21 +3,11 @@ using prjDB_GamingForm_Show.Models;
 using prjDB_GamingForm_Show.Models.Entities;
 using prjDB_GamingForm_Show.Models.Member;
 using prjDB_GamingForm_Show.ViewModels;
-using MailKit;
-using MailKit.Net.Smtp;
 using MimeKit;
-using Microsoft.AspNetCore.Http.Extensions;
-using Microsoft.Identity.Client;
 using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using MailKit.Search;
-using prjDB_GamingForm_Show.Models.Shop;
-using Microsoft.AspNetCore.Components.Web;
-using System.Net.Mail;
 using SmtpClient = MailKit.Net.Smtp.SmtpClient;
-using static prjDB_GamingForm_Show.Hubs.MemberChatHub;
-using Microsoft.AspNetCore.Mvc.ActionConstraints;
 
 namespace prjDB_GamingForm_Show.Controllers
 {
@@ -743,6 +733,7 @@ namespace prjDB_GamingForm_Show.Controllers
             {
                 return "現在";
             }
+            
         }
 
         [HttpPost]

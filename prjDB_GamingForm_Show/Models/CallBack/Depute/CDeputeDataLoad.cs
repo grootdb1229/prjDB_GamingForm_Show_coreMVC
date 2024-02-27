@@ -2,38 +2,38 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using prjDB_GamingForm_Show.Models.Entities;
-using System.Collections.Generic;
+using prjDB_GamingForm_Show.Models.Shop;
 
 namespace prjDB_GamingForm_Show.Models.CallBack.Depute
 {
-    public class CDeputeDataLoad
+    public class CDeputeDataLoad:Controller
     {
 
-        //Static Inner Class
-        private static class LazyHolder
-        {
-            internal static CDeputeDataLoad uniqueInstance = new CDeputeDataLoad();
-        }
-        private CDeputeDataLoad(){}
-        public static CDeputeDataLoad getInstance()
-        {
-            return LazyHolder.uniqueInstance;
-        }
-
-
-
-        private readonly IWebHostEnvironment _host;
         private readonly DbGamingFormTestContext _db;
-        private readonly DeputeDataLoad _dataLoad;
-        public CDeputeDataLoad(IWebHostEnvironment host, DbGamingFormTestContext context, DeputeDataLoad dataLoad)
+        private DeputeDataLoad _dataLoad;
+        private CDeputeViewModel _viewModel;
+        private List<CDeputeViewModel> _list;
+
+        public CDeputeDataLoad
+        (
+         DbGamingFormTestContext context,
+         DeputeDataLoad dataLoad,
+         CDeputeViewModel viewModel,
+         List<CDeputeViewModel> list
+        )
         {
-            _host = host;
+            //di
             _db = context;
             _dataLoad = dataLoad;
-        }
-        public List<CDeputeViewModel> List {get; set;}
+            _viewModel = viewModel;
+            _list = list;
 
-        private List<CDeputeViewModel> listLoad()
+            //di event register
+            _dataLoad.getlist+= getList;
+            _dataLoad.getrecommend+= getRecommand;
+            _dataLoad.getdetailskills += getDetailSkills;
+        }
+        public IActionResult getList(CKeyWord vm)
         {
             _db.Members.Load();
             _db.Statuses.Load();
@@ -54,40 +54,34 @@ namespace prjDB_GamingForm_Show.Models.CallBack.Depute
                            Status = n.Status.Name,
                            n.Region.City,
                            n.Provider.FImagePath,
-                           Skillid = getSkill(n.DeputeId),
-                           Skillclassid = getSkillClass(n.DeputeId)
+                           Skillid = listSkill(n.DeputeId),
+                           Skillclassid = listSkillClass(n.DeputeId)
 
 
                        };
-            CDeputeViewModel x = CDeputeViewModel.getInstance();
-
             foreach (var item in data)
             {
-                x.id = item.DeputeId;
-                x.title = item.Title;
-                x.providername = item.Name;
-                x.startdate = item.SrartDate;
-                x.modifieddate = item.Modifiedate;
-                x.deputeContent = item.DeputeContent;
-                x.salary = item.Salary;
-                x.viewcount = item.ViewCount;
-                x.status = item.Status;
-                x.region = item.City;
-                x.imgfilepath = item.FImagePath;
-                x.listskillid = item.Skillid;
-                x.listskillclassid = item.Skillclassid;
+                _viewModel.id = item.DeputeId;
+                _viewModel.title = item.Title;
+                _viewModel.providername = item.Name;
+                _viewModel.startdate = item.SrartDate;
+                _viewModel.modifieddate = item.Modifiedate;
+                _viewModel.deputeContent = item.DeputeContent;
+                _viewModel.salary = item.Salary;
+                _viewModel.viewcount = item.ViewCount;
+                _viewModel.status = item.Status;
+                _viewModel.region = item.City;
+                _viewModel.imgfilepath = item.FImagePath;
+                _viewModel.listskillid = item.Skillid;
+                _viewModel.listskillclassid = item.Skillclassid;
 
-
-                List.Add(x);
-
-
+                _list.Add(_viewModel);
             }
 
-            return List;
+            return Json(_list);
 
         }
-
-        private string getSkill(int deputeId)
+        private string listSkill(int deputeId)
         {
             string result = "";
             _db.Skills.Load();
@@ -103,35 +97,88 @@ namespace prjDB_GamingForm_Show.Models.CallBack.Depute
 
             return result;
         }
-
-        private string getSkillClass(int deputeId)
+        private string listSkillClass(int id)
         {
             string result = "";
             _db.Skills.Load();
             _db.SkillClasses.Load();
             var data = (from n in _db.DeputeSkills
-                        where n.DeputeId == deputeId
+                        where n.DeputeId == id
                         select n.Skill.SkillClass.Name).Distinct();
 
             foreach (var item in data)
             {
                 result += item + ",";
-
             }
 
 
             return result;
 
         }
-        
-
-
-        //callback
-        public List<CDeputeViewModel> returnList()
+        public IActionResult getRecommand(CKeyWord vm)
         {
-            _dataLoad.dataLoad += listLoad;
-            return _dataLoad.getList();
+            _db.Skills.Load();
+            _db.Deputes.Load();
+            _db.Members.Load();
+            var value = from n in _db.DeputeSkills.AsEnumerable()
+                        where n.DeputeId == vm.txtId
+                        select n.Skill.Name;
+            List<CDeputeViewModel> Rcolist = new List<CDeputeViewModel>();
+            foreach (var item in value)
+            {
+                var RecoData = (from n in _db.DeputeSkills.AsEnumerable()
+                                where n.Skill.Name.Contains(item)
+                                select new
+                                {
+                                    n.DeputeId,
+                                    Title = (n.Depute.Title.Length > 15) ? n.Depute.Title.Substring(0, 10) : n.Depute.Title,
+                                    DeputeContent = (n.Depute.DeputeContent.Length > 15) ? n.Depute.DeputeContent.Substring(0, 10) : n.Depute.DeputeContent,
+                                    n.Depute.Provider.Name,
+                                    n.Depute.Provider.FImagePath
+                                }).Distinct();
+                foreach (var item2 in RecoData)
+                {
+                    _viewModel.id = item2.DeputeId;
+                    _viewModel.title = item2.Title;
+                    _viewModel.providername = item2.Name;
+                    _viewModel.deputeContent = item2.DeputeContent;
+                    _viewModel.imgfilepath = item2.FImagePath;
+                    Rcolist.Add(_viewModel);
+                }
+
+            }
+
+            Random rnd = new Random();
+            int count = rnd.Next(0, Rcolist.Count());
+            List<CDeputeViewModel> Rcolist2 = new List<CDeputeViewModel>();
+            if (Rcolist.Count() > 0)
+            {
+                for (int i = 1; i <= 6; i++)
+                {
+                    if (i <= Rcolist.Count())
+                    {
+                        Rcolist2.Add(Rcolist[count]);
+                        Rcolist.RemoveAt(count);
+                        count = rnd.Next(0, Rcolist.Count);
+                    }
+                }
+            }
+            return  Json(Rcolist2);
+
+
         }
-        
+        public IActionResult getDetailSkills(CKeyWord vm)
+        {
+            if (vm.txtId == null)
+                return Content("No result match");
+            else
+            {
+                _db.SkillClasses.Load();
+                IEnumerable<string> skillname = (from n in _db.DeputeSkills
+                                                 where n.DeputeId == vm.txtId
+                                                 select n.Skill.Name).Distinct();
+                return Json(skillname);
+            }
+        }
     }
 }
