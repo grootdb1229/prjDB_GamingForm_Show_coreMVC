@@ -7,18 +7,17 @@ namespace prjDB_GamingForm_Show.Models.CallBack.Depute
 {
     public class CDeputeCookie : Controller
     {
-
         private List<CDeputeViewModel>? CookieList { get; set; }
         private readonly DbGamingFormTestContext _db;
         private DeputeCookie _dataCookie;
         private CDeputeDataLoad _dataLoad;
-
         public CDeputeCookie
         (
             DbGamingFormTestContext context,
             DeputeCookie dataCookie,
             CDeputeDataLoad dataLoad
         )
+
         {
             _db = context;
             _dataCookie = dataCookie;
@@ -30,6 +29,7 @@ namespace prjDB_GamingForm_Show.Models.CallBack.Depute
             _dataCookie.getfav+= getFav;
 
         }
+
         public IActionResult setCookie(CKeyWord vm)
         {
             int userid = 0;
@@ -42,8 +42,9 @@ namespace prjDB_GamingForm_Show.Models.CallBack.Depute
 
             CookieOptions options = new CookieOptions();
             options.Expires = DateTime.Now.AddDays(30);
-            record += $"{vm},";
+            record += $"{vm.txtId},";
             HttpContext.Response.Cookies.Append(userid.ToString(), record, options);//
+
             return Content("Succeed");
         }
         public IActionResult getCookie(CKeyWord vm)
@@ -76,7 +77,7 @@ namespace prjDB_GamingForm_Show.Models.CallBack.Depute
 
         }
         //加入我的最愛
-        public bool setFav(int? id)
+        public IActionResult setFav(CKeyWord vm)
         {
 
             int userid = 0;
@@ -88,11 +89,11 @@ namespace prjDB_GamingForm_Show.Models.CallBack.Depute
                 record = HttpContext.Request.Cookies[$"fav{userid}"];
 
             string[] strResult = record.Split(',');
-            if (strResult.Contains(id.ToString()))
+            if (strResult.Contains(vm.txtId.ToString()))
             {
                 record = "";
                 HttpContext.Response.Cookies.Delete($"fav{userid}");
-                var data = strResult.Where(n => n != id.ToString());
+                var data = strResult.Where(n => n != vm.txtId.ToString());
                 foreach (var item in data)
                 {
                     if (!string.IsNullOrEmpty(item))
@@ -101,16 +102,16 @@ namespace prjDB_GamingForm_Show.Models.CallBack.Depute
                 CookieOptions options = new CookieOptions();
                 options.Expires = DateTime.Now.AddDays(30);
                 HttpContext.Response.Cookies.Append($"fav{userid}", record, options);////
-                return false;
+                return Content("false");
             }
             else
             {
                 CookieOptions options = new CookieOptions();
                 options.Expires = DateTime.Now.AddDays(30);
-                record += $"{id},";
+                record += $"{vm},";
                 HttpContext.Response.Cookies.Append($"fav{userid}", record, options);//
 
-                return true;
+                return Content("true"); ;
             }
         }
         public IActionResult getFav(CKeyWord vm)

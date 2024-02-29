@@ -14,18 +14,6 @@ namespace DB_GamingForm_Show.Job.DeputeClass
 {
     public class CDeputeViewModel
     {
-        
-            private static class LazyHolder
-            {
-                internal static CDeputeViewModel uniqueInstance = new CDeputeViewModel();
-            }
-            private CDeputeViewModel()
-            {
-            }
-            public static CDeputeViewModel getInstance()
-            {
-                return LazyHolder.uniqueInstance;
-            }
 
         [DisplayName("委託編號")]
         public int id { get; set; }

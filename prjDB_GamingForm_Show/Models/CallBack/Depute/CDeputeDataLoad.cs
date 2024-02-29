@@ -8,12 +8,11 @@ namespace prjDB_GamingForm_Show.Models.CallBack.Depute
 {
     public class CDeputeDataLoad:Controller
     {
-
         private readonly DbGamingFormTestContext _db;
         private DeputeDataLoad _dataLoad;
         private CDeputeViewModel _viewModel;
         private List<CDeputeViewModel> _list;
-
+        private CDeputeCookie _cookie;
         public CDeputeDataLoad
         (
          DbGamingFormTestContext context,
@@ -92,7 +91,6 @@ namespace prjDB_GamingForm_Show.Models.CallBack.Depute
             foreach (var item in data)
             {
                 result += item + ",";
-
             }
 
             return result;
@@ -167,6 +165,7 @@ namespace prjDB_GamingForm_Show.Models.CallBack.Depute
 
 
         }
+
         public IActionResult getDetailSkills(CKeyWord vm)
         {
             if (vm.txtId == null)
