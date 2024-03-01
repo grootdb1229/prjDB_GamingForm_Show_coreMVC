@@ -42,12 +42,13 @@ namespace prjDB_GamingForm_Show.Models.CallBack.Depute
 
             CookieOptions options = new CookieOptions();
             options.Expires = DateTime.Now.AddDays(30);
-            record += $"{vm},";
+            record += $"{vm.txtId},";
             HttpContext.Response.Cookies.Append(userid.ToString(), record, options);//
             return Content("Succeed");
         }
         public IActionResult getCookie(CKeyWord vm)
         {
+            CookieList = new List<CDeputeViewModel>();
             int userid = 0;
             if (HttpContext.Session.GetInt32(CDictionary.SK_UserID) != null)
                 userid = (int)HttpContext.Session.GetInt32(CDictionary.SK_UserID);
@@ -56,12 +57,13 @@ namespace prjDB_GamingForm_Show.Models.CallBack.Depute
                 record = HttpContext.Request.Cookies[userid.ToString()];
             string[] strResult = record.Split(',');
             strResult = strResult.Reverse().Distinct().ToArray();
+            
             IEnumerable<CDeputeViewModel> datas = null;
             foreach (var item in strResult)
             {
                 if (!string.IsNullOrEmpty(item))
                 {
-                    datas = from n in _dataLoad.getList(vm) as IEnumerable<CDeputeViewModel>
+                    datas = from n in _dataLoad.getList(vm)
                             where n.id == Convert.ToInt32(item)
                             select n;
                     foreach (var data in datas)
@@ -71,8 +73,7 @@ namespace prjDB_GamingForm_Show.Models.CallBack.Depute
                 }
 
             }
-
-            return Json(CookieList);
+            return Json(CookieList.Take(5));
 
         }
         //加入我的最愛

@@ -33,7 +33,7 @@ namespace prjDB_GamingForm_Show.Models.CallBack.Depute
             _dataLoad.getrecommend+= getRecommand;
             _dataLoad.getdetailskills += getDetailSkills;
         }
-        public IActionResult getList(CKeyWord vm)
+        public List<CDeputeViewModel> getList(CKeyWord vm)
         {
             _db.Members.Load();
             _db.Statuses.Load();
@@ -78,7 +78,7 @@ namespace prjDB_GamingForm_Show.Models.CallBack.Depute
                 _list.Add(_viewModel);
             }
 
-            return Json(_list);
+            return _list;
 
         }
         private string listSkill(int deputeId)

@@ -20,6 +20,8 @@ namespace prjDB_GamingForm_Show.Controllers
         private readonly DbGamingFormTestContext _db;
         private CDeputeDataLoad _dateLoad;
         private CDeputeSearch _dataSearch;
+        private CDeputeCookie _dataCookie;
+        private CDeputeViewModel _viewModel;
         public List<CDeputeViewModel> IList { get; set; } 
         public List<CDeputeViewModel> CookieList { get; set; } 
         public DeputeController
@@ -27,15 +29,17 @@ namespace prjDB_GamingForm_Show.Controllers
             IWebHostEnvironment host,
             DbGamingFormTestContext context,
             CDeputeDataLoad dataLoad,
-            CDeputeSearch dataSearch
-            )
+            CDeputeSearch dataSearch,
+            CDeputeCookie dataCookie,
+            CDeputeViewModel viewModel)
 
         {
             _host = host;
             _db = context;
             _dateLoad = dataLoad;
             _dataSearch = dataSearch;
-
+            _dataCookie = dataCookie;
+            _viewModel = viewModel;
         }
         #region 老朱
 
@@ -93,7 +97,7 @@ namespace prjDB_GamingForm_Show.Controllers
         public IActionResult DeputeDetails(int? id)
         {
             Cookie(id);
-            CDeputeViewModel pln = CDeputeViewModel.getInstance();
+            _viewModel = new CDeputeViewModel();
             Depute pDb = _db.Deputes.FirstOrDefault(n => n.DeputeId == id);
 
             if (pDb != null)
@@ -106,22 +110,22 @@ namespace prjDB_GamingForm_Show.Controllers
                 _db.SaveChanges();
 
 
-                pln.id = pDb.DeputeId;
-                pln.workerId = pDb.ProviderId;
-                pln.providername = pDb.Provider.Name;
-                pln.title = pDb.Title;
-                pln.startdate = pDb.StartDate.ToString("yyyy/MM/dd HH:mm:ss");
-                pln.modifieddate = pDb.Modifiedate.ToString("yyyy/MM/dd HH:mm:ss");
-                pln.deputeContent = pDb.DeputeContent;
-                pln.salary = pDb.Salary;
-                pln.status = pDb.Status.Name;
-                pln.region = pDb.Region.City;
-                pln.memeberContent = pDb.Provider.Mycomment;
-                pln.imgfilepath = pDb.Provider.FImagePath;
+                _viewModel.id = pDb.DeputeId;
+                _viewModel.workerId = pDb.ProviderId;
+                _viewModel.providername = pDb.Provider.Name;
+                _viewModel.title = pDb.Title;
+                _viewModel.startdate = pDb.StartDate.ToString("yyyy/MM/dd HH:mm:ss");
+                _viewModel.modifieddate = pDb.Modifiedate.ToString("yyyy/MM/dd HH:mm:ss");
+                _viewModel.deputeContent = pDb.DeputeContent;
+                _viewModel.salary = pDb.Salary;
+                _viewModel.status = pDb.Status.Name;
+                _viewModel.region = pDb.Region.City;
+                _viewModel.memeberContent = pDb.Provider.Mycomment;
+                _viewModel.imgfilepath = pDb.Provider.FImagePath;
 
             }
 
-            return View(pln);
+            return View(_viewModel);
 
 
         }
@@ -162,8 +166,10 @@ namespace prjDB_GamingForm_Show.Controllers
             HttpContext.Response.Cookies.Append(userid.ToString(), record, options);//
 
         }
-        public IActionResult GetCookie()
+        public IActionResult GetCookie(CKeyWord vm)
         {
+            //return _dataCookie.getCookie(vm);
+
             CookieList = new List<CDeputeViewModel>();
             int userid = 0;
             if (HttpContext.Session.GetInt32(CDictionary.SK_UserID) != null)
@@ -178,7 +184,7 @@ namespace prjDB_GamingForm_Show.Controllers
             {
                 if (!string.IsNullOrEmpty(item))
                 {
-                    datas = from n in IList
+                    datas = from n in _dateLoad.getList(vm)
                             where n.id == Convert.ToInt32(item)
                             select n;
                     foreach (var data in datas)
@@ -228,7 +234,7 @@ namespace prjDB_GamingForm_Show.Controllers
                 return Content("Succeed");
             }
         }
-        public IActionResult GetFav()
+        public IActionResult GetFav(CKeyWord vm)
         {
             CookieList = new List<CDeputeViewModel>();
             int userid = 0;
@@ -244,7 +250,7 @@ namespace prjDB_GamingForm_Show.Controllers
             {
                 if (!string.IsNullOrEmpty(item))
                 {
-                    datas = from n in IList
+                    datas = from n in _dateLoad.getList(vm)
                             where n.id == Convert.ToInt32(item)
                             select n;
                     foreach (var data in datas)
@@ -282,13 +288,13 @@ namespace prjDB_GamingForm_Show.Controllers
                                 }).Distinct();
                 foreach (var item2 in RecoData)
                 {
-                    CDeputeViewModel x = CDeputeViewModel.getInstance();
-                    x.id = item2.DeputeId;
-                    x.title = item2.Title;
-                    x.providername = item2.Name;
-                    x.deputeContent = item2.DeputeContent;
-                    x.imgfilepath = item2.FImagePath;
-                    Rcolist.Add(x);
+                    _viewModel = new CDeputeViewModel();
+                    _viewModel.id = item2.DeputeId;
+                    _viewModel.title = item2.Title;
+                    _viewModel.providername = item2.Name;
+                    _viewModel.deputeContent = item2.DeputeContent;
+                    _viewModel.imgfilepath = item2.FImagePath;
+                    Rcolist.Add(_viewModel);
                 }
 
             }
@@ -375,20 +381,19 @@ namespace prjDB_GamingForm_Show.Controllers
             _db.DeputeSkills.Load();
             var SkillClasses = _db.SkillClasses;
             List<CDeputeViewModel> slist = new List<CDeputeViewModel>();
-            CDeputeViewModel x = null;
             foreach (var item in SkillClasses)
             {
                 var datas = (from n in _db.DeputeSkills.AsEnumerable()
                              where n.Skill.SkillClassId == item.SkillClassId
                              select n.DeputeId).Distinct();
 
-                x = CDeputeViewModel.getInstance();
-                x.skillid = item.SkillClassId;
-                x.skillname = item.Name;
-                x.count = datas.Count();
+                _viewModel = new CDeputeViewModel();
+                _viewModel.skillid = item.SkillClassId;
+                _viewModel.skillname = item.Name;
+                _viewModel.count = datas.Count();
 
 
-                slist.Add(x);
+                slist.Add(_viewModel);
 
 
             }
@@ -396,16 +401,16 @@ namespace prjDB_GamingForm_Show.Controllers
         }
 
         //熱門5最新5
-        public IActionResult GetFive(int? id)
+        public IActionResult GetFive(CKeyWord vm)
         {
             IEnumerable<CDeputeViewModel> datas = null;
-            if (id == 1)
+            if (vm.txtId == 1)
             {
-                datas = IList.OrderByDescending(n => Convert.ToDateTime(n.startdate)).Take(5);
+                datas = _dateLoad.getList(vm).OrderByDescending(n => Convert.ToDateTime(n.startdate)).Take(5);
             }
             else
             {
-                datas = IList.OrderByDescending(n => n.viewcount).Take(5);
+                datas = _dateLoad.getList(vm).OrderByDescending(n => n.viewcount).Take(5);
 
             }
             return Json(datas);
@@ -772,15 +777,14 @@ namespace prjDB_GamingForm_Show.Controllers
         public IActionResult confirmApply(int id)
         {
             var ori = _db.DeputeRecords.FirstOrDefault(_ => _.DeputeId == id && _.ApplyStatusId == 25);
-            CDeputeViewModel data = CDeputeViewModel.getInstance();
+            _viewModel = new CDeputeViewModel();
+            _viewModel.id = ori.Id;
+            _viewModel.title = ori.Depute.Title;
+            _viewModel.replyContent = ori.ReplyContent;
+            _viewModel.replyFileName = ori.ReplyFileName;
+            _viewModel.workerName = ori.Member.Name;
 
-            data.id = ori.Id;
-            data.title = ori.Depute.Title;
-            data.replyContent = ori.ReplyContent;
-            data.replyFileName = ori.ReplyFileName;
-            data.workerName = ori.Member.Name;
-
-            return Json(data);
+            return Json(_viewModel);
         }
 
         public IActionResult changeDeputeRecordStatus(string jsonString)
@@ -857,19 +861,19 @@ namespace prjDB_GamingForm_Show.Controllers
             List<CDeputeViewModel> list = new List<CDeputeViewModel>();
             foreach (var item in o)
             {
-                CDeputeViewModel n = CDeputeViewModel.getInstance();
-                n.id = item.Id;
-                n.workerId = item.MemberId;
-                n.title = item.Depute.Title;
-                n.count = o.Count();
-                n.status = item.ApplyStatus.Name;
-                n.workerName = item.Member.Name;
-                n.applyerGender = item.Member.Gender == 1 ? "男性" : "女性";
-                n.applyerEmail = item.Member.Email;
-                n.applyerBirth = item.Member.Birth.ToString("yyyy/MM/dd");
-                n.applyerContent = item.RecordContent == null ? "該會員無提供補充資訊" : item.RecordContent;
-                n.applyerPhone = item.Member.Phone;
-                list.Add(n);
+                _viewModel = new CDeputeViewModel();
+                _viewModel.id = item.Id;
+                _viewModel.workerId = item.MemberId;
+                _viewModel.title = item.Depute.Title;
+                _viewModel.count = o.Count();
+                _viewModel.status = item.ApplyStatus.Name;
+                _viewModel.workerName = item.Member.Name;
+                _viewModel.applyerGender = item.Member.Gender == 1 ? "男性" : "女性";
+                _viewModel.applyerEmail = item.Member.Email;
+                _viewModel.applyerBirth = item.Member.Birth.ToString("yyyy/MM/dd");
+                _viewModel.applyerContent = item.RecordContent == null ? "該會員無提供補充資訊" : item.RecordContent;
+                _viewModel.applyerPhone = item.Member.Phone;
+                list.Add(_viewModel);
             }
             return Json(list);
         }
@@ -880,20 +884,19 @@ namespace prjDB_GamingForm_Show.Controllers
             Depute o = _db.Deputes.FirstOrDefault(_ => _.DeputeId == id);
             if (o == null)
                 return RedirectToAction("HomeFrame");
-            CDeputeViewModel n = CDeputeViewModel.getInstance();
-
-            n.title = o.Title;
-            n.status = o.Status.Name;
-            n.count = o.DeputeRecords.Count();
-            n.deputeContent = o.DeputeContent;
+            _viewModel = new CDeputeViewModel();
+            _viewModel.title = o.Title;
+            _viewModel.status = o.Status.Name;
+            _viewModel.count = o.DeputeRecords.Count();
+            _viewModel.deputeContent = o.DeputeContent;
             //imgfilepath=;
-            n.providername = o.Provider.Name;
-            n.region = o.Region.City;
-            n.salary = o.Salary;
-            n.startdate = o.StartDate.ToString("yyyy/MM/dd");
-            n.modifieddate = o.Modifiedate.ToString("yyyy/MM/dd");
+            _viewModel.providername = o.Provider.Name;
+            _viewModel.region = o.Region.City;
+            _viewModel.salary = o.Salary;
+            _viewModel.startdate = o.StartDate.ToString("yyyy/MM/dd");
+            _viewModel.modifieddate = o.Modifiedate.ToString("yyyy/MM/dd");
 
-            return Json(n);
+            return Json(_viewModel);
         }
 
         public IActionResult oriSkills(int deputeID)

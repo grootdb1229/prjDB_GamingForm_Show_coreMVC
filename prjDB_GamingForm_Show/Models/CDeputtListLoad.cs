@@ -7,6 +7,7 @@ using prjDB_GamingForm_Show.Models.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.Xml;
 using System.Web;
 
 
@@ -20,16 +21,19 @@ namespace prjDB_GamingForm_Show.ViewModels
         private readonly IWebHostEnvironment _host;
         private readonly DbGamingFormTestContext _db;
         private readonly CDeputeDataLoad _dataLoad;
+        private  CDeputeViewModel _viewModel;
         public CDeputtListLoad
             (
             IWebHostEnvironment host,
             DbGamingFormTestContext db,
-            CDeputeDataLoad dataLoad
+            CDeputeDataLoad dataLoad,
+            CDeputeViewModel viewModel
             )
         {
             _host = host;
             _db = db;
             _dataLoad = dataLoad;
+            _viewModel = viewModel;
         }
 
         public void ListLoad()
@@ -59,21 +63,20 @@ namespace prjDB_GamingForm_Show.ViewModels
 
             foreach (var item in data)
             {
-                CDeputeViewModel x = CDeputeViewModel.getInstance();
-                
-                    x.id = item.DeputeId;
-                    x.title = item.Title;
-                    x.providername = item.Name;
-                    x.startdate = item.SrartDate;
-                    x.modifieddate = item.Modifiedate;
-                    x.deputeContent = item.DeputeContent;
-                    x.salary = item.Salary;
-                    x.viewcount = item.ViewCount;
-                    x.status = item.Status;
-                    x.region = item.City;
-                    x.imgfilepath = item.FImagePath;
+                    _viewModel = new CDeputeViewModel();
+                    _viewModel.id = item.DeputeId;
+                    _viewModel.title = item.Title;
+                    _viewModel.providername = item.Name;
+                    _viewModel.startdate = item.SrartDate;
+                    _viewModel.modifieddate = item.Modifiedate;
+                    _viewModel.deputeContent = item.DeputeContent;
+                    _viewModel.salary = item.Salary;
+                    _viewModel.viewcount = item.ViewCount;
+                    _viewModel.status = item.Status;
+                    _viewModel.region = item.City;
+                    _viewModel.imgfilepath = item.FImagePath;
 
-                List.Add(x);
+                List.Add(_viewModel);
                 Temp = List;
             }
         }
