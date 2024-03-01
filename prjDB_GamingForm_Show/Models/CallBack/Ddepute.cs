@@ -10,7 +10,6 @@ namespace prjDB_GamingForm_Show.Models.CallBack
         public delegate List<CDeputeViewModel> ListDelegate(CKeyWord vm);
         public delegate IActionResult MutiSearch(CKeyWord vm);
         public delegate IActionResult CookieDelegate(CKeyWord vm);
-        public delegate bool FavDelegate(int? id);
         public delegate IActionResult SkillDelegate(CKeyWord vm);
 
     }

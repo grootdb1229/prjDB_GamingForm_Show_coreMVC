@@ -22,16 +22,12 @@ namespace prjDB_GamingForm_Show.Controllers
             DbGamingFormTestContext db,
             IWebHostEnvironment p,
             CDeputeDataLoad dataLoad
-            
         )
         {
             _db = db;
             _enviro = p;//論壇圖片
             _dataLoad = dataLoad;
         }
-
-
-
         public IActionResult Index()
         {
             string name = TempData["AdminName"] as string;
@@ -1643,8 +1639,6 @@ namespace prjDB_GamingForm_Show.Controllers
             _db.SaveChanges();
             return RedirectToAction("ACDeputeList");
         }
-
-
         #endregion
         #region 數據
 
@@ -1747,18 +1741,8 @@ namespace prjDB_GamingForm_Show.Controllers
             return View(orders);
         }
 
-
-
-
-
-
         #endregion
     }
-
-
-
-
-
 
 }
 

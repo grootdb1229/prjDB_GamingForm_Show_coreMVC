@@ -9,7 +9,7 @@ namespace prjDB_GamingForm_Show.Models.CallBack.Depute
 
         internal event CookieDelegate setcookie;
         internal event CookieDelegate getcookie;
-        internal event FavDelegate setfav;
+        internal event CookieDelegate setfav;
         internal event DataDelegate getfav;
         
 
@@ -22,9 +22,9 @@ namespace prjDB_GamingForm_Show.Models.CallBack.Depute
             return Json(getcookie(vm));
         }
 
-        public bool setFav(int? id)
+        public IActionResult setFav(CKeyWord vm)
         {
-            return setfav(id);
+            return setfav(vm);
         }
         public IActionResult getFav(CKeyWord vm)
         {
